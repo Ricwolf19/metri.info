@@ -22,11 +22,7 @@ export const ThemeToggle = ({ className }: { className?: string }) => {
         className,
       )}
     >
-      {scheme === "dark" ? (
-        <SunIcon size={18} />
-      ) : (
-        <MoonIcon size={18} />
-      )}
+      {scheme === "dark" ? <SunIcon size={18} /> : <MoonIcon size={18} />}
     </button>
   );
 };

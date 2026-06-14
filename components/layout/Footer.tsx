@@ -5,40 +5,47 @@ import Link from "next/link";
 import { GithubIcon } from "@/components/icons";
 import { Logo } from "@/components/layout/Logo";
 import { Container } from "@/components/shared/Container";
-import { useT } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
-import { repos } from "@/lib/site";
+import { type RouteId, routePath } from "@/lib/i18n/routes";
+import { webAppRepo } from "@/lib/site";
 
-const COLUMNS: { heading: TranslationKey; links: { href: string; key: TranslationKey }[] }[] = [
+type FooterLink =
+  | { id: RouteId; key: TranslationKey }
+  | { href: string; key: TranslationKey };
+
+const COLUMNS: { heading: TranslationKey; links: FooterLink[] }[] = [
   {
     heading: "footer.product",
     links: [
-      { href: "/tools", key: "nav.tools" },
-      { href: "/exercises", key: "nav.exercises" },
-      { href: "/programs", key: "nav.programs" },
-      { href: "/download", key: "nav.download" },
+      { id: "tools", key: "nav.tools" },
+      { id: "exercises", key: "nav.exercises" },
+      { id: "programs", key: "nav.programs" },
+      { id: "download", key: "nav.download" },
     ],
   },
   {
     heading: "footer.resources",
     links: [
-      { href: "/docs", key: "nav.docs" },
-      { href: repos.app, key: "nav.github" },
-      { href: repos.web, key: "footer.siteSource" },
+      { id: "docs", key: "nav.docs" },
+      { href: webAppRepo, key: "nav.github" },
     ],
   },
   {
     heading: "footer.company",
     links: [
-      { href: "/about", key: "footer.about" },
-      { href: "/privacy", key: "footer.privacy" },
-      { href: "/terms", key: "footer.terms" },
+      { id: "about", key: "footer.about" },
+      { id: "privacy", key: "footer.privacy" },
+      { id: "terms", key: "footer.terms" },
     ],
   },
 ];
 
+const linkClass =
+  "text-sm text-ink-300 transition-colors hover:text-ink-50";
+
 export const Footer = () => {
-  const t = useT();
+  const { t, locale } = useI18n();
   const year = new Date().getFullYear();
 
   return (
@@ -48,7 +55,7 @@ export const Footer = () => {
           <Logo />
           <p className="mt-4 text-sm text-ink-300">{t("footer.tagline")}</p>
           <a
-            href={repos.app}
+            href={webAppRepo}
             target="_blank"
             rel="noreferrer noopener"
             className="mt-4 inline-flex items-center gap-2 text-sm text-ink-300 transition-colors hover:text-accent"
@@ -60,26 +67,23 @@ export const Footer = () => {
 
         {COLUMNS.map((col) => (
           <div key={col.heading}>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-400">
+            <h3 className="text-xs font-semibold tracking-wider text-ink-400 uppercase">
               {t(col.heading)}
             </h3>
             <ul className="mt-4 space-y-3">
               {col.links.map((link) => (
-                <li key={link.href}>
-                  {link.href.startsWith("http") ? (
+                <li key={link.key}>
+                  {"href" in link ? (
                     <a
                       href={link.href}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="text-sm text-ink-300 transition-colors hover:text-ink-50"
+                      className={linkClass}
                     >
                       {t(link.key)}
                     </a>
                   ) : (
-                    <Link
-                      href={link.href}
-                      className="text-sm text-ink-300 transition-colors hover:text-ink-50"
-                    >
+                    <Link href={routePath(link.id, locale)} className={linkClass}>
                       {t(link.key)}
                     </Link>
                   )}

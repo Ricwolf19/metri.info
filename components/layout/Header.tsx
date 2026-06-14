@@ -9,22 +9,23 @@ import { Logo } from "@/components/layout/Logo";
 import { LocaleToggle } from "@/components/layout/LocaleToggle";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { Container } from "@/components/shared/Container";
-import { useT } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
-import { primaryRepo } from "@/lib/site";
+import { type RouteId, routePath } from "@/lib/i18n/routes";
+import { webAppRepo } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-const NAV: { href: string; key: TranslationKey }[] = [
-  { href: "/docs", key: "nav.docs" },
-  { href: "/tools", key: "nav.tools" },
-  { href: "/exercises", key: "nav.exercises" },
-  { href: "/programs", key: "nav.programs" },
-  { href: "/download", key: "nav.download" },
+const NAV: { id: RouteId; key: TranslationKey }[] = [
+  { id: "docs", key: "nav.docs" },
+  { id: "tools", key: "nav.tools" },
+  { id: "exercises", key: "nav.exercises" },
+  { id: "programs", key: "nav.programs" },
+  { id: "download", key: "nav.download" },
 ];
 
 export const Header = () => {
-  const t = useT();
-  const pathname = usePathname();
+  const { t, locale } = useI18n();
+  const pathname = usePathname() ?? "/";
   const [open, setOpen] = useState(false);
 
   return (
@@ -33,17 +34,16 @@ export const Header = () => {
         <Logo />
 
         <nav className="hidden items-center gap-1 md:flex">
-          {NAV.map(({ href, key }) => {
+          {NAV.map(({ id, key }) => {
+            const href = routePath(id, locale);
             const active = pathname.startsWith(href);
             return (
               <Link
-                key={href}
+                key={id}
                 href={href}
                 className={cn(
                   "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                  active
-                    ? "text-accent"
-                    : "text-ink-300 hover:text-ink-50",
+                  active ? "text-accent" : "text-ink-300 hover:text-ink-50",
                 )}
               >
                 {t(key)}
@@ -54,7 +54,7 @@ export const Header = () => {
 
         <div className="flex items-center gap-2">
           <a
-            href={primaryRepo}
+            href={webAppRepo}
             target="_blank"
             rel="noreferrer noopener"
             aria-label={t("nav.github")}
@@ -79,10 +79,10 @@ export const Header = () => {
       {open && (
         <nav className="border-t border-ink-600/60 bg-ink-900 md:hidden">
           <Container className="flex flex-col py-3">
-            {NAV.map(({ href, key }) => (
+            {NAV.map(({ id, key }) => (
               <Link
-                key={href}
-                href={href}
+                key={id}
+                href={routePath(id, locale)}
                 onClick={() => setOpen(false)}
                 className="rounded-lg px-3 py-3 text-base font-medium text-ink-200 hover:bg-ink-800 hover:text-ink-50"
               >

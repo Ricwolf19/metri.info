@@ -16,7 +16,7 @@ export const Hero = () => {
       {/* Ambient lime glow */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-[-10rem] h-[28rem] w-[44rem] -translate-x-1/2 rounded-full bg-lime-400/10 blur-[120px]"
+        className="pointer-events-none absolute top-[-10rem] left-1/2 h-[28rem] w-[44rem] -translate-x-1/2 rounded-full bg-lime-400/10 blur-[120px]"
       />
       <Container className="relative py-24 text-center sm:py-32">
         <motion.div
@@ -34,14 +34,14 @@ export const Hero = () => {
 
           <motion.h1
             variants={fadeInUp}
-            className="mt-6 text-balance text-5xl font-bold tracking-tight text-ink-50 sm:text-6xl"
+            className="mt-6 text-5xl font-bold tracking-tight text-balance text-ink-50 sm:text-6xl"
           >
             {t("hero.title")}
           </motion.h1>
 
           <motion.p
             variants={fadeInUp}
-            className="mx-auto mt-6 max-w-2xl text-pretty text-lg text-ink-300"
+            className="mx-auto mt-6 max-w-2xl text-lg text-pretty text-ink-300"
           >
             {t("hero.subtitle")}
           </motion.p>
