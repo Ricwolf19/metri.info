@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+/*
+ * METRI Web design system — ported 1:1 from the mobile app.
+ * Tokens are space-separated RGB channels so Tailwind's opacity modifiers work
+ * (e.g. `bg-ink-800/60`). `:root` holds the dark scheme (dark-first, like
+ * mobile); `[data-theme="light"]` overrides per scheme. The ThemeProvider sets
+ * `data-theme` on <html>.
+ *
+ * `ink-950` is intentionally constant (near-black): only ever dark text ON the
+ * lime accent (buttons, result cards), which must stay dark in both modes.
+ */
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  /* Brand accent — the dumbbell lime from the logo. */
+  --color-lime-50: #f7fee7;
+  --color-lime-100: #ecfccb;
+  --color-lime-200: #dcf8a6;
+  --color-lime-300: #cef47a;
+  --color-lime-400: #bef82b;
+  --color-lime-500: #a3e635;
+  --color-lime-600: #84cc16;
+  --color-lime-700: #65a30d;
+  --color-lime-800: #4d7c0f;
+  --color-lime-900: #3f6212;
+
+  /* Cool neutrals — swap per theme via the channel vars below. */
+  --color-ink-950: #08090d;
+  --color-ink-900: rgb(var(--ink-900));
+  --color-ink-850: rgb(var(--ink-850));
+  --color-ink-800: rgb(var(--ink-800));
+  --color-ink-750: rgb(var(--ink-750));
+  --color-ink-700: rgb(var(--ink-700));
+  --color-ink-600: rgb(var(--ink-600));
+  --color-ink-500: rgb(var(--ink-500));
+  --color-ink-400: rgb(var(--ink-400));
+  --color-ink-300: rgb(var(--ink-300));
+  --color-ink-200: rgb(var(--ink-200));
+  --color-ink-100: rgb(var(--ink-100));
+  --color-ink-50: rgb(var(--ink-50));
+
+  /* Accent text (legible on the current surface) + calmer fill for buttons. */
+  --color-accent: rgb(var(--accent));
+  --color-accent-fill: rgb(var(--accent-fill));
+
+  /* Secondary "PR" orange (used sparingly for highlights). */
+  --color-flame: #ff6b35;
+
+  --font-sans: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-stack), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --radius-card: 1rem;
+}
+
+/* Dark scheme (default, dark-first) */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --ink-900: 11 13 18; /* app background */
+  --ink-850: 15 18 25;
+  --ink-800: 20 24 35; /* cards / surfaces */
+  --ink-750: 26 31 43;
+  --ink-700: 33 39 55; /* raised surfaces */
+  --ink-600: 44 52 71; /* borders */
+  --ink-500: 59 68 89;
+  --ink-400: 86 96 119; /* muted text */
+  --ink-300: 124 134 156; /* secondary text */
+  --ink-200: 170 178 196;
+  --ink-100: 215 220 230;
+  --ink-50: 238 241 246; /* primary text */
+  --accent: 190 248 43; /* lime-400 — accent text on dark */
+  --accent-fill: 190 248 43; /* lime-400 — fills on dark */
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --ink-900: 247 249 252; /* app background (near-white) */
+  --ink-850: 244 247 250;
+  --ink-800: 255 255 255; /* cards (white) */
+  --ink-750: 237 240 245;
+  --ink-700: 226 231 240; /* raised surfaces */
+  --ink-600: 209 214 224; /* borders */
+  --ink-500: 170 178 196;
+  --ink-400: 120 130 150; /* muted text */
+  --ink-300: 90 99 120; /* secondary text */
+  --ink-200: 60 70 90;
+  --ink-100: 34 40 52;
+  --ink-50: 17 20 27; /* primary text (near-black) */
+  --accent: 101 163 13; /* lime-700 — accent text on light */
+  --accent-fill: 132 204 22; /* lime-600 — calmer fill on white */
+}
+
+* {
+  border-color: rgb(var(--ink-600));
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: rgb(var(--ink-900));
+  color: rgb(var(--ink-50));
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: rgb(var(--accent) / 0.25);
+}
+
+/* Respect reduced motion for all Framer Motion / CSS animations. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
