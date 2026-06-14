@@ -16,14 +16,24 @@ const manifest = (): MetadataRoute.Manifest => ({
   lang: "en",
   dir: "ltr",
   icons: [
-    { src: "/brand/icon.png", sizes: "512x512", type: "image/png", purpose: "any" },
+    {
+      src: "/brand/icon-192.png",
+      sizes: "192x192",
+      type: "image/png",
+      purpose: "any",
+    },
+    {
+      src: "/brand/icon-512.png",
+      sizes: "512x512",
+      type: "image/png",
+      purpose: "any",
+    },
     {
       src: "/brand/android-icon-foreground.png",
       sizes: "512x512",
       type: "image/png",
       purpose: "maskable",
     },
-    { src: "/brand/favicon.png", sizes: "192x192", type: "image/png" },
   ],
 });
 
