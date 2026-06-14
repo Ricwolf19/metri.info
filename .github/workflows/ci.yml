@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint, typecheck, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/setup-repo
+
+      - name: Format check
+        run: bun run format
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Secrets scan
+        run: bunx secretlint "**/*"
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Circular deps
+        run: bun run lint:circular
+
+      - name: Dead code (knip)
+        run: bun run knip
+
+      - name: Build
+        run: bun run build
+        env:
+          NEXT_PUBLIC_APP_URL: https://metri.info

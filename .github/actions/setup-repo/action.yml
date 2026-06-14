@@ -1,0 +1,16 @@
+name: "Setup Repo"
+description: "Install Bun and project dependencies (frozen lockfile). Assumes the repo is already checked out."
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: "1.3.14"
+
+    - name: Install dependencies
+      shell: bash
+      run: bun install --frozen-lockfile
+      env:
+        HUSKY: "0"
