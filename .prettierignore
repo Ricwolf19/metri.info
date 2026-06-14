@@ -3,4 +3,6 @@ node_modules
 bun.lock
 public
 drizzle
+content
 *.md
+*.mdx
