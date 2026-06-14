@@ -74,6 +74,29 @@ export const ROUTES: Record<RouteId, RouteEntry> = {
   },
 };
 
+/** Calculator route ids (subset of RouteId), in display order. */
+export const CALC_IDS = [
+  "onerm",
+  "tdee",
+  "macros",
+  "bodyfat",
+  "bmi",
+  "ffmi",
+  "water",
+  "plates",
+] as const satisfies readonly RouteId[];
+
+export type CalcRouteId = (typeof CALC_IDS)[number];
+
+/** Map a calculator slug (last path segment) to its route id, per locale. */
+export const calcIdForSlug = (
+  locale: Locale,
+  slug: string,
+): CalcRouteId | null => {
+  const full = locale === "es" ? `/es/herramientas/${slug}` : `/tools/${slug}`;
+  return CALC_IDS.find((id) => ROUTES[id][locale] === full) ?? null;
+};
+
 /** Resolve a route id to its path in the given locale. */
 export const routePath = (id: RouteId, locale: Locale): string =>
   ROUTES[id][locale];
