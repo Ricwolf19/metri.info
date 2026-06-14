@@ -1,9 +1,18 @@
-import { Hero } from "@/components/marketing/Hero";
+import type { Metadata } from "next";
+
+import { Home } from "@/components/marketing/Home";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { metaAlternates } from "@/lib/i18n/routes";
+import { organizationSchema, websiteSchema } from "@/lib/seo/schema";
+
+export const metadata: Metadata = {
+  alternates: metaAlternates("home", "en"),
+};
 
 const HomePage = () => (
   <>
-    <Hero />
-    {/* Phase 2 adds: AppShowcase, Tools preview, Docs preview, Open-source CTA */}
+    <JsonLd data={[organizationSchema(), websiteSchema()]} />
+    <Home />
   </>
 );
 
