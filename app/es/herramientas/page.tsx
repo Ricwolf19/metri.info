@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 
-import { ComingSoon } from "@/components/shared/ComingSoon";
+import { ToolsIndex } from "@/components/calculators/ToolsIndex";
 import { metaAlternates } from "@/lib/i18n/routes";
 
 export const metadata: Metadata = {
-  title: "Calculadoras y herramientas",
+  title: "Calculadoras de fitness gratis",
+  description:
+    "Calculadoras de fitness gratis — 1RM, TDEE, macros, grasa corporal, IMC, FFMI, hidratación y discos de barra. Las mismas fórmulas que la app METRI, al instante.",
   alternates: metaAlternates("tools", "es"),
-  robots: { index: false },
 };
 
-const HerramientasPage = () => <ComingSoon titleKey="nav.tools" />;
+const HerramientasPage = () => <ToolsIndex locale="es" />;
 
 export default HerramientasPage;
