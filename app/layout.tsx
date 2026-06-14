@@ -1,16 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Spline_Sans } from "next/font/google";
 import { cookies } from "next/headers";
+import { GoogleAnalytics } from "@next/third-parties/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { Providers } from "@/components/providers";
-import {
-  DEFAULT_LOCALE,
-  LOCALE_COOKIE,
-  isLocale,
-  type Locale,
-} from "@/lib/i18n/config";
+import { getLocale } from "@/lib/i18n/server";
 import { THEME_COOKIE, type ThemePreference } from "@/lib/theme/theme-context";
 import { siteUrl } from "@/lib/utils";
 
@@ -60,7 +58,9 @@ export const metadata: Metadata = {
     title: "METRI — Open-source fitness tracker for serious lifters",
     description:
       "Free fitness calculators, structured programs and an evidence-based knowledge base. Offline-first and open source.",
-    images: [{ url: "/og/default.png", width: 1200, height: 630, alt: "METRI" }],
+    images: [
+      { url: "/og/default.png", width: 1200, height: 630, alt: "METRI" },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -80,14 +80,8 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  icons: {
-    icon: [
-      { url: "/brand/favicon.png", type: "image/png" },
-      { url: "/brand/metri-icon.svg", type: "image/svg+xml" },
-    ],
-    apple: "/brand/icon.png",
-    shortcut: "/brand/favicon.png",
-  },
+  // Icons are provided by file conventions: app/icon.svg, app/icon.png,
+  // app/apple-icon.png — all transparent-background (no black tile).
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -111,12 +105,11 @@ export const viewport: Viewport = {
 const NO_FLASH = `(function(){try{var m=document.cookie.match(/(?:^|; )metri_theme=([^;]+)/);var p=m?m[1]:'dark';var s=p==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):p;document.documentElement.setAttribute('data-theme',s);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
 
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
-  const store = await cookies();
-  const localeCookie = store.get(LOCALE_COOKIE)?.value;
-  const locale: Locale = isLocale(localeCookie) ? localeCookie : DEFAULT_LOCALE;
+  const [store, locale] = await Promise.all([cookies(), getLocale()]);
   const themePref = (store.get(THEME_COOKIE)?.value ??
     "dark") as ThemePreference;
   const initialScheme = themePref === "light" ? "light" : "dark"; // 'system' resolves client-side
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
   return (
     <html
@@ -129,13 +122,18 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
         <script dangerouslySetInnerHTML={{ __html: NO_FLASH }} />
       </head>
       <body className="min-h-dvh font-sans antialiased">
-        <Providers locale={locale} themePreference={themePref}>
+        <Providers themePreference={themePref}>
           <div className="flex min-h-dvh flex-col">
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
           </div>
         </Providers>
+        {/* Privacy-friendly product + Core Web Vitals analytics (no-op off Vercel). */}
+        <Analytics />
+        <SpeedInsights />
+        {/* Google Analytics 4 — only when NEXT_PUBLIC_GA_ID is set. */}
+        {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
       </body>
     </html>
   );
