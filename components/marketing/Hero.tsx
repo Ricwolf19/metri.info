@@ -6,10 +6,11 @@ import { motion } from "framer-motion";
 import { ArrowRightIcon, DownloadIcon } from "@/components/icons";
 import { Container } from "@/components/shared/Container";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
-import { useT } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
+import { routePath } from "@/lib/i18n/routes";
 
 export const Hero = () => {
-  const t = useT();
+  const { t, locale } = useI18n();
 
   return (
     <section className="relative overflow-hidden">
@@ -51,14 +52,14 @@ export const Hero = () => {
             className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row"
           >
             <Link
-              href="/download"
+              href={routePath("download", locale)}
               className="inline-flex h-12 items-center gap-2 rounded-xl bg-accent-fill px-6 font-semibold text-ink-950 transition-transform hover:scale-[1.02]"
             >
               <DownloadIcon size={18} />
               {t("hero.ctaDownload")}
             </Link>
             <Link
-              href="/tools"
+              href={routePath("tools", locale)}
               className="inline-flex h-12 items-center gap-2 rounded-xl border border-ink-600 bg-ink-800 px-6 font-semibold text-ink-50 transition-colors hover:bg-ink-700"
             >
               {t("hero.ctaTools")}

@@ -1,19 +1,19 @@
 import "server-only";
 
-import { cookies } from "next/headers";
+import { headers } from "next/headers";
 
 import {
   DEFAULT_LOCALE,
-  LOCALE_COOKIE,
   type Locale,
   type TFunction,
   isLocale,
   translate,
 } from "./config";
 
-/** Resolve the active locale on the server from the persisted cookie. */
+/** Resolve the active locale on the server from the middleware `x-locale`
+ * header (path-based i18n: English at root, Spanish under /es). */
 export const getLocale = async (): Promise<Locale> => {
-  const value = (await cookies()).get(LOCALE_COOKIE)?.value;
+  const value = (await headers()).get("x-locale");
   return isLocale(value) ? value : DEFAULT_LOCALE;
 };
 

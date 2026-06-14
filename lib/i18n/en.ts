@@ -105,6 +105,29 @@ export const en = {
   "docs.onThisPage": "On this page",
   "docs.disclaimer":
     "Educational content only. Not medical advice — consult a professional for your situation.",
+  "docs.catNutrition": "Nutrition",
+  "docs.catNutritionDesc":
+    "Macros, calories, meal timing and hydration — what actually moves body composition.",
+  "docs.catTraining": "Training",
+  "docs.catTrainingDesc":
+    "Progressive overload, RIR/RPE, volume landmarks and how to program for growth.",
+  "docs.catRecovery": "Recovery",
+  "docs.catRecoveryDesc":
+    "Sleep, deloads and managing fatigue so your training actually sticks.",
+  // Knowledge-base category labels (sidebar/index)
+  "docs.category.gettingStarted": "Getting started",
+  "docs.category.nutrition": "Nutrition",
+  "docs.category.training": "Training",
+  "docs.category.recovery": "Recovery",
+
+  // Homepage CTAs
+  "home.toolsCta": "See all calculators",
+  "home.docsCta": "Browse the knowledge base",
+
+  // Coming-soon placeholder
+  "soon.badge": "Coming soon",
+  "soon.body": "This section is being built and lands in an upcoming release.",
+  "soon.backHome": "Back to home",
 
   // Open-source CTA
   "oss.title": "Built in the open.",

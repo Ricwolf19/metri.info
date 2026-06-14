@@ -108,6 +108,30 @@ export const es: Record<TranslationKey, string> = {
   "docs.onThisPage": "En esta página",
   "docs.disclaimer":
     "Contenido educativo. No es consejo médico — consulta a un profesional para tu caso.",
+  "docs.catNutrition": "Nutrición",
+  "docs.catNutritionDesc":
+    "Macros, calorías, timing de comidas e hidratación — lo que de verdad mueve la composición corporal.",
+  "docs.catTraining": "Entrenamiento",
+  "docs.catTrainingDesc":
+    "Sobrecarga progresiva, RIR/RPE, landmarks de volumen y cómo programar para crecer.",
+  "docs.catRecovery": "Recuperación",
+  "docs.catRecoveryDesc":
+    "Sueño, descargas y gestión de la fatiga para que el entrenamiento cunda.",
+  // Etiquetas de categoría de la base de conocimiento
+  "docs.category.gettingStarted": "Primeros pasos",
+  "docs.category.nutrition": "Nutrición",
+  "docs.category.training": "Entrenamiento",
+  "docs.category.recovery": "Recuperación",
+
+  // CTAs de inicio
+  "home.toolsCta": "Ver todas las calculadoras",
+  "home.docsCta": "Explorar la base de conocimiento",
+
+  // Marcador "próximamente"
+  "soon.badge": "Próximamente",
+  "soon.body":
+    "Esta sección se está construyendo y llegará en una próxima versión.",
+  "soon.backHome": "Volver al inicio",
 
   // Open-source CTA
   "oss.title": "Construido en abierto.",

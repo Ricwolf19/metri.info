@@ -1,61 +1,30 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import { usePathname } from "next/navigation";
+import { createContext, useContext, useMemo } from "react";
 
-import {
-  DEFAULT_LOCALE,
-  LOCALE_COOKIE,
-  type Locale,
-  type TFunction,
-  translate,
-} from "./config";
+import { type Locale, type TFunction, translate } from "./config";
 
 type I18nContextValue = {
   locale: Locale;
-  setLocale: (locale: Locale) => void;
   t: TFunction;
 };
 
 const I18nContext = createContext<I18nContextValue | null>(null);
 
 /**
- * Client provider. `initialLocale` is resolved on the server (from cookie) and
- * passed in to avoid a hydration mismatch — same idea as mobile reading MMKV
- * synchronously on first render.
+ * Client provider. With path-based i18n the locale is the URL — derived from the
+ * pathname so it stays correct across client navigations (e.g. / ↔ /es) without
+ * extra state. `<html lang>` is set server-side from the middleware header.
  */
-export const I18nProvider = ({
-  initialLocale = DEFAULT_LOCALE,
-  children,
-}: {
-  initialLocale?: Locale;
-  children: React.ReactNode;
-}) => {
-  const [locale, setLocaleState] = useState<Locale>(initialLocale);
-
-  const setLocale = useCallback((next: Locale) => {
-    setLocaleState(next);
-    try {
-      localStorage.setItem(LOCALE_COOKIE, next);
-    } catch {}
-    // Persist for SSR on the next request (1 year).
-    document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`;
-    document.documentElement.lang = next;
-  }, []);
-
-  const t = useCallback<TFunction>(
-    (key, vars) => translate(locale, key, vars),
-    [locale],
-  );
+export const I18nProvider = ({ children }: { children: React.ReactNode }) => {
+  const pathname = usePathname();
+  const locale: Locale =
+    pathname === "/es" || pathname?.startsWith("/es/") ? "es" : "en";
 
   const value = useMemo<I18nContextValue>(
-    () => ({ locale, setLocale, t }),
-    [locale, setLocale, t],
+    () => ({ locale, t: (key, vars) => translate(locale, key, vars) }),
+    [locale],
   );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
