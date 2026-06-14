@@ -1,12 +1,15 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
+import react from "eslint-plugin-react";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   // Arrow-function style everywhere — mirrors the mobile app's convention.
   {
+    plugins: { react },
+    settings: { react: { version: "detect" } },
     rules: {
       "func-style": ["error", "expression", { allowArrowFunctions: true }],
       "react/function-component-definition": [

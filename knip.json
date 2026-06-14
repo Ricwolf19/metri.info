@@ -1,0 +1,15 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": ["scripts/*.{mjs,ts}"],
+  "ignoreDependencies": [
+    "@img/sharp-darwin-arm64",
+    "@img/sharp-libvips-darwin-arm64",
+    "@secretlint/secretlint-rule-preset-recommend",
+    "class-variance-authority"
+  ],
+  "rules": {
+    "exports": "warn",
+    "types": "warn",
+    "enumMembers": "warn"
+  }
+}
