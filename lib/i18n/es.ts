@@ -52,8 +52,10 @@ export const es: Record<TranslationKey, string> = {
   "showcase.subtitle":
     "METRI funciona totalmente en tu dispositivo. Sin cuenta, sin que tus datos salgan del teléfono.",
   "showcase.feature1": "Calculadoras instantáneas que responden a cada tecla",
-  "showcase.feature2": "Funciona 100% sin conexión — tus datos se quedan contigo",
-  "showcase.feature3": "Fotos de progreso, recordatorios y programas estructurados",
+  "showcase.feature2":
+    "Funciona 100% sin conexión — tus datos se quedan contigo",
+  "showcase.feature3":
+    "Fotos de progreso, recordatorios y programas estructurados",
   "showcase.feature4": "Gratis y de código abierto, para siempre",
 
   // Tools / calculators directory
@@ -61,13 +63,17 @@ export const es: Record<TranslationKey, string> = {
   "tools.subtitle":
     "Las mismas fórmulas que la app — al instante en tu navegador. Comparte resultados con un enlace.",
   "tools.bmr.title": "TMB y GET",
-  "tools.bmr.desc": "Estima tu gasto energético diario (Harris-Benedict, Mifflin-St Jeor, Katch-McArdle).",
+  "tools.bmr.desc":
+    "Estima tu gasto energético diario (Harris-Benedict, Mifflin-St Jeor, Katch-McArdle).",
   "tools.macros.title": "Reparto de macros",
-  "tools.macros.desc": "Objetivos de proteína, carbohidratos y grasa según tus calorías y meta.",
+  "tools.macros.desc":
+    "Objetivos de proteína, carbohidratos y grasa según tus calorías y meta.",
   "tools.onerm.title": "Calculadora de 1RM",
-  "tools.onerm.desc": "Estima tu repetición máxima (Epley, Brzycki) desde cualquier serie.",
+  "tools.onerm.desc":
+    "Estima tu repetición máxima (Epley, Brzycki) desde cualquier serie.",
   "tools.bodyfat.title": "Grasa corporal",
-  "tools.bodyfat.desc": "Método de circunferencias de la Marina de EE. UU. para el % de grasa.",
+  "tools.bodyfat.desc":
+    "Método de circunferencias de la Marina de EE. UU. para el % de grasa.",
   "tools.ideal.title": "Peso saludable e IMC",
   "tools.ideal.desc": "Tu IMC y el rango de peso saludable de la OMS.",
   "tools.ffmi.title": "FFMI",
@@ -75,7 +81,8 @@ export const es: Record<TranslationKey, string> = {
   "tools.water.title": "Hidratación",
   "tools.water.desc": "Objetivo diario de agua según peso y actividad.",
   "tools.plates.title": "Calculadora de discos",
-  "tools.plates.desc": "Qué discos cargar en la barra para cualquier peso objetivo.",
+  "tools.plates.desc":
+    "Qué discos cargar en la barra para cualquier peso objetivo.",
 
   // Calculator UI
   "calc.weight": "Peso",

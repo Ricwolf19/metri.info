@@ -9,7 +9,7 @@ import {
 } from "@/components/icons";
 import { Container } from "@/components/shared/Container";
 import { getT } from "@/lib/i18n/server";
-import { appDistribution, primaryRepo } from "@/lib/site";
+import { appDistribution, mobileAppRepo } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Download the METRI app",
@@ -48,7 +48,7 @@ const DownloadPage = async () => {
             <ArrowRightIcon size={18} />
           </Link>
           <a
-            href={primaryRepo}
+            href={mobileAppRepo}
             target="_blank"
             rel="noreferrer noopener"
             className="inline-flex h-12 items-center gap-2 rounded-xl border border-ink-600 bg-ink-800 px-6 font-semibold text-ink-50 transition-colors hover:bg-ink-700"
@@ -61,7 +61,7 @@ const DownloadPage = async () => {
 
       {/* Platforms — placeholders now; swap for store badges + QR at launch. */}
       <div className="mx-auto mt-16 max-w-2xl">
-        <h2 className="text-center text-xs font-semibold uppercase tracking-wider text-ink-400">
+        <h2 className="text-center text-xs font-semibold tracking-wider text-ink-400 uppercase">
           {t("download.platformsTitle")}
         </h2>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">

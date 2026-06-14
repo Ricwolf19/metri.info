@@ -61,13 +61,17 @@ export const en = {
   "tools.subtitle":
     "The same formulas as the app — run instantly in your browser. Share results with a link.",
   "tools.bmr.title": "BMR & TDEE",
-  "tools.bmr.desc": "Estimate daily energy expenditure (Harris-Benedict, Mifflin-St Jeor, Katch-McArdle).",
+  "tools.bmr.desc":
+    "Estimate daily energy expenditure (Harris-Benedict, Mifflin-St Jeor, Katch-McArdle).",
   "tools.macros.title": "Macro Splitter",
-  "tools.macros.desc": "Protein, carbs and fat targets from your calories and goal.",
+  "tools.macros.desc":
+    "Protein, carbs and fat targets from your calories and goal.",
   "tools.onerm.title": "1RM Calculator",
-  "tools.onerm.desc": "Estimate your one-rep max (Epley, Brzycki) from any set.",
+  "tools.onerm.desc":
+    "Estimate your one-rep max (Epley, Brzycki) from any set.",
   "tools.bodyfat.title": "Body Fat",
-  "tools.bodyfat.desc": "U.S. Navy circumference method for body-fat percentage.",
+  "tools.bodyfat.desc":
+    "U.S. Navy circumference method for body-fat percentage.",
   "tools.ideal.title": "Healthy Weight & BMI",
   "tools.ideal.desc": "Your BMI and the WHO healthy-weight range.",
   "tools.ffmi.title": "FFMI",

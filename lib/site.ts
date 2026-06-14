@@ -11,7 +11,8 @@ export const repos = {
 } as const;
 
 /** Primary "View on GitHub" target across the landing page = the app repo. */
-export const primaryRepo = repos.app;
+export const webAppRepo = repos.web;
+export const mobileAppRepo = repos.app;
 
 export type AppStatus = "development" | "live";
 
