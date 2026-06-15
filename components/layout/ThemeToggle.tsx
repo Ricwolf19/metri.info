@@ -5,7 +5,7 @@ import { useT } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme/theme-context";
 import { cn } from "@/lib/utils";
 
-/** Compact light/dark switch. Cycles between explicit light and dark (a full
+/** Compact light/dark switch — toggles the resolved scheme (a full
  * system/light/dark picker lives in the mobile app's settings). */
 export const ThemeToggle = ({ className }: { className?: string }) => {
   const { scheme, setPreference } = useTheme();
@@ -18,7 +18,7 @@ export const ThemeToggle = ({ className }: { className?: string }) => {
       onClick={() => setPreference(next)}
       aria-label={`${t("theme.title")}: ${t(`theme.${next}`)}`}
       className={cn(
-        "inline-flex h-9 w-9 items-center justify-center rounded-lg border border-ink-600 bg-ink-800 text-ink-200 transition-colors hover:bg-ink-700 hover:text-ink-50",
+        "inline-flex h-9 w-9 items-center justify-center rounded-lg border border-ink-600 bg-ink-800 text-ink-200 transition-colors hover:bg-ink-700 hover:text-ink-50 focus-visible:ring-2 focus-visible:ring-ink-500/50 focus-visible:outline-none",
         className,
       )}
     >

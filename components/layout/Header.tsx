@@ -2,14 +2,20 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 
-import { GithubIcon, MenuIcon, XIcon } from "@/components/icons";
+import { GithubIcon, MenuIcon } from "@/components/icons";
 import { Logo } from "@/components/layout/Logo";
-import { buttonVariants } from "@/components/ui/button";
 import { LocaleToggle } from "@/components/layout/LocaleToggle";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { Container } from "@/components/shared/Container";
+import { buttonVariants } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { useI18n } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
 import { isAuthPath, type RouteId, routePath } from "@/lib/i18n/routes";
@@ -20,22 +26,22 @@ const NAV: { id: RouteId; key: TranslationKey }[] = [
   { id: "tools", key: "nav.tools" },
   { id: "docs", key: "nav.docs" },
   { id: "download", key: "nav.download" },
+  { id: "contact", key: "nav.contact" },
 ];
 
 export const Header = () => {
   const { t, locale } = useI18n();
   const pathname = usePathname() ?? "/";
-  const [open, setOpen] = useState(false);
 
   // Auth pages render their own full-screen layout — no site chrome.
   if (isAuthPath(pathname)) return null;
 
   return (
     <header className="sticky top-0 z-50 border-b border-ink-600/60 bg-ink-900/80 backdrop-blur-lg">
-      <Container className="flex h-16 items-center justify-between">
-        <Logo />
+      <Container className="flex h-16 items-center justify-between md:grid md:grid-cols-[1fr_auto_1fr]">
+        <Logo className="md:justify-self-start" />
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-1 justify-self-center md:flex">
           {NAV.map(({ id, key }) => {
             const href = routePath(id, locale);
             const active = pathname.startsWith(href);
@@ -54,7 +60,7 @@ export const Header = () => {
           })}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 md:justify-self-end">
           <a
             href={webAppRepo}
             target="_blank"
@@ -75,41 +81,41 @@ export const Header = () => {
           >
             {t("nav.signIn")}
           </Link>
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-label={open ? t("nav.close") : t("nav.menu")}
-            aria-expanded={open}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-ink-600 bg-ink-800 text-ink-200 transition-colors hover:bg-ink-700 hover:text-ink-50 md:hidden"
-          >
-            {open ? <XIcon size={18} /> : <MenuIcon size={18} />}
-          </button>
+
+          <Sheet>
+            <SheetTrigger
+              aria-label={t("nav.menu")}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-ink-600 bg-ink-800 text-ink-200 transition-colors hover:bg-ink-700 hover:text-ink-50 focus-visible:ring-2 focus-visible:ring-ink-500/50 focus-visible:outline-none md:hidden"
+            >
+              <MenuIcon size={18} />
+            </SheetTrigger>
+            <SheetContent>
+              <SheetTitle className="sr-only">{t("nav.menu")}</SheetTitle>
+              <Logo />
+              <nav className="mt-8 flex flex-col gap-1">
+                {NAV.map(({ id, key }) => (
+                  <SheetClose asChild key={id}>
+                    <Link
+                      href={routePath(id, locale)}
+                      className="rounded-lg px-3 py-3 text-base font-medium text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50"
+                    >
+                      {t(key)}
+                    </Link>
+                  </SheetClose>
+                ))}
+              </nav>
+              <SheetClose asChild>
+                <Link
+                  href={routePath("signIn", locale)}
+                  className={cn(buttonVariants({ size: "lg" }), "mt-4 w-full")}
+                >
+                  {t("nav.signIn")}
+                </Link>
+              </SheetClose>
+            </SheetContent>
+          </Sheet>
         </div>
       </Container>
-
-      {open && (
-        <nav className="border-t border-ink-600/60 bg-ink-900 md:hidden">
-          <Container className="flex flex-col py-3">
-            {NAV.map(({ id, key }) => (
-              <Link
-                key={id}
-                href={routePath(id, locale)}
-                onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-3 text-base font-medium text-ink-200 hover:bg-ink-800 hover:text-ink-50"
-              >
-                {t(key)}
-              </Link>
-            ))}
-            <Link
-              href={routePath("signIn", locale)}
-              onClick={() => setOpen(false)}
-              className={cn(buttonVariants({ size: "lg" }), "mt-2 w-full")}
-            >
-              {t("nav.signIn")}
-            </Link>
-          </Container>
-        </nav>
-      )}
     </header>
   );
 };

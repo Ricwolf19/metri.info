@@ -51,7 +51,6 @@ export const Bento = () => {
       />
 
       <AnimatedSection className="mt-12 grid auto-rows-[minmax(0,1fr)] gap-4 sm:grid-cols-2 lg:grid-cols-6">
-        {/* Big feature — the calculators (the product) */}
         <AnimatedItem className="sm:col-span-2 lg:col-span-4 lg:row-span-2">
           <Card className="group relative flex h-full flex-col overflow-hidden p-7">
             <div
@@ -94,7 +93,6 @@ export const Bento = () => {
           </Card>
         </AnimatedItem>
 
-        {/* Open source */}
         <AnimatedItem className="lg:col-span-2">
           <Card className="flex h-full flex-col p-6">
             <IconTile icon={CodeIcon} />
@@ -114,7 +112,6 @@ export const Bento = () => {
           </Card>
         </AnimatedItem>
 
-        {/* Offline */}
         <AnimatedItem className="lg:col-span-2">
           <Card className="flex h-full flex-col p-6">
             <IconTile icon={WifiOffIcon} />
@@ -127,7 +124,6 @@ export const Bento = () => {
           </Card>
         </AnimatedItem>
 
-        {/* Knowledge base */}
         <AnimatedItem className="sm:col-span-2 lg:col-span-3">
           <Card className="flex h-full flex-col p-6">
             <IconTile icon={BookIcon} />
@@ -145,7 +141,6 @@ export const Bento = () => {
           </Card>
         </AnimatedItem>
 
-        {/* Privacy */}
         <AnimatedItem className="sm:col-span-2 lg:col-span-3">
           <Card className="flex h-full flex-col p-6">
             <IconTile icon={ShieldIcon} />
