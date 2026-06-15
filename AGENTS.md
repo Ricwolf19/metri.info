@@ -18,9 +18,11 @@ same i18n philosophy — built for the web with Next.js 16.
 - **Bun** — package manager + TS script runner (`bun run scripts/*.ts`). Vercel
   builds on Node; Bun is for installs and scripts.
 - **TypeScript (strict)** · **Tailwind CSS v4** (CSS-first `@theme`) · **Framer Motion**.
-- **Drizzle ORM + Neon (Postgres)** and **Better Auth** land in Phase 5.
-- **Lucide** icons via the `@/components/icons` barrel (names mirror mobile;
-  brand icons like GitHub ship as local components).
+- **Drizzle ORM + Neon (Postgres)** + **Better Auth** power the optional account
+  layer — bundled content (calculators, docs, exercises) renders without a DB.
+- **Iconoir** icons via the `@/components/icons` barrel — each is wrapped to take a
+  `size` (px) prop and re-exported under stable names that mirror mobile. Brand
+  icons (GitHub) ship as local components. Never import `iconoir-react` directly.
 
 ## Conventions
 
@@ -43,14 +45,17 @@ same i18n philosophy — built for the web with Next.js 16.
 bun install
 bun run dev        # dev server (Turbopack)
 bun run build      # production build
-bun run verify     # lint + typecheck — the pre-commit gate
+bun run verify     # format + lint + typecheck + circular-deps + build (CI gate)
+bun run knip       # dead-code / unused-dependency check
 ```
 
 ## Layout
 
 ```
-app/            App Router routes + root layout (fonts, providers, metadata)
-components/     icons (barrel), layout (Header/Footer/toggles), marketing, shared
-lib/            i18n, theme, animations, utils, (db/auth/calculations later)
-public/brand/   logo + icons copied from the mobile app
+app/            App Router routes (EN at root, ES under /es) + SEO files
+components/     ui (primitives), icons (barrel), layout, marketing, shared,
+               docs, calculators, exercises, programs, contact, seo
+content/docs/   MDX knowledge base (en/es)
+lib/            i18n, theme, calculations, calculators, db, auth, errors, seo, og
+public/brand/   mark + PWA icons copied from the mobile app
 ```
