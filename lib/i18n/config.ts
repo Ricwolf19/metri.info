@@ -40,5 +40,12 @@ export const translate = (
   vars?: Record<string, string | number>,
 ): string => interpolate(DICTS[locale][key] ?? en[key] ?? key, vars);
 
+/** A translate function bound to a locale — for Server Components that receive
+ * the locale as a prop (keeps pages statically generatable per language). */
+export const createT =
+  (locale: Locale): TFunction =>
+  (key, vars) =>
+    translate(locale, key, vars);
+
 export const isLocale = (value: unknown): value is Locale =>
   value === "en" || value === "es";

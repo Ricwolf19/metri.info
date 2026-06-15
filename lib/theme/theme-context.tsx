@@ -55,6 +55,20 @@ export const ThemeProvider = ({
     resolve(initialPreference),
   );
 
+  // On mount, adopt the persisted preference (the no-flash script already
+  // applied the matching data-theme before paint).
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(THEME_COOKIE);
+      if (stored === "light" || stored === "dark" || stored === "system") {
+        // One-time sync from the persisted store after hydration (the no-flash
+        // script already applied the matching theme before paint).
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setPreferenceState(stored);
+      }
+    } catch {}
+  }, []);
+
   // Apply the resolved scheme to <html> and react to system changes.
   useEffect(() => {
     const apply = () => {

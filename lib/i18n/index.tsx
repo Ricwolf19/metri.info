@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { createContext, useContext, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
 
 import { type Locale, type TFunction, translate } from "./config";
 
@@ -21,6 +21,11 @@ export const I18nProvider = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const locale: Locale =
     pathname === "/es" || pathname?.startsWith("/es/") ? "es" : "en";
+
+  // Keep <html lang> correct on the client (SSR defaults to "en").
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
 
   const value = useMemo<I18nContextValue>(
     () => ({ locale, t: (key, vars) => translate(locale, key, vars) }),

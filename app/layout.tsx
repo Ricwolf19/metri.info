@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Spline_Sans } from "next/font/google";
-import { cookies } from "next/headers";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -8,8 +7,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { Providers } from "@/components/providers";
-import { getLocale } from "@/lib/i18n/server";
-import { THEME_COOKIE, type ThemePreference } from "@/lib/theme/theme-context";
 import { siteUrl } from "@/lib/utils";
 
 import "./globals.css";
@@ -58,16 +55,13 @@ export const metadata: Metadata = {
     title: "METRI — Open-source fitness tracker for serious lifters",
     description:
       "Free fitness calculators, structured programs and an evidence-based knowledge base. Offline-first and open source.",
-    images: [
-      { url: "/og/default.png", width: 1200, height: 630, alt: "METRI" },
-    ],
+    // og:image is provided by the dynamic opengraph-image file convention.
   },
   twitter: {
     card: "summary_large_image",
     title: "METRI — Open-source fitness tracker",
     description:
       "Free fitness calculators, programs and a knowledge base. Offline-first and open source.",
-    images: ["/og/default.png"],
   },
   robots: {
     index: true,
@@ -104,17 +98,16 @@ export const viewport: Viewport = {
 // No-flash script: applies the persisted theme before first paint.
 const NO_FLASH = `(function(){try{var m=document.cookie.match(/(?:^|; )metri_theme=([^;]+)/);var p=m?m[1]:'dark';var s=p==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):p;document.documentElement.setAttribute('data-theme',s);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
 
-const RootLayout = async ({ children }: { children: React.ReactNode }) => {
-  const [store, locale] = await Promise.all([cookies(), getLocale()]);
-  const themePref = (store.get(THEME_COOKIE)?.value ??
-    "dark") as ThemePreference;
-  const initialScheme = themePref === "light" ? "light" : "dark"; // 'system' resolves client-side
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
+  // `lang` defaults to "en"; the client I18nProvider corrects it to "es" on /es
+  // routes. `data-theme` defaults to dark and the no-flash script applies the
+  // persisted theme before first paint. Both are static so pages can be SSG.
   return (
     <html
-      lang={locale}
-      data-theme={initialScheme}
+      lang="en"
+      data-theme="dark"
       className={`${display.variable} ${mono.variable}`}
       suppressHydrationWarning
     >
@@ -122,7 +115,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
         <script dangerouslySetInnerHTML={{ __html: NO_FLASH }} />
       </head>
       <body className="min-h-dvh font-sans antialiased">
-        <Providers themePreference={themePref}>
+        <Providers>
           <div className="flex min-h-dvh flex-col">
             <Header />
             <main className="flex-1">{children}</main>
