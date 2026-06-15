@@ -83,6 +83,30 @@ export const es: Record<TranslationKey, string> = {
     "Fotos de progreso, recordatorios y programas estructurados",
   "showcase.feature4": "Gratis y de código abierto, para siempre",
 
+  // Bento (propuestas de valor en la portada)
+  "bento.eyebrow": "Por qué METRI",
+  "bento.title": "Todo lo que un atleta necesita,",
+  "bento.highlight": "gratis en la web.",
+  "bento.subtitle":
+    "Sin muros de pago, sin registro, sin relleno: herramientas de código abierto en las que puedes confiar de verdad. La app es solo un extra opcional.",
+  "bento.calc.title": "8 calculadoras al instante",
+  "bento.calc.desc":
+    "1RM, TDEE, macros, grasa corporal, IMC, FFMI, hidratación y carga de discos — cada una con su gráfica visual y un enlace para compartir.",
+  "bento.calc.cta": "Abrir las calculadoras",
+  "bento.oss.title": "Código abierto para siempre",
+  "bento.oss.desc":
+    "Licencia MIT y desarrollo abierto. Lee las fórmulas, haz un fork, contribuye.",
+  "bento.offline.title": "Funciona sin conexión",
+  "bento.offline.desc":
+    "La app nativa opcional ejecuta cada herramienta sin conexión — tus datos se quedan en el dispositivo.",
+  "bento.docs.title": "Guías basadas en evidencia",
+  "bento.docs.desc":
+    "Una base de conocimiento en crecimiento sobre nutrición, entrenamiento y recuperación — escrita para atletas, no para clics.",
+  "bento.docs.cta": "Explorar la documentación",
+  "bento.privacy.title": "Privado por diseño",
+  "bento.privacy.desc":
+    "Las calculadoras funcionan en tu navegador. La cuenta es opcional y solo sincroniza lo que decidas guardar.",
+
   // Tools / calculators directory
   "tools.title": "Calculadoras y herramientas",
   "tools.subtitle":

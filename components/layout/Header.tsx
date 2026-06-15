@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { GithubIcon, MenuIcon, XIcon } from "@/components/icons";
 import { Logo } from "@/components/layout/Logo";
+import { buttonVariants } from "@/components/ui/button";
 import { LocaleToggle } from "@/components/layout/LocaleToggle";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { Container } from "@/components/shared/Container";
@@ -67,7 +68,10 @@ export const Header = () => {
           <ThemeToggle />
           <Link
             href={routePath("signIn", locale)}
-            className="hidden h-9 items-center rounded-lg bg-ink-50 px-3.5 text-sm font-semibold text-ink-900 transition-transform hover:scale-[1.03] sm:inline-flex"
+            className={cn(
+              buttonVariants({ size: "sm" }),
+              "hidden transition-transform hover:scale-[1.03] sm:inline-flex",
+            )}
           >
             {t("nav.signIn")}
           </Link>
@@ -99,7 +103,7 @@ export const Header = () => {
             <Link
               href={routePath("signIn", locale)}
               onClick={() => setOpen(false)}
-              className="mt-2 rounded-lg bg-ink-50 px-3 py-3 text-center text-base font-semibold text-ink-900"
+              className={cn(buttonVariants({ size: "lg" }), "mt-2 w-full")}
             >
               {t("nav.signIn")}
             </Link>

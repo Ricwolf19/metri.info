@@ -79,6 +79,30 @@ export const en = {
   "showcase.feature3": "Progress photos, reminders and structured programs",
   "showcase.feature4": "Free and open source, forever",
 
+  // Bento (homepage value props)
+  "bento.eyebrow": "Why METRI",
+  "bento.title": "Everything a lifter needs,",
+  "bento.highlight": "free on the web.",
+  "bento.subtitle":
+    "No paywalls, no sign-up, no fluff — open-source tools you can actually trust. The app is just an optional extra.",
+  "bento.calc.title": "8 instant calculators",
+  "bento.calc.desc":
+    "1RM, TDEE, macros, body fat, BMI, FFMI, hydration and plate loading — each with a visual chart and a shareable link.",
+  "bento.calc.cta": "Open the calculators",
+  "bento.oss.title": "Open source forever",
+  "bento.oss.desc":
+    "MIT-licensed and built in the open. Read the formulas, fork it, contribute.",
+  "bento.offline.title": "Works offline",
+  "bento.offline.desc":
+    "The optional native app runs every tool with zero connection — your data stays on device.",
+  "bento.docs.title": "Evidence-based guides",
+  "bento.docs.desc":
+    "A growing knowledge base on nutrition, training and recovery — written for lifters, not clicks.",
+  "bento.docs.cta": "Browse the docs",
+  "bento.privacy.title": "Private by design",
+  "bento.privacy.desc":
+    "Calculators run in your browser. An account is optional and only syncs what you choose to save.",
+
   // Tools / calculators directory
   "tools.title": "Calculators & Tools",
   "tools.subtitle":

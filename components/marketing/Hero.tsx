@@ -5,9 +5,11 @@ import { motion } from "framer-motion";
 
 import { ArrowRightIcon, DownloadIcon } from "@/components/icons";
 import { Container } from "@/components/shared/Container";
+import { buttonVariants } from "@/components/ui/button";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 import { useI18n } from "@/lib/i18n";
 import { routePath } from "@/lib/i18n/routes";
+import { cn } from "@/lib/utils";
 
 export const Hero = () => {
   const { t, locale } = useI18n();
@@ -52,18 +54,21 @@ export const Hero = () => {
             className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row"
           >
             <Link
-              href={routePath("download", locale)}
-              className="inline-flex h-12 items-center gap-2 rounded-xl bg-ink-50 px-6 font-semibold text-ink-900 transition-transform hover:scale-[1.02]"
-            >
-              <DownloadIcon size={18} />
-              {t("hero.ctaDownload")}
-            </Link>
-            <Link
               href={routePath("tools", locale)}
-              className="inline-flex h-12 items-center gap-2 rounded-xl border border-ink-600 bg-ink-800 px-6 font-semibold text-ink-50 transition-colors hover:bg-ink-700"
+              className={cn(
+                buttonVariants({ size: "lg" }),
+                "transition-transform hover:scale-[1.02]",
+              )}
             >
               {t("hero.ctaTools")}
               <ArrowRightIcon size={18} />
+            </Link>
+            <Link
+              href={routePath("download", locale)}
+              className={buttonVariants({ variant: "secondary", size: "lg" })}
+            >
+              <DownloadIcon size={18} />
+              {t("hero.ctaDownload")}
             </Link>
           </motion.div>
         </motion.div>
