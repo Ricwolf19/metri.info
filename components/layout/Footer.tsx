@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { GithubIcon } from "@/components/icons";
 import { Logo } from "@/components/layout/Logo";
 import { Container } from "@/components/shared/Container";
 import { useI18n } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
-import { type RouteId, routePath } from "@/lib/i18n/routes";
+import { isAuthPath, type RouteId, routePath } from "@/lib/i18n/routes";
 import { webAppRepo } from "@/lib/site";
 
 type FooterLink =
@@ -19,18 +20,13 @@ const COLUMNS: { heading: TranslationKey; links: FooterLink[] }[] = [
     heading: "footer.product",
     links: [
       { id: "tools", key: "nav.tools" },
-      { id: "exercises", key: "nav.exercises" },
-      { id: "programs", key: "nav.programs" },
+      { id: "docs", key: "nav.docs" },
       { id: "download", key: "nav.download" },
     ],
   },
   {
     heading: "footer.resources",
-    links: [
-      { id: "docs", key: "nav.docs" },
-      { id: "download", key: "nav.download" },
-      { href: webAppRepo, key: "nav.github" },
-    ],
+    links: [{ href: webAppRepo, key: "nav.github" }],
   },
 ];
 
@@ -38,7 +34,10 @@ const linkClass = "text-sm text-ink-300 transition-colors hover:text-ink-50";
 
 export const Footer = () => {
   const { t, locale } = useI18n();
+  const pathname = usePathname() ?? "/";
   const year = new Date().getFullYear();
+
+  if (isAuthPath(pathname)) return null;
 
   return (
     <footer className="border-t border-ink-600/60 bg-ink-850">

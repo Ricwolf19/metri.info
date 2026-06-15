@@ -36,6 +36,31 @@ export const es: Record<TranslationKey, string> = {
   "nav.menu": "Menú",
   "nav.close": "Cerrar",
 
+  // Auth
+  "auth.signIn": "Iniciar sesión",
+  "auth.signUp": "Crear cuenta",
+  "auth.email": "Correo",
+  "auth.password": "Contraseña",
+  "auth.name": "Nombre",
+  "auth.or": "o",
+  "auth.continueGoogle": "Continuar con Google",
+  "auth.continueGithub": "Continuar con GitHub",
+  "auth.signInTitle": "Bienvenido de vuelta",
+  "auth.signInSubtitle":
+    "Inicia sesión para guardar tus resultados y sincronizar con la app.",
+  "auth.signUpTitle": "Crea tu cuenta",
+  "auth.signUpSubtitle":
+    "Gratis para siempre. Guarda tus cálculos y tu progreso.",
+  "auth.noAccount": "¿No tienes cuenta?",
+  "auth.haveAccount": "¿Ya tienes cuenta?",
+  "auth.createAccount": "Crea una",
+  "auth.backHome": "Volver al inicio",
+  "auth.errorGeneric": "Algo salió mal. Inténtalo de nuevo.",
+  "auth.brandTitle": "Entrena con cabeza,",
+  "auth.brandHighlight": "mide todo.",
+  "auth.brandSubtitle":
+    "Calculadoras, programas y guías de fitness gratis — tu cuenta mantiene tus resultados sincronizados.",
+
   // Hero
   "hero.badge": "Tracker de fitness de código abierto",
   "hero.title": "Mide. Progresa. Evoluciona.",
@@ -97,6 +122,8 @@ export const es: Record<TranslationKey, string> = {
   "calc.result": "Resultado",
   "calc.share": "Copiar enlace",
   "calc.copied": "Enlace copiado",
+  "calc.metric": "Métrico",
+  "calc.imperial": "Imperial",
   // Campos de calculadora
   "calc.bodyFat": "Grasa corporal",
   "calc.neck": "Cuello",

@@ -49,4 +49,6 @@ export {
   Smartphone as SmartphoneIcon,
   Download as DownloadIcon,
   Copy as CopyIcon,
+  Eye as EyeIcon,
+  EyeOff as EyeOffIcon,
 } from "lucide-react";

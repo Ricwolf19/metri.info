@@ -11,15 +11,13 @@ import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { Container } from "@/components/shared/Container";
 import { useI18n } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
-import { type RouteId, routePath } from "@/lib/i18n/routes";
+import { isAuthPath, type RouteId, routePath } from "@/lib/i18n/routes";
 import { webAppRepo } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 const NAV: { id: RouteId; key: TranslationKey }[] = [
-  { id: "docs", key: "nav.docs" },
   { id: "tools", key: "nav.tools" },
-  { id: "exercises", key: "nav.exercises" },
-  { id: "programs", key: "nav.programs" },
+  { id: "docs", key: "nav.docs" },
   { id: "download", key: "nav.download" },
 ];
 
@@ -27,6 +25,9 @@ export const Header = () => {
   const { t, locale } = useI18n();
   const pathname = usePathname() ?? "/";
   const [open, setOpen] = useState(false);
+
+  // Auth pages render their own full-screen layout — no site chrome.
+  if (isAuthPath(pathname)) return null;
 
   return (
     <header className="sticky top-0 z-50 border-b border-ink-600/60 bg-ink-900/80 backdrop-blur-lg">
@@ -64,6 +65,12 @@ export const Header = () => {
           </a>
           <LocaleToggle />
           <ThemeToggle />
+          <Link
+            href={routePath("signIn", locale)}
+            className="hidden h-9 items-center rounded-lg bg-ink-50 px-3.5 text-sm font-semibold text-ink-900 transition-transform hover:scale-[1.03] sm:inline-flex"
+          >
+            {t("nav.signIn")}
+          </Link>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
@@ -89,6 +96,13 @@ export const Header = () => {
                 {t(key)}
               </Link>
             ))}
+            <Link
+              href={routePath("signIn", locale)}
+              onClick={() => setOpen(false)}
+              className="mt-2 rounded-lg bg-ink-50 px-3 py-3 text-center text-base font-semibold text-ink-900"
+            >
+              {t("nav.signIn")}
+            </Link>
           </Container>
         </nav>
       )}

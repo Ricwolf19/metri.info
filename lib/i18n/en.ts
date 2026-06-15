@@ -36,6 +36,29 @@ export const en = {
   "nav.menu": "Menu",
   "nav.close": "Close",
 
+  // Auth
+  "auth.signIn": "Sign in",
+  "auth.signUp": "Create account",
+  "auth.email": "Email",
+  "auth.password": "Password",
+  "auth.name": "Name",
+  "auth.or": "or",
+  "auth.continueGoogle": "Continue with Google",
+  "auth.continueGithub": "Continue with GitHub",
+  "auth.signInTitle": "Welcome back",
+  "auth.signInSubtitle": "Sign in to save your results and sync with the app.",
+  "auth.signUpTitle": "Create your account",
+  "auth.signUpSubtitle": "Free forever. Save your calculations and progress.",
+  "auth.noAccount": "Don't have an account?",
+  "auth.haveAccount": "Already have an account?",
+  "auth.createAccount": "Create one",
+  "auth.backHome": "Back to home",
+  "auth.errorGeneric": "Something went wrong. Please try again.",
+  "auth.brandTitle": "Train smarter,",
+  "auth.brandHighlight": "track everything.",
+  "auth.brandSubtitle":
+    "Free fitness calculators, programs and guides — your account keeps your results in sync.",
+
   // Hero
   "hero.badge": "Open-source fitness tracker",
   "hero.title": "Track. Progress. Evolve.",
@@ -94,6 +117,8 @@ export const en = {
   "calc.result": "Result",
   "calc.share": "Copy share link",
   "calc.copied": "Link copied",
+  "calc.metric": "Metric",
+  "calc.imperial": "Imperial",
   // Calculator fields
   "calc.bodyFat": "Body fat",
   "calc.neck": "Neck",

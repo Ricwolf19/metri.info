@@ -18,6 +18,8 @@ export type RouteId =
   | "about"
   | "privacy"
   | "terms"
+  | "signIn"
+  | "signUp"
   // Calculators (filled in during Phase 4)
   | "ffmi"
   | "onerm"
@@ -40,6 +42,8 @@ export const ROUTES: Record<RouteId, RouteEntry> = {
   about: { en: "/about", es: "/es/acerca" },
   privacy: { en: "/privacy", es: "/es/privacidad" },
   terms: { en: "/terms", es: "/es/terminos" },
+  signIn: { en: "/sign-in", es: "/es/iniciar-sesion" },
+  signUp: { en: "/sign-up", es: "/es/registrarse" },
   ffmi: {
     en: "/tools/ffmi-calculator",
     es: "/es/herramientas/calculadora-ffmi",
@@ -100,6 +104,15 @@ export const calcIdForSlug = (
 /** Resolve a route id to its path in the given locale. */
 export const routePath = (id: RouteId, locale: Locale): string =>
   ROUTES[id][locale];
+
+/** Whether a pathname is a full-screen auth page (no site header/footer). */
+export const isAuthPath = (pathname: string): boolean =>
+  [
+    ROUTES.signIn.en,
+    ROUTES.signIn.es,
+    ROUTES.signUp.en,
+    ROUTES.signUp.es,
+  ].includes(pathname);
 
 /** Metadata `alternates` (canonical + hreflang languages + x-default). */
 export const metaAlternates = (
