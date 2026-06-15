@@ -10,7 +10,7 @@ export const MuscleBadge = ({
 }) => (
   <span
     className={cn(
-      "mr-1 inline-flex items-center rounded-md border border-lime-400/25 bg-lime-400/10 px-2 py-0.5 text-xs font-medium text-accent",
+      "mr-1 inline-flex items-center rounded-md border border-ink-600 bg-ink-700 px-2 py-0.5 text-xs font-medium text-accent",
       className,
     )}
   >

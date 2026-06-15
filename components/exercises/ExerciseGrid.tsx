@@ -26,7 +26,7 @@ export type ExerciseCard = {
 };
 
 const selectClass =
-  "h-10 rounded-lg border border-ink-600 bg-ink-800 px-3 text-sm text-ink-100 focus:border-lime-400/40 focus:ring-2 focus:ring-lime-400/20 focus:outline-none";
+  "h-10 rounded-lg border border-ink-600 bg-ink-800 px-3 text-sm text-ink-100 focus:border-ink-500 focus:ring-2 focus:ring-ink-500/40 focus:outline-none";
 
 export const ExerciseGrid = ({
   items,
@@ -64,7 +64,7 @@ export const ExerciseGrid = ({
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t("ex.searchPlaceholder")}
             aria-label={t("ex.searchPlaceholder")}
-            className="h-10 w-full rounded-lg border border-ink-600 bg-ink-800 pr-3 pl-10 text-sm text-ink-50 placeholder:text-ink-400 focus:border-lime-400/40 focus:ring-2 focus:ring-lime-400/20 focus:outline-none"
+            className="h-10 w-full rounded-lg border border-ink-600 bg-ink-800 pr-3 pl-10 text-sm text-ink-50 placeholder:text-ink-400 focus:border-ink-500 focus:ring-2 focus:ring-ink-500/40 focus:outline-none"
           />
         </div>
         <select
@@ -116,7 +116,7 @@ export const ExerciseGrid = ({
                   <span className="rounded-md bg-ink-700 px-2 py-0.5 text-xs text-ink-200">
                     {t(EQUIPMENT_LABEL[e.equipment])}
                   </span>
-                  <span className="rounded-md border border-lime-400/25 bg-lime-400/10 px-2 py-0.5 text-xs text-accent">
+                  <span className="rounded-md border border-ink-600 bg-ink-700 px-2 py-0.5 text-xs text-accent">
                     {t(DIFFICULTY_LABEL[e.difficulty])}
                   </span>
                 </div>

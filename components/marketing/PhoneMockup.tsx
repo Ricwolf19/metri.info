@@ -24,11 +24,11 @@ export const PhoneMockup = () => (
 
       <div className="rounded-2xl border border-lime-400/20 bg-lime-400/5 p-4">
         <p className="text-xs text-ink-300">Daily energy</p>
-        <p className="mt-1 font-mono text-2xl font-bold text-accent">
+        <p className="mt-1 font-mono text-2xl font-bold text-lime-400">
           2,540 <span className="text-sm text-ink-400">kcal</span>
         </p>
         <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-ink-700">
-          <div className="h-full w-2/3 rounded-full bg-accent-fill" />
+          <div className="h-full w-2/3 rounded-full bg-lime-400" />
         </div>
       </div>
 

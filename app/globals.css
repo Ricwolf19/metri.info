@@ -55,42 +55,42 @@
   --radius-card: 1rem;
 }
 
-/* Dark scheme (default, dark-first) */
+/* Dark scheme (default, dark-first) — neutral zinc grays, not blue-tinted */
 :root,
 [data-theme="dark"] {
   color-scheme: dark;
-  --ink-900: 11 13 18; /* app background */
-  --ink-850: 15 18 25;
-  --ink-800: 20 24 35; /* cards / surfaces */
-  --ink-750: 26 31 43;
-  --ink-700: 33 39 55; /* raised surfaces */
-  --ink-600: 44 52 71; /* borders */
-  --ink-500: 59 68 89;
-  --ink-400: 86 96 119; /* muted text */
-  --ink-300: 124 134 156; /* secondary text */
-  --ink-200: 170 178 196;
-  --ink-100: 215 220 230;
-  --ink-50: 238 241 246; /* primary text */
-  --accent: 190 248 43; /* lime-400 — accent text on dark */
-  --accent-fill: 190 248 43; /* lime-400 — fills on dark */
+  --ink-900: 9 9 11; /* app background */
+  --ink-850: 13 13 16;
+  --ink-800: 18 18 21; /* cards / surfaces */
+  --ink-750: 24 24 27;
+  --ink-700: 32 32 36; /* raised surfaces */
+  --ink-600: 42 42 47; /* borders */
+  --ink-500: 63 63 70;
+  --ink-400: 113 113 122; /* muted text */
+  --ink-300: 161 161 170; /* secondary text */
+  --ink-200: 212 212 216;
+  --ink-100: 228 228 231;
+  --ink-50: 245 245 247; /* primary text */
+  --accent: 212 212 216; /* silver — accent text on dark (green stays on logo) */
+  --accent-fill: 244 244 245; /* near-white — mono button fills on dark */
 }
 
 [data-theme="light"] {
   color-scheme: light;
-  --ink-900: 247 249 252; /* app background (near-white) */
-  --ink-850: 244 247 250;
+  --ink-900: 250 250 250; /* app background (soft off-white) */
+  --ink-850: 245 245 246;
   --ink-800: 255 255 255; /* cards (white) */
-  --ink-750: 237 240 245;
-  --ink-700: 226 231 240; /* raised surfaces */
-  --ink-600: 209 214 224; /* borders */
-  --ink-500: 170 178 196;
-  --ink-400: 120 130 150; /* muted text */
-  --ink-300: 90 99 120; /* secondary text */
-  --ink-200: 60 70 90;
-  --ink-100: 34 40 52;
-  --ink-50: 17 20 27; /* primary text (near-black) */
-  --accent: 101 163 13; /* lime-700 — accent text on light */
-  --accent-fill: 132 204 22; /* lime-600 — calmer fill on white */
+  --ink-750: 244 244 245;
+  --ink-700: 235 235 238; /* raised surfaces */
+  --ink-600: 214 214 219; /* borders (soft) */
+  --ink-500: 161 161 170;
+  --ink-400: 113 113 122; /* muted text */
+  --ink-300: 82 82 91; /* secondary text */
+  --ink-200: 52 52 56;
+  --ink-100: 39 39 42;
+  --ink-50: 24 24 27; /* primary text (near-black) */
+  --accent: 63 63 70; /* zinc-700 — legible neutral accent text on white */
+  --accent-fill: 24 24 27; /* near-black — mono button fills on light */
 }
 
 * {

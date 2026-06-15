@@ -47,7 +47,7 @@ export const mdxComponents: MDXComponents = {
     ),
   blockquote: (props) => (
     <blockquote
-      className="mt-6 border-l-2 border-lime-400/40 pl-4 text-ink-300 italic"
+      className="mt-6 border-l-2 border-ink-500 pl-4 text-ink-300 italic"
       {...props}
     />
   ),
@@ -59,7 +59,7 @@ export const mdxComponents: MDXComponents = {
   ),
   pre: (props) => (
     <pre
-      className="mt-6 overflow-x-auto rounded-xl border border-ink-600 bg-ink-950 p-4 font-mono text-sm text-ink-100"
+      className="mt-6 overflow-x-auto rounded-xl border border-ink-600 bg-ink-850 p-4 font-mono text-sm text-ink-200"
       {...props}
     />
   ),

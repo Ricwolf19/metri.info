@@ -1,13 +1,12 @@
 import { DocsBrowser } from "@/components/docs/DocsBrowser";
 import { Container } from "@/components/shared/Container";
-import { getT } from "@/lib/i18n/server";
-import type { Locale } from "@/lib/i18n/config";
+import { createT, type Locale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
 import { CATEGORY_LABEL, DOC_CATEGORIES, getAllDocs } from "@/lib/docs";
 
 /** Docs landing — header + searchable, category-grouped card grid. */
-export const DocsIndex = async ({ locale }: { locale: Locale }) => {
-  const t = await getT();
+export const DocsIndex = ({ locale }: { locale: Locale }) => {
+  const t = createT(locale);
   const docs = getAllDocs(locale);
   const categories = DOC_CATEGORIES.map((category) => ({
     category,

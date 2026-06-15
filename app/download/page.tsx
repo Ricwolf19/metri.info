@@ -10,6 +10,6 @@ export const metadata: Metadata = {
   alternates: metaAlternates("download", "en"),
 };
 
-const DownloadPage = () => <DownloadView />;
+const DownloadPage = () => <DownloadView locale="en" />;
 
 export default DownloadPage;

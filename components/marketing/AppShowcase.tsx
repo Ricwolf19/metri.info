@@ -38,7 +38,7 @@ export const AppShowcase = () => {
           viewport={inViewOnce}
           transition={{ duration: 0.5 }}
         >
-          <span className="inline-flex items-center rounded-full border border-lime-400/20 bg-lime-400/10 px-3 py-1 text-xs font-medium text-accent">
+          <span className="inline-flex items-center rounded-full border border-ink-600 bg-ink-700 px-3 py-1 text-xs font-medium text-accent">
             {t("showcase.badge")}
           </span>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-balance text-ink-50 sm:text-4xl">
@@ -50,7 +50,7 @@ export const AppShowcase = () => {
           <ul className="mt-8 space-y-4">
             {FEATURES.map(({ icon: Icon, key }) => (
               <li key={key} className="flex items-start gap-3">
-                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-lime-400/10 text-accent">
+                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-ink-700 text-accent">
                   <Icon size={16} />
                 </span>
                 <span className="text-sm text-ink-200">{t(key)}</span>

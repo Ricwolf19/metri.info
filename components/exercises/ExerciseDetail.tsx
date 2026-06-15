@@ -78,7 +78,7 @@ export const ExerciseDetail = async ({
           <span className="rounded-md bg-ink-700 px-2.5 py-1 text-xs text-ink-200">
             {t("ex.equipmentLabel")}: {t(EQUIPMENT_LABEL[ex.equipment])}
           </span>
-          <span className="rounded-md border border-lime-400/25 bg-lime-400/10 px-2.5 py-1 text-xs text-accent">
+          <span className="rounded-md border border-ink-600 bg-ink-700 px-2.5 py-1 text-xs text-accent">
             {t(DIFFICULTY_LABEL[ex.difficulty])}
           </span>
         </div>

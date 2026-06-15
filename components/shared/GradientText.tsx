@@ -10,7 +10,7 @@ export const GradientText = ({
 }) => (
   <span
     className={cn(
-      "bg-gradient-to-r from-lime-300 via-lime-400 to-lime-600 bg-clip-text text-transparent",
+      "bg-gradient-to-br from-ink-50 via-ink-100 to-ink-400 bg-clip-text text-transparent",
       className,
     )}
   >

@@ -47,7 +47,7 @@ export const DocsBrowser = ({
           onChange={(e) => setQuery(e.target.value)}
           placeholder={t("docs.searchPlaceholder")}
           aria-label={t("docs.searchPlaceholder")}
-          className="h-12 w-full rounded-xl border border-ink-600 bg-ink-800 pr-4 pl-11 text-ink-50 placeholder:text-ink-400 focus:border-lime-400/40 focus:ring-2 focus:ring-lime-400/20 focus:outline-none"
+          className="h-12 w-full rounded-xl border border-ink-600 bg-ink-800 pr-4 pl-11 text-ink-50 placeholder:text-ink-400 focus:border-ink-500 focus:ring-2 focus:ring-ink-500/40 focus:outline-none"
         />
       </div>
 

@@ -33,7 +33,7 @@ export const ProgramsIndex = ({ locale }: { locale: Locale }) => {
                   {p.name[locale]}
                 </h2>
                 {p.featured && (
-                  <span className="rounded-md border border-lime-400/25 bg-lime-400/10 px-2 py-0.5 text-xs text-accent">
+                  <span className="rounded-md border border-ink-600 bg-ink-700 px-2 py-0.5 text-xs text-accent">
                     {t("program.featured")}
                   </span>
                 )}

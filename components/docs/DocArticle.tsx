@@ -10,8 +10,7 @@ import { DocsSidebar } from "@/components/docs/DocsSidebar";
 import { TableOfContents } from "@/components/docs/TableOfContents";
 import { Container } from "@/components/shared/Container";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getT } from "@/lib/i18n/server";
-import type { Locale } from "@/lib/i18n/config";
+import { createT, type Locale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
 import {
   CATEGORY_LABEL,
@@ -39,7 +38,7 @@ export const DocArticle = async ({
   const doc = getDoc(locale, slug);
   if (!doc) notFound();
 
-  const t = await getT();
+  const t = createT(locale);
   const basePath = routePath("docs", locale);
   const toc = getToc(doc.content);
   const { prev, next } = getDocSiblings(locale, slug);
@@ -128,7 +127,7 @@ export const DocArticle = async ({
             {prev ? (
               <Link
                 href={`${basePath}/${prev.slug}`}
-                className="group rounded-xl border border-ink-600 bg-ink-800 p-4 transition-colors hover:border-lime-400/40"
+                className="group rounded-xl border border-ink-600 bg-ink-800 p-4 transition-colors hover:border-ink-500"
               >
                 <span className="flex items-center gap-1 text-xs text-ink-400">
                   <ArrowLeftIcon size={13} /> {t("common.readMore")}
@@ -143,7 +142,7 @@ export const DocArticle = async ({
             {next && (
               <Link
                 href={`${basePath}/${next.slug}`}
-                className="group rounded-xl border border-ink-600 bg-ink-800 p-4 text-right transition-colors hover:border-lime-400/40"
+                className="group rounded-xl border border-ink-600 bg-ink-800 p-4 text-right transition-colors hover:border-ink-500"
               >
                 <span className="flex items-center justify-end gap-1 text-xs text-ink-400">
                   {t("common.readMore")} <ArrowRightIcon size={13} />

@@ -17,7 +17,7 @@ export const Hero = () => {
       {/* Ambient lime glow */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-[-10rem] left-1/2 h-[28rem] w-[44rem] -translate-x-1/2 rounded-full bg-lime-400/10 blur-[120px]"
+        className="pointer-events-none absolute top-[-10rem] left-1/2 h-[28rem] w-[44rem] -translate-x-1/2 rounded-full bg-ink-700 blur-[120px]"
       />
       <Container className="relative py-24 text-center sm:py-32">
         <motion.div
@@ -28,7 +28,7 @@ export const Hero = () => {
         >
           <motion.span
             variants={fadeInUp}
-            className="inline-flex items-center rounded-full border border-lime-400/20 bg-lime-400/10 px-3 py-1 text-xs font-medium text-accent"
+            className="inline-flex items-center rounded-full border border-ink-600 bg-ink-700 px-3 py-1 text-xs font-medium text-accent"
           >
             {t("hero.badge")}
           </motion.span>
@@ -53,7 +53,7 @@ export const Hero = () => {
           >
             <Link
               href={routePath("download", locale)}
-              className="inline-flex h-12 items-center gap-2 rounded-xl bg-accent-fill px-6 font-semibold text-ink-950 transition-transform hover:scale-[1.02]"
+              className="inline-flex h-12 items-center gap-2 rounded-xl bg-ink-50 px-6 font-semibold text-ink-900 transition-transform hover:scale-[1.02]"
             >
               <DownloadIcon size={18} />
               {t("hero.ctaDownload")}

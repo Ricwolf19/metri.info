@@ -7,14 +7,14 @@ import {
   SmartphoneIcon,
 } from "@/components/icons";
 import { Container } from "@/components/shared/Container";
-import { getLocale, getT } from "@/lib/i18n/server";
+import { createT, type Locale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
 import { appDistribution, mobileAppRepo } from "@/lib/site";
 
 /** Download page body — shared by /download (EN) and /es/descargar (ES).
  * While the app is in development it shows a "coming soon" state. */
-export const DownloadView = async () => {
-  const [t, locale] = await Promise.all([getT(), getLocale()]);
+export const DownloadView = ({ locale }: { locale: Locale }) => {
+  const t = createT(locale);
   const isDev = appDistribution.status === "development";
 
   return (
@@ -37,7 +37,7 @@ export const DownloadView = async () => {
         <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
             href={routePath("tools", locale)}
-            className="inline-flex h-12 items-center gap-2 rounded-xl bg-accent-fill px-6 font-semibold text-ink-950 transition-transform hover:scale-[1.02]"
+            className="inline-flex h-12 items-center gap-2 rounded-xl bg-ink-50 px-6 font-semibold text-ink-900 transition-transform hover:scale-[1.02]"
           >
             {t("download.devCtaTools")}
             <ArrowRightIcon size={18} />

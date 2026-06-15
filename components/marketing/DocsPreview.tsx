@@ -57,7 +57,7 @@ export const DocsPreview = () => {
           <AnimatedItem key={titleKey}>
             <Link href={routePath("docs", locale)} className="block h-full">
               <GlowCard className="h-full">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-lime-400/10 text-accent">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-ink-700 text-accent">
                   <Icon size={22} />
                 </span>
                 <h3 className="mt-4 text-lg font-semibold text-ink-50">
