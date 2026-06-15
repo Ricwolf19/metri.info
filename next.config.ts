@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     // Tree-shake big barrel imports for smaller client bundles (better INP/LCP).
-    optimizePackageImports: ["lucide-react", "framer-motion"],
+    optimizePackageImports: ["iconoir-react", "framer-motion"],
   },
   async headers() {
     return [
