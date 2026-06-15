@@ -33,6 +33,7 @@ export const en = {
   "nav.signIn": "Sign In",
   "nav.signUp": "Sign Up",
   "nav.github": "GitHub",
+  "nav.contact": "Contact",
   "nav.menu": "Menu",
   "nav.close": "Close",
 
@@ -139,8 +140,14 @@ export const en = {
   "calc.activity": "Activity level",
   "calc.formula": "Formula",
   "calc.result": "Result",
-  "calc.share": "Copy share link",
-  "calc.copied": "Link copied",
+  "calc.share": "Copy link",
+  "calc.copied": "Copied",
+  "calc.shareCta": "Share result",
+  "calc.shareTitle": "Share this result",
+  "calc.shareDesc":
+    "Anyone with the link sees the same inputs and result — no account needed.",
+  "calc.shareQrHint": "Scan to open on your phone",
+  "calc.shareNative": "Share…",
   "calc.metric": "Metric",
   "calc.imperial": "Imperial",
   // Calculator fields
@@ -205,10 +212,17 @@ export const en = {
   "calc.ffmi.superior": "Superior",
   "calc.ffmi.suspicious": "Exceptional",
   // Calculator page UI
+  "calc.eyebrow": "Free calculator",
+  "calc.overviewTitle": "Overview",
+  "calc.onThisPage": "On this page",
   "calc.howTitle": "How it's calculated",
   "calc.interpretTitle": "How to read your result",
   "calc.faqTitle": "Frequently asked questions",
   "calc.relatedTitle": "Related calculators",
+  "calc.trustTitle": "Free & open source",
+  "calc.trustBody":
+    "Every METRI calculator runs in your browser — no account, no paywall, no tracking.",
+  "calc.trustCta": "Browse all calculators",
 
   // Exercise library
   "ex.title": "Exercise Library",
@@ -302,6 +316,11 @@ export const en = {
   // Homepage CTAs
   "home.toolsCta": "See all calculators",
   "home.docsCta": "Browse the knowledge base",
+  // Homepage stat strip
+  "stats.calculators": "Free calculators",
+  "stats.private": "Runs in your browser",
+  "stats.account": "Accounts needed",
+  "stats.license": "Open-source (MIT)",
 
   // Coming-soon placeholder
   "soon.badge": "Coming soon",
@@ -319,12 +338,47 @@ export const en = {
   "footer.product": "Product",
   "footer.resources": "Resources",
   "footer.company": "Company",
+  "footer.calculators": "Calculators",
+  "footer.tagline2":
+    "Free, open-source fitness calculators and guides — no account, no paywall, built for lifters.",
   "footer.about": "About",
   "footer.privacy": "Privacy",
   "footer.terms": "Terms",
+  "footer.contact": "Contact",
   "footer.rights": "All rights reserved.",
   "footer.builtWith": "Free & open source.",
+  "footer.builtBy": "Built by",
   "footer.siteSource": "Website source",
+
+  // Contact page
+  "contact.title": "Get in touch",
+  "contact.subtitle":
+    "Questions, feedback, a bug report, or a partnership — send a message and it lands straight in my inbox.",
+  "contact.nameLabel": "Name",
+  "contact.emailLabel": "Email",
+  "contact.messageLabel": "Message",
+  "contact.namePlaceholder": "Your name",
+  "contact.emailPlaceholder": "you@example.com",
+  "contact.messagePlaceholder": "How can I help?",
+  "contact.submit": "Send message",
+  "contact.sending": "Sending…",
+  "contact.success": "Thanks! Your message is on its way — I'll reply soon.",
+  "contact.sendAnother": "Send another message",
+  "contact.developer": "Built and maintained by",
+  "contact.errorRequired": "This field is required.",
+  "contact.errorName": "Please enter your name.",
+  "contact.errorNameLong": "That name is too long.",
+  "contact.errorEmail": "Please enter a valid email address.",
+  "contact.errorMessage": "Please write at least a few words.",
+  "contact.errorMessageLong": "That message is too long.",
+  "contact.errorBot": "We couldn't verify you're human. Please try again.",
+  "contact.errorGeneric": "Your message couldn't be sent. Please try again.",
+  "contact.recaptchaProtected":
+    "This site is protected by reCAPTCHA and the Google",
+  "contact.recaptchaPrivacy": "Privacy Policy",
+  "contact.recaptchaAnd": "and",
+  "contact.recaptchaTerms": "Terms of Service",
+  "contact.recaptchaApply": "apply.",
 
   // Download page
   "download.title": "Get METRI on your phone",

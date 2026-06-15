@@ -18,6 +18,7 @@ export type RouteId =
   | "about"
   | "privacy"
   | "terms"
+  | "contact"
   | "signIn"
   | "signUp"
   // Calculators (filled in during Phase 4)
@@ -42,6 +43,7 @@ export const ROUTES: Record<RouteId, RouteEntry> = {
   about: { en: "/about", es: "/es/acerca" },
   privacy: { en: "/privacy", es: "/es/privacidad" },
   terms: { en: "/terms", es: "/es/terminos" },
+  contact: { en: "/contact", es: "/es/contacto" },
   signIn: { en: "/sign-in", es: "/es/iniciar-sesion" },
   signUp: { en: "/sign-up", es: "/es/registrarse" },
   ffmi: {

@@ -31,8 +31,8 @@ const sitemap = (): MetadataRoute.Sitemap => {
     entry(ROUTES[id].en, ROUTES[id].es, id === "home" ? 1 : 0.7, "weekly", now),
   );
 
-  // Legal / about — low priority, rarely changes
-  const legal: RouteId[] = ["about", "privacy", "terms"];
+  // Legal / about / contact — low priority, rarely changes
+  const legal: RouteId[] = ["about", "contact", "privacy", "terms"];
   const legalEntries = legal.map((id) =>
     entry(ROUTES[id].en, ROUTES[id].es, 0.3, "yearly", now),
   );

@@ -33,6 +33,7 @@ export const es: Record<TranslationKey, string> = {
   "nav.signIn": "Iniciar sesión",
   "nav.signUp": "Registrarse",
   "nav.github": "GitHub",
+  "nav.contact": "Contacto",
   "nav.menu": "Menú",
   "nav.close": "Cerrar",
 
@@ -145,7 +146,13 @@ export const es: Record<TranslationKey, string> = {
   "calc.formula": "Fórmula",
   "calc.result": "Resultado",
   "calc.share": "Copiar enlace",
-  "calc.copied": "Enlace copiado",
+  "calc.copied": "Copiado",
+  "calc.shareCta": "Compartir resultado",
+  "calc.shareTitle": "Comparte este resultado",
+  "calc.shareDesc":
+    "Cualquiera con el enlace ve los mismos datos y resultado — sin cuenta.",
+  "calc.shareQrHint": "Escanea para abrirlo en tu teléfono",
+  "calc.shareNative": "Compartir…",
   "calc.metric": "Métrico",
   "calc.imperial": "Imperial",
   // Campos de calculadora
@@ -210,10 +217,17 @@ export const es: Record<TranslationKey, string> = {
   "calc.ffmi.superior": "Superior",
   "calc.ffmi.suspicious": "Excepcional",
   // UI de la página de calculadora
+  "calc.eyebrow": "Calculadora gratis",
+  "calc.overviewTitle": "Resumen",
+  "calc.onThisPage": "En esta página",
   "calc.howTitle": "Cómo se calcula",
   "calc.interpretTitle": "Cómo leer tu resultado",
   "calc.faqTitle": "Preguntas frecuentes",
   "calc.relatedTitle": "Calculadoras relacionadas",
+  "calc.trustTitle": "Gratis y de código abierto",
+  "calc.trustBody":
+    "Cada calculadora de METRI corre en tu navegador — sin cuenta, sin muros de pago, sin rastreo.",
+  "calc.trustCta": "Ver todas las calculadoras",
 
   // Biblioteca de ejercicios
   "ex.title": "Biblioteca de ejercicios",
@@ -307,6 +321,11 @@ export const es: Record<TranslationKey, string> = {
   // CTAs de inicio
   "home.toolsCta": "Ver todas las calculadoras",
   "home.docsCta": "Explorar la base de conocimiento",
+  // Homepage stat strip
+  "stats.calculators": "Calculadoras gratis",
+  "stats.private": "Corre en tu navegador",
+  "stats.account": "Cuentas necesarias",
+  "stats.license": "Código abierto (MIT)",
 
   // Marcador "próximamente"
   "soon.badge": "Próximamente",
@@ -325,12 +344,49 @@ export const es: Record<TranslationKey, string> = {
   "footer.product": "Producto",
   "footer.resources": "Recursos",
   "footer.company": "Empresa",
+  "footer.calculators": "Calculadoras",
+  "footer.tagline2":
+    "Calculadoras y guías de fitness gratis y de código abierto — sin cuenta, sin muros de pago, hechas para lifters.",
   "footer.about": "Acerca de",
   "footer.privacy": "Privacidad",
   "footer.terms": "Términos",
+  "footer.contact": "Contacto",
   "footer.rights": "Todos los derechos reservados.",
   "footer.builtWith": "Gratis y de código abierto.",
+  "footer.builtBy": "Hecho por",
   "footer.siteSource": "Código del sitio",
+
+  // Contact page
+  "contact.title": "Hablemos",
+  "contact.subtitle":
+    "Dudas, comentarios, un error o una colaboración — envía un mensaje y llegará directo a mi bandeja de entrada.",
+  "contact.nameLabel": "Nombre",
+  "contact.emailLabel": "Correo",
+  "contact.messageLabel": "Mensaje",
+  "contact.namePlaceholder": "Tu nombre",
+  "contact.emailPlaceholder": "tu@ejemplo.com",
+  "contact.messagePlaceholder": "¿En qué puedo ayudarte?",
+  "contact.submit": "Enviar mensaje",
+  "contact.sending": "Enviando…",
+  "contact.success":
+    "¡Gracias! Tu mensaje va en camino — te responderé pronto.",
+  "contact.sendAnother": "Enviar otro mensaje",
+  "contact.developer": "Desarrollado y mantenido por",
+  "contact.errorRequired": "Este campo es obligatorio.",
+  "contact.errorName": "Escribe tu nombre.",
+  "contact.errorNameLong": "Ese nombre es demasiado largo.",
+  "contact.errorEmail": "Escribe un correo electrónico válido.",
+  "contact.errorMessage": "Escribe al menos unas palabras.",
+  "contact.errorMessageLong": "Ese mensaje es demasiado largo.",
+  "contact.errorBot":
+    "No pudimos verificar que eres humano. Inténtalo de nuevo.",
+  "contact.errorGeneric": "No se pudo enviar tu mensaje. Inténtalo de nuevo.",
+  "contact.recaptchaProtected":
+    "Este sitio está protegido por reCAPTCHA y se aplican la",
+  "contact.recaptchaPrivacy": "Política de Privacidad",
+  "contact.recaptchaAnd": "y los",
+  "contact.recaptchaTerms": "Términos de Servicio",
+  "contact.recaptchaApply": "de Google.",
 
   // Download page
   "download.title": "Lleva METRI en tu teléfono",
