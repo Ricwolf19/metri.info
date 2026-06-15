@@ -119,14 +119,26 @@ export const CALCULATORS: Record<CalcId, CalcConfig> = {
       const reps = num(v, "reps");
       const max = oneRm(w, reps, str(v, "formula") as OneRmFormula);
       if (max <= 0) return null;
+      const atPct = (pct: number) => Math.round(((max * pct) / 100) * 10) / 10;
       return {
         primaryLabelKey: "calc.result.oneRm",
         primaryValue: fmt(max),
         primaryUnit: "kg",
         rows: RM_PERCENTAGES.filter((p) => p.pct < 100).map((p) => ({
           label: `${p.pct}% · ${p.reps}`,
-          value: `${fmt(Math.round(((max * p.pct) / 100) * 10) / 10)} kg`,
+          value: `${fmt(atPct(p.pct))} kg`,
         })),
+        chart: {
+          kind: "bars",
+          max,
+          bars: RM_PERCENTAGES.map((p) => ({
+            label: `${p.pct}%`,
+            value: (max * p.pct) / 100,
+            display: `${fmt(atPct(p.pct))} kg`,
+            color: C.green,
+            highlight: p.pct === 100,
+          })),
+        },
       };
     },
   },
@@ -209,18 +221,48 @@ export const CALCULATORS: Record<CalcId, CalcConfig> = {
       });
       if (b <= 0) return null;
       const maintain = tdee(b, str(v, "activity") as ActivityLevel);
+      const cut = maintain - 500;
+      const bulk = maintain + 300;
       return {
         primaryLabelKey: "calc.result.tdee",
         primaryValue: fmt(maintain),
         primaryUnit: "kcal",
         rows: [
           { labelKey: "calc.result.bmr", value: `${fmt(b)} kcal` },
-          { labelKey: "calc.result.cut", value: `${fmt(maintain - 500)} kcal` },
-          {
-            labelKey: "calc.result.bulk",
-            value: `${fmt(maintain + 300)} kcal`,
-          },
+          { labelKey: "calc.result.cut", value: `${fmt(cut)} kcal` },
+          { labelKey: "calc.result.bulk", value: `${fmt(bulk)} kcal` },
         ],
+        chart: {
+          kind: "bars",
+          max: bulk,
+          bars: [
+            {
+              labelKey: "calc.result.bmr",
+              value: b,
+              display: fmt(b),
+              color: C.violet,
+            },
+            {
+              labelKey: "calc.goal.cut",
+              value: cut,
+              display: fmt(cut),
+              color: C.amber,
+            },
+            {
+              labelKey: "calc.goal.maintain",
+              value: maintain,
+              display: fmt(maintain),
+              color: C.green,
+              highlight: true,
+            },
+            {
+              labelKey: "calc.goal.bulk",
+              value: bulk,
+              display: fmt(bulk),
+              color: C.blue,
+            },
+          ],
+        },
       };
     },
   },
@@ -575,6 +617,14 @@ export const CALCULATORS: Record<CalcId, CalcConfig> = {
           { labelKey: "calc.result.milliliters", value: `${fmt(h.ml)} ml` },
           { labelKey: "calc.result.cups", value: fmt(h.cups) },
         ],
+        chart: {
+          kind: "ring",
+          value: h.liters,
+          goal: 4,
+          centerValue: fmt(h.liters),
+          centerUnit: "L",
+          color: C.blue,
+        },
       };
     },
   },
@@ -614,6 +664,7 @@ export const CALCULATORS: Record<CalcId, CalcConfig> = {
           label: `${p.plate} kg`,
           value: `× ${p.count}`,
         })),
+        chart: { kind: "barbell", plates: r.plates },
       };
     },
   },

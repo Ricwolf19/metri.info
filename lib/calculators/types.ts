@@ -37,8 +37,12 @@ export type ResultRow = {
   value: string;
 };
 
-/** Visual for the result panel. `scale` = value on a banded spectrum + gauge;
- * `split` = stacked proportional bar (e.g. macro breakdown). */
+/** Visual for the result panel.
+ * `scale` = value on a banded spectrum + gauge;
+ * `split` = stacked proportional bar (e.g. macro breakdown);
+ * `bars`  = labelled horizontal bars (e.g. 1RM strength curve, TDEE targets);
+ * `ring`  = radial fill of value toward a goal (e.g. hydration);
+ * `barbell` = a loaded-barbell graphic (plate calculator). */
 export type CalcChart =
   | {
       kind: "scale";
@@ -50,6 +54,30 @@ export type CalcChart =
   | {
       kind: "split";
       segments: { labelKey: TranslationKey; value: number; color: string }[];
+    }
+  | {
+      kind: "bars";
+      max: number;
+      bars: {
+        labelKey?: TranslationKey;
+        label?: string;
+        value: number;
+        display: string;
+        color: string;
+        highlight?: boolean;
+      }[];
+    }
+  | {
+      kind: "ring";
+      value: number;
+      goal: number;
+      centerValue: string;
+      centerUnit?: string;
+      color: string;
+    }
+  | {
+      kind: "barbell";
+      plates: { plate: number; count: number }[];
     };
 
 export type CalcResult = {
