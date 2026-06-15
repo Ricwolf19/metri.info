@@ -4,7 +4,15 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 
 import { CalcChart } from "@/components/calculators/CalcChart";
-import { CheckIcon, CopyIcon } from "@/components/icons";
+import { ShareDialog } from "@/components/calculators/ShareDialog";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useT } from "@/lib/i18n";
 import { CALCULATORS } from "@/lib/calculators/registry";
 import type { CalcId, CalcValues } from "@/lib/calculators/types";
@@ -22,7 +30,6 @@ export const Calculator = ({ id }: { id: CalcId }) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [copied, setCopied] = useState(false);
 
   // Values are always stored in METRIC (so compute + shareable URLs are stable).
   const initial = useMemo<CalcValues>(() => {
@@ -93,19 +100,8 @@ export const Calculator = ({ id }: { id: CalcId }) => {
 
   const result = useMemo(() => config.compute(values), [config, values]);
 
-  const share = useCallback(() => {
-    navigator.clipboard?.writeText(window.location.href).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1600);
-    });
-  }, []);
-
-  const inputClass =
-    "h-11 w-full rounded-lg border border-ink-600 bg-ink-900 px-3 text-ink-50 focus:border-ink-500 focus:ring-2 focus:ring-ink-500/40 focus:outline-none";
-
   return (
     <div className="grid gap-6 rounded-card border border-ink-600 bg-ink-800 p-6 md:grid-cols-2">
-      {/* Inputs */}
       <div className="space-y-5">
         {hasUnits && (
           <div className="inline-flex rounded-lg border border-ink-600 bg-ink-900 p-0.5 text-xs font-medium">
@@ -130,22 +126,26 @@ export const Calculator = ({ id }: { id: CalcId }) => {
         {config.fields.map((f) => {
           if (f.kind === "select") {
             return (
-              <label key={f.name} className="block">
+              <div key={f.name} className="block">
                 <span className="mb-1.5 block text-sm font-medium text-ink-200">
                   {t(f.labelKey)}
                 </span>
-                <select
+                <Select
                   value={String(values[f.name] ?? "")}
-                  onChange={(e) => update(f.name, e.target.value)}
-                  className={inputClass}
+                  onValueChange={(v) => update(f.name, v)}
                 >
-                  {f.options.map((o) => (
-                    <option key={o.value} value={o.value}>
-                      {t(o.labelKey)}
-                    </option>
-                  ))}
-                </select>
-              </label>
+                  <SelectTrigger aria-label={t(f.labelKey)}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {f.options.map((o) => (
+                      <SelectItem key={o.value} value={String(o.value)}>
+                        {t(o.labelKey)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             );
           }
 
@@ -177,7 +177,7 @@ export const Calculator = ({ id }: { id: CalcId }) => {
                   )}
                 </span>
               </div>
-              <input
+              <Input
                 type="number"
                 inputMode="decimal"
                 value={String(dispVal)}
@@ -187,7 +187,7 @@ export const Calculator = ({ id }: { id: CalcId }) => {
                 onChange={(e) =>
                   update(f.name, toMetric(Number(e.target.value), f.unit))
                 }
-                className={cn(inputClass, "font-mono")}
+                className="font-mono"
               />
               {hasRange && (
                 <input
@@ -208,7 +208,6 @@ export const Calculator = ({ id }: { id: CalcId }) => {
         })}
       </div>
 
-      {/* Result */}
       <div className="flex flex-col rounded-xl border border-ink-600 bg-ink-850 p-5">
         {result ? (
           <>
@@ -246,19 +245,9 @@ export const Calculator = ({ id }: { id: CalcId }) => {
                 ))}
               </ul>
             )}
-            <button
-              type="button"
-              onClick={share}
-              className={cn(
-                "mt-auto inline-flex items-center justify-center gap-2 self-start rounded-lg border border-ink-600 px-3 py-2 text-xs font-medium transition-colors",
-                copied
-                  ? "border-ink-500 text-accent"
-                  : "text-ink-300 hover:bg-ink-700 hover:text-ink-50",
-              )}
-            >
-              {copied ? <CheckIcon size={14} /> : <CopyIcon size={14} />}
-              {copied ? t("calc.copied") : t("calc.share")}
-            </button>
+            <div className="mt-6 border-t border-ink-700 pt-5">
+              <ShareDialog />
+            </div>
           </>
         ) : (
           <p className="m-auto text-sm text-ink-400">{t("common.loading")}</p>

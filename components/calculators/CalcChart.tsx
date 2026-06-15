@@ -231,7 +231,6 @@ export const CalcChart = ({ chart }: { chart: Chart }) => {
         {t(active.labelKey)}
       </span>
 
-      {/* Banded spectrum */}
       <div className="mt-3 w-full">
         <div className="relative h-2 w-full overflow-hidden rounded-full">
           <div className="flex h-full w-full">
