@@ -28,6 +28,14 @@ const COLUMNS: { heading: TranslationKey; links: FooterLink[] }[] = [
     heading: "footer.resources",
     links: [{ href: webAppRepo, key: "nav.github" }],
   },
+  {
+    heading: "footer.company",
+    links: [
+      { id: "about", key: "footer.about" },
+      { id: "privacy", key: "footer.privacy" },
+      { id: "terms", key: "footer.terms" },
+    ],
+  },
 ];
 
 const linkClass = "text-sm text-ink-300 transition-colors hover:text-ink-50";
@@ -41,7 +49,7 @@ export const Footer = () => {
 
   return (
     <footer className="border-t border-ink-600/60 bg-ink-850">
-      <Container className="grid gap-10 py-14 md:grid-cols-[1.5fr_repeat(2,1fr)]">
+      <Container className="grid gap-10 py-14 md:grid-cols-[1.5fr_repeat(3,1fr)]">
         <div className="max-w-xs">
           <Logo />
           <p className="mt-4 text-sm text-ink-300">{t("footer.tagline")}</p>

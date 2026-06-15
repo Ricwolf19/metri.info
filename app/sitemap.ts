@@ -31,6 +31,12 @@ const sitemap = (): MetadataRoute.Sitemap => {
     entry(ROUTES[id].en, ROUTES[id].es, id === "home" ? 1 : 0.7, "weekly", now),
   );
 
+  // Legal / about — low priority, rarely changes
+  const legal: RouteId[] = ["about", "privacy", "terms"];
+  const legalEntries = legal.map((id) =>
+    entry(ROUTES[id].en, ROUTES[id].es, 0.3, "yearly", now),
+  );
+
   // Calculators — highest-value pages
   const calcEntries = CALC_IDS.map((id) =>
     entry(ROUTES[id].en, ROUTES[id].es, 0.9, "monthly", now),
@@ -41,7 +47,7 @@ const sitemap = (): MetadataRoute.Sitemap => {
     entry(`/docs/${slug}`, `/es/docs/${slug}`, 0.6, "monthly", now),
   );
 
-  return [...staticEntries, ...calcEntries, ...docEntries];
+  return [...staticEntries, ...calcEntries, ...docEntries, ...legalEntries];
 };
 
 export default sitemap;
