@@ -69,6 +69,17 @@ const FFMI_NOTE: Record<string, TranslationKey> = {
   suspicious: "calc.ffmi.suspicious",
 };
 
+const C = {
+  blue: "#38bdf8",
+  green: "#22c55e",
+  lime: "#84cc16",
+  yellow: "#eab308",
+  orange: "#f97316",
+  amber: "#f59e0b",
+  red: "#ef4444",
+  violet: "#8b5cf6",
+};
+
 export const CALCULATORS: Record<CalcId, CalcConfig> = {
   onerm: {
     id: "onerm",
@@ -258,6 +269,22 @@ export const CALCULATORS: Record<CalcId, CalcConfig> = {
           { labelKey: "calc.result.carbs", value: `${fmt(m.carbs)} g` },
           { labelKey: "calc.result.fat", value: `${fmt(m.fat)} g` },
         ],
+        chart: {
+          kind: "split",
+          segments: [
+            {
+              labelKey: "calc.result.protein",
+              value: m.protein * 4,
+              color: C.green,
+            },
+            {
+              labelKey: "calc.result.carbs",
+              value: m.carbs * 4,
+              color: C.blue,
+            },
+            { labelKey: "calc.result.fat", value: m.fat * 9, color: C.amber },
+          ],
+        },
       };
     },
   },
@@ -323,11 +350,74 @@ export const CALCULATORS: Record<CalcId, CalcConfig> = {
         hipCm: num(v, "hip"),
       });
       if (bf <= 0) return null;
+      const bfSegments =
+        sex === "male"
+          ? [
+              {
+                upto: 6,
+                color: C.blue,
+                labelKey: "calc.bf.essential" as TranslationKey,
+              },
+              {
+                upto: 14,
+                color: C.green,
+                labelKey: "calc.bf.athlete" as TranslationKey,
+              },
+              {
+                upto: 18,
+                color: C.lime,
+                labelKey: "calc.bf.fitness" as TranslationKey,
+              },
+              {
+                upto: 25,
+                color: C.yellow,
+                labelKey: "calc.bf.average" as TranslationKey,
+              },
+              {
+                upto: 42,
+                color: C.red,
+                labelKey: "calc.bf.high" as TranslationKey,
+              },
+            ]
+          : [
+              {
+                upto: 14,
+                color: C.blue,
+                labelKey: "calc.bf.essential" as TranslationKey,
+              },
+              {
+                upto: 21,
+                color: C.green,
+                labelKey: "calc.bf.athlete" as TranslationKey,
+              },
+              {
+                upto: 25,
+                color: C.lime,
+                labelKey: "calc.bf.fitness" as TranslationKey,
+              },
+              {
+                upto: 32,
+                color: C.yellow,
+                labelKey: "calc.bf.average" as TranslationKey,
+              },
+              {
+                upto: 48,
+                color: C.red,
+                labelKey: "calc.bf.high" as TranslationKey,
+              },
+            ];
       return {
         primaryLabelKey: "calc.result.bodyFat",
         primaryValue: fmt(bf),
         primaryUnit: "%",
         noteKey: BF_NOTE[bodyFatCategory(bf, sex)],
+        chart: {
+          kind: "scale",
+          value: bf,
+          min: sex === "male" ? 3 : 8,
+          max: sex === "male" ? 42 : 48,
+          segments: bfSegments,
+        },
       };
     },
   },
@@ -370,6 +460,18 @@ export const CALCULATORS: Record<CalcId, CalcConfig> = {
             value: `${fmt(range.min)}–${fmt(range.max)} kg`,
           },
         ],
+        chart: {
+          kind: "scale",
+          value,
+          min: 15,
+          max: 40,
+          segments: [
+            { upto: 18.5, color: C.blue, labelKey: "calc.bmi.underweight" },
+            { upto: 25, color: C.green, labelKey: "calc.bmi.normal" },
+            { upto: 30, color: C.yellow, labelKey: "calc.bmi.overweight" },
+            { upto: 40, color: C.red, labelKey: "calc.bmi.obese" },
+          ],
+        },
       };
     },
   },
@@ -420,6 +522,20 @@ export const CALCULATORS: Record<CalcId, CalcConfig> = {
         primaryValue: fmt(r.normalized),
         noteKey: FFMI_NOTE[ffmiBand(r.normalized)],
         rows: [{ labelKey: "calc.result.ffmiRaw", value: fmt(r.raw) }],
+        chart: {
+          kind: "scale",
+          value: r.normalized,
+          min: 16,
+          max: 30,
+          segments: [
+            { upto: 18, color: C.red, labelKey: "calc.ffmi.below" },
+            { upto: 20, color: C.orange, labelKey: "calc.ffmi.average" },
+            { upto: 22, color: C.yellow, labelKey: "calc.ffmi.aboveAverage" },
+            { upto: 23, color: C.lime, labelKey: "calc.ffmi.excellent" },
+            { upto: 26, color: C.green, labelKey: "calc.ffmi.superior" },
+            { upto: 30, color: C.violet, labelKey: "calc.ffmi.suspicious" },
+          ],
+        },
       };
     },
   },

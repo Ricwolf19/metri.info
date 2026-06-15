@@ -13,8 +13,7 @@ import {
 } from "@/components/icons";
 import { GlowCard } from "@/components/shared/GlowCard";
 import { Container } from "@/components/shared/Container";
-import { getT } from "@/lib/i18n/server";
-import type { Locale } from "@/lib/i18n/config";
+import { createT, type Locale } from "@/lib/i18n/config";
 import { CALC_IDS, routePath, type CalcRouteId } from "@/lib/i18n/routes";
 import { CALC_CONTENT } from "@/lib/calculators/content";
 
@@ -29,8 +28,8 @@ const ICONS: Record<CalcRouteId, React.ComponentType<IconProps>> = {
   plates: CalculatorIcon,
 };
 
-export const ToolsIndex = async ({ locale }: { locale: Locale }) => {
-  const t = await getT();
+export const ToolsIndex = ({ locale }: { locale: Locale }) => {
+  const t = createT(locale);
 
   return (
     <Container className="py-16 sm:py-20">
@@ -52,7 +51,7 @@ export const ToolsIndex = async ({ locale }: { locale: Locale }) => {
               className="block h-full"
             >
               <GlowCard className="flex h-full flex-col">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-lime-400/10 text-accent">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-ink-700 text-accent">
                   <Icon size={22} />
                 </span>
                 <h2 className="mt-4 text-lg font-semibold text-ink-50">

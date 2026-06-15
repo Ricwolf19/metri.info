@@ -1,11 +1,11 @@
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { Calculator } from "@/components/calculators/Calculator";
 import { ArrowRightIcon } from "@/components/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Container } from "@/components/shared/Container";
-import { getT } from "@/lib/i18n/server";
-import type { Locale } from "@/lib/i18n/config";
+import { createT, type Locale } from "@/lib/i18n/config";
 import { CALC_IDS, routePath, type CalcRouteId } from "@/lib/i18n/routes";
 import { CALC_CONTENT } from "@/lib/calculators/content";
 import { absoluteUrl } from "@/lib/utils";
@@ -17,7 +17,7 @@ export const CalculatorPage = async ({
   locale: Locale;
   id: CalcRouteId;
 }) => {
-  const t = await getT();
+  const t = createT(locale);
   const c = CALC_CONTENT[id][locale];
   const toolsPath = routePath("tools", locale);
   const selfPath = routePath(id, locale);
@@ -80,7 +80,13 @@ export const CalculatorPage = async ({
 
         {/* Interactive calculator */}
         <div className="mt-8">
-          <Calculator id={id} />
+          <Suspense
+            fallback={
+              <div className="h-64 rounded-card border border-ink-600 bg-ink-800" />
+            }
+          >
+            <Calculator id={id} />
+          </Suspense>
         </div>
 
         {/* Content */}
@@ -103,7 +109,7 @@ export const CalculatorPage = async ({
               </p>
             ))}
             {c.formula && (
-              <pre className="mt-5 overflow-x-auto rounded-xl border border-ink-600 bg-ink-950 p-4 font-mono text-sm text-ink-100">
+              <pre className="mt-5 overflow-x-auto rounded-xl border border-ink-600 bg-ink-850 p-4 font-mono text-sm text-ink-200">
                 {c.formula}
               </pre>
             )}
@@ -149,7 +155,7 @@ export const CalculatorPage = async ({
                 <Link
                   key={r}
                   href={routePath(r, locale)}
-                  className="group flex items-center justify-between rounded-xl border border-ink-600 bg-ink-800 px-4 py-3 transition-colors hover:border-lime-400/40"
+                  className="group flex items-center justify-between rounded-xl border border-ink-600 bg-ink-800 px-4 py-3 transition-colors hover:border-ink-500"
                 >
                   <span className="font-medium text-ink-100">
                     {CALC_CONTENT[r][locale].h1}

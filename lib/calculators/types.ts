@@ -37,12 +37,28 @@ export type ResultRow = {
   value: string;
 };
 
+/** Visual for the result panel. `scale` = value on a banded spectrum + gauge;
+ * `split` = stacked proportional bar (e.g. macro breakdown). */
+export type CalcChart =
+  | {
+      kind: "scale";
+      value: number;
+      min: number;
+      max: number;
+      segments: { upto: number; color: string; labelKey: TranslationKey }[];
+    }
+  | {
+      kind: "split";
+      segments: { labelKey: TranslationKey; value: number; color: string }[];
+    };
+
 export type CalcResult = {
   primaryLabelKey: TranslationKey;
   primaryValue: string;
   primaryUnit?: string;
   rows?: ResultRow[];
   noteKey?: TranslationKey;
+  chart?: CalcChart;
 } | null;
 
 export type CalcValues = Record<string, number | string>;
