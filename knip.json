@@ -4,8 +4,7 @@
   "ignoreDependencies": [
     "@img/sharp-darwin-arm64",
     "@img/sharp-libvips-darwin-arm64",
-    "@secretlint/secretlint-rule-preset-recommend",
-    "class-variance-authority"
+    "@secretlint/secretlint-rule-preset-recommend"
   ],
   "rules": {
     "exports": "warn",
