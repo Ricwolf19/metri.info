@@ -26,6 +26,33 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 }
 
 /**
+ * Origins allowed to call the auth API. Better Auth rejects requests whose
+ * Origin isn't trusted; by default only `baseURL`'s origin counts. We must list
+ * BOTH the apex and `www` host of the site (the canonical 301 between them is
+ * exactly what broke sign-in), plus localhost in dev, plus any explicit
+ * comma-separated overrides via BETTER_AUTH_TRUSTED_ORIGINS.
+ */
+const trustedOrigins = (() => {
+  const origins = new Set<string>();
+  try {
+    const { protocol, host } = new URL(siteUrl);
+    const apex = host.replace(/^www\./, "");
+    origins.add(`${protocol}//${apex}`);
+    origins.add(`${protocol}//www.${apex}`);
+  } catch {
+    // siteUrl unparseable — rely on env override + localhost below.
+  }
+  for (const raw of process.env.BETTER_AUTH_TRUSTED_ORIGINS?.split(",") ?? []) {
+    const origin = raw.trim().replace(/\/$/, "");
+    if (origin) origins.add(origin);
+  }
+  if (process.env.NODE_ENV !== "production") {
+    origins.add("http://localhost:3000");
+  }
+  return [...origins];
+})();
+
+/**
  * Better Auth server config. Self-hosted on our Neon DB via Drizzle. Builds
  * fine without env vars (no connection at construction); sign-in works once
  * BETTER_AUTH_SECRET + DATABASE_URL are set. Each OAuth provider turns on only
@@ -33,6 +60,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
  */
 export const auth = betterAuth({
   baseURL: siteUrl,
+  trustedOrigins,
   secret: process.env.BETTER_AUTH_SECRET,
   database: drizzleAdapter(db, {
     provider: "pg",

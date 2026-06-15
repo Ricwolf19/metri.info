@@ -22,7 +22,6 @@ export const AuthShell = ({
 
   return (
     <div className="flex min-h-svh flex-col lg:flex-row">
-      {/* Brand panel (desktop) */}
       <aside className="relative hidden overflow-hidden bg-ink-950 lg:flex lg:w-[44%] lg:flex-col lg:justify-between lg:p-12">
         <div
           aria-hidden
@@ -59,7 +58,6 @@ export const AuthShell = ({
         </p>
       </aside>
 
-      {/* Form column */}
       <main className="flex flex-1 flex-col bg-ink-900">
         <div className="flex items-center justify-between px-5 py-4 sm:px-8">
           <Link href={home} className="inline-flex lg:hidden">

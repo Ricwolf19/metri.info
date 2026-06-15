@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { GithubIcon } from "@/components/icons";
+import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/client";
 import { useT } from "@/lib/i18n";
 
@@ -27,9 +28,6 @@ const GoogleMark = () => (
   </svg>
 );
 
-const btnClass =
-  "inline-flex h-11 w-full items-center justify-center gap-2.5 rounded-xl border border-ink-600 bg-ink-800 text-sm font-medium text-ink-100 transition-colors hover:bg-ink-700 disabled:opacity-60";
-
 export const SocialButtons = ({ callbackURL }: { callbackURL: string }) => {
   const t = useT();
   const [loading, setLoading] = useState<"google" | "github" | null>(null);
@@ -48,24 +46,26 @@ export const SocialButtons = ({ callbackURL }: { callbackURL: string }) => {
 
   return (
     <div className="flex flex-col gap-3">
-      <button
+      <Button
         type="button"
+        variant="secondary"
         disabled={loading !== null}
         onClick={() => go("google")}
-        className={btnClass}
+        className="w-full font-medium"
       >
         <GoogleMark />
         {t("auth.continueGoogle")}
-      </button>
-      <button
+      </Button>
+      <Button
         type="button"
+        variant="secondary"
         disabled={loading !== null}
         onClick={() => go("github")}
-        className={btnClass}
+        className="w-full font-medium"
       >
         <GithubIcon size={18} />
         {t("auth.continueGithub")}
-      </button>
+      </Button>
       {error && (
         <p role="alert" className="text-center text-xs text-red-500">
           {error}

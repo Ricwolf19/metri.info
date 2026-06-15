@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { AuthDivider, AuthInput } from "@/components/auth/AuthInput";
 import { SocialButtons } from "@/components/auth/SocialButtons";
+import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/client";
 import { useI18n } from "@/lib/i18n";
 import { routePath } from "@/lib/i18n/routes";
@@ -25,14 +26,21 @@ export const SignUpForm = () => {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    const res = await authClient.signUp.email({ name, email, password });
-    if (res.error) {
-      setError(res.error.message ?? t("auth.errorGeneric"));
+    try {
+      const res = await authClient.signUp.email({ name, email, password });
+      if (res.error) {
+        setError(res.error.message ?? t("auth.errorGeneric"));
+        return;
+      }
+      router.push(home);
+      router.refresh();
+    } catch {
+      // A thrown/hung request (network, CORS, 5xx) used to leave the spinner
+      // stuck forever — finally guarantees the button re-enables.
+      setError(t("auth.errorGeneric"));
+    } finally {
       setLoading(false);
-      return;
     }
-    router.push(home);
-    router.refresh();
   };
 
   return (
@@ -70,13 +78,9 @@ export const SignUpForm = () => {
             {error}
           </p>
         )}
-        <button
-          type="submit"
-          disabled={loading}
-          className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-ink-50 font-semibold text-ink-900 transition-transform hover:scale-[1.01] disabled:opacity-60"
-        >
+        <Button type="submit" disabled={loading} className="w-full">
           {loading ? t("common.loading") : t("auth.signUp")}
-        </button>
+        </Button>
       </form>
 
       <p className="text-center text-sm text-ink-300">
