@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 
-import { ComingSoon } from "@/components/shared/ComingSoon";
+import { ProgramsIndex } from "@/components/programs/ProgramsIndex";
 import { metaAlternates } from "@/lib/i18n/routes";
 
 export const metadata: Metadata = {
   title: "Programas de entrenamiento",
+  description:
+    "Programas de entrenamiento estructurados y gratis — rutinas de powerbuilding y cuerpo completo con ejercicios, series y reps por día.",
   alternates: metaAlternates("programs", "es"),
-  robots: { index: false },
 };
 
-const ProgramasPage = () => <ComingSoon titleKey="nav.programs" />;
+const ProgramasPage = () => <ProgramsIndex locale="es" />;
 
 export default ProgramasPage;

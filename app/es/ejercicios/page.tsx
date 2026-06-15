@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 
-import { ComingSoon } from "@/components/shared/ComingSoon";
+import { ExercisesIndex } from "@/components/exercises/ExercisesIndex";
 import { metaAlternates } from "@/lib/i18n/routes";
 
 export const metadata: Metadata = {
   title: "Biblioteca de ejercicios",
+  description:
+    "Biblioteca de ejercicios gratis con guías de técnica — músculos implicados, equipo y técnica paso a paso para los ejercicios que importan.",
   alternates: metaAlternates("exercises", "es"),
-  robots: { index: false },
 };
 
-const EjerciciosPage = () => <ComingSoon titleKey="nav.exercises" />;
+const EjerciciosPage = () => <ExercisesIndex locale="es" />;
 
 export default EjerciciosPage;

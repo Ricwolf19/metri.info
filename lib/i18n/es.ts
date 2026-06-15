@@ -46,11 +46,11 @@ export const es: Record<TranslationKey, string> = {
   "hero.ctaTools": "Probar las calculadoras",
 
   // App showcase
-  "showcase.badge": "App móvil",
-  "showcase.title": "Toda tu vida de entrenamiento,",
-  "showcase.highlight": "sin conexión primero.",
+  "showcase.badge": "También en el móvil",
+  "showcase.title": "¿Prefieres el teléfono?",
+  "showcase.highlight": "Llévalo contigo.",
   "showcase.subtitle":
-    "METRI funciona totalmente en tu dispositivo. Sin cuenta, sin que tus datos salgan del teléfono.",
+    "Todo en METRI es gratis en la web. Una app nativa está en camino como extra opcional — las mismas herramientas, sin conexión.",
   "showcase.feature1": "Calculadoras instantáneas que responden a cada tecla",
   "showcase.feature2":
     "Funciona 100% sin conexión — tus datos se quedan contigo",
@@ -164,6 +164,70 @@ export const es: Record<TranslationKey, string> = {
   "calc.faqTitle": "Preguntas frecuentes",
   "calc.relatedTitle": "Calculadoras relacionadas",
 
+  // Biblioteca de ejercicios
+  "ex.title": "Biblioteca de ejercicios",
+  "ex.subtitle":
+    "Guías de técnica para los ejercicios que importan — músculos implicados, equipo y técnica paso a paso.",
+  "ex.searchPlaceholder": "Buscar ejercicios…",
+  "ex.allCategories": "Todos los grupos musculares",
+  "ex.allEquipment": "Todo el equipo",
+  "ex.noResults": "No se encontraron ejercicios.",
+  "ex.instructions": "Cómo realizarlo",
+  "ex.primaryMuscles": "Músculos primarios",
+  "ex.secondaryMuscles": "Músculos secundarios",
+  "ex.equipmentLabel": "Equipo",
+  "ex.difficultyLabel": "Dificultad",
+  "ex.cat.chest": "Pecho",
+  "ex.cat.back": "Espalda",
+  "ex.cat.legs": "Pierna",
+  "ex.cat.shoulders": "Hombros",
+  "ex.cat.arms": "Brazos",
+  "ex.cat.core": "Core",
+  "ex.eq.barbell": "Barra",
+  "ex.eq.dumbbell": "Mancuerna",
+  "ex.eq.machine": "Máquina",
+  "ex.eq.cable": "Polea",
+  "ex.eq.bodyweight": "Peso corporal",
+  "ex.eq.kettlebell": "Kettlebell",
+  "ex.diff.beginner": "Principiante",
+  "ex.diff.intermediate": "Intermedio",
+  "ex.diff.advanced": "Avanzado",
+
+  // Músculos
+  "muscle.chest": "Pecho",
+  "muscle.upperBack": "Espalda alta",
+  "muscle.lats": "Dorsales",
+  "muscle.lowerBack": "Espalda baja",
+  "muscle.traps": "Trapecios",
+  "muscle.frontDelts": "Deltoides frontal",
+  "muscle.sideDelts": "Deltoides lateral",
+  "muscle.triceps": "Tríceps",
+  "muscle.biceps": "Bíceps",
+  "muscle.forearms": "Antebrazos",
+  "muscle.quads": "Cuádriceps",
+  "muscle.hamstrings": "Femorales",
+  "muscle.glutes": "Glúteos",
+  "muscle.calves": "Gemelos",
+  "muscle.abs": "Abdominales",
+  "muscle.obliques": "Oblicuos",
+  "muscle.core": "Core",
+
+  // Programas
+  "program.title": "Programas de entrenamiento",
+  "program.subtitle":
+    "Rutinas estructuradas de varias semanas — elige una meta y sigue un plan probado.",
+  "program.weeks": "{n} semanas",
+  "program.daysPerWeek": "{n} días/semana",
+  "program.day": "Día",
+  "program.sets": "Series",
+  "program.reps": "Reps",
+  "program.exercisesTitle": "El plan",
+  "program.featured": "Destacado",
+  "program.goal.strength": "Fuerza",
+  "program.goal.hypertrophy": "Hipertrofia",
+  "program.goal.powerbuilding": "Powerbuilding",
+  "program.goal.endurance": "Resistencia",
+
   // Docs preview
   "docs.title": "Base de conocimiento",
   "docs.subtitle":
@@ -224,13 +288,13 @@ export const es: Record<TranslationKey, string> = {
   "download.android": "Disponible en Google Play",
   "download.scan": "Escanea para descargar",
   // Estado en desarrollo
-  "download.devBadge": "En desarrollo",
-  "download.devTitle": "La app de METRI está por llegar",
+  "download.devBadge": "App móvil en desarrollo",
+  "download.devTitle": "Una app nativa está en camino",
   "download.devBody":
-    "Estamos dando los últimos toques a la app móvil. Las versiones de iOS y Android llegan pronto — mientras tanto, todas las calculadoras ya funcionan aquí en la web.",
-  "download.devCtaTools": "Usar las calculadoras web",
+    "METRI es gratis y de código abierto en la web — todas las calculadoras y guías, sin cuenta, para siempre. Una app nativa de iOS y Android está en desarrollo como extra opcional.",
+  "download.devCtaTools": "Explorar las calculadoras",
   "download.devCtaGithub": "Sigue el avance en GitHub",
-  "download.platformsTitle": "Dónde la encontrarás",
+  "download.platformsTitle": "Llegará a",
   "download.iosSoon": "App Store — próximamente",
   "download.androidSoon": "Google Play — próximamente",
   "download.notifyNote":
