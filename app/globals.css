@@ -113,6 +113,64 @@ body {
   background-color: rgb(var(--accent) / 0.25);
 }
 
+/* Every actionable control gets a pointer cursor on hover (Tailwind's preflight
+ * resets buttons to the default arrow). Disabled controls keep the default. */
+button:not(:disabled),
+[role="button"]:not(:disabled),
+label[for],
+summary {
+  cursor: pointer;
+}
+
+/*
+ * Above-the-fold reveal — pure CSS so the hero is in the SSR HTML and paints on
+ * first frame (no JS gate). Framer's `initial="hidden"` left the LCP text at
+ * opacity:0 until hydration → blank screen on slow mobile. This animates from a
+ * near-final state instead, and reduced-motion (below) snaps it fully visible.
+ */
+@keyframes metri-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-rise {
+  animation: metri-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Radix overlay / sheet / popover entrances (no tailwindcss-animate plugin). */
+@keyframes metri-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes metri-sheet-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes metri-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* Respect reduced motion for all Framer Motion / CSS animations. */
 @media (prefers-reduced-motion: reduce) {
   *,

@@ -17,6 +17,61 @@ export const Section = ({
   </section>
 );
 
+/**
+ * Page-level header (renders an `h1`) — eyebrow + title + optional subtitle.
+ * `align="center"` (default) suits index pages; `align="left"` suits split
+ * layouts. Extra nodes (badges, CTAs) can be passed as children.
+ */
+export const PageHeader = ({
+  eyebrow,
+  title,
+  highlight,
+  subtitle,
+  align = "center",
+  className,
+  children,
+}: {
+  eyebrow?: string;
+  title: string;
+  highlight?: string;
+  subtitle?: string;
+  align?: "center" | "left";
+  className?: string;
+  children?: React.ReactNode;
+}) => (
+  <div
+    className={cn(
+      align === "center" ? "mx-auto max-w-2xl text-center" : "max-w-2xl",
+      className,
+    )}
+  >
+    {eyebrow && (
+      <p className="text-sm font-semibold tracking-wide text-accent uppercase">
+        {eyebrow}
+      </p>
+    )}
+    <h1
+      className={cn(
+        "text-4xl font-bold tracking-tight text-balance text-ink-50 sm:text-5xl",
+        eyebrow && "mt-3",
+      )}
+    >
+      {title} {highlight && <GradientText>{highlight}</GradientText>}
+    </h1>
+    {subtitle && (
+      <p
+        className={cn(
+          "mt-5 text-lg text-pretty text-ink-300",
+          align === "center" && "mx-auto max-w-xl",
+        )}
+      >
+        {subtitle}
+      </p>
+    )}
+    {children}
+  </div>
+);
+
 /** Eyebrow + heading + optional subtitle, centered. */
 export const SectionHeading = ({
   eyebrow,
