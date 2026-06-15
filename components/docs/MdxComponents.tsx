@@ -3,6 +3,14 @@ import type { MDXComponents } from "mdx/types";
 
 import { Callout } from "@/components/docs/Callout";
 import { MuscleBadge } from "@/components/docs/MuscleBadge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 /** Tailwind-styled HTML elements + custom components available inside MDX docs. */
 export const mdxComponents: MDXComponents = {
@@ -64,20 +72,12 @@ export const mdxComponents: MDXComponents = {
     />
   ),
   hr: () => <hr className="my-10 border-ink-600" />,
-  table: (props) => (
-    <div className="mt-6 overflow-x-auto">
-      <table className="w-full border-collapse text-sm" {...props} />
-    </div>
-  ),
-  th: (props) => (
-    <th
-      className="border-b border-ink-600 px-3 py-2 text-left font-semibold text-ink-50"
-      {...props}
-    />
-  ),
-  td: (props) => (
-    <td className="border-b border-ink-700 px-3 py-2 text-ink-200" {...props} />
-  ),
+  table: (props) => <Table {...props} />,
+  thead: (props) => <TableHeader {...props} />,
+  tbody: (props) => <TableBody {...props} />,
+  tr: (props) => <TableRow {...props} />,
+  th: (props) => <TableHead {...props} />,
+  td: (props) => <TableCell {...props} />,
   Callout,
   MuscleBadge,
 };

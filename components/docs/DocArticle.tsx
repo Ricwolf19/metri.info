@@ -4,7 +4,11 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 
-import { ArrowLeftIcon, ArrowRightIcon } from "@/components/icons";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ChevronRightIcon,
+} from "@/components/icons";
 import { mdxComponents } from "@/components/docs/MdxComponents";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
 import { TableOfContents } from "@/components/docs/TableOfContents";
@@ -40,6 +44,7 @@ export const DocArticle = async ({
 
   const t = createT(locale);
   const basePath = routePath("docs", locale);
+  const toolsPath = routePath("tools", locale);
   const toc = getToc(doc.content);
   const { prev, next } = getDocSiblings(locale, slug);
   const allDocs = getAllDocs(locale);
@@ -84,8 +89,7 @@ export const DocArticle = async ({
   return (
     <Container className="py-12">
       <JsonLd data={jsonLd} />
-      <div className="grid gap-10 lg:grid-cols-[220px_1fr] xl:grid-cols-[220px_1fr_200px]">
-        {/* Sidebar */}
+      <div className="grid gap-10 lg:grid-cols-[220px_1fr] xl:grid-cols-[220px_1fr_220px]">
         <aside className="hidden lg:block">
           <div className="sticky top-24">
             <DocsSidebar
@@ -96,13 +100,12 @@ export const DocArticle = async ({
           </div>
         </aside>
 
-        {/* Article */}
         <article className="min-w-0">
-          <nav className="flex items-center gap-2 text-sm text-ink-400">
+          <nav className="flex items-center gap-1.5 text-sm text-ink-400">
             <Link href={basePath} className="hover:text-ink-200">
               {t("docs.title")}
             </Link>
-            <span>/</span>
+            <ChevronRightIcon size={14} />
             <span className="text-ink-300">
               {t(CATEGORY_LABEL[doc.meta.category])}
             </span>
@@ -122,7 +125,6 @@ export const DocArticle = async ({
             {t("docs.disclaimer")}
           </p>
 
-          {/* Prev / next */}
           <div className="mt-10 grid gap-4 sm:grid-cols-2">
             {prev ? (
               <Link
@@ -155,10 +157,24 @@ export const DocArticle = async ({
           </div>
         </article>
 
-        {/* TOC */}
         <aside className="hidden xl:block">
-          <div className="sticky top-24">
+          <div className="sticky top-24 space-y-8">
             <TableOfContents items={toc} />
+            <div className="rounded-card border border-ink-600 bg-ink-800 p-5">
+              <p className="font-semibold text-ink-50">
+                {t("calc.trustTitle")}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-ink-300">
+                {t("calc.trustBody")}
+              </p>
+              <Link
+                href={toolsPath}
+                className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:underline"
+              >
+                {t("calc.trustCta")}
+                <ArrowRightIcon size={15} />
+              </Link>
+            </div>
           </div>
         </aside>
       </div>

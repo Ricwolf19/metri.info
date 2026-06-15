@@ -29,18 +29,21 @@ export const TableOfContents = ({ items }: { items: TocItem[] }) => {
   if (items.length === 0) return null;
 
   return (
-    <nav aria-label={t("docs.onThisPage")} className="text-sm">
-      <p className="font-semibold text-ink-50">{t("docs.onThisPage")}</p>
-      <ul className="mt-3 space-y-2">
+    <nav aria-label={t("docs.onThisPage")}>
+      <p className="text-xs font-semibold tracking-wider text-ink-400 uppercase">
+        {t("docs.onThisPage")}
+      </p>
+      <ul className="mt-3 space-y-2 border-l border-ink-600">
         {items.map((item) => (
-          <li key={item.id} className={cn(item.depth === 3 && "pl-3")}>
+          <li key={item.id}>
             <a
               href={`#${item.id}`}
               className={cn(
-                "block transition-colors",
+                "-ml-px block border-l py-1 pl-4 text-sm transition-colors",
+                item.depth === 3 && "pl-7",
                 activeId === item.id
-                  ? "text-accent"
-                  : "text-ink-400 hover:text-ink-100",
+                  ? "border-accent text-ink-100"
+                  : "border-transparent text-ink-400 hover:border-ink-400 hover:text-ink-100",
               )}
             >
               {item.text}

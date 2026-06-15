@@ -1,5 +1,6 @@
 import { DocsBrowser } from "@/components/docs/DocsBrowser";
 import { Container } from "@/components/shared/Container";
+import { PageHeader } from "@/components/shared/Section";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
 import { CATEGORY_LABEL, DOC_CATEGORIES, getAllDocs } from "@/lib/docs";
@@ -15,12 +16,12 @@ export const DocsIndex = ({ locale }: { locale: Locale }) => {
 
   return (
     <Container className="py-16 sm:py-20">
-      <div className="mx-auto mb-12 max-w-2xl text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-ink-50 sm:text-5xl">
-          {t("docs.title")}
-        </h1>
-        <p className="mt-4 text-lg text-ink-300">{t("docs.subtitle")}</p>
-      </div>
+      <PageHeader
+        eyebrow={t("nav.docs")}
+        title={t("docs.title")}
+        subtitle={t("docs.subtitle")}
+        className="mb-12"
+      />
 
       <DocsBrowser
         docs={docs}
