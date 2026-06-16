@@ -24,6 +24,12 @@ import {
   getDocSiblings,
   getToc,
 } from "@/lib/docs";
+import {
+  DOC_AUTHOR,
+  DOC_LAST_REVIEWED,
+  DOC_SOURCES,
+  HEALTH_DOCS,
+} from "@/lib/docs/sources";
 import { absoluteUrl } from "@/lib/utils";
 
 const categoryInfo = () =>
@@ -49,6 +55,14 @@ export const DocArticle = async ({
   const { prev, next } = getDocSiblings(locale, slug);
   const allDocs = getAllDocs(locale);
 
+  const sources = DOC_SOURCES[slug] ?? [];
+  const isHealth = HEALTH_DOCS.has(slug);
+  const reviewedDate = new Date(DOC_LAST_REVIEWED).toLocaleDateString(locale, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   const { content } = await compileMDX({
     source: doc.content,
     components: mdxComponents,
@@ -60,15 +74,28 @@ export const DocArticle = async ({
   const jsonLd = [
     {
       "@context": "https://schema.org",
-      "@type": "Article",
+      // Health/nutrition/recovery topics are YMYL → MedicalWebPage with a named
+      // author/reviewer and a last-reviewed date. Training/intro stay Article.
+      "@type": isHealth ? "MedicalWebPage" : "Article",
       headline: doc.meta.title,
+      name: doc.meta.title,
       description: doc.meta.description,
       articleSection: t(CATEGORY_LABEL[doc.meta.category]),
       inLanguage: locale,
       isAccessibleForFree: true,
-      author: { "@type": "Organization", name: "Metri" },
+      lastReviewed: DOC_LAST_REVIEWED,
+      dateModified: DOC_LAST_REVIEWED,
+      author: { "@type": "Person", name: DOC_AUTHOR.name, url: DOC_AUTHOR.url },
+      reviewedBy: {
+        "@type": "Person",
+        name: DOC_AUTHOR.name,
+        url: DOC_AUTHOR.url,
+      },
       publisher: { "@type": "Organization", name: "Metri" },
       mainEntityOfPage: absoluteUrl(`${basePath}/${slug}`),
+      ...(sources.length > 0
+        ? { citation: sources.map((s) => s.url ?? s.text) }
+        : {}),
     },
     {
       "@context": "https://schema.org",
@@ -118,8 +145,51 @@ export const DocArticle = async ({
           <p className="mt-2 font-mono text-xs text-ink-400">
             {t("docs.readingTime", { minutes: doc.meta.readingMinutes })}
           </p>
+          <p className="mt-3 text-sm text-ink-400">
+            {t("docs.reviewedBy")}{" "}
+            <a
+              href={DOC_AUTHOR.url}
+              rel="author noreferrer noopener"
+              target="_blank"
+              className="font-medium text-ink-200 underline-offset-2 hover:text-accent hover:underline"
+            >
+              {DOC_AUTHOR.name}
+            </a>
+            <span className="px-1.5 text-ink-600">·</span>
+            {t("docs.lastUpdated")}{" "}
+            <time dateTime={DOC_LAST_REVIEWED}>{reviewedDate}</time>
+          </p>
 
           <div className="mt-8">{content}</div>
+
+          {sources.length > 0 && (
+            <section className="mt-12">
+              <h2 className="text-xl font-bold text-ink-50">
+                {t("docs.sourcesTitle")}
+              </h2>
+              <ul className="mt-4 space-y-2.5">
+                {sources.map((s) => (
+                  <li
+                    key={s.text}
+                    className="text-sm leading-relaxed text-ink-300"
+                  >
+                    {s.url ? (
+                      <a
+                        href={s.url}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className="underline-offset-2 hover:text-accent hover:underline"
+                      >
+                        {s.text}
+                      </a>
+                    ) : (
+                      s.text
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           <p className="mt-12 rounded-xl border border-ink-600 bg-ink-850 p-4 text-xs text-ink-400">
             {t("docs.disclaimer")}

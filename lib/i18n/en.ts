@@ -320,6 +320,12 @@ export const en = {
   "calc.howTitle": "How it's calculated",
   "calc.interpretTitle": "How to read your result",
   "calc.faqTitle": "Frequently asked questions",
+  "calc.sourcesTitle": "Sources & references",
+  "calc.reviewedBy": "Written & reviewed by",
+  "calc.lastUpdated": "Last updated",
+  "calc.disclaimerTitle": "Medical disclaimer",
+  "calc.disclaimer":
+    "This calculator is for general educational purposes only and is not medical advice. Estimates are based on population formulas and may not fit your individual situation. Consult a qualified healthcare or fitness professional before making health, nutrition or training decisions.",
   "calc.relatedTitle": "Related calculators",
   "calc.trustTitle": "Free & open source",
   "calc.trustBody":
@@ -351,6 +357,9 @@ export const en = {
   "docs.noResults": "No results found.",
   "docs.readingTime": "{minutes} min read",
   "docs.onThisPage": "On this page",
+  "docs.sourcesTitle": "Sources & references",
+  "docs.reviewedBy": "Written & reviewed by",
+  "docs.lastUpdated": "Last updated",
   "docs.disclaimer":
     "Educational content only. Not medical advice — consult a professional for your situation.",
   "docs.category.gettingStarted": "Getting started",

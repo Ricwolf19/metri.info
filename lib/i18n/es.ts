@@ -328,6 +328,12 @@ export const es: Record<TranslationKey, string> = {
   "calc.howTitle": "Cómo se calcula",
   "calc.interpretTitle": "Cómo leer tu resultado",
   "calc.faqTitle": "Preguntas frecuentes",
+  "calc.sourcesTitle": "Fuentes y referencias",
+  "calc.reviewedBy": "Escrito y revisado por",
+  "calc.lastUpdated": "Última actualización",
+  "calc.disclaimerTitle": "Aviso médico",
+  "calc.disclaimer":
+    "Esta calculadora es solo para fines educativos generales y no es consejo médico. Las estimaciones se basan en fórmulas poblacionales y pueden no ajustarse a tu situación individual. Consulta a un profesional de la salud o del fitness cualificado antes de tomar decisiones de salud, nutrición o entrenamiento.",
   "calc.relatedTitle": "Calculadoras relacionadas",
   "calc.trustTitle": "Gratis y de código abierto",
   "calc.trustBody":
@@ -359,6 +365,9 @@ export const es: Record<TranslationKey, string> = {
   "docs.noResults": "Sin resultados.",
   "docs.readingTime": "{minutes} min de lectura",
   "docs.onThisPage": "En esta página",
+  "docs.sourcesTitle": "Fuentes y referencias",
+  "docs.reviewedBy": "Escrito y revisado por",
+  "docs.lastUpdated": "Última actualización",
   "docs.disclaimer":
     "Contenido educativo. No es consejo médico — consulta a un profesional para tu caso.",
   "docs.category.gettingStarted": "Primeros pasos",

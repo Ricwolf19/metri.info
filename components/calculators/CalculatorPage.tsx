@@ -10,6 +10,12 @@ import { createT, type Locale } from "@/lib/i18n/config";
 import { CALC_IDS, routePath, type CalcRouteId } from "@/lib/i18n/routes";
 import { CALC_CONTENT } from "@/lib/calculators/content";
 import { isPopularCalc } from "@/lib/calculators/registry";
+import {
+  CALC_AUTHOR,
+  CALC_LAST_REVIEWED,
+  CALC_SOURCES,
+  HEALTH_CALCS,
+} from "@/lib/calculators/sources";
 import { absoluteUrl } from "@/lib/utils";
 
 const SECTION = {
@@ -17,6 +23,7 @@ const SECTION = {
   how: "how-it-works",
   interpret: "interpret",
   faq: "faq",
+  sources: "sources",
 } as const;
 
 export const CalculatorPage = async ({
@@ -32,11 +39,22 @@ export const CalculatorPage = async ({
   const selfPath = routePath(id, locale);
   const related = CALC_IDS.filter((x) => x !== id).slice(0, 4);
 
+  const sources = CALC_SOURCES[id];
+  const isHealth = HEALTH_CALCS.has(id);
+  const reviewedDate = new Date(CALC_LAST_REVIEWED).toLocaleDateString(locale, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   const toc: { id: string; label: string }[] = [
     { id: SECTION.overview, label: t("calc.overviewTitle") },
     { id: SECTION.how, label: t("calc.howTitle") },
     { id: SECTION.interpret, label: t("calc.interpretTitle") },
     { id: SECTION.faq, label: t("calc.faqTitle") },
+    ...(sources.length > 0
+      ? [{ id: SECTION.sources, label: t("calc.sourcesTitle") }]
+      : []),
   ];
 
   const jsonLd = [
@@ -74,6 +92,33 @@ export const CalculatorPage = async ({
         item: absoluteUrl(item.url),
       })),
     },
+    ...(isHealth
+      ? [
+          {
+            "@context": "https://schema.org",
+            "@type": "MedicalWebPage",
+            name: c.h1,
+            url: absoluteUrl(selfPath),
+            description: c.seoDescription,
+            inLanguage: locale,
+            lastReviewed: CALC_LAST_REVIEWED,
+            datePublished: CALC_LAST_REVIEWED,
+            dateModified: CALC_LAST_REVIEWED,
+            author: {
+              "@type": "Person",
+              name: CALC_AUTHOR.name,
+              url: CALC_AUTHOR.url,
+            },
+            reviewedBy: {
+              "@type": "Person",
+              name: CALC_AUTHOR.name,
+              url: CALC_AUTHOR.url,
+            },
+            publisher: { "@type": "Organization", name: "Metri" },
+            citation: sources.map((s) => s.url ?? s.text),
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -107,6 +152,21 @@ export const CalculatorPage = async ({
         </h1>
         <p className="mt-3 max-w-2xl text-lg text-pretty text-ink-300">
           {c.tagline}
+        </p>
+
+        <p className="mt-4 text-sm text-ink-400">
+          {t("calc.reviewedBy")}{" "}
+          <a
+            href={CALC_AUTHOR.url}
+            rel="author noreferrer noopener"
+            target="_blank"
+            className="font-medium text-ink-200 underline-offset-2 hover:text-accent hover:underline"
+          >
+            {CALC_AUTHOR.name}
+          </a>
+          <span className="px-1.5 text-ink-600">·</span>
+          {t("calc.lastUpdated")}{" "}
+          <time dateTime={CALC_LAST_REVIEWED}>{reviewedDate}</time>
         </p>
 
         <div className="mt-8">
@@ -189,6 +249,46 @@ export const CalculatorPage = async ({
                 ))}
               </div>
             </section>
+
+            {sources.length > 0 && (
+              <section id={SECTION.sources} className="scroll-mt-24">
+                <h2 className="text-2xl font-bold text-ink-50">
+                  {t("calc.sourcesTitle")}
+                </h2>
+                <ul className="mt-4 space-y-2.5">
+                  {sources.map((s) => (
+                    <li
+                      key={s.text}
+                      className="text-sm leading-relaxed text-ink-300"
+                    >
+                      {s.url ? (
+                        <a
+                          href={s.url}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className="underline-offset-2 hover:text-accent hover:underline"
+                        >
+                          {s.text}
+                        </a>
+                      ) : (
+                        s.text
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {isHealth && (
+              <section className="rounded-xl border border-ink-700 bg-ink-850 p-5">
+                <p className="text-xs font-semibold tracking-wider text-ink-400 uppercase">
+                  {t("calc.disclaimerTitle")}
+                </p>
+                <p className="mt-2 text-xs leading-relaxed text-ink-400">
+                  {t("calc.disclaimer")}
+                </p>
+              </section>
+            )}
           </article>
 
           <aside className="hidden lg:block">

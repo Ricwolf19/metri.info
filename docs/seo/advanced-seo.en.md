@@ -18,6 +18,7 @@
 - [Content & trust elements by page type](#content--trust-elements-by-page-type)
 - [10. Pre-launch checklist](#10-pre-launch-checklist)
 - [11. Concept reference — what / why / impact / code](#11-concept-reference--what--why--impact--code)
+- [12. Further reading — authoritative sources](#12-further-reading--authoritative-sources)
 
 ---
 
@@ -468,3 +469,34 @@ export default function OG() { return new ImageResponse(<Card/>, size); }
 
 > For the analytics that measure all of the above, see
 > [`analytics.en.md`](./analytics.en.md).
+
+---
+
+## 12. Further reading — authoritative sources
+
+Keep these bookmarked; they are the **canonical, always-current** references.
+When SEO advice conflicts, these win.
+
+- **[Google SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide)**
+  — Google's official fundamentals: how Search discovers, crawls and ranks
+  pages, and the practices Google itself recommends. The "is my site doing the
+  basics right?" reference. (Part of **Google Search Central**, the full
+  developer SEO documentation.)
+- **[Search Console — Performance report](https://search.google.com/search-console/performance/)**
+  — your site's **real** search data: the queries you appear for, impressions,
+  clicks, CTR and average position. This is the empirical feedback loop — it
+  tells you which keywords actually rank, instead of guessing.
+- **[schema.org](https://schema.org)** — the vocabulary for structured data:
+  every type and property you can put in JSON-LD (`Article`, `FAQPage`,
+  `BreadcrumbList`, `MedicalWebPage`, `Product`, `LocalBusiness`, …). The
+  dictionary behind section 5. Pair it with Google's **Rich Results Test** to
+  validate.
+- **[Search Quality Rater Guidelines (PDF)](https://services.google.com/fh/files/misc/hsw-sqrg.pdf)**
+  — the manual Google's human quality raters use. It defines **E-E-A-T**
+  (Experience, Expertise, Authoritativeness, Trust), **YMYL** (Your Money or
+  Your Life), "Page Quality" and "Needs Met". The authoritative explanation of
+  what Google means by "quality" — essential for health/finance/legal pages.
+
+Supporting references already used throughout this guide: **web.dev** (Core Web
+Vitals), **MDN** (semantic HTML), and the **PageSpeed Insights** / **Rich
+Results Test** tools in section "Testing tools".

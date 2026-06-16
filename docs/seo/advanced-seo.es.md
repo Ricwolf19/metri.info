@@ -18,6 +18,7 @@
 - [Contenido y elementos de confianza por tipo de página](#contenido-y-elementos-de-confianza-por-tipo-de-página)
 - [10. Checklist previo al lanzamiento](#10-checklist-previo-al-lanzamiento)
 - [11. Referencia de conceptos — qué es / qué brinda / en qué afecta / código](#11-referencia-de-conceptos--qué-es--qué-brinda--en-qué-afecta--código)
+- [12. Lecturas recomendadas — fuentes autorizadas](#12-lecturas-recomendadas--fuentes-autorizadas)
 
 ---
 
@@ -482,3 +483,35 @@ export default function OG() { return new ImageResponse(<Card/>, size); }
 
 > Para la analítica que mide todo lo anterior, ver
 > [`analytics.es.md`](./analytics.es.md).
+
+---
+
+## 12. Lecturas recomendadas — fuentes autorizadas
+
+Tenlas a mano; son las referencias **canónicas y siempre actuales**. Cuando un
+consejo de SEO entre en conflicto, estas mandan.
+
+- **[Guía de inicio de SEO de Google](https://developers.google.com/search/docs/fundamentals/seo-starter-guide)**
+  — los fundamentos oficiales de Google: cómo Search descubre, rastrea y rankea
+  páginas, y las prácticas que el propio Google recomienda. La referencia de
+  "¿mi sitio hace bien lo básico?". (Parte de **Google Search Central**, la
+  documentación de SEO para desarrolladores.)
+- **[Search Console — informe de Rendimiento](https://search.google.com/search-console/performance/)**
+  — los datos de búsqueda **reales** de tu sitio: las consultas en las que
+  apareces, impresiones, clics, CTR y posición media. Es el bucle de
+  retroalimentación empírico — te dice qué keywords posicionan de verdad, en
+  vez de adivinar.
+- **[schema.org](https://schema.org)** — el vocabulario de datos estructurados:
+  cada tipo y propiedad que puedes poner en JSON-LD (`Article`, `FAQPage`,
+  `BreadcrumbList`, `MedicalWebPage`, `Product`, `LocalBusiness`, …). El
+  diccionario detrás de la sección 5. Combínalo con el **Test de Resultados
+  Enriquecidos** de Google para validar.
+- **[Search Quality Rater Guidelines (PDF)](https://services.google.com/fh/files/misc/hsw-sqrg.pdf)**
+  — el manual que usan los evaluadores humanos de calidad de Google. Define
+  **E-E-A-T** (Experiencia, Pericia, Autoridad, Confianza), **YMYL** (Your Money
+  or Your Life), "Page Quality" y "Needs Met". La explicación autorizada de qué
+  entiende Google por "calidad" — esencial para páginas de salud/finanzas/legal.
+
+Referencias de apoyo ya usadas a lo largo de esta guía: **web.dev** (Core Web
+Vitals), **MDN** (HTML semántico) y las herramientas **PageSpeed Insights** /
+**Test de Resultados Enriquecidos** de la sección "Herramientas de prueba".
