@@ -43,7 +43,7 @@ export const DialogContent = ({
     <DialogPrimitive.Overlay className="fixed inset-0 z-50 [animation:metri-overlay-in_0.2s_ease-out] bg-ink-950/70 backdrop-blur-sm" />
     <DialogPrimitive.Content
       className={cn(
-        "fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 [animation:metri-pop-in_0.2s_cubic-bezier(0.22,1,0.36,1)] rounded-card border border-ink-600 bg-ink-900 p-6 shadow-2xl focus:outline-none",
+        "fixed top-1/2 left-1/2 z-50 max-h-[90dvh] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 [animation:metri-pop-in_0.2s_cubic-bezier(0.22,1,0.36,1)] overflow-y-auto rounded-card border border-ink-600 bg-ink-900 p-6 shadow-2xl focus:outline-none",
         className,
       )}
       {...props}

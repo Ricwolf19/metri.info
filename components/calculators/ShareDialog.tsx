@@ -3,7 +3,12 @@
 import { QRCodeSVG } from "qrcode.react";
 import { useState, useSyncExternalStore } from "react";
 
-import { CheckIcon, CopyIcon, ShareIcon } from "@/components/icons";
+import {
+  CheckIcon,
+  CopyIcon,
+  DownloadIcon,
+  ShareIcon,
+} from "@/components/icons";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +17,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useT } from "@/lib/i18n";
+import type { CalcId } from "@/lib/calculators/types";
+import type { Locale } from "@/lib/i18n/config";
 import { cn } from "@/lib/utils";
 
 const noop = () => () => {};
@@ -25,23 +32,38 @@ const useNativeShare = () =>
   );
 
 /**
- * Share a calculator result. Inputs already live in the URL query string and the
- * result is recomputed from them, so the current URL *is* the shareable snapshot
- * — no account, no stored state, fully crawlable. Offers copy, a scannable QR
- * (encoded client-side, so the link never leaves the device) and the native
- * share sheet where available.
+ * Share a calculator result. The inputs live in the `search` string and the
+ * result recomputes from them, so the built URL *is* the shareable snapshot —
+ * no account, no stored state, fully reproducible. Offers a copy link, a QR
+ * (encoded on-device, so the link never leaves the browser), the native share
+ * sheet, and a branded result-card image rendered by the /og/calc route.
  */
-export const ShareDialog = () => {
+export const ShareDialog = ({
+  calcId,
+  locale,
+  search,
+}: {
+  calcId: CalcId;
+  locale: Locale;
+  search: string;
+}) => {
   const t = useT();
   const [url, setUrl] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [copied, setCopied] = useState(false);
   const canNativeShare = useNativeShare();
 
   const capture = (open: boolean) => {
-    if (open) {
-      setUrl(window.location.href);
-      setCopied(false);
-    }
+    if (!open) return;
+    const { origin } = window.location;
+    const suffix = `id=${calcId}&locale=${locale}${search ? `&${search}` : ""}`;
+    // Point at the /s share landing (rich OG preview when pasted in chats), not
+    // the static calc page whose preview can't read query params.
+    setUrl(
+      `${origin}/s/${calcId}?locale=${locale}${search ? `&${search}` : ""}`,
+    );
+    setImageUrl(`${origin}/og/calc?${suffix}`);
+    setCopied(false);
   };
 
   const copy = () => {
@@ -59,7 +81,7 @@ export const ShareDialog = () => {
     <Dialog onOpenChange={capture}>
       <DialogTrigger
         className={cn(
-          "inline-flex items-center justify-center gap-2 self-start rounded-lg border border-ink-600 px-3 py-2 text-xs font-medium text-ink-300 transition-colors",
+          "inline-flex items-center justify-center gap-2 rounded-lg border border-ink-600 px-3 py-2 text-xs font-medium text-ink-300 transition-colors",
           "hover:bg-ink-700 hover:text-ink-50 focus-visible:ring-2 focus-visible:ring-ink-500/50 focus-visible:outline-none",
         )}
       >
@@ -111,6 +133,35 @@ export const ShareDialog = () => {
             {t("calc.shareNative")}
           </button>
         )}
+
+        <div className="mt-5 border-t border-ink-700 pt-5">
+          <p className="text-xs font-semibold tracking-wider text-ink-400 uppercase">
+            {t("calc.cardTitle")}
+          </p>
+          {imageUrl && (
+            <a
+              href={imageUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="mt-2 block overflow-hidden rounded-xl border border-ink-600"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={imageUrl}
+                alt=""
+                className="aspect-[1200/630] w-full bg-ink-850 object-cover"
+              />
+            </a>
+          )}
+          <a
+            href={imageUrl}
+            download={`metri-${calcId}.png`}
+            className="mt-2.5 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-ink-600 py-2 text-sm font-medium text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50"
+          >
+            <DownloadIcon size={15} />
+            {t("calc.saveImage")}
+          </a>
+        </div>
       </DialogContent>
     </Dialog>
   );
