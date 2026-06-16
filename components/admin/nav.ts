@@ -4,7 +4,6 @@ import {
   CalculatorIcon,
   HomeIcon,
   type IconProps,
-  LinkIcon,
   TrendingUpIcon,
   UsersIcon,
 } from "@/components/icons";
@@ -26,5 +25,4 @@ export const ADMIN_NAV: AdminNavItem[] = [
     label: "Calculations",
     icon: CalculatorIcon,
   },
-  { href: "/admin/services", label: "Services", icon: LinkIcon },
 ];
