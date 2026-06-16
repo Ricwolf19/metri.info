@@ -41,6 +41,4 @@ export const appDistribution = {
 export const deepLinks = {
   open: "metri://open",
   workout: "metri://workout/start",
-  exercise: (id: string) => `metri://exercise/${id}`,
-  program: (id: string) => `metri://program/${id}`,
 } as const;

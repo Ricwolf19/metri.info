@@ -109,7 +109,5 @@ export class ExternalServiceError extends AppError {
 /** Coerce any thrown value into an AppError without leaking internals. */
 export const toAppError = (value: unknown): AppError => {
   if (value instanceof AppError) return value;
-  // Unknown throws collapse to a generic 500 — the original is kept as `cause`
-  // for server logs but never reaches `publicMessage`.
   return new AppError("internal", { cause: value });
 };

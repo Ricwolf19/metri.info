@@ -5,8 +5,8 @@ import { useT } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
 
 const STATS: { value: string; key: TranslationKey }[] = [
-  { value: "8", key: "stats.calculators" },
-  { value: "100%", key: "stats.private" },
+  { value: "16", key: "stats.calculators" },
+  { value: "20+", key: "stats.guides" },
   { value: "0", key: "stats.account" },
   { value: "MIT", key: "stats.license" },
 ];

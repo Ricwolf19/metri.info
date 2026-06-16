@@ -12,8 +12,6 @@ export type RouteId =
   | "home"
   | "tools"
   | "docs"
-  | "exercises"
-  | "programs"
   | "download"
   | "about"
   | "privacy"
@@ -21,7 +19,9 @@ export type RouteId =
   | "contact"
   | "signIn"
   | "signUp"
-  // Calculators (filled in during Phase 4)
+  | "forgotPassword"
+  | "resetPassword"
+  | "accountSettings"
   | "ffmi"
   | "onerm"
   | "tdee"
@@ -29,7 +29,15 @@ export type RouteId =
   | "bodyfat"
   | "bmi"
   | "water"
-  | "plates";
+  | "plates"
+  | "idealweight"
+  | "deficit"
+  | "protein"
+  | "leanmass"
+  | "heartrate"
+  | "whtr"
+  | "wilks"
+  | "calsburned";
 
 type RouteEntry = { en: string; es: string };
 
@@ -37,8 +45,6 @@ export const ROUTES: Record<RouteId, RouteEntry> = {
   home: { en: "/", es: "/es" },
   tools: { en: "/tools", es: "/es/herramientas" },
   docs: { en: "/docs", es: "/es/docs" },
-  exercises: { en: "/exercises", es: "/es/ejercicios" },
-  programs: { en: "/programs", es: "/es/programas" },
   download: { en: "/download", es: "/es/descargar" },
   about: { en: "/about", es: "/es/acerca" },
   privacy: { en: "/privacy", es: "/es/privacidad" },
@@ -46,6 +52,15 @@ export const ROUTES: Record<RouteId, RouteEntry> = {
   contact: { en: "/contact", es: "/es/contacto" },
   signIn: { en: "/sign-in", es: "/es/iniciar-sesion" },
   signUp: { en: "/sign-up", es: "/es/registrarse" },
+  forgotPassword: {
+    en: "/forgot-password",
+    es: "/es/recuperar-contrasena",
+  },
+  resetPassword: {
+    en: "/reset-password",
+    es: "/es/restablecer-contrasena",
+  },
+  accountSettings: { en: "/account/settings", es: "/account/settings" },
   ffmi: {
     en: "/tools/ffmi-calculator",
     es: "/es/herramientas/calculadora-ffmi",
@@ -78,6 +93,38 @@ export const ROUTES: Record<RouteId, RouteEntry> = {
     en: "/tools/plate-calculator",
     es: "/es/herramientas/calculadora-discos",
   },
+  idealweight: {
+    en: "/tools/ideal-weight-calculator",
+    es: "/es/herramientas/calculadora-peso-ideal",
+  },
+  deficit: {
+    en: "/tools/calorie-deficit-calculator",
+    es: "/es/herramientas/calculadora-deficit-calorico",
+  },
+  protein: {
+    en: "/tools/protein-calculator",
+    es: "/es/herramientas/calculadora-proteina",
+  },
+  leanmass: {
+    en: "/tools/lean-body-mass-calculator",
+    es: "/es/herramientas/calculadora-masa-magra",
+  },
+  heartrate: {
+    en: "/tools/heart-rate-zone-calculator",
+    es: "/es/herramientas/calculadora-zonas-frecuencia-cardiaca",
+  },
+  whtr: {
+    en: "/tools/waist-to-height-ratio-calculator",
+    es: "/es/herramientas/calculadora-cintura-altura",
+  },
+  wilks: {
+    en: "/tools/wilks-dots-calculator",
+    es: "/es/herramientas/calculadora-wilks-dots",
+  },
+  calsburned: {
+    en: "/tools/calories-burned-calculator",
+    es: "/es/herramientas/calculadora-calorias-quemadas",
+  },
 };
 
 /** Calculator route ids (subset of RouteId), in display order. */
@@ -90,6 +137,14 @@ export const CALC_IDS = [
   "ffmi",
   "water",
   "plates",
+  "idealweight",
+  "deficit",
+  "protein",
+  "leanmass",
+  "heartrate",
+  "whtr",
+  "wilks",
+  "calsburned",
 ] as const satisfies readonly RouteId[];
 
 export type CalcRouteId = (typeof CALC_IDS)[number];
@@ -114,6 +169,10 @@ export const isAuthPath = (pathname: string): boolean =>
     ROUTES.signIn.es,
     ROUTES.signUp.en,
     ROUTES.signUp.es,
+    ROUTES.forgotPassword.en,
+    ROUTES.forgotPassword.es,
+    ROUTES.resetPassword.en,
+    ROUTES.resetPassword.es,
   ].includes(pathname);
 
 /** Pages that render their own shell — no marketing header/footer (auth, admin). */
@@ -147,7 +206,6 @@ export const routeIdForPath = (pathname: string): RouteId | null => {
 export const alternatePathname = (pathname: string, target: Locale): string => {
   const id = routeIdForPath(pathname);
   if (id) return ROUTES[id][target];
-  // Fallback for pages not (yet) in the map: swap the /es prefix.
   if (target === "es")
     return pathname.startsWith("/es") ? pathname : `/es${pathname}`;
   return pathname.replace(/^\/es/, "") || "/";

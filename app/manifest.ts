@@ -2,10 +2,11 @@ import type { MetadataRoute } from "next";
 
 /** PWA manifest — served at /manifest.webmanifest. */
 const manifest = (): MetadataRoute.Manifest => ({
-  name: "METRI — Open-source fitness tracker",
-  short_name: "METRI",
+  name: "Metri — Open-source fitness tracker",
+  short_name: "Metri",
   description:
-    "Free fitness calculators, structured programs and an evidence-based knowledge base. Offline-first and open source.",
+    "Free fitness calculators and an evidence-based knowledge base. Offline-first and open source.",
+  id: "/",
   start_url: "/",
   display: "standalone",
   background_color: "#0b0d12",

@@ -19,7 +19,7 @@ const DEFAULT_TO = "rhtc19@gmail.com";
  * account owner — no domain verification needed to get started. Swap to a
  * verified domain sender via CONTACT_FROM_EMAIL for production deliverability.
  */
-const DEFAULT_FROM = "METRI Contact <onboarding@resend.dev>";
+const DEFAULT_FROM = "Metri Contact <onboarding@resend.dev>";
 
 /**
  * Verify a reCAPTCHA v3 token server-side. No-ops (with a warning) when the

@@ -22,7 +22,6 @@ export const I18nProvider = ({ children }: { children: React.ReactNode }) => {
   const locale: Locale =
     pathname === "/es" || pathname?.startsWith("/es/") ? "es" : "en";
 
-  // Keep <html lang> correct on the client (SSR defaults to "en").
   useEffect(() => {
     document.documentElement.lang = locale;
   }, [locale]);

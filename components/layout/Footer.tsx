@@ -88,7 +88,6 @@ export const Footer = () => {
           </div>
         </div>
 
-        {/* Calculators (internal SEO links) */}
         <div>
           <h3 className="text-xs font-semibold tracking-wider text-ink-400 uppercase">
             {t("footer.calculators")}
@@ -125,7 +124,7 @@ export const Footer = () => {
       <div className="border-t border-ink-600/60">
         <Container className="flex flex-col items-center justify-between gap-2 py-6 text-xs text-ink-400 sm:flex-row">
           <p>
-            © {year} METRI. {t("footer.rights")}
+            © {year} Metri. {t("footer.rights")}
           </p>
           <p className="flex items-center gap-1.5">
             <span>{t("footer.builtWith")}</span>

@@ -46,7 +46,6 @@ export const ContactForm = () => {
       if (res.error.fieldErrors) setFieldErrors(res.error.fieldErrors);
       setFormError(res.error.message);
     } catch {
-      // The action is designed not to throw, but never leave the user stuck.
       setFormError(t("contact.errorGeneric"));
     } finally {
       setLoading(false);
@@ -132,7 +131,7 @@ export const ContactForm = () => {
         </p>
       )}
 
-      <Button type="submit" disabled={loading} className="w-full">
+      <Button type="submit" loading={loading} className="w-full">
         {loading ? t("contact.sending") : t("contact.submit")}
       </Button>
 

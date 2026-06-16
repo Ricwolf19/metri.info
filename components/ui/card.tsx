@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 /**
- * shadcn-style card primitives, themed with METRI's ink tokens. Compose:
+ * shadcn-style card primitives, themed with Metri's ink tokens. Compose:
  * <Card><CardHeader><CardTitle/><CardDescription/></CardHeader><CardContent/></Card>
  */
 export const Card = ({

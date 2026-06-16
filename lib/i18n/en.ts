@@ -4,7 +4,7 @@
  * same keys. Use `{name}`-style placeholders for interpolation (see `t()`).
  */
 export const en = {
-  // Common
+  "common.and": "and",
   "common.continue": "Continue",
   "common.learnMore": "Learn more",
   "common.readMore": "Read more",
@@ -13,33 +13,38 @@ export const en = {
   "common.search": "Search",
   "common.loading": "Loading…",
 
-  // Languages
+  "pwa.installTitle": "Install Metri",
+  "pwa.installBody": "Add Metri to your home screen for offline calculators.",
+  "pwa.install": "Install",
+  "pwa.dismiss": "Dismiss",
+  "pwa.offlineTitle": "You're offline",
+  "pwa.offlineBody":
+    "We couldn't reach the network. Calculators you've already opened still work offline — everything is computed on your device.",
+  "pwa.offlineHome": "Back to home",
+
   "lang.en": "English",
   "lang.es": "Spanish",
 
-  // Theme
   "theme.title": "Appearance",
   "theme.system": "System",
   "theme.light": "Light",
   "theme.dark": "Dark",
 
-  // Navigation
   "nav.home": "Home",
   "nav.docs": "Docs",
   "nav.tools": "Tools",
-  "nav.exercises": "Exercises",
-  "nav.programs": "Programs",
   "nav.download": "Download",
   "nav.signIn": "Sign In",
   "nav.signUp": "Sign Up",
   "nav.signOut": "Sign out",
+  "nav.signingOut": "Signing out…",
   "nav.admin": "Admin panel",
+  "nav.account": "My account",
   "nav.github": "GitHub",
   "nav.contact": "Contact",
   "nav.menu": "Menu",
   "nav.close": "Close",
 
-  // Auth
   "auth.signIn": "Sign in",
   "auth.signUp": "Create account",
   "auth.email": "Email",
@@ -60,37 +65,52 @@ export const en = {
   "auth.brandTitle": "Train smarter,",
   "auth.brandHighlight": "track everything.",
   "auth.brandSubtitle":
-    "Free fitness calculators, programs and guides — your account keeps your results in sync.",
+    "Free fitness calculators and guides — your account keeps your results in sync.",
+  "auth.forgotPassword": "Forgot password?",
+  "auth.newPassword": "New password",
+  "auth.confirmPassword": "Confirm password",
+  "auth.backToSignIn": "Back to sign in",
+  "auth.forgotTitle": "Reset your password",
+  "auth.forgotSubtitle":
+    "Enter your email and we'll send you a link to set a new password.",
+  "auth.forgotSubmit": "Send reset link",
+  "auth.forgotSent":
+    "If an account exists for that email, a reset link is on its way. Check your inbox.",
+  "auth.resetTitle": "Choose a new password",
+  "auth.resetSubtitle": "Pick a strong password you don't use anywhere else.",
+  "auth.resetSubmit": "Update password",
+  "auth.resetSuccess": "Password updated. You can now sign in.",
+  "auth.resetInvalidToken":
+    "This reset link is invalid or has expired. Request a new one.",
+  "auth.errorPasswordShort": "Password must be at least 8 characters.",
+  "auth.errorPasswordMatch": "Passwords don't match.",
 
-  // Hero
   "hero.badge": "Open-source fitness tracker",
   "hero.title": "Track. Progress. Evolve.",
   "hero.subtitle":
-    "The open-source training companion for serious lifters — calculators, programs and a knowledge base, free and private by design.",
+    "The open-source training companion for serious lifters — 16 calculators and an evidence-based knowledge base, free and private by design.",
   "hero.ctaDownload": "Download App",
   "hero.ctaDocs": "Explore Docs",
   "hero.ctaTools": "Try the Calculators",
 
-  // App showcase
   "showcase.badge": "Also on mobile",
   "showcase.title": "Prefer your phone?",
   "showcase.highlight": "Take it with you.",
   "showcase.subtitle":
-    "Everything on METRI is free on the web. A native app is on the way as an optional extra — the same tools, fully offline.",
+    "Everything on Metri is free on the web. A native app is on the way as an optional extra — the same tools, fully offline.",
   "showcase.feature1": "Instant calculators that run on every keystroke",
   "showcase.feature2": "Works 100% offline — your data stays on device",
-  "showcase.feature3": "Progress photos, reminders and structured programs",
+  "showcase.feature3": "Progress photos and reminders",
   "showcase.feature4": "Free and open source, forever",
 
-  // Bento (homepage value props)
-  "bento.eyebrow": "Why METRI",
+  "bento.eyebrow": "Why Metri",
   "bento.title": "Everything a lifter needs,",
   "bento.highlight": "free on the web.",
   "bento.subtitle":
     "No paywalls, no sign-up, no fluff — open-source tools you can actually trust. The app is just an optional extra.",
-  "bento.calc.title": "8 instant calculators",
+  "bento.calc.title": "16 instant calculators",
   "bento.calc.desc":
-    "1RM, TDEE, macros, body fat, BMI, FFMI, hydration and plate loading — each with a visual chart and a shareable link.",
+    "1RM, TDEE, macros, body fat, BMI, FFMI, ideal weight, protein, heart-rate zones, Wilks/DOTS and more — each with a visual chart and a shareable link.",
   "bento.calc.cta": "Open the calculators",
   "bento.oss.title": "Open source forever",
   "bento.oss.desc":
@@ -106,10 +126,13 @@ export const en = {
   "bento.privacy.desc":
     "Calculators run in your browser. An account is optional and only syncs what you choose to save.",
 
-  // Tools / calculators directory
   "tools.title": "Calculators & Tools",
   "tools.subtitle":
     "The same formulas as the app — run instantly in your browser. Share results with a link.",
+  "tools.searchPlaceholder": "Search calculators…",
+  "tools.noResults": "No calculators match your search.",
+  "tools.popular": "Popular",
+  "tools.popularAria": "Popular calculator",
   "tools.bmr.title": "BMR & TDEE",
   "tools.bmr.desc":
     "Estimate daily energy expenditure (Harris-Benedict, Mifflin-St Jeor, Katch-McArdle).",
@@ -130,8 +153,26 @@ export const en = {
   "tools.water.desc": "Daily water target from body weight and activity.",
   "tools.plates.title": "Plate Calculator",
   "tools.plates.desc": "Which plates to load on the bar for any target weight.",
+  "tools.idealweight.title": "Ideal Weight",
+  "tools.idealweight.desc":
+    "A healthy target weight for your height (Devine, Robinson, BMI range).",
+  "tools.deficit.title": "Calorie Deficit",
+  "tools.deficit.desc":
+    "Turn a goal weight into a daily deficit and a realistic timeline.",
+  "tools.protein.title": "Protein Intake",
+  "tools.protein.desc": "Your daily protein target from bodyweight and goal.",
+  "tools.leanmass.title": "Lean Body Mass",
+  "tools.leanmass.desc": "Estimate your fat-free mass and total fat mass.",
+  "tools.heartrate.title": "Heart-Rate Zones",
+  "tools.heartrate.desc": "Max heart rate and five training zones in bpm.",
+  "tools.whtr.title": "Waist-to-Height",
+  "tools.whtr.desc": "A simple, accurate central-fat screen — better than BMI.",
+  "tools.wilks.title": "Wilks / DOTS",
+  "tools.wilks.desc": "Score your powerlifting total relative to bodyweight.",
+  "tools.calsburned.title": "Calories Burned",
+  "tools.calsburned.desc":
+    "Calories an activity burns for your weight and time.",
 
-  // Calculator UI
   "calc.weight": "Weight",
   "calc.reps": "Reps",
   "calc.height": "Height",
@@ -157,12 +198,25 @@ export const en = {
   "calc.scenarioA": "Scenario A",
   "calc.scenarioB": "Scenario B",
   "calc.difference": "Difference",
+  "calc.increase": "Increase {field}",
+  "calc.decrease": "Decrease {field}",
+  "calc.saveCta": "Save calculation",
+  "calc.saving": "Saving…",
+  "calc.saved": "Saved",
+  "calc.saveViewHistory": "View history",
+  "calc.savePromptTitle": "Save your calculations",
+  "calc.savePromptDesc":
+    "Create a free account to save this result to your history, pin favorites, and sync across the web app.",
+  "calc.savePromptTerms": "By creating an account you agree to our",
+  "calc.savePromptTermsLink": "Terms",
+  "calc.savePromptPrivacyLink": "Privacy Policy",
+  "calc.savePromptCreate": "Create free account",
+  "calc.savePromptSignIn": "Sign in",
   "share.open": "Open the calculator",
   "share.note":
     "Computed instantly in your browser — open it to change the inputs.",
   "calc.metric": "Metric",
   "calc.imperial": "Imperial",
-  // Calculator fields
   "calc.bodyFat": "Body fat",
   "calc.neck": "Neck",
   "calc.waist": "Waist",
@@ -171,23 +225,25 @@ export const en = {
   "calc.goalLabel": "Goal",
   "calc.targetWeight": "Target weight",
   "calc.barWeight": "Bar weight",
-  // Activity options
+  "calc.currentWeight": "Current weight",
+  "calc.goalWeight": "Goal weight",
+  "calc.weeklyRate": "Weekly rate",
+  "calc.restingHr": "Resting heart rate",
+  "calc.liftTotal": "Lift total",
+  "calc.minutes": "Duration",
   "activity.sedentary": "Sedentary",
   "activity.light": "Light",
   "activity.moderate": "Moderate",
   "activity.active": "Active",
   "activity.veryActive": "Very active",
-  // Goal options
   "calc.goal.cut": "Cut",
   "calc.goal.maintain": "Maintain",
   "calc.goal.bulk": "Bulk",
-  // Formula options
   "calc.formula.epley": "Epley",
   "calc.formula.brzycki": "Brzycki",
   "calc.formula.mifflin": "Mifflin-St Jeor",
   "calc.formula.harris": "Harris-Benedict",
   "calc.formula.katch": "Katch-McArdle",
-  // Result labels
   "calc.result.oneRm": "Estimated 1RM",
   "calc.result.tdee": "Maintenance (TDEE)",
   "calc.result.bmr": "BMR",
@@ -205,25 +261,59 @@ export const en = {
   "calc.result.milliliters": "Millilitres",
   "calc.result.cups": "Cups (~240 ml)",
   "calc.result.perSide": "Per side",
-  // BMI categories
+  "calc.result.idealWeight": "Ideal weight (Devine)",
+  "calc.result.devine": "Devine",
+  "calc.result.robinson": "Robinson",
+  "calc.result.dailyDeficit": "Daily deficit",
+  "calc.result.dailySurplus": "Daily surplus",
+  "calc.result.toLose": "Total to lose",
+  "calc.result.toGain": "Total to gain",
+  "calc.result.weeksToGoal": "Weeks to goal",
+  "calc.result.monthsToGoal": "Months to goal",
+  "calc.result.proteinKcal": "From protein",
+  "calc.result.perMeal": "Per meal (×4)",
+  "calc.result.leanMass": "Lean body mass (Boer)",
+  "calc.result.lbmFromBf": "LBM from body fat",
+  "calc.result.fatMass": "Fat mass",
+  "calc.result.maxHr": "Max heart rate",
+  "calc.result.whtr": "Waist-to-height ratio",
+  "calc.result.dots": "DOTS score",
+  "calc.result.caloriesBurned": "Calories burned",
+  "calc.result.perHour": "Per hour",
   "calc.bmi.underweight": "Underweight",
   "calc.bmi.normal": "Normal weight",
   "calc.bmi.overweight": "Overweight",
   "calc.bmi.obese": "Obese",
-  // Body-fat categories
   "calc.bf.essential": "Essential fat",
   "calc.bf.athlete": "Athletic",
   "calc.bf.fitness": "Fitness",
   "calc.bf.average": "Average",
   "calc.bf.high": "High",
-  // FFMI bands
   "calc.ffmi.below": "Below average",
   "calc.ffmi.average": "Average",
   "calc.ffmi.aboveAverage": "Above average",
   "calc.ffmi.excellent": "Excellent",
   "calc.ffmi.superior": "Superior",
   "calc.ffmi.suspicious": "Exceptional",
-  // Calculator page UI
+  "calc.whtr.low": "Low (underweight)",
+  "calc.whtr.healthy": "Healthy",
+  "calc.whtr.increased": "Increased risk",
+  "calc.whtr.high": "High risk",
+  "calc.hr.z1": "Z1 · Recovery",
+  "calc.hr.z2": "Z2 · Aerobic",
+  "calc.hr.z3": "Z3 · Tempo",
+  "calc.hr.z4": "Z4 · Threshold",
+  "calc.hr.z5": "Z5 · Maximal",
+  "calc.deficit.lose": "Fat loss",
+  "calc.deficit.gain": "Weight gain",
+  "calc.met.walking": "Walking",
+  "calc.met.running": "Running",
+  "calc.met.cycling": "Cycling",
+  "calc.met.swimming": "Swimming",
+  "calc.met.weightlifting": "Weightlifting",
+  "calc.met.hiit": "HIIT",
+  "calc.met.yoga": "Yoga",
+  "calc.met.soccer": "Soccer",
   "calc.eyebrow": "Free calculator",
   "calc.overviewTitle": "Overview",
   "calc.onThisPage": "On this page",
@@ -233,39 +323,9 @@ export const en = {
   "calc.relatedTitle": "Related calculators",
   "calc.trustTitle": "Free & open source",
   "calc.trustBody":
-    "Every METRI calculator runs in your browser — no account, no paywall, no tracking.",
+    "Every Metri calculator runs in your browser — no account, no paywall, no tracking.",
   "calc.trustCta": "Browse all calculators",
 
-  // Exercise library
-  "ex.title": "Exercise Library",
-  "ex.subtitle":
-    "Form guides for the lifts that matter — muscles worked, equipment and step-by-step technique.",
-  "ex.searchPlaceholder": "Search exercises…",
-  "ex.allCategories": "All muscle groups",
-  "ex.allEquipment": "All equipment",
-  "ex.noResults": "No exercises found.",
-  "ex.instructions": "How to perform",
-  "ex.primaryMuscles": "Primary muscles",
-  "ex.secondaryMuscles": "Secondary muscles",
-  "ex.equipmentLabel": "Equipment",
-  "ex.difficultyLabel": "Difficulty",
-  "ex.cat.chest": "Chest",
-  "ex.cat.back": "Back",
-  "ex.cat.legs": "Legs",
-  "ex.cat.shoulders": "Shoulders",
-  "ex.cat.arms": "Arms",
-  "ex.cat.core": "Core",
-  "ex.eq.barbell": "Barbell",
-  "ex.eq.dumbbell": "Dumbbell",
-  "ex.eq.machine": "Machine",
-  "ex.eq.cable": "Cable",
-  "ex.eq.bodyweight": "Bodyweight",
-  "ex.eq.kettlebell": "Kettlebell",
-  "ex.diff.beginner": "Beginner",
-  "ex.diff.intermediate": "Intermediate",
-  "ex.diff.advanced": "Advanced",
-
-  // Muscles
   "muscle.chest": "Chest",
   "muscle.upperBack": "Upper back",
   "muscle.lats": "Lats",
@@ -284,23 +344,6 @@ export const en = {
   "muscle.obliques": "Obliques",
   "muscle.core": "Core",
 
-  // Programs
-  "program.title": "Training Programs",
-  "program.subtitle":
-    "Structured, multi-week routines — pick a goal and follow a proven plan.",
-  "program.weeks": "{n} weeks",
-  "program.daysPerWeek": "{n} days/week",
-  "program.day": "Day",
-  "program.sets": "Sets",
-  "program.reps": "Reps",
-  "program.exercisesTitle": "The plan",
-  "program.featured": "Featured",
-  "program.goal.strength": "Strength",
-  "program.goal.hypertrophy": "Hypertrophy",
-  "program.goal.powerbuilding": "Powerbuilding",
-  "program.goal.endurance": "Endurance",
-
-  // Docs preview
   "docs.title": "Knowledge Base",
   "docs.subtitle":
     "Evidence-based guides on nutrition, training and recovery — written for lifters, not clickbait.",
@@ -319,33 +362,47 @@ export const en = {
   "docs.catRecovery": "Recovery",
   "docs.catRecoveryDesc":
     "Sleep, deloads and managing fatigue so your training actually sticks.",
-  // Knowledge-base category labels (sidebar/index)
   "docs.category.gettingStarted": "Getting started",
+  "docs.category.calculators": "Calculators",
   "docs.category.nutrition": "Nutrition",
   "docs.category.training": "Training",
   "docs.category.recovery": "Recovery",
+  "docs.category.supplements": "Supplements",
+  "docs.category.progress": "Progress",
+  "docs.category.glossary": "Glossary",
+  "docs.topics.gettingStarted": "Welcome to Metri and how to use it.",
+  "docs.topics.calculators":
+    "Guides to TDEE, macros, body fat, FFMI, 1RM and hydration.",
+  "docs.topics.nutrition":
+    "Macros, calories, meal timing and personalizing your diet.",
+  "docs.topics.training":
+    "Progressive overload, volume, frequency, intensity and technique.",
+  "docs.topics.recovery": "Sleep, deloads and managing fatigue.",
+  "docs.topics.supplements": "What's worth taking — and what isn't.",
+  "docs.topics.progress": "Measuring and tracking real progress over time.",
+  "docs.topics.glossary": "Plain-English definitions of every key term.",
 
-  // Homepage CTAs
-  "home.toolsCta": "See all calculators",
+  "home.toolsCta": "See all 16 calculators",
   "home.docsCta": "Browse the knowledge base",
-  // Homepage stat strip
+  "home.toolsLead":
+    "16 free calculators that run instantly in your browser — the most-used ones first, with the full set a click away.",
+  "home.docsLead":
+    "An evidence-based, bilingual knowledge base — eight sections covering nutrition, training, recovery and more, written for lifters.",
   "stats.calculators": "Free calculators",
+  "stats.guides": "Evidence-based guides",
   "stats.private": "Runs in your browser",
   "stats.account": "Accounts needed",
   "stats.license": "Open-source (MIT)",
 
-  // Coming-soon placeholder
   "soon.badge": "Coming soon",
   "soon.body": "This section is being built and lands in an upcoming release.",
   "soon.backHome": "Back to home",
 
-  // Open-source CTA
   "oss.title": "Built in the open.",
   "oss.subtitle":
-    "METRI is MIT-licensed and free forever. Star it, fork it, or contribute on GitHub.",
+    "Metri is MIT-licensed and free forever. Star it, fork it, or contribute on GitHub.",
   "oss.cta": "View on GitHub",
 
-  // Footer
   "footer.tagline": "Open-source fitness, built for lifters.",
   "footer.product": "Product",
   "footer.resources": "Resources",
@@ -362,7 +419,6 @@ export const en = {
   "footer.builtBy": "Built by",
   "footer.siteSource": "Website source",
 
-  // Contact page
   "contact.title": "Get in touch",
   "contact.subtitle":
     "Questions, feedback, a bug report, or a partnership — send a message and it lands straight in my inbox.",
@@ -392,17 +448,15 @@ export const en = {
   "contact.recaptchaTerms": "Terms of Service",
   "contact.recaptchaApply": "apply.",
 
-  // Download page
-  "download.title": "Get METRI on your phone",
+  "download.title": "Get Metri on your phone",
   "download.subtitle": "Free, offline-first, no account required.",
   "download.ios": "Download on the App Store",
   "download.android": "Get it on Google Play",
   "download.scan": "Scan to download",
-  // In-development state
   "download.devBadge": "Mobile app in development",
   "download.devTitle": "A native app is on the way",
   "download.devBody":
-    "METRI is free and open source on the web — every calculator and guide, no account, forever. A native iOS and Android app is in development as an optional extra.",
+    "Metri is free and open source on the web — every calculator and guide, no account, forever. A native iOS and Android app is in development as an optional extra.",
   "download.devCtaTools": "Explore the calculators",
   "download.devCtaGithub": "Follow progress on GitHub",
   "download.platformsTitle": "Coming to",
@@ -410,6 +464,134 @@ export const en = {
   "download.androidSoon": "Google Play — coming soon",
   "download.notifyNote":
     "Star the repo to get notified when the first build drops.",
+
+  "favorites.pin": "Add to favorites",
+  "favorites.unpin": "Remove from favorites",
+
+  "account.title": "My account",
+  "account.subtitle": "Your calculation history and favorites, in one place.",
+  "account.historyTitle": "Calculation history",
+  "account.historySubtitle": "Your most recent calculations.",
+  "account.historyEmpty":
+    "No calculations yet. Try one of the calculators to see your history here.",
+  "account.favoritesTitle": "Favorites",
+  "account.favoritesSubtitle": "Calculators and guides you've pinned.",
+  "account.favoritesEmpty":
+    "No favorites yet. Pin a calculator or guide with the star to find it here.",
+  "account.favoriteCalculators": "Calculators",
+  "account.favoriteDocs": "Guides",
+  "account.openCalculator": "Open calculator",
+  "account.viewAllHistory": "Showing your {count} most recent calculations.",
+  "account.historyCount": "{count} saved",
+  "account.historyPageInfo": "Page {page} of {total}",
+  "account.historyPrev": "Previous",
+  "account.historyNext": "Next",
+  "account.loggedAt": "Logged",
+  "account.settingsTitle": "Settings",
+  "account.settingsSubtitle": "Manage your profile, password and connections.",
+  "account.settingsLink": "Account settings",
+  "account.backToAccount": "Back to account",
+
+  "benefits.eyebrow": "Free account",
+  "benefits.title": "Why create an account",
+  "benefits.subtitle":
+    "Calculators are free for everyone — an account just remembers your work.",
+  "benefits.ctaCreate": "Create a free account",
+  "benefits.ctaSignIn": "Sign in",
+  "benefits.guest.name": "Guest",
+  "benefits.guest.tagline": "No sign-up needed.",
+  "benefits.guest.f1": "Every calculator, instantly",
+  "benefits.guest.f2": "No account required",
+  "benefits.guest.f3": "Nothing saved between visits",
+  "benefits.free.name": "Free account",
+  "benefits.free.badge": "Recommended",
+  "benefits.free.tagline": "Free forever — no card.",
+  "benefits.free.f1": "Save your calculation history",
+  "benefits.free.f2": "Pin favorite calculators & guides",
+  "benefits.free.f3": "Link Google or GitHub",
+  "benefits.free.f4": "Sync across the web app",
+  "benefits.soon.name": "Coming soon",
+  "benefits.soon.badge": "Coming soon",
+  "benefits.soon.tagline": "On the roadmap.",
+  "benefits.soon.f1": "Metri mobile app sync",
+  "benefits.soon.f2": "Cloud backup of your data",
+  "benefits.soon.f3": "Cross-device history",
+
+  "settings.title": "Account settings",
+  "settings.subtitle":
+    "Update your profile, secure your account, and manage how you sign in.",
+  "settings.eyebrow": "My account",
+  "settings.save": "Save changes",
+  "settings.saving": "Saving…",
+  "settings.saved": "Saved.",
+  "settings.errorGeneric": "Something went wrong. Please try again.",
+  "settings.required": "This field is required.",
+
+  "settings.navProfile": "Profile",
+  "settings.navProfileDesc": "Name & body metrics",
+  "settings.navSecurity": "Security",
+  "settings.navSecurityDesc": "Password",
+  "settings.navConnections": "Linked accounts",
+  "settings.navConnectionsDesc": "Google & GitHub",
+
+  "settings.profileTitle": "Profile",
+  "settings.profileDesc": "How you appear and the body metrics used in tools.",
+  "settings.name": "Name",
+  "settings.displayName": "Display name",
+  "settings.displayNamePlaceholder": "Shown across Metri",
+  "settings.bio": "Bio",
+  "settings.bioPlaceholder": "A short line about you",
+  "settings.units": "Units",
+  "settings.unitsKg": "Metric (kg / cm)",
+  "settings.unitsLb": "Imperial (lb / in)",
+  "settings.sex": "Sex",
+  "settings.sexUnset": "Prefer not to say",
+  "settings.sexMale": "Male",
+  "settings.sexFemale": "Female",
+  "settings.activityLevel": "Activity level",
+  "settings.activityUnset": "Not set",
+  "settings.activitySedentary": "Sedentary",
+  "settings.activityLight": "Lightly active",
+  "settings.activityModerate": "Moderately active",
+  "settings.activityActive": "Very active",
+  "settings.activityAthlete": "Athlete",
+  "settings.bodyWeight": "Body weight (kg)",
+  "settings.bodyHeight": "Height (cm)",
+  "settings.profileSaved": "Profile updated.",
+
+  "settings.securityTitle": "Password",
+  "settings.securityDesc": "Used to sign in with your email. Keep it private.",
+  "settings.changePassword": "Change password",
+  "settings.setPassword": "Set a password",
+  "settings.setPasswordDesc":
+    "You signed up with a social account. Set a password to also sign in with your email.",
+  "settings.currentPassword": "Current password",
+  "settings.newPassword": "New password",
+  "settings.confirmPassword": "Confirm new password",
+  "settings.passwordSaved": "Password updated.",
+  "settings.passwordSet": "Password set. You can now sign in with your email.",
+  "settings.errorPasswordShort": "Password must be at least 8 characters.",
+  "settings.errorPasswordMatch": "Passwords don't match.",
+  "settings.errorCurrentPassword": "Your current password is incorrect.",
+  "settings.setPasswordEmailFallback":
+    "We've emailed you a link to set your password — check your inbox.",
+
+  "settings.connectionsTitle": "Linked accounts",
+  "settings.connectionsDesc":
+    "Connect Google or GitHub to sign in faster. Email & password is shown when set.",
+  "settings.providerCredential": "Email & password",
+  "settings.providerGoogle": "Google",
+  "settings.providerGithub": "GitHub",
+  "settings.connected": "Connected",
+  "settings.notConnected": "Not connected",
+  "settings.connect": "Connect",
+  "settings.disconnect": "Disconnect",
+  "settings.connectionsNoPasswordNotice":
+    "You don't have a password yet. Set one under Password so you can still sign in if you disconnect a provider.",
+  "settings.lastMethodNotice":
+    "This is your only way to sign in — add another sign-in method before disconnecting it.",
+  "settings.disconnected": "Disconnected.",
+  "settings.connectError": "Couldn't connect that account. Please try again.",
 } as const;
 
 export type TranslationKey = keyof typeof en;

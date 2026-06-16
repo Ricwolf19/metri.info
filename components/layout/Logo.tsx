@@ -7,7 +7,7 @@ import { useI18n } from "@/lib/i18n";
 import { routePath } from "@/lib/i18n/routes";
 import { cn } from "@/lib/utils";
 
-/** METRI wordmark — icon + label, linking to the locale-correct home. */
+/** Metri wordmark — icon + label, linking to the locale-correct home. */
 export const Logo = ({
   className,
   withWordmark = true,
@@ -20,13 +20,13 @@ export const Logo = ({
   return (
     <Link
       href={routePath("home", locale)}
-      aria-label="METRI home"
+      aria-label="Metri home"
       className={cn("flex items-center gap-2", className)}
     >
       <MetriMark className="h-7 w-7" />
       {withWordmark && (
         <span className="font-sans text-lg font-bold tracking-tight text-ink-50">
-          METRI
+          Metri
         </span>
       )}
     </Link>

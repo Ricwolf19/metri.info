@@ -6,9 +6,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 <!-- END:nextjs-agent-rules -->
 
-# METRI Web — agent & contributor guide
+# Metri Web — agent & contributor guide
 
-Public web companion to the METRI mobile app (Expo). Same brand, same formulas,
+Public web companion to the Metri mobile app (Expo). Same brand, same formulas,
 same i18n philosophy — built for the web with Next.js 16.
 
 ## Stack
@@ -19,7 +19,12 @@ same i18n philosophy — built for the web with Next.js 16.
   builds on Node; Bun is for installs and scripts.
 - **TypeScript (strict)** · **Tailwind CSS v4** (CSS-first `@theme`) · **Framer Motion**.
 - **Drizzle ORM + Neon (Postgres)** + **Better Auth** power the optional account
-  layer — bundled content (calculators, docs, exercises) renders without a DB.
+  layer (email+password, Google/GitHub, account linking, password reset via
+  Resend) — bundled content (calculators, docs) renders without a DB.
+- **Analytics**: **PostHog** (autocapture, heatmaps, session replay), GA4, and
+  Vercel Analytics + Speed Insights — all env-gated, off when keys are absent.
+- **PWA**: installable + offline calculators via `public/sw.js`, `app/manifest.ts`
+  and an offline fallback (`app/offline`).
 - **Iconoir** icons via the `@/components/icons` barrel — each is wrapped to take a
   `size` (px) prop and re-exported under stable names that mirror mobile. Brand
   icons (GitHub) ship as local components. Never import `iconoir-react` directly.
@@ -37,7 +42,19 @@ same i18n philosophy — built for the web with Next.js 16.
 - **State**: no Zustand/Redux. Server Components fetch directly; client state is
   URL params + React Context (`ThemeProvider`, `I18nProvider`).
 - **SEO**: server-first. Metadata API, JSON-LD, file-based `sitemap.ts`/
-  `robots.ts`/`manifest.ts`, dynamic OG via `opengraph-image`.
+  `robots.ts`/`manifest.ts`, dynamic OG via `opengraph-image` + `app/og/calc`.
+- **Calculation logging = explicit save only.** `saveCalculation` (`lib/calculators/log.ts`)
+  requires a session and rejects anonymous saves — no null-userId rows ever land
+  in `calculation_log`. Aggregate product usage is tracked via PostHog events,
+  not the DB.
+- **Admin** (`/admin`) is **EN-only**, chromeless (no marketing nav/footer) and
+  driven by a sidebar (`components/admin/nav.ts`). It's role-gated by
+  `requireAdmin` (`lib/auth/admin.ts`); create the first admin with
+  `bun run admin:bootstrap`.
+- **DB migration flow**: `db:generate` is run **manually/locally** against the
+  schema, the generated SQL in `drizzle/` is committed, and Vercel applies it on
+  deploy via `scripts/vercel-migrate.mjs` (`db:migrate`). Never auto-generate in
+  CI.
 
 ## Commands
 
@@ -47,15 +64,37 @@ bun run dev        # dev server (Turbopack)
 bun run build      # production build
 bun run verify     # format + lint + typecheck + circular-deps + build (CI gate)
 bun run knip       # dead-code / unused-dependency check
+
+# Database (Drizzle) — generate locally, commit, Vercel migrates on deploy
+bun run db:generate   # author migrations from the schema (manual/local)
+bun run db:migrate    # apply migrations (also run by Vercel via vercel-migrate)
+bun run db:studio     # Drizzle Studio
+
+bun run admin:bootstrap  # create the first admin user
 ```
 
 ## Layout
 
 ```
-app/            App Router routes (EN at root, ES under /es) + SEO files
+app/            App Router routes (EN at root, ES under /es) + SEO files.
+               Pages: tools/[calc], docs/[slug], account (+ settings),
+               admin (+ analytics/users/calculations/services), sign-in/up,
+               forgot/reset-password, offline, s/[id] (share), og/calc,
+               api/auth/[...all]
 components/     ui (primitives), icons (barrel), layout, marketing, shared,
-               docs, calculators, exercises, programs, contact, seo
-content/docs/   MDX knowledge base (en/es)
-lib/            i18n, theme, calculations, calculators, db, auth, errors, seo, og
-public/brand/   mark + PWA icons copied from the mobile app
+               calculators, docs, account, admin, analytics, pwa, auth,
+               contact, legal, seo
+content/docs/   MDX knowledge base (en/es) — 8 categories
+lib/
+  calculations/   pure formulas, split: shared, strength, energy, body, cardio
+  calculators/    config-driven registry + configs/ + content + share + log
+  analytics/      posthog + db-metrics (admin dashboards)
+  account/        profile providers + settings
+  favorites/      pin/unpin server actions + useFavorites hook
+  auth/           server (Better Auth) + client + admin (requireAdmin)
+  admin/          admin data helpers
+  db/             Drizzle schema + client
+  i18n, theme, docs, contact, legal, seo, og
+public/         brand mark + PWA icons, sw.js (service worker)
+drizzle/        generated migrations (after db:generate)
 ```

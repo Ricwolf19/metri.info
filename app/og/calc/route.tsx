@@ -32,7 +32,7 @@ const Stat = ({ label, value }: { label: string; value: string }) => (
 const Brand = () => (
   <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
     {/* eslint-disable-next-line @next/next/no-img-element */}
-    <img src={MARK_DATA_URI} width={52} height={52} alt="METRI" />
+    <img src={MARK_DATA_URI} width={52} height={52} alt="Metri" />
     <span
       style={{
         fontSize: "28px",
@@ -41,7 +41,7 @@ const Brand = () => (
         color: "#fafafa",
       }}
     >
-      METRI
+      Metri
     </span>
   </div>
 );
@@ -106,8 +106,6 @@ export const GET = (req: Request) => {
 
   const headers = {
     "cache-control": "public, max-age=600, s-maxage=86400",
-    // Keep the raw image endpoint out of search indexes, but still fetchable by
-    // social crawlers (unlike a robots.txt block, which would hide the preview).
     "x-robots-tag": "noindex",
   };
 

@@ -1,4 +1,5 @@
 import { AppShowcase } from "@/components/marketing/AppShowcase";
+import { BenefitsSection } from "@/components/marketing/BenefitsSection";
 import { Bento } from "@/components/marketing/Bento";
 import { DocsPreview } from "@/components/marketing/DocsPreview";
 import { Hero } from "@/components/marketing/Hero";
@@ -14,8 +15,9 @@ export const Home = () => (
     <StatStrip />
     <Bento />
     <ToolsPreview />
-    <AppShowcase />
     <DocsPreview />
+    <BenefitsSection />
+    <AppShowcase />
     <OpenSourceCTA />
   </>
 );

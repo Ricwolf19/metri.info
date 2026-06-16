@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-/** METRI dumbbell mark as inline SVG using `currentColor`, so it can be lime on
+/** Metri dumbbell mark as inline SVG using `currentColor`, so it can be lime on
  * dark surfaces and near-black on light surfaces (legible on both). */
 export const MetriMark = ({ className }: { className?: string }) => (
   <svg

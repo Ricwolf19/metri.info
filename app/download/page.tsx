@@ -4,9 +4,9 @@ import { DownloadView } from "@/components/marketing/DownloadView";
 import { metaAlternates } from "@/lib/i18n/routes";
 
 export const metadata: Metadata = {
-  title: "Download the METRI app",
+  title: "Download the Metri app",
   description:
-    "METRI for iOS and Android is in development. Meanwhile, use every fitness calculator free on the web.",
+    "Metri for iOS and Android is in development. Meanwhile, use every fitness calculator free on the web.",
   alternates: metaAlternates("download", "en"),
 };
 

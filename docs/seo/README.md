@@ -1,4 +1,4 @@
-# METRI — SEO documentation
+# Metri — SEO documentation
 
 A practical, reusable playbook for **advanced SEO with Next.js (App Router)**, written against this project but designed to **standardize across other projects**.
 

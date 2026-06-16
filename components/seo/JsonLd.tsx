@@ -5,7 +5,6 @@
 export const JsonLd = ({ data }: { data: object | object[] }) => (
   <script
     type="application/ld+json"
-    // Content is our own structured data, not user input.
     dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
   />
 );

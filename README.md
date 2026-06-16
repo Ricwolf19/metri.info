@@ -1,15 +1,16 @@
 <p align="center">
-  <img src="./public/brand/metri-mark.svg" alt="METRI" width="96" height="96" />
+  <img src="./public/brand/metri-mark.svg" alt="Metri" width="96" height="96" />
 </p>
 
-<h1 align="center">METRI Web · metri.info</h1>
+<h1 align="center">Metri Web · metri.info</h1>
 
 <p align="center">
   The open-source web companion to the
-  <a href="https://github.com/Ricwolf19/metri">METRI</a> mobile fitness app —
-  free calculators, an exercise library, training programs and an
-  evidence-based knowledge base.<br />
-  Dark-first, bilingual (EN/ES), SEO-first, and built to mirror the mobile app 1:1.
+  <a href="https://github.com/Ricwolf19/metri">Metri</a> mobile fitness app.
+  On the web, Metri <em>is</em> the product: a suite of free, no-account fitness
+  calculators plus a bilingual, evidence-based knowledge base — with an optional
+  account for saved history, favorites and sync.<br />
+  Dark-first, bilingual (EN/ES), SEO-first, installable as a PWA.
 </p>
 
 <p align="center">
@@ -19,84 +20,96 @@
   <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-bef82b?labelColor=18181b" />
 </p>
 
+## What is Metri Web?
+
+Metri Web is a fully functional fitness toolkit you can use right now — no
+sign-up required. The 16 calculators and the knowledge base are bundled content
+that renders without a database, so the core experience works offline and stays
+fast. Create an optional account only if you want to **save** results, pin
+favorites and sync across devices. It's free and open source.
+
 ## Features
 
-- **8 fitness calculators** — 1RM, TDEE/BMR, macros, body fat (Navy), BMI, FFMI,
-  hydration and barbell plates. Same formulas as the app, instant in-browser.
-  Inputs live in the URL, so every result is shareable as a link or QR code —
-  no account, no stored state.
-- **Exercise library** — form guides with target muscles, equipment and
-  step-by-step technique; filterable by muscle group and equipment.
-- **Training programs** — multi-week routines with per-day exercises, sets/reps.
-- **Knowledge base** — MDX guides on nutrition, training and recovery with search.
-- **Bilingual** — English at the root, Spanish under `/es` with localized slugs
-  and reciprocal hreflang.
-- **Advanced SEO** — static generation, per-page metadata, JSON-LD, dynamic OG
-  images, sitemap + robots. See [`docs/seo`](./docs/seo).
+- **16 free calculators** — 1RM, TDEE/BMR, macros, body fat, BMI, FFMI,
+  hydration, barbell plates, ideal weight, calorie deficit, protein, lean body
+  mass, heart-rate zones, waist-to-height, Wilks/DOTS and calories burned. Each
+  supports metric/imperial units and a side-by-side **compare mode**. Inputs live
+  in the URL, so every result is **shareable** as a link or QR code with a
+  dynamic Open Graph share card. Commonly used ones carry a "Popular" marker.
+- **Bilingual knowledge base** — ~20 MDX guides across 8 categories
+  (getting-started, calculators, nutrition, training, recovery, supplements,
+  progress, glossary) with search and a grouped, compact listing.
+- **Optional accounts** — email + password or Google/GitHub sign-in (with
+  account linking and password reset). Save calculation **history** (explicit
+  save), pin **favorites** for calculators and docs, and manage your profile and
+  settings. Anonymous usage is never stored in the database.
+- **Installable PWA** — works offline, with offline-capable calculators, an
+  offline fallback page and an install prompt.
+- **Bilingual routing** — English at the root, Spanish under `/es` with
+  localized slugs and reciprocal hreflang.
+- **Advanced SEO** — server-first rendering, the Metadata API, JSON-LD,
+  file-based sitemap/robots/manifest and dynamic OG images.
+- **Admin dashboard** — a role-gated `/admin` area with in-app analytics drawn
+  from Postgres and PostHog (mobile sync from the app is planned).
 
 ## Tech stack
 
-| Layer | Choice |
-|-------|--------|
-| Framework | Next.js 16 (App Router, React 19, RSC) |
-| Package manager / runner | Bun |
-| Styling | Tailwind CSS v4 (CSS-first `@theme`) |
-| Animation | Framer Motion |
-| Icons | Iconoir (`@/components/icons` barrel) |
-| Content | MDX (`next-mdx-remote`) |
-| Database | Drizzle ORM + Neon (Postgres) — *optional, for accounts* |
-| Auth | Better Auth — *optional* |
-| Analytics | Vercel Analytics + Speed Insights, optional GA4 |
+| Layer                     | Choice                                              |
+| ------------------------- | --------------------------------------------------- |
+| Framework                 | Next.js 16 (App Router, React 19, Server Components) |
+| Language                  | TypeScript (strict)                                 |
+| Styling                   | Tailwind CSS v4 (CSS-first `@theme`)                |
+| Animation                 | Framer Motion                                       |
+| Icons                     | Iconoir (`@/components/icons` barrel)               |
+| Content                   | MDX (`next-mdx-remote`)                              |
+| Database                  | Drizzle ORM + Neon (Postgres) — _accounts only_     |
+| Auth                      | Better Auth (email + password, Google/GitHub)       |
+| Product analytics         | PostHog · GA4 · Vercel Analytics + Speed Insights   |
+| Package manager / runner  | Bun                                                 |
 
-The **calculators, exercises, programs and docs are bundled static content** —
-they need no database and render as static HTML. The DB + auth layer powers
-accounts and saved history and activates only when configured.
+The **calculators and docs are bundled static content** — they need no database
+and render as static HTML. The DB + auth layer powers accounts, saved history and
+favorites, and activates only when configured.
 
-## Getting started
+## Quick start
 
 ```bash
 bun install
-bun run dev        # http://localhost:3000
-
-bun run build      # production build
-bun run verify     # format + lint + typecheck + circular-deps + build
-bun run knip       # dead-code / dependency check
+cp .env.example .env   # fill in DEV values (all optional for the static site)
+bun run dev            # http://localhost:3000
 ```
 
-Copy `.env.example` → `.env.local`. The site runs fully without any env vars;
-see [`docs/SETUP.md`](./docs/SETUP.md) to wire up Neon, Better Auth, GA4 and
-Search Console.
+The site runs fully without any environment variables; accounts, analytics and
+the contact form activate only when their keys are present.
 
-## Architecture
+## Key scripts
 
-- **i18n routing** — two explicit route trees (`/` and `/es`) sharing components.
-  Locale is derived from the URL; the central route map (`lib/i18n/routes.ts`)
-  drives nav, the language switcher, hreflang and the sitemap. Server Components
-  receive `locale` as a prop (via `createT`) so every page is statically
-  generated in both languages.
-- **Design tokens** — ported 1:1 from mobile (`ink-*` scale, lime `#bef82b`
-  accent) as CSS variables that swap per theme. Never hardcode hex.
-- **Calculators** — pure formulas in `lib/calculations`; a config-driven registry
-  (`lib/calculators`) renders all 8 from one tested client island.
-- **No global state** — Server Components fetch/render directly; client state is
-  URL params + React Context.
+| Script                    | What it does                                         |
+| ------------------------- | ---------------------------------------------------- |
+| `bun run dev`             | Dev server (Turbopack)                               |
+| `bun run build`           | Production build                                     |
+| `bun run verify`          | format + lint + typecheck + circular-deps + build (CI gate) |
+| `bun run knip`            | Dead-code / unused-dependency check                  |
+| `bun run db:generate`     | Generate Drizzle migrations from the schema (local)  |
+| `bun run db:migrate`      | Apply pending migrations                             |
+| `bun run db:studio`       | Open Drizzle Studio                                  |
+| `bun run admin:bootstrap` | Create the first admin user                          |
+| `bun run gen:favicons`    | Regenerate favicons/PWA icons                        |
 
-## Project structure
+## Environment variables
 
-```
-app/              App Router routes (EN at root, ES under /es) + SEO files
-components/       icons, layout, marketing, shared, docs, calculators, exercises, programs, seo
-content/docs/     MDX knowledge base (en/es)
-lib/              i18n, theme, calculations, calculators, exercises, programs, db, auth, seo, og
-docs/             SEO playbook (EN/ES) + service setup guide
-drizzle/          generated migrations (after db:generate)
-```
+All configuration is optional — see [`.env.example`](./.env.example) for the full
+list and inline docs. In short: `DATABASE_URL` + `BETTER_AUTH_SECRET` enable
+accounts, OAuth pairs enable social sign-in, `RESEND_API_KEY` powers contact +
+password-reset email, and the `*_POSTHOG_*` / `NEXT_PUBLIC_GA_ID` keys enable
+analytics. Copy the file to `.env` and fill in only what you need.
 
-## Scripts
+## Deploying
 
-`dev` · `build` · `start` · `lint` · `typecheck` · `format` · `knip` ·
-`lint:circular` · `verify` (CI gate) · `gen:favicons` ·
-`db:generate` / `db:migrate` / `db:push` / `db:studio` / `db:seed`.
+Deploys on **Vercel**. Database migrations apply automatically during the build
+via `scripts/vercel-migrate.mjs` (wired into the `vercel-build` script), so you
+generate migrations locally with `db:generate`, commit them, and the deploy runs
+`db:migrate` for you.
 
 ## License
 

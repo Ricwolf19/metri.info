@@ -18,21 +18,21 @@ export type LegalContent = {
 export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
   about: {
     en: {
-      title: "About METRI",
-      lead: "METRI is a free, open-source toolkit for people who take training seriously — accurate calculators and evidence-based guides, with no paywalls and no clutter.",
+      title: "About Metri",
+      lead: "Metri is a free, open-source toolkit for people who take training seriously — accurate calculators and evidence-based guides, with no paywalls and no clutter.",
       updated: "",
       sections: [
         {
-          heading: "What METRI is",
+          heading: "What Metri is",
           body: [
-            "METRI is web-first. Every calculator — 1RM, TDEE, macros, body fat, BMI, FFMI, hydration and plate loading — runs instantly in your browser, free, forever. Alongside them is a growing knowledge base of practical, no-nonsense guides on nutrition, training and recovery.",
-            "A native iOS and Android app is in development as an optional extra: the same tools, fully offline, with progress tracking and reminders. You never need it to use METRI — the web is the product.",
+            "Metri is web-first. Every calculator — 1RM, TDEE, macros, body fat, BMI, FFMI, hydration and plate loading — runs instantly in your browser, free, forever. Alongside them is a growing knowledge base of practical, no-nonsense guides on nutrition, training and recovery.",
+            "A native iOS and Android app is in development as an optional extra: the same tools, fully offline, with progress tracking and reminders. You never need it to use Metri — the web is the product.",
           ],
         },
         {
           heading: "Free and open source",
           body: [
-            "METRI is MIT-licensed and developed in the open. There are no subscriptions, no locked features and no ads. You can read the code, file issues, suggest features or fork it entirely.",
+            "Metri is MIT-licensed and developed in the open. There are no subscriptions, no locked features and no ads. You can read the code, file issues, suggest features or fork it entirely.",
             "Keeping it open keeps it honest: the formulas behind every result are inspectable, so you can trust what the numbers mean.",
           ],
         },
@@ -45,27 +45,27 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
         {
           heading: "Who builds it",
           body: [
-            "METRI is built and maintained independently. Contributions are welcome — the best place to get involved is the GitHub repository.",
+            "Metri is built and maintained independently. Contributions are welcome — the best place to get involved is the GitHub repository.",
           ],
         },
       ],
     },
     es: {
-      title: "Acerca de METRI",
-      lead: "METRI es un conjunto de herramientas gratuito y de código abierto para quienes se toman el entrenamiento en serio: calculadoras precisas y guías basadas en evidencia, sin muros de pago ni distracciones.",
+      title: "Acerca de Metri",
+      lead: "Metri es un conjunto de herramientas gratuito y de código abierto para quienes se toman el entrenamiento en serio: calculadoras precisas y guías basadas en evidencia, sin muros de pago ni distracciones.",
       updated: "",
       sections: [
         {
-          heading: "Qué es METRI",
+          heading: "Qué es Metri",
           body: [
-            "METRI es, ante todo, web. Todas las calculadoras —1RM, TDEE, macros, grasa corporal, IMC, FFMI, hidratación y carga de discos— funcionan al instante en tu navegador, gratis y para siempre. Junto a ellas hay una base de conocimiento en crecimiento con guías prácticas y directas sobre nutrición, entrenamiento y recuperación.",
-            "Una app nativa para iOS y Android está en desarrollo como un extra opcional: las mismas herramientas, totalmente sin conexión, con seguimiento de progreso y recordatorios. Nunca la necesitas para usar METRI: la web es el producto.",
+            "Metri es, ante todo, web. Todas las calculadoras —1RM, TDEE, macros, grasa corporal, IMC, FFMI, hidratación y carga de discos— funcionan al instante en tu navegador, gratis y para siempre. Junto a ellas hay una base de conocimiento en crecimiento con guías prácticas y directas sobre nutrición, entrenamiento y recuperación.",
+            "Una app nativa para iOS y Android está en desarrollo como un extra opcional: las mismas herramientas, totalmente sin conexión, con seguimiento de progreso y recordatorios. Nunca la necesitas para usar Metri: la web es el producto.",
           ],
         },
         {
           heading: "Gratis y de código abierto",
           body: [
-            "METRI tiene licencia MIT y se desarrolla de forma abierta. No hay suscripciones, ni funciones bloqueadas, ni anuncios. Puedes leer el código, reportar problemas, sugerir funciones o hacer un fork completo.",
+            "Metri tiene licencia MIT y se desarrolla de forma abierta. No hay suscripciones, ni funciones bloqueadas, ni anuncios. Puedes leer el código, reportar problemas, sugerir funciones o hacer un fork completo.",
             "Mantenerlo abierto lo mantiene honesto: las fórmulas detrás de cada resultado son inspeccionables, así puedes confiar en lo que significan los números.",
           ],
         },
@@ -78,7 +78,7 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
         {
           heading: "Quién lo construye",
           body: [
-            "METRI se construye y mantiene de forma independiente. Las contribuciones son bienvenidas; el mejor lugar para participar es el repositorio de GitHub.",
+            "Metri se construye y mantiene de forma independiente. Las contribuciones son bienvenidas; el mejor lugar para participar es el repositorio de GitHub.",
           ],
         },
       ],
@@ -125,7 +125,7 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
         {
           heading: "Children",
           body: [
-            "METRI is not directed at children under 13, and we do not knowingly collect their data.",
+            "Metri is not directed at children under 13, and we do not knowingly collect their data.",
           ],
         },
       ],
@@ -169,7 +169,7 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
         {
           heading: "Menores",
           body: [
-            "METRI no está dirigido a menores de 13 años y no recopilamos sus datos de forma consciente.",
+            "Metri no está dirigido a menores de 13 años y no recopilamos sus datos de forma consciente.",
           ],
         },
       ],
@@ -179,37 +179,37 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
   terms: {
     en: {
       title: "Terms of Service",
-      lead: "The short version: METRI is free, provided as-is, and is not medical advice. Use your judgment.",
+      lead: "The short version: Metri is free, provided as-is, and is not medical advice. Use your judgment.",
       updated: "Last updated: June 2026",
       sections: [
         {
           heading: "Acceptance",
           body: [
-            "By using METRI you agree to these terms. If you do not agree, please do not use the service.",
+            "By using Metri you agree to these terms. If you do not agree, please do not use the service.",
           ],
         },
         {
           heading: "Not medical advice",
           body: [
-            "METRI's calculators and guides are for educational and informational purposes only. They are estimates based on published formulas and are not a substitute for professional medical, nutritional or fitness advice. Consult a qualified professional before making decisions about your health or training.",
+            "Metri's calculators and guides are for educational and informational purposes only. They are estimates based on published formulas and are not a substitute for professional medical, nutritional or fitness advice. Consult a qualified professional before making decisions about your health or training.",
           ],
         },
         {
           heading: "Provided “as is”",
           body: [
-            "The service is provided without warranties of any kind. We do not guarantee that results are accurate for your individual circumstances or that the service will be uninterrupted or error-free. To the extent permitted by law, we are not liable for any loss arising from your use of METRI.",
+            "The service is provided without warranties of any kind. We do not guarantee that results are accurate for your individual circumstances or that the service will be uninterrupted or error-free. To the extent permitted by law, we are not liable for any loss arising from your use of Metri.",
           ],
         },
         {
           heading: "Your account",
           body: [
-            "If you create an account, you are responsible for keeping access to it secure and for the activity that happens under it. Don't use METRI to break the law or to disrupt the service for others.",
+            "If you create an account, you are responsible for keeping access to it secure and for the activity that happens under it. Don't use Metri to break the law or to disrupt the service for others.",
           ],
         },
         {
           heading: "Open-source license",
           body: [
-            "The METRI source code is released under the MIT License. Your use of the code is governed by that license, which is available in the repository.",
+            "The Metri source code is released under the MIT License. Your use of the code is governed by that license, which is available in the repository.",
           ],
         },
         {
@@ -222,37 +222,37 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
     },
     es: {
       title: "Términos del Servicio",
-      lead: "La versión corta: METRI es gratis, se ofrece tal cual y no es consejo médico. Usa tu criterio.",
+      lead: "La versión corta: Metri es gratis, se ofrece tal cual y no es consejo médico. Usa tu criterio.",
       updated: "Última actualización: junio de 2026",
       sections: [
         {
           heading: "Aceptación",
           body: [
-            "Al usar METRI aceptas estos términos. Si no estás de acuerdo, por favor no uses el servicio.",
+            "Al usar Metri aceptas estos términos. Si no estás de acuerdo, por favor no uses el servicio.",
           ],
         },
         {
           heading: "No es consejo médico",
           body: [
-            "Las calculadoras y guías de METRI tienen fines únicamente educativos e informativos. Son estimaciones basadas en fórmulas publicadas y no sustituyen el consejo profesional médico, nutricional o deportivo. Consulta a un profesional cualificado antes de tomar decisiones sobre tu salud o entrenamiento.",
+            "Las calculadoras y guías de Metri tienen fines únicamente educativos e informativos. Son estimaciones basadas en fórmulas publicadas y no sustituyen el consejo profesional médico, nutricional o deportivo. Consulta a un profesional cualificado antes de tomar decisiones sobre tu salud o entrenamiento.",
           ],
         },
         {
           heading: "Se ofrece “tal cual”",
           body: [
-            "El servicio se ofrece sin garantías de ningún tipo. No garantizamos que los resultados sean exactos para tus circunstancias individuales ni que el servicio sea ininterrumpido o esté libre de errores. En la medida que permita la ley, no somos responsables de ninguna pérdida derivada del uso de METRI.",
+            "El servicio se ofrece sin garantías de ningún tipo. No garantizamos que los resultados sean exactos para tus circunstancias individuales ni que el servicio sea ininterrumpido o esté libre de errores. En la medida que permita la ley, no somos responsables de ninguna pérdida derivada del uso de Metri.",
           ],
         },
         {
           heading: "Tu cuenta",
           body: [
-            "Si creas una cuenta, eres responsable de mantener su acceso seguro y de la actividad que ocurra en ella. No uses METRI para infringir la ley ni para perjudicar el servicio a otros.",
+            "Si creas una cuenta, eres responsable de mantener su acceso seguro y de la actividad que ocurra en ella. No uses Metri para infringir la ley ni para perjudicar el servicio a otros.",
           ],
         },
         {
           heading: "Licencia de código abierto",
           body: [
-            "El código fuente de METRI se publica bajo la Licencia MIT. Tu uso del código se rige por esa licencia, disponible en el repositorio.",
+            "El código fuente de Metri se publica bajo la Licencia MIT. Tu uso del código se rige por esa licencia, disponible en el repositorio.",
           ],
         },
         {

@@ -25,24 +25,20 @@ const entry = (
 const sitemap = (): MetadataRoute.Sitemap => {
   const now = new Date();
 
-  // Static sections (exercises/programs are temporarily disabled)
   const sections: RouteId[] = ["home", "tools", "docs", "download"];
   const staticEntries = sections.map((id) =>
     entry(ROUTES[id].en, ROUTES[id].es, id === "home" ? 1 : 0.7, "weekly", now),
   );
 
-  // Legal / about / contact — low priority, rarely changes
   const legal: RouteId[] = ["about", "contact", "privacy", "terms"];
   const legalEntries = legal.map((id) =>
     entry(ROUTES[id].en, ROUTES[id].es, 0.3, "yearly", now),
   );
 
-  // Calculators — highest-value pages
   const calcEntries = CALC_IDS.map((id) =>
     entry(ROUTES[id].en, ROUTES[id].es, 0.9, "monthly", now),
   );
 
-  // Docs
   const docEntries = getDocSlugs("en").map((slug) =>
     entry(`/docs/${slug}`, `/es/docs/${slug}`, 0.6, "monthly", now),
   );

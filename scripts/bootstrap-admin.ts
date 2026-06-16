@@ -27,7 +27,7 @@ for (const key of ["DATABASE_URL", "BETTER_AUTH_SECRET"]) {
 }
 
 const email = process.env.ADMIN_EMAIL ?? "rhtc19@gmail.com";
-const name = process.env.ADMIN_NAME ?? "METRI Admin";
+const name = process.env.ADMIN_NAME ?? "Metri Admin";
 const generated = !process.env.ADMIN_PASSWORD;
 const password =
   process.env.ADMIN_PASSWORD ?? randomBytes(18).toString("base64url");

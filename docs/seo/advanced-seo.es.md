@@ -1,6 +1,6 @@
 # Manual de SEO avanzado (Next.js App Router)
 
-> Este es el estándar de SEO de METRI y una plantilla para futuros proyectos.
+> Este es el estándar de SEO de Metri y una plantilla para futuros proyectos.
 > Objetivo: posicionar para búsquedas competitivas de alta intención (p. ej.
 > `calculadora ffmi`, `calculadora tdee`) en **inglés y español**, con
 > excelentes Core Web Vitals.
@@ -89,7 +89,7 @@ usar códigos de idioma reales (`en`, `es`) e incluir siempre `x-default`.
 
 Se definen una vez y los heredan todas las páginas: `metadataBase` (obligatorio
 para que las URLs relativas de OG/canonical se resuelvan a absolutas), plantilla
-de título (`%s · METRI`), descripción por defecto, Open Graph, Twitter card,
+de título (`%s · Metri`), descripción por defecto, Open Graph, Twitter card,
 robots, `appleWebApp`, `category`.
 
 ### Dinámicos (por página)

@@ -1,6 +1,6 @@
 # Advanced SEO playbook (Next.js App Router)
 
-> This is the SEO standard for METRI and a template for future projects.
+> This is the SEO standard for Metri and a template for future projects.
 > Goal: rank for high-intent, competitive queries (e.g. `ffmi calculator`,
 > `tdee calculator`) in **English and Spanish**, with excellent Core Web Vitals.
 
@@ -85,7 +85,7 @@ language codes (`en`, `es`), and always include `x-default`.
 ### Static (root `app/layout.tsx`)
 
 Set once, inherited by all pages: `metadataBase` (required for relative OG/
-canonical URLs to resolve absolute), title template (`%s · METRI`), default
+canonical URLs to resolve absolute), title template (`%s · Metri`), default
 description, Open Graph, Twitter card, robots, `appleWebApp`, `category`.
 
 ### Dynamic (per page)

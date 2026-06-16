@@ -19,7 +19,7 @@ export const OpenSourceCTA = () => {
           />
           <h2 className="relative text-3xl font-bold tracking-tight text-balance text-ink-50 sm:text-4xl">
             {t("oss.title").replace(/\.$/, "")}{" "}
-            <GradientText>METRI</GradientText>
+            <GradientText>Metri</GradientText>
           </h2>
           <p className="relative mx-auto mt-4 max-w-xl text-ink-300">
             {t("oss.subtitle")}

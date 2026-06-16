@@ -31,8 +31,8 @@ export const PhoneMockup = () => (
           <MetriMark className="h-5 w-5" />
         </span>
         <div>
-          <p className="text-[11px] font-medium tracking-wide text-ink-400 uppercase">
-            METRI
+          <p className="text-[11px] font-medium tracking-wide text-ink-400">
+            Metri
           </p>
           <p className="text-sm font-semibold text-ink-50">Hi, lifter</p>
         </div>

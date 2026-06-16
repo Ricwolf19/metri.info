@@ -4,7 +4,7 @@ import { absoluteUrl, siteUrl } from "@/lib/utils";
 export const organizationSchema = () => ({
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "METRI",
+  name: "Metri",
   url: siteUrl,
   logo: absoluteUrl("/icon.svg"),
   sameAs: ["https://github.com/Ricwolf19/metri"],
@@ -14,7 +14,7 @@ export const organizationSchema = () => ({
 export const websiteSchema = () => ({
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "METRI",
+  name: "Metri",
   url: siteUrl,
   inLanguage: ["en", "es"],
   potentialAction: {

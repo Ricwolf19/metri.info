@@ -54,7 +54,6 @@ export const DownloadView = ({ locale }: { locale: Locale }) => {
         </div>
       </div>
 
-      {/* Platforms — placeholders now; swap for store badges + QR at launch. */}
       <div className="mx-auto mt-16 max-w-2xl">
         <h2 className="text-center text-xs font-semibold tracking-wider text-ink-400 uppercase">
           {t("download.platformsTitle")}
