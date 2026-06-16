@@ -4,6 +4,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
+import { MetaPixel } from "@/components/analytics/MetaPixel";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { Providers } from "@/components/providers";
@@ -100,6 +101,7 @@ const NO_FLASH = `(function(){try{var m=document.cookie.match(/(?:^|; )metri_the
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
+  const fbPixelId = process.env.NEXT_PUBLIC_FB_PIXEL_ID;
 
   // `lang` defaults to "en"; the client I18nProvider corrects it to "es" on /es
   // routes. `data-theme` defaults to dark and the no-flash script applies the
@@ -127,6 +129,8 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         <SpeedInsights />
         {/* Google Analytics 4 — only when NEXT_PUBLIC_GA_ID is set. */}
         {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
+        {/* Meta Pixel — only when NEXT_PUBLIC_FB_PIXEL_ID is set. */}
+        {fbPixelId ? <MetaPixel pixelId={fbPixelId} /> : null}
       </body>
     </html>
   );
