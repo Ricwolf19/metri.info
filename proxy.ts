@@ -83,6 +83,6 @@ export const config = {
    * favicons), so the proxy never redirects those.
    */
   matcher: [
-    "/((?!_next/|api/|og/|sitemap.xml|robots.txt|manifest.webmanifest|sw.js|offline|.*\\.).*)",
+    "/((?!_next/|api/|ingest/|og/|sitemap.xml|robots.txt|manifest.webmanifest|sw.js|offline|.*\\.).*)",
   ],
 };

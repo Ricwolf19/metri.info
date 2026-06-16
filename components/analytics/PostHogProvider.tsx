@@ -4,8 +4,9 @@ import posthog from "posthog-js";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
 
+import { authClient } from "@/lib/auth/client";
+
 const key = process.env.NEXT_PUBLIC_POSTHOG_KEY;
-const host = process.env.NEXT_PUBLIC_POSTHOG_HOST;
 
 const dntEnabled = () =>
   typeof navigator !== "undefined" &&
@@ -19,7 +20,10 @@ const start = () => {
   if (started || !key || typeof window === "undefined" || dntEnabled()) return;
   started = true;
   posthog.init(key, {
-    api_host: host || "https://us.i.posthog.com",
+    // First-party reverse proxy (see next.config rewrites) so ad blockers don't
+    // drop events; `ui_host` keeps the toolbar/links pointing at PostHog itself.
+    api_host: "/ingest",
+    ui_host: "https://us.posthog.com",
     autocapture: true,
     enable_heatmaps: true,
     disable_session_recording: false,
@@ -47,6 +51,30 @@ const PageViews = () => {
   return null;
 };
 
+/** Tie events to the signed-in user (and reset on sign-out) so funnels,
+ * retention and per-person views work. `role` is included when present. */
+const Identify = () => {
+  const { data } = authClient.useSession();
+  const user = data?.user as
+    | { id: string; email?: string; name?: string; role?: string }
+    | undefined;
+
+  useEffect(() => {
+    if (!started) return;
+    if (user?.id) {
+      posthog.identify(user.id, {
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      });
+    } else {
+      posthog.reset();
+    }
+  }, [user?.id, user?.email, user?.name, user?.role]);
+
+  return null;
+};
+
 /** Initializes PostHog only when a key is configured; otherwise a true no-op so
  * local dev and unconfigured deployments stay clean. */
 export const PostHogProvider = ({
@@ -63,6 +91,7 @@ export const PostHogProvider = ({
       <Suspense fallback={null}>
         <PageViews />
       </Suspense>
+      <Identify />
       {children}
     </>
   );

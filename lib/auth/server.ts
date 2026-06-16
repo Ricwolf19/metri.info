@@ -4,6 +4,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { Resend } from "resend";
 
+import { captureServer } from "@/lib/analytics/posthog-server";
 import { db } from "@/lib/db";
 import { account, session, user, verification } from "@/lib/db/schema";
 import { siteUrl } from "@/lib/utils";
@@ -104,6 +105,22 @@ const trustedOrigins = (() => {
 })();
 
 /**
+ * Cookie domain for cross-subdomain sessions. Returns `.apex` (e.g.
+ * `.metri.info`) so the session cookie set on the apex is also sent on `www`
+ * (and vice-versa) — this is what keeps you signed in across the apex↔www 308.
+ * Null on localhost / raw IPs, where a Domain attribute would break dev cookies.
+ */
+const cookieDomain = (() => {
+  try {
+    const host = new URL(siteUrl).hostname;
+    if (host === "localhost" || /^\d+\.\d+\.\d+\.\d+$/.test(host)) return null;
+    return `.${host.replace(/^www\./, "")}`;
+  } catch {
+    return null;
+  }
+})();
+
+/**
  * Better Auth server config. Self-hosted on our Neon DB via Drizzle. Builds
  * fine without env vars (no connection at construction); sign-in works once
  * BETTER_AUTH_SECRET + DATABASE_URL are set. Each OAuth provider turns on only
@@ -126,11 +143,40 @@ export const auth = betterAuth({
     accountLinking: {
       enabled: true,
       trustedProviders: ["google", "github"],
+      // Trusted providers (Google/GitHub) verify the email themselves, so allow
+      // linking even when the pre-existing local account is unverified — without
+      // this, a bootstrap admin created via email+password (emailVerified=false)
+      // hits `account_not_linked` when signing in with the same Google/GitHub email.
+      requireLocalEmailVerified: false,
     },
   },
+  // Share the session cookie across apex + www so the canonical 308 between them
+  // never drops the session. Omitted entirely on localhost (no Domain attr).
+  ...(cookieDomain && {
+    advanced: {
+      crossSubDomainCookies: { enabled: true, domain: cookieDomain },
+    },
+  }),
   user: {
     additionalFields: {
       role: { type: "string", input: false, required: false },
+    },
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        // Fires exactly once per new account — the funnel's final step. Captured
+        // server-side so email and social signups count uniformly (the client
+        // can't distinguish a new social user from a returning one). Method is a
+        // best-effort read of the endpoint path (`/callback/<provider>` vs email).
+        after: async (newUser, context) => {
+          const path = (context as { path?: string } | null)?.path ?? "";
+          const method = path.includes("callback")
+            ? (path.split("/").pop() ?? "social")
+            : "email";
+          await captureServer(newUser.id, "signup_completed", { method });
+        },
+      },
     },
   },
 });
