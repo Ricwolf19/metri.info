@@ -1,9 +1,12 @@
 import { BarList } from "@/components/admin/charts/BarList";
+import { FunnelChart } from "@/components/admin/charts/FunnelChart";
 import { Card, fmt, Placeholder } from "@/components/admin/ui";
 import {
   getCalcUsageTotals,
   getPageviewTotals,
+  getSignupFunnel,
   getTopCalcUsage,
+  getTopEvents,
   getTopPages,
   posthogConfigured,
 } from "@/lib/analytics/posthog";
@@ -41,12 +44,15 @@ const Split = ({ last7, last30 }: { last7: number; last30: number }) => (
  * Query API. Every card degrades to a "Connect PostHog" hint when the personal
  * API key isn't set, and to "No data" when configured but empty. */
 export const AnalyticsPanel = async () => {
-  const [pageviews, topPages, calcUsage, topCalcUsage] = await Promise.all([
-    getPageviewTotals(),
-    getTopPages(),
-    getCalcUsageTotals(),
-    getTopCalcUsage(),
-  ]);
+  const [pageviews, topPages, calcUsage, topCalcUsage, topEvents, funnel] =
+    await Promise.all([
+      getPageviewTotals(),
+      getTopPages(),
+      getCalcUsageTotals(),
+      getTopCalcUsage(),
+      getTopEvents(),
+      getSignupFunnel(),
+    ]);
 
   const phConfigured = posthogConfigured();
 
@@ -98,6 +104,38 @@ export const AnalyticsPanel = async () => {
               color: COLORS[i % COLORS.length],
             }))}
           />
+        ) : (
+          <Placeholder>No PostHog data available.</Placeholder>
+        )}
+      </Card>
+
+      <Card
+        title="Top events"
+        subtitle="Custom + product events · last 30 days"
+      >
+        {!phConfigured ? (
+          <ConnectHint />
+        ) : topEvents && topEvents.length > 0 ? (
+          <BarList
+            items={topEvents.map((e, i) => ({
+              label: e.event,
+              value: e.count,
+              color: COLORS[i % COLORS.length],
+            }))}
+          />
+        ) : (
+          <Placeholder>No PostHog data available.</Placeholder>
+        )}
+      </Card>
+
+      <Card
+        title="Signup funnel"
+        subtitle="Visit → calculator → sign-up → account · 30d, 7d window"
+      >
+        {!phConfigured ? (
+          <ConnectHint />
+        ) : funnel ? (
+          <FunnelChart steps={funnel} />
         ) : (
           <Placeholder>No PostHog data available.</Placeholder>
         )}

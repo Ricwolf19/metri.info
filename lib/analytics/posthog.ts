@@ -1,10 +1,16 @@
 import "server-only";
 
+import { POSTHOG_METRICS_TAG } from "@/lib/analytics/tags";
+
 const apiKey = process.env.POSTHOG_PERSONAL_API_KEY;
 const projectId = process.env.POSTHOG_PROJECT_ID;
-const host = (
-  process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.posthog.com"
-).replace("//us.i.", "//us.");
+// Query API host (reads data back out). Kept separate from the client's ingest
+// proxy: the browser sends events to `/ingest`, but server-side HogQL must hit
+// PostHog's API host directly. Override with POSTHOG_API_HOST for non-US clouds.
+const host = (process.env.POSTHOG_API_HOST || "https://us.posthog.com").replace(
+  /\/$/,
+  "",
+);
 
 export const posthogConfigured = () => Boolean(apiKey && projectId);
 
@@ -21,7 +27,7 @@ const runHogQL = async (query: string): Promise<unknown[] | null> => {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({ query: { kind: "HogQLQuery", query } }),
-      next: { revalidate: 3600 },
+      next: { revalidate: 3600, tags: [POSTHOG_METRICS_TAG] },
     });
     if (!res.ok) return null;
     const json = (await res.json()) as { results?: unknown[] };
@@ -102,4 +108,68 @@ export const getTopPages = async (): Promise<TopPage[] | null> => {
     path: r[0] ?? "/",
     views: Number(r[1] ?? 0),
   }));
+};
+
+export type TopEvent = { event: string; count: number };
+
+/** Top event names over the last 30 days — surfaces the custom product events
+ * (calculation_saved, favorite_toggled, share_clicked, …) alongside autocapture
+ * so the admin can see what people actually do, not just pageviews. */
+export const getTopEvents = async (): Promise<TopEvent[] | null> => {
+  const rows = await runHogQL(
+    `SELECT event, count() AS total
+     FROM events
+     WHERE timestamp >= now() - INTERVAL 30 DAY
+       AND event NOT IN ('$pageview', '$pageleave', '$autocapture')
+     GROUP BY event
+     ORDER BY total DESC
+     LIMIT 10`,
+  );
+  if (!rows) return null;
+  return (rows as [string, number][]).map((r) => ({
+    event: r[0] ?? "",
+    count: Number(r[1] ?? 0),
+  }));
+};
+
+export type FunnelStep = { label: string; count: number };
+
+/**
+ * Signup conversion funnel over the last 30 days, with a 7-day completion
+ * window per person. `windowFunnel` returns the furthest IN-ORDER step each
+ * person reached, so the counts strictly decrease and show where people drop:
+ *   visited → used a calculator → reached sign-up → created account.
+ */
+export const getSignupFunnel = async (): Promise<FunnelStep[] | null> => {
+  const rows = await runHogQL(
+    `SELECT
+       countIf(level >= 1) AS visited,
+       countIf(level >= 2) AS used_calculator,
+       countIf(level >= 3) AS reached_signup,
+       countIf(level >= 4) AS signed_up
+     FROM (
+       SELECT
+         person_id,
+         windowFunnel(604800)(
+           timestamp,
+           event = '$pageview',
+           event = 'calculator_used',
+           event = '$pageview' AND (properties.$pathname = '/sign-up' OR properties.$pathname = '/es/registrarse'),
+           event = 'signup_completed'
+         ) AS level
+       FROM events
+       WHERE timestamp >= now() - INTERVAL 30 DAY
+       GROUP BY person_id
+     )`,
+  );
+  if (!rows || rows.length === 0) return null;
+  const [visited, usedCalc, reachedSignup, signedUp] = (
+    rows[0] as number[]
+  ).map((n) => Number(n ?? 0));
+  return [
+    { label: "Visited", count: visited },
+    { label: "Used a calculator", count: usedCalc },
+    { label: "Reached sign-up", count: reachedSignup },
+    { label: "Created account", count: signedUp },
+  ];
 };
