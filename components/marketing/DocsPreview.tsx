@@ -5,9 +5,13 @@ import Link from "next/link";
 import {
   AppleIcon,
   ArrowRightIcon,
+  BookIcon,
+  CalculatorIcon,
   DumbbellIcon,
   HeartIcon,
   type IconProps,
+  TrendingUpIcon,
+  ZapIcon,
 } from "@/components/icons";
 import {
   AnimatedItem,
@@ -19,25 +23,52 @@ import { useI18n } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
 import { routePath } from "@/lib/i18n/routes";
 
+/** Mirrors DOC_CATEGORIES — the eight knowledge-base sections, with sample
+ * topics so the homepage reflects the real breadth of the docs. */
 const CATEGORIES: {
   icon: React.ComponentType<IconProps>;
-  titleKey: TranslationKey;
-  descKey: TranslationKey;
+  labelKey: TranslationKey;
+  topicsKey: TranslationKey;
 }[] = [
   {
+    icon: BookIcon,
+    labelKey: "docs.category.gettingStarted",
+    topicsKey: "docs.topics.gettingStarted",
+  },
+  {
+    icon: CalculatorIcon,
+    labelKey: "docs.category.calculators",
+    topicsKey: "docs.topics.calculators",
+  },
+  {
     icon: AppleIcon,
-    titleKey: "docs.catNutrition",
-    descKey: "docs.catNutritionDesc",
+    labelKey: "docs.category.nutrition",
+    topicsKey: "docs.topics.nutrition",
   },
   {
     icon: DumbbellIcon,
-    titleKey: "docs.catTraining",
-    descKey: "docs.catTrainingDesc",
+    labelKey: "docs.category.training",
+    topicsKey: "docs.topics.training",
   },
   {
     icon: HeartIcon,
-    titleKey: "docs.catRecovery",
-    descKey: "docs.catRecoveryDesc",
+    labelKey: "docs.category.recovery",
+    topicsKey: "docs.topics.recovery",
+  },
+  {
+    icon: ZapIcon,
+    labelKey: "docs.category.supplements",
+    topicsKey: "docs.topics.supplements",
+  },
+  {
+    icon: TrendingUpIcon,
+    labelKey: "docs.category.progress",
+    topicsKey: "docs.topics.progress",
+  },
+  {
+    icon: BookIcon,
+    labelKey: "docs.category.glossary",
+    topicsKey: "docs.topics.glossary",
   },
 ];
 
@@ -49,21 +80,23 @@ export const DocsPreview = () => {
       <SectionHeading
         eyebrow={t("nav.docs")}
         title={t("docs.title")}
-        subtitle={t("docs.subtitle")}
+        subtitle={t("home.docsLead")}
       />
 
-      <AnimatedSection className="mt-12 grid gap-5 md:grid-cols-3">
-        {CATEGORIES.map(({ icon: Icon, titleKey, descKey }) => (
-          <AnimatedItem key={titleKey}>
+      <AnimatedSection className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {CATEGORIES.map(({ icon: Icon, labelKey, topicsKey }) => (
+          <AnimatedItem key={labelKey}>
             <Link href={routePath("docs", locale)} className="block h-full">
-              <GlowCard className="h-full">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-ink-700 text-accent">
-                  <Icon size={22} />
+              <GlowCard className="flex h-full flex-col p-5">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink-700 text-accent">
+                  <Icon size={20} />
                 </span>
-                <h3 className="mt-4 text-lg font-semibold text-ink-50">
-                  {t(titleKey)}
+                <h3 className="mt-4 text-base font-semibold text-ink-50">
+                  {t(labelKey)}
                 </h3>
-                <p className="mt-2 text-sm text-ink-300">{t(descKey)}</p>
+                <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-ink-300">
+                  {t(topicsKey)}
+                </p>
               </GlowCard>
             </Link>
           </AnimatedItem>

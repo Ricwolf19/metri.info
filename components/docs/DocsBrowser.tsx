@@ -3,13 +3,39 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-import { ArrowRightIcon, SearchIcon } from "@/components/icons";
+import {
+  BookIcon,
+  CalculatorIcon,
+  DropletsIcon,
+  DumbbellIcon,
+  FlameIcon,
+  HomeIcon,
+  MoonIcon,
+  SearchIcon,
+  TrendingUpIcon,
+} from "@/components/icons";
 import { GlowCard } from "@/components/shared/GlowCard";
+import { PinButton } from "@/components/shared/PinButton";
+import { useFavoriteIds } from "@/lib/favorites/useFavorites";
 import { useT } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
 import type { DocCategory, DocMeta } from "@/lib/docs";
 
 type CategoryInfo = { category: DocCategory; labelKey: TranslationKey };
+
+type IconType = typeof BookIcon;
+
+/** Per-category icon for the compact doc cards. */
+const CATEGORY_ICON: Record<DocCategory, IconType> = {
+  "getting-started": HomeIcon,
+  calculators: CalculatorIcon,
+  nutrition: DropletsIcon,
+  training: DumbbellIcon,
+  recovery: MoonIcon,
+  supplements: FlameIcon,
+  progress: TrendingUpIcon,
+  glossary: BookIcon,
+};
 
 export const DocsBrowser = ({
   docs,
@@ -22,6 +48,7 @@ export const DocsBrowser = ({
 }) => {
   const t = useT();
   const [query, setQuery] = useState("");
+  const pinned = useFavoriteIds("doc");
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -54,33 +81,41 @@ export const DocsBrowser = ({
       {filtered.length === 0 ? (
         <p className="mt-12 text-center text-ink-400">{t("docs.noResults")}</p>
       ) : (
-        <div className="mt-12 space-y-12">
+        <div className="mt-10 space-y-10">
           {categories.map(({ category, labelKey }) => {
             const items = filtered.filter((d) => d.category === category);
             if (items.length === 0) return null;
+            const Icon = CATEGORY_ICON[category];
             return (
               <section key={category}>
                 <h2 className="text-sm font-semibold tracking-wide text-ink-400 uppercase">
                   {t(labelKey)}
                 </h2>
-                <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {items.map((doc) => (
                     <Link
                       key={doc.slug}
                       href={`${basePath}/${doc.slug}`}
                       className="block h-full"
                     >
-                      <GlowCard className="flex h-full flex-col">
-                        <h3 className="text-lg font-semibold text-ink-50">
-                          {doc.title}
-                        </h3>
-                        <p className="mt-2 flex-1 text-sm text-ink-300">
-                          {doc.description}
-                        </p>
-                        <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-accent">
-                          {t("common.readMore")}
-                          <ArrowRightIcon size={15} />
+                      <GlowCard className="flex h-full items-start gap-3.5 p-4">
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-ink-700 text-accent">
+                          <Icon size={20} />
                         </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-sm font-semibold text-ink-50">
+                            {doc.title}
+                          </span>
+                          <span className="mt-1 line-clamp-2 block text-xs leading-relaxed text-ink-300">
+                            {doc.description}
+                          </span>
+                        </span>
+                        <PinButton
+                          itemType="doc"
+                          itemId={doc.slug}
+                          initialPinned={pinned.has(doc.slug)}
+                          className="-mt-1 -mr-1"
+                        />
                       </GlowCard>
                     </Link>
                   ))}

@@ -66,15 +66,15 @@ export const DocArticle = async ({
       articleSection: t(CATEGORY_LABEL[doc.meta.category]),
       inLanguage: locale,
       isAccessibleForFree: true,
-      author: { "@type": "Organization", name: "METRI" },
-      publisher: { "@type": "Organization", name: "METRI" },
+      author: { "@type": "Organization", name: "Metri" },
+      publisher: { "@type": "Organization", name: "Metri" },
       mainEntityOfPage: absoluteUrl(`${basePath}/${slug}`),
     },
     {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { name: "METRI", url: routePath("home", locale) },
+        { name: "Metri", url: routePath("home", locale) },
         { name: t("docs.title"), url: basePath },
         { name: doc.meta.title, url: `${basePath}/${slug}` },
       ].map((item, i) => ({
