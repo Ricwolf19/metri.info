@@ -1,9 +1,11 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import posthog from "posthog-js";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { CalcChart } from "@/components/calculators/CalcChart";
+import { SaveCalcButton } from "@/components/calculators/SaveCalcButton";
 import { ShareDialog } from "@/components/calculators/ShareDialog";
 import { Input } from "@/components/ui/input";
 import {
@@ -25,6 +27,38 @@ const CM_TO_IN = 1 / 2.54;
 const r1 = (n: number) => Math.round(n * 10) / 10;
 const convertible = (unit?: string) => unit === "kg" || unit === "cm";
 const numeric = (s: string) => Number(s.replace(/[^0-9.-]/g, ""));
+
+const roundToStep = (value: number, step: number) => {
+  const decimals = (String(step).split(".")[1] ?? "").length;
+  return Number(value.toFixed(decimals));
+};
+
+const StepButton = ({
+  label,
+  symbol,
+  disabled,
+  onClick,
+}: {
+  label: string;
+  symbol: "+" | "−";
+  disabled: boolean;
+  onClick: () => void;
+}) => (
+  <button
+    type="button"
+    aria-label={label}
+    disabled={disabled}
+    onClick={onClick}
+    className={cn(
+      "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-ink-600 bg-ink-800 font-mono text-lg text-ink-100 transition-colors",
+      "hover:bg-ink-700",
+      "focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none",
+      "disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-ink-800",
+    )}
+  >
+    {symbol}
+  </button>
+);
 
 const FieldInputs = ({
   config,
@@ -93,13 +127,21 @@ const FieldInputs = ({
               : 0.5
             : f.step;
         const hasRange = dispMin !== undefined && dispMax !== undefined;
+        const step = dispStep ?? 1;
+        const label = t(f.labelKey);
+        const nudge = (dir: 1 | -1) => {
+          let next = roundToStep(dispVal + dir * step, step);
+          if (dispMin !== undefined) next = Math.max(dispMin, next);
+          if (dispMax !== undefined) next = Math.min(dispMax, next);
+          onChange(f.name, toMetric(next, f.unit));
+        };
+        const atMin = dispMin !== undefined && dispVal <= dispMin;
+        const atMax = dispMax !== undefined && dispVal >= dispMax;
 
         return (
           <div key={f.name}>
             <div className="mb-1.5 flex items-baseline justify-between">
-              <span className="text-sm font-medium text-ink-200">
-                {t(f.labelKey)}
-              </span>
+              <span className="text-sm font-medium text-ink-200">{label}</span>
               <span className="font-mono text-sm text-ink-50">
                 {dispVal}
                 {displayUnit(f.unit) && (
@@ -109,18 +151,32 @@ const FieldInputs = ({
                 )}
               </span>
             </div>
-            <Input
-              type="number"
-              inputMode="decimal"
-              value={String(dispVal)}
-              min={dispMin}
-              max={dispMax}
-              step={dispStep}
-              onChange={(e) =>
-                onChange(f.name, toMetric(Number(e.target.value), f.unit))
-              }
-              className="font-mono"
-            />
+            <div className="flex items-center gap-2">
+              <StepButton
+                symbol="−"
+                label={t("calc.decrease", { field: label })}
+                disabled={atMin}
+                onClick={() => nudge(-1)}
+              />
+              <Input
+                type="number"
+                inputMode="decimal"
+                value={String(dispVal)}
+                min={dispMin}
+                max={dispMax}
+                step={dispStep}
+                onChange={(e) =>
+                  onChange(f.name, toMetric(Number(e.target.value), f.unit))
+                }
+                className="text-center font-mono"
+              />
+              <StepButton
+                symbol="+"
+                label={t("calc.increase", { field: label })}
+                disabled={atMax}
+                onClick={() => nudge(1)}
+              />
+            </div>
             {hasRange && (
               <input
                 type="range"
@@ -156,35 +212,69 @@ const ResultPanel = ({
 
   if (!result) {
     return (
-      <div className="flex flex-col rounded-xl border border-ink-600 bg-ink-850 p-5">
+      <div
+        className={cn(
+          "flex min-h-44 flex-col rounded-xl border border-ink-600 bg-ink-850 p-5",
+          !compact && "h-full",
+        )}
+      >
         <p className="m-auto text-sm text-ink-400">{t("common.loading")}</p>
       </div>
     );
   }
 
+  const chart = result.chart;
+  const chartSize = compact ? "sm" : "lg";
+
   return (
-    <div className="flex flex-col rounded-xl border border-ink-600 bg-ink-850 p-5">
-      <p className="text-sm text-ink-400">{t(result.primaryLabelKey)}</p>
-      <p className="mt-1 font-mono text-4xl font-bold text-accent">
-        {result.primaryValue}
-        {result.primaryUnit && (
-          <span className="ml-1 text-lg text-ink-300">
-            {result.primaryUnit}
+    <div
+      className={cn(
+        "flex flex-col rounded-xl border border-ink-600 bg-ink-850",
+        compact ? "p-4" : "h-full p-5",
+      )}
+    >
+      <div className="flex flex-col items-center text-center">
+        <p className="text-sm text-ink-400">{t(result.primaryLabelKey)}</p>
+        <p
+          className={cn(
+            "mt-1 font-mono font-bold text-accent",
+            compact ? "text-3xl" : "text-4xl",
+          )}
+        >
+          {result.primaryValue}
+          {result.primaryUnit && (
+            <span className="ml-1 text-lg text-ink-300">
+              {result.primaryUnit}
+            </span>
+          )}
+        </p>
+        {result.noteKey && (
+          <span className="mt-2.5 inline-flex w-fit items-center rounded-md border border-ink-500 bg-ink-700 px-2.5 py-1 text-xs font-semibold text-accent">
+            {t(result.noteKey)}
           </span>
         )}
-      </p>
-      {result.noteKey && (
-        <span className="mt-3 inline-flex w-fit items-center rounded-md border border-ink-600 bg-ink-700 px-2 py-0.5 text-xs font-medium text-accent">
-          {t(result.noteKey)}
-        </span>
-      )}
-      {!compact && result.chart && (
-        <div className="mt-5">
-          <CalcChart chart={result.chart} />
+      </div>
+
+      {chart && (
+        <div
+          className={cn(
+            "flex items-center justify-center",
+            compact ? "mt-4" : "mt-6 flex-1",
+          )}
+        >
+          <div className="w-full">
+            <CalcChart chart={chart} size={chartSize} />
+          </div>
         </div>
       )}
+
       {result.rows && result.rows.length > 0 && (
-        <ul className="mt-4 space-y-1.5 border-t border-ink-700 pt-4">
+        <ul
+          className={cn(
+            "space-y-1.5 border-t border-ink-700 pt-4",
+            chart ? "mt-4" : "mt-auto pt-4",
+          )}
+        >
           {result.rows.map((row, i) => (
             <li key={i} className="flex items-center justify-between text-sm">
               <span className="text-ink-300">
@@ -215,7 +305,7 @@ const DeltaBar = ({
   const delta = numeric(rb.primaryValue) - numeric(ra.primaryValue);
   const unit = ra.primaryUnit ? ` ${ra.primaryUnit}` : "";
   return (
-    <div className="flex items-center justify-between rounded-xl border border-ink-600 bg-ink-850 px-5 py-4">
+    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 rounded-xl border border-ink-600 bg-ink-850 px-4 py-4 sm:px-5">
       <span className="text-sm font-medium text-ink-300">
         {t("calc.difference")} (B − A)
       </span>
@@ -274,8 +364,6 @@ export const Calculator = ({ id }: { id: CalcId }) => {
     } catch {}
   };
 
-  // Values are stored in METRIC so compute + shareable URLs stay stable. Set "A"
-  // reads flat params; set "B" (compare) reads the packed `b` param.
   const [a, setA] = useState<CalcValues>(() =>
     readValues(config, (k) => searchParams.get(k)),
   );
@@ -290,6 +378,18 @@ export const Calculator = ({ id }: { id: CalcId }) => {
   });
 
   const search = buildSearch(config, a, b, compare);
+
+  const lastTracked = useRef<string | null>(null);
+  useEffect(() => {
+    if (!config.compute(a)) return;
+    if (lastTracked.current === id) return;
+    const timer = setTimeout(() => {
+      if (!posthog.__loaded) return;
+      lastTracked.current = id;
+      posthog.capture("calculator_used", { calculator: id });
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [config, id, a]);
 
   const commit = useCallback(
     (nextA: CalcValues, nextB: CalcValues, nextCompare: boolean) => {
@@ -318,7 +418,7 @@ export const Calculator = ({ id }: { id: CalcId }) => {
   };
 
   return (
-    <div className="rounded-card border border-ink-600 bg-ink-800 p-6">
+    <div className="rounded-card border border-ink-600 bg-ink-800 p-4 sm:p-6">
       {hasUnits && (
         <div className="mb-6 inline-flex rounded-lg border border-ink-600 bg-ink-900 p-0.5 text-xs font-medium">
           {(["metric", "imperial"] as const).map((u) => (
@@ -341,7 +441,7 @@ export const Calculator = ({ id }: { id: CalcId }) => {
 
       {compare ? (
         <div className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-x-6 gap-y-8 md:grid-cols-2">
             <div className="space-y-4">
               <ScenarioBadge tag="A" />
               <FieldInputs
@@ -379,6 +479,7 @@ export const Calculator = ({ id }: { id: CalcId }) => {
 
       <div className="mt-6 flex flex-wrap items-center gap-2 border-t border-ink-700 pt-5">
         <ShareDialog calcId={id} locale={locale} search={search} />
+        <SaveCalcButton id={id} values={a} />
         <button
           type="button"
           onClick={toggleCompare}

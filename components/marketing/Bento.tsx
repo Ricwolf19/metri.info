@@ -24,12 +24,12 @@ import { type RouteId, routePath } from "@/lib/i18n/routes";
 import { webAppRepo } from "@/lib/site";
 
 const CALC_CHIPS: { id: RouteId; key: TranslationKey }[] = [
-  { id: "ffmi", key: "tools.ffmi.title" },
-  { id: "onerm", key: "tools.onerm.title" },
   { id: "tdee", key: "tools.bmr.title" },
   { id: "macros", key: "tools.macros.title" },
+  { id: "onerm", key: "tools.onerm.title" },
   { id: "bodyfat", key: "tools.bodyfat.title" },
-  { id: "bmi", key: "tools.ideal.title" },
+  { id: "idealweight", key: "tools.idealweight.title" },
+  { id: "heartrate", key: "tools.heartrate.title" },
 ];
 
 const IconTile = ({ icon: Icon }: { icon: React.ComponentType<IconProps> }) => (

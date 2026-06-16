@@ -61,8 +61,6 @@ export const generateMetadata = async ({
   return {
     title,
     description: data.content.tagline,
-    // A shareable snapshot, not a canonical page: keep it out of the index but
-    // let the link credit flow to the real calculator.
     robots: { index: false, follow: true },
     alternates: { canonical: routePath(data.calcId, data.locale) },
     openGraph: {

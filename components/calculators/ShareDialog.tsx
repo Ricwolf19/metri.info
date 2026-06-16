@@ -22,8 +22,6 @@ import type { Locale } from "@/lib/i18n/config";
 import { cn } from "@/lib/utils";
 
 const noop = () => () => {};
-// Client-only check — false during SSR, resolved on hydration (no effect,
-// no hydration mismatch).
 const useNativeShare = () =>
   useSyncExternalStore(
     noop,
@@ -57,8 +55,6 @@ export const ShareDialog = ({
     if (!open) return;
     const { origin } = window.location;
     const suffix = `id=${calcId}&locale=${locale}${search ? `&${search}` : ""}`;
-    // Point at the /s share landing (rich OG preview when pasted in chats), not
-    // the static calc page whose preview can't read query params.
     setUrl(
       `${origin}/s/${calcId}?locale=${locale}${search ? `&${search}` : ""}`,
     );

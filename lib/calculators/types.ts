@@ -8,7 +8,15 @@ export type CalcId =
   | "bmi"
   | "ffmi"
   | "water"
-  | "plates";
+  | "plates"
+  | "idealweight"
+  | "deficit"
+  | "protein"
+  | "leanmass"
+  | "heartrate"
+  | "whtr"
+  | "wilks"
+  | "calsburned";
 
 export type SelectOption = { value: string; labelKey: TranslationKey };
 

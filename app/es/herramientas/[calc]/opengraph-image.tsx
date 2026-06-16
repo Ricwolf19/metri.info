@@ -2,7 +2,7 @@ import { CALC_CONTENT } from "@/lib/calculators/content";
 import { calcIdForSlug } from "@/lib/i18n/routes";
 import { ogContentType, ogSize, renderOg } from "@/lib/og";
 
-export const alt = "Calculadora METRI";
+export const alt = "Calculadora Metri";
 export const size = ogSize;
 export const contentType = ogContentType;
 

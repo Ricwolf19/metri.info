@@ -9,6 +9,7 @@ import { Container } from "@/components/shared/Container";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { CALC_IDS, routePath, type CalcRouteId } from "@/lib/i18n/routes";
 import { CALC_CONTENT } from "@/lib/calculators/content";
+import { isPopularCalc } from "@/lib/calculators/registry";
 import { absoluteUrl } from "@/lib/utils";
 
 const SECTION = {
@@ -63,7 +64,7 @@ export const CalculatorPage = async ({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { name: "METRI", url: routePath("home", locale) },
+        { name: "Metri", url: routePath("home", locale) },
         { name: t("nav.tools"), url: toolsPath },
         { name: c.h1, url: selfPath },
       ].map((item, i) => ({
@@ -87,9 +88,20 @@ export const CalculatorPage = async ({
           <span className="text-ink-300">{c.h1}</span>
         </nav>
 
-        <p className="mt-6 text-sm font-semibold tracking-wide text-accent uppercase">
-          {t("calc.eyebrow")}
-        </p>
+        <div className="mt-6 flex items-center gap-3">
+          <p className="text-sm font-semibold tracking-wide text-accent uppercase">
+            {t("calc.eyebrow")}
+          </p>
+          {isPopularCalc(id) && (
+            <span
+              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-ink-950/10 px-2 py-0.5 text-xs font-semibold tracking-wide text-ink-950 dark:bg-lime-400/10 dark:text-lime-400"
+              aria-label={t("tools.popularAria")}
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-ink-950 dark:bg-lime-400" />
+              {t("tools.popular")}
+            </span>
+          )}
+        </div>
         <h1 className="mt-2 text-4xl font-bold tracking-tight text-balance text-ink-50 sm:text-5xl">
           {c.h1}
         </h1>

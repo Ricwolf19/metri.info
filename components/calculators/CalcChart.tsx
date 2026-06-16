@@ -2,6 +2,7 @@
 
 import { useT } from "@/lib/i18n";
 import type { CalcChart as Chart } from "@/lib/calculators/types";
+import { cn } from "@/lib/utils";
 
 const clamp = (n: number, lo: number, hi: number) =>
   Math.max(lo, Math.min(hi, n));
@@ -11,18 +12,20 @@ const Gauge = ({
   min,
   max,
   color,
+  className = "h-32 w-32",
 }: {
   value: number;
   min: number;
   max: number;
   color: string;
+  className?: string;
 }) => {
   const R = 52;
   const C = 2 * Math.PI * R;
-  const ARC = 0.75; // 270°
+  const ARC = 0.75;
   const frac = clamp((value - min) / (max - min || 1), 0, 1);
   return (
-    <svg viewBox="0 0 120 120" className="h-32 w-32">
+    <svg viewBox="0 0 120 120" className={className}>
       <circle
         cx="60"
         cy="60"
@@ -55,17 +58,21 @@ const Ring = ({
   color,
   value,
   unit,
+  className = "h-32 w-32",
+  valueClass = "text-2xl",
 }: {
   frac: number;
   color: string;
   value: string;
   unit?: string;
+  className?: string;
+  valueClass?: string;
 }) => {
   const R = 52;
   const C = 2 * Math.PI * R;
   return (
     <div className="relative">
-      <svg viewBox="0 0 120 120" className="h-32 w-32 -rotate-90">
+      <svg viewBox="0 0 120 120" className={cn("-rotate-90", className)}>
         <circle
           cx="60"
           cy="60"
@@ -86,7 +93,7 @@ const Ring = ({
         />
       </svg>
       <span className="absolute inset-0 flex flex-col items-center justify-center font-mono font-bold text-ink-50">
-        <span className="text-2xl">{value}</span>
+        <span className={valueClass}>{value}</span>
         {unit && <span className="text-xs text-ink-400">{unit}</span>}
       </span>
     </div>
@@ -106,18 +113,31 @@ const PLATE_COLORS: Record<number, string> = {
 const plateColor = (p: number) => PLATE_COLORS[p] ?? "#a1a1aa";
 const plateHeight = (p: number) => 22 + (Math.min(p, 25) / 25) * 42;
 
-export const CalcChart = ({ chart }: { chart: Chart }) => {
+export const CalcChart = ({
+  chart,
+  size = "md",
+}: {
+  chart: Chart;
+  size?: "sm" | "md" | "lg";
+}) => {
   const t = useT();
 
   if (chart.kind === "bars") {
+    const labelW = size === "sm" ? "w-12" : "w-20";
+    const valueW = size === "sm" ? "w-12" : "w-20";
     return (
-      <div className="space-y-2.5">
+      <div className="w-full space-y-2.5">
         {chart.bars.map((b, i) => (
-          <div key={i} className="flex items-center gap-3">
-            <span className="w-20 shrink-0 truncate text-xs text-ink-300">
+          <div key={i} className="flex items-center gap-2 sm:gap-3">
+            <span
+              className={cn(
+                "min-w-0 shrink-0 truncate text-xs text-ink-300",
+                labelW,
+              )}
+            >
               {b.labelKey ? t(b.labelKey) : b.label}
             </span>
-            <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-ink-700">
+            <div className="h-2.5 min-w-0 flex-1 overflow-hidden rounded-full bg-ink-700">
               <div
                 className="h-full rounded-full"
                 style={{
@@ -127,7 +147,12 @@ export const CalcChart = ({ chart }: { chart: Chart }) => {
                 }}
               />
             </div>
-            <span className="w-20 shrink-0 text-right font-mono text-xs text-ink-100">
+            <span
+              className={cn(
+                "shrink-0 truncate text-right font-mono text-xs text-ink-100",
+                valueW,
+              )}
+            >
               {b.display}
             </span>
           </div>
@@ -144,6 +169,16 @@ export const CalcChart = ({ chart }: { chart: Chart }) => {
           color={chart.color}
           value={chart.centerValue}
           unit={chart.centerUnit}
+          className={
+            size === "lg"
+              ? "h-44 w-44 max-w-full"
+              : size === "sm"
+                ? "h-24 w-24 max-w-full"
+                : "h-32 w-32 max-w-full"
+          }
+          valueClass={
+            size === "lg" ? "text-4xl" : size === "sm" ? "text-lg" : "text-2xl"
+          }
         />
       </div>
     );
@@ -154,7 +189,7 @@ export const CalcChart = ({ chart }: { chart: Chart }) => {
       Array.from({ length: p.count }, () => p.plate),
     );
     return (
-      <div className="flex items-center justify-center gap-[3px] rounded-xl border border-ink-700 bg-ink-900/40 py-4">
+      <div className="flex w-full max-w-full flex-wrap items-center justify-center gap-x-[3px] gap-y-1 overflow-hidden rounded-xl border border-ink-700 bg-ink-900/40 px-2 py-4">
         <span className="h-1.5 w-9 rounded-l-sm bg-ink-500" />
         {stack.length === 0 ? (
           <span className="h-1.5 w-16 bg-ink-600" />
@@ -180,8 +215,8 @@ export const CalcChart = ({ chart }: { chart: Chart }) => {
   if (chart.kind === "split") {
     const total = chart.segments.reduce((s, x) => s + x.value, 0) || 1;
     return (
-      <div className="mt-1">
-        <div className="flex h-3 overflow-hidden rounded-full">
+      <div className="mt-1 w-full">
+        <div className="flex h-3 w-full overflow-hidden rounded-full">
           {chart.segments.map((s) => (
             <div
               key={s.labelKey}
@@ -210,17 +245,35 @@ export const CalcChart = ({ chart }: { chart: Chart }) => {
     );
   }
 
-  // scale
   const { value, min, max, segments } = chart;
   const active =
     segments.find((s) => value < s.upto) ?? segments[segments.length - 1];
   const markerPct = clamp(((value - min) / (max - min || 1)) * 100, 0, 100);
+  const gaugeClass =
+    size === "lg"
+      ? "h-44 w-44 max-w-full"
+      : size === "sm"
+        ? "h-24 w-24 max-w-full"
+        : "h-32 w-32 max-w-full";
+  const valueClass =
+    size === "lg" ? "text-4xl" : size === "sm" ? "text-xl" : "text-2xl";
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex w-full flex-col items-center">
       <div className="relative">
-        <Gauge value={value} min={min} max={max} color={active.color} />
-        <span className="absolute inset-0 flex items-center justify-center font-mono text-2xl font-bold text-ink-50">
+        <Gauge
+          value={value}
+          min={min}
+          max={max}
+          color={active.color}
+          className={gaugeClass}
+        />
+        <span
+          className={cn(
+            "absolute inset-0 flex items-center justify-center font-mono font-bold text-ink-50",
+            valueClass,
+          )}
+        >
           {value}
         </span>
       </div>
