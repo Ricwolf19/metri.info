@@ -1,12 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
-import { GithubIcon, MenuIcon } from "@/components/icons";
+import {
+  GithubIcon,
+  LogOutIcon,
+  MenuIcon,
+  ShieldIcon,
+} from "@/components/icons";
 import { Logo } from "@/components/layout/Logo";
 import { LocaleToggle } from "@/components/layout/LocaleToggle";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { UserMenu } from "@/components/layout/UserMenu";
 import { Container } from "@/components/shared/Container";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -16,9 +22,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { signOut, useSession } from "@/lib/auth/client";
 import { useI18n } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
-import { isAuthPath, type RouteId, routePath } from "@/lib/i18n/routes";
+import { isChromelessPath, type RouteId, routePath } from "@/lib/i18n/routes";
 import { webAppRepo } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -32,9 +39,18 @@ const NAV: { id: RouteId; key: TranslationKey }[] = [
 export const Header = () => {
   const { t, locale } = useI18n();
   const pathname = usePathname() ?? "/";
+  const router = useRouter();
+  const { data: session } = useSession();
+  const isAdmin =
+    (session?.user as { role?: string } | undefined)?.role === "admin";
 
-  // Auth pages render their own full-screen layout — no site chrome.
-  if (isAuthPath(pathname)) return null;
+  // Auth + admin pages render their own shell — no site chrome.
+  if (isChromelessPath(pathname)) return null;
+
+  const signInHref = routePath("signIn", locale);
+  const handleSignOut = () => {
+    signOut().finally(() => router.refresh());
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-ink-600/60 bg-ink-900/80 backdrop-blur-lg">
@@ -72,15 +88,19 @@ export const Header = () => {
           </a>
           <LocaleToggle />
           <ThemeToggle />
-          <Link
-            href={routePath("signIn", locale)}
-            className={cn(
-              buttonVariants({ size: "sm" }),
-              "hidden transition-transform hover:scale-[1.03] sm:inline-flex",
-            )}
-          >
-            {t("nav.signIn")}
-          </Link>
+          {session ? (
+            <UserMenu className="hidden sm:inline-flex" />
+          ) : (
+            <Link
+              href={signInHref}
+              className={cn(
+                buttonVariants({ size: "sm" }),
+                "hidden transition-transform hover:scale-[1.03] sm:inline-flex",
+              )}
+            >
+              {t("nav.signIn")}
+            </Link>
+          )}
 
           <Sheet>
             <SheetTrigger
@@ -104,14 +124,52 @@ export const Header = () => {
                   </SheetClose>
                 ))}
               </nav>
-              <SheetClose asChild>
-                <Link
-                  href={routePath("signIn", locale)}
-                  className={cn(buttonVariants({ size: "lg" }), "mt-4 w-full")}
-                >
-                  {t("nav.signIn")}
-                </Link>
-              </SheetClose>
+
+              {session ? (
+                <div className="mt-4 border-t border-ink-600 pt-4">
+                  <div className="px-3 py-2">
+                    <p className="truncate text-sm font-medium text-ink-50">
+                      {session.user.name}
+                    </p>
+                    <p className="truncate text-xs text-ink-400">
+                      {session.user.email}
+                    </p>
+                  </div>
+                  {isAdmin && (
+                    <SheetClose asChild>
+                      <Link
+                        href="/admin"
+                        className="flex items-center gap-2.5 rounded-lg px-3 py-3 text-base font-medium text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50"
+                      >
+                        <ShieldIcon size={18} />
+                        {t("nav.admin")}
+                      </Link>
+                    </SheetClose>
+                  )}
+                  <SheetClose asChild>
+                    <button
+                      type="button"
+                      onClick={handleSignOut}
+                      className="flex w-full items-center gap-2.5 rounded-lg px-3 py-3 text-base font-medium text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50"
+                    >
+                      <LogOutIcon size={18} />
+                      {t("nav.signOut")}
+                    </button>
+                  </SheetClose>
+                </div>
+              ) : (
+                <SheetClose asChild>
+                  <Link
+                    href={signInHref}
+                    className={cn(
+                      buttonVariants({ size: "lg" }),
+                      "mt-4 w-full",
+                    )}
+                  >
+                    {t("nav.signIn")}
+                  </Link>
+                </SheetClose>
+              )}
             </SheetContent>
           </Sheet>
         </div>

@@ -116,6 +116,12 @@ export const isAuthPath = (pathname: string): boolean =>
     ROUTES.signUp.es,
   ].includes(pathname);
 
+/** Pages that render their own shell — no marketing header/footer (auth, admin). */
+export const isChromelessPath = (pathname: string): boolean =>
+  isAuthPath(pathname) ||
+  pathname === "/admin" ||
+  pathname.startsWith("/admin/");
+
 /** Metadata `alternates` (canonical + hreflang languages + x-default). */
 export const metaAlternates = (
   id: RouteId,

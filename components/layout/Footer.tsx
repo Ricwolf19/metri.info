@@ -8,7 +8,7 @@ import { Logo } from "@/components/layout/Logo";
 import { Container } from "@/components/shared/Container";
 import { useI18n } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
-import { isAuthPath, type RouteId, routePath } from "@/lib/i18n/routes";
+import { isChromelessPath, type RouteId, routePath } from "@/lib/i18n/routes";
 import { webAppRepo } from "@/lib/site";
 
 const CONTACT_EMAIL = "rhtc19@gmail.com";
@@ -58,7 +58,7 @@ export const Footer = () => {
   const pathname = usePathname() ?? "/";
   const year = new Date().getFullYear();
 
-  if (isAuthPath(pathname)) return null;
+  if (isChromelessPath(pathname)) return null;
 
   return (
     <footer className="border-t border-ink-600/60 bg-ink-850">
