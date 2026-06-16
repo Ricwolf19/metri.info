@@ -32,8 +32,15 @@ const generated = !process.env.ADMIN_PASSWORD;
 const password =
   process.env.ADMIN_PASSWORD ?? randomBytes(18).toString("base64url");
 
+// Also mark the email verified: the admin is created via email+password (which
+// leaves emailVerified=false), and Better Auth refuses to link a Google/GitHub
+// login to an unverified local account (`account_not_linked`). Re-running this
+// against an existing admin therefore also repairs that flag.
 const promote = () =>
-  db.update(user).set({ role: "admin" }).where(eq(user.email, email));
+  db
+    .update(user)
+    .set({ role: "admin", emailVerified: true })
+    .where(eq(user.email, email));
 
 const run = async () => {
   const [existing] = await db
