@@ -25,7 +25,7 @@ export const RM_PERCENTAGES: { pct: number; reps: number }[] = [
   { pct: 70, reps: 12 },
 ];
 
-export const PLATES_KG = [25, 20, 15, 10, 5, 2.5, 1.25];
+const PLATES_KG = [25, 20, 15, 10, 5, 2.5, 1.25];
 
 export const plateLoad = (targetKg: number, barKg = 20) => {
   const perSide = (targetKg - barKg) / 2;

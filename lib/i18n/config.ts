@@ -6,13 +6,6 @@ import { es } from "./es";
 
 export type Locale = "en" | "es";
 
-export const LOCALES: { value: Locale; key: TranslationKey }[] = [
-  { value: "en", key: "lang.en" },
-  { value: "es", key: "lang.es" },
-];
-
-export const DEFAULT_LOCALE: Locale = "en";
-
 /** Cookie name shared by the server (SSR) and client (toggle persistence). */
 export const LOCALE_COOKIE = "metri_locale";
 

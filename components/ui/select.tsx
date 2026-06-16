@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 
 /** Radix Select, themed with ink tokens — a drop-in for native `<select>`. */
 export const Select = SelectPrimitive.Root;
-export const SelectGroup = SelectPrimitive.Group;
 export const SelectValue = SelectPrimitive.Value;
 
 export const SelectTrigger = ({

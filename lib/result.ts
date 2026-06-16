@@ -10,7 +10,7 @@ import { type AppError, type ErrorCode, toAppError } from "@/lib/errors";
  * server and collapsed to a generic message before they reach the client.
  */
 
-export type ActionError = {
+type ActionError = {
   code: ErrorCode;
   message: string;
   fieldErrors?: Record<string, string>;
@@ -20,9 +20,9 @@ export type Result<T> =
   | { ok: true; data: T }
   | { ok: false; error: ActionError };
 
-export const ok = <T>(data: T): Result<T> => ({ ok: true, data });
+const ok = <T>(data: T): Result<T> => ({ ok: true, data });
 
-export const fail = (error: ActionError): Result<never> => ({
+const fail = (error: ActionError): Result<never> => ({
   ok: false,
   error,
 });

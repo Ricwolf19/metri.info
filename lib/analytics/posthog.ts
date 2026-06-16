@@ -11,7 +11,7 @@ export const posthogConfigured = () => Boolean(apiKey && projectId);
 /** POST a HogQL query to the PostHog Query API and return `results` (a 2D array
  * of rows). Returns null when unconfigured or on any failure — the personal API
  * key never reaches the client and errors never bubble to the page. */
-export const runHogQL = async (query: string): Promise<unknown[] | null> => {
+const runHogQL = async (query: string): Promise<unknown[] | null> => {
   if (!apiKey || !projectId) return null;
   try {
     const res = await fetch(`${host}/api/projects/${projectId}/query`, {

@@ -87,18 +87,6 @@ export class ForbiddenError extends AppError {
   }
 }
 
-export class NotFoundError extends AppError {
-  constructor(publicMessage?: string, cause?: unknown) {
-    super("not_found", { publicMessage, cause });
-  }
-}
-
-export class RateLimitError extends AppError {
-  constructor(publicMessage?: string, cause?: unknown) {
-    super("rate_limited", { publicMessage, cause });
-  }
-}
-
 /** A third-party (Resend, reCAPTCHA, OAuth, …) failed or returned an error. */
 export class ExternalServiceError extends AppError {
   constructor(publicMessage?: string, cause?: unknown) {

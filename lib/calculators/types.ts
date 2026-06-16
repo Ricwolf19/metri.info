@@ -20,7 +20,7 @@ export type CalcId =
 
 export type SelectOption = { value: string; labelKey: TranslationKey };
 
-export type CalcField =
+type CalcField =
   | {
       name: string;
       kind: "number";
@@ -39,7 +39,7 @@ export type CalcField =
       default: string;
     };
 
-export type ResultRow = {
+type ResultRow = {
   label?: string;
   labelKey?: TranslationKey;
   value: string;

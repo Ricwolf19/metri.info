@@ -8,7 +8,6 @@
  */
 
 export {
-  ACTIVITY_MULTIPLIERS,
   type ActivityLevel,
   type BmrFormula,
   type Goal,
@@ -16,13 +15,7 @@ export {
   type Sex,
 } from "./shared";
 
-export {
-  PLATES_KG,
-  RM_PERCENTAGES,
-  dotsScore,
-  oneRm,
-  plateLoad,
-} from "./strength";
+export { RM_PERCENTAGES, dotsScore, oneRm, plateLoad } from "./strength";
 
 export {
   ACTIVITY_METS,

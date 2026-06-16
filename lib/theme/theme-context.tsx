@@ -12,7 +12,7 @@ import {
 export type ThemeScheme = "light" | "dark";
 export type ThemePreference = "system" | "light" | "dark";
 
-export const THEME_COOKIE = "metri_theme";
+const THEME_COOKIE = "metri_theme";
 
 /** Accent text color per scheme — matches mobile's `useTheme().accent`
  * (lime-400 on dark, lime-700 on light) so icon `color=` props stay legible. */

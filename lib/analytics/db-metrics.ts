@@ -7,7 +7,7 @@ import type { CalcId } from "@/lib/calculators/types";
 import { db } from "@/lib/db";
 import { calculationLog, favorite, session, user } from "@/lib/db/schema";
 
-export type Totals = {
+type Totals = {
   users: number;
   sessions: number;
   activeSessions: number;
@@ -15,9 +15,9 @@ export type Totals = {
   favorites: number;
 };
 
-export type DayPoint = { date: string; value: number };
+type DayPoint = { date: string; value: number };
 
-export type TopCalculator = { id: string; name: string; value: number };
+type TopCalculator = { id: string; name: string; value: number };
 
 export type DbMetrics = {
   totals: Totals;

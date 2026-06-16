@@ -3,7 +3,7 @@
  * Flip `appStatus` to "live" and fill the URLs when the mobile app ships.
  */
 
-export const repos = {
+const repos = {
   /** The mobile app — the product showcased on the site. Primary GitHub link. */
   app: "https://github.com/Ricwolf19/metri",
   /** This website's own source. */
@@ -35,10 +35,4 @@ export const appDistribution = {
     /** Optional direct APK for sideloading. */
     apk: null as string | null,
   },
-} as const;
-
-/** Deep-link scheme into the native app (used by QR codes / "open in app"). */
-export const deepLinks = {
-  open: "metri://open",
-  workout: "metri://workout/start",
 } as const;

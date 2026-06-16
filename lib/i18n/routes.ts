@@ -163,7 +163,7 @@ export const routePath = (id: RouteId, locale: Locale): string =>
   ROUTES[id][locale];
 
 /** Whether a pathname is a full-screen auth page (no site header/footer). */
-export const isAuthPath = (pathname: string): boolean =>
+const isAuthPath = (pathname: string): boolean =>
   [
     ROUTES.signIn.en,
     ROUTES.signIn.es,
@@ -195,7 +195,7 @@ export const metaAlternates = (
 });
 
 /** Reverse-lookup a pathname to its route id (exact match). */
-export const routeIdForPath = (pathname: string): RouteId | null => {
+const routeIdForPath = (pathname: string): RouteId | null => {
   for (const id of Object.keys(ROUTES) as RouteId[]) {
     if (ROUTES[id].en === pathname || ROUTES[id].es === pathname) return id;
   }
