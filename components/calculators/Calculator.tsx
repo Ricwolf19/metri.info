@@ -378,6 +378,7 @@ export const Calculator = ({ id }: { id: CalcId }) => {
   });
 
   const search = buildSearch(config, a, b, compare);
+  const canSave = useMemo(() => config.compute(a) !== null, [config, a]);
 
   const lastTracked = useRef<string | null>(null);
   useEffect(() => {
@@ -479,15 +480,20 @@ export const Calculator = ({ id }: { id: CalcId }) => {
 
       <div className="mt-6 flex flex-wrap items-center gap-2 border-t border-ink-700 pt-5">
         <ShareDialog calcId={id} locale={locale} search={search} />
-        <SaveCalcButton id={id} values={a} />
+        <SaveCalcButton id={id} values={a} canSave={canSave} />
         <button
           type="button"
           onClick={toggleCompare}
+          aria-pressed={compare}
           className={cn(
             "inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
+            "focus-visible:ring-2 focus-visible:ring-lime-500/40 focus-visible:outline-none",
             compare
-              ? "border-ink-500 text-accent"
-              : "border-ink-600 text-ink-300 hover:bg-ink-700 hover:text-ink-50",
+              ? "border-transparent bg-lime-400 text-ink-950 hover:opacity-90"
+              : cn(
+                  "border-lime-600 text-lime-700 hover:bg-lime-50",
+                  "dark:border-lime-400/40 dark:text-lime-400 dark:hover:bg-lime-400/10",
+                ),
           )}
         >
           {compare ? t("calc.compareExit") : t("calc.compare")}

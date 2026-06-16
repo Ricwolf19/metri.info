@@ -170,6 +170,16 @@ summary {
     transform: none;
   }
 }
+@keyframes metri-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 
 /* Respect reduced motion for all Framer Motion / CSS animations. */
 @media (prefers-reduced-motion: reduce) {

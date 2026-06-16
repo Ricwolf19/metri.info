@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 
 import { StarIcon, StarSolidIcon } from "@/components/icons";
+import { useToast } from "@/components/ui/toast";
 import { useSession } from "@/lib/auth/client";
 import { type FavoriteItemType, toggleFavorite } from "@/lib/favorites/actions";
 import { useI18n } from "@/lib/i18n";
@@ -27,6 +28,7 @@ export const PinButton = ({
 }) => {
   const { data } = useSession();
   const { t, locale } = useI18n();
+  const { toast } = useToast();
   const [pinned, setPinned] = useState(initialPinned);
   const [pending, startTransition] = useTransition();
   const dirty = useRef(false);
@@ -49,6 +51,8 @@ export const PinButton = ({
         setPinned(!next);
         if (res.reason === "unauthenticated") {
           window.location.href = routePath("signIn", locale);
+        } else {
+          toast({ title: t("toast.favError"), variant: "error" });
         }
       } else {
         setPinned(res.favorited);

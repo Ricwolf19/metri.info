@@ -361,15 +361,6 @@ export const es: Record<TranslationKey, string> = {
   "docs.onThisPage": "En esta página",
   "docs.disclaimer":
     "Contenido educativo. No es consejo médico — consulta a un profesional para tu caso.",
-  "docs.catNutrition": "Nutrición",
-  "docs.catNutritionDesc":
-    "Macros, calorías, timing de comidas e hidratación — lo que de verdad mueve la composición corporal.",
-  "docs.catTraining": "Entrenamiento",
-  "docs.catTrainingDesc":
-    "Sobrecarga progresiva, RIR/RPE, landmarks de volumen y cómo programar para crecer.",
-  "docs.catRecovery": "Recuperación",
-  "docs.catRecoveryDesc":
-    "Sueño, descargas y gestión de la fatiga para que el entrenamiento cunda.",
   "docs.category.gettingStarted": "Primeros pasos",
   "docs.category.calculators": "Calculadoras",
   "docs.category.nutrition": "Nutrición",
@@ -608,4 +599,20 @@ export const es: Record<TranslationKey, string> = {
   "settings.disconnected": "Desconectado.",
   "settings.connectError":
     "No se pudo conectar esa cuenta. Inténtalo de nuevo.",
+
+  "toast.dismiss": "Descartar",
+  "toast.genericError": "Algo salió mal. Inténtalo de nuevo.",
+  "toast.calcSaved": "Guardado en tu historial",
+  "toast.calcSaveError": "No se pudo guardar tu cálculo. Inténtalo de nuevo.",
+  "toast.favError":
+    "No se pudieron actualizar tus favoritos. Inténtalo de nuevo.",
+  "toast.profileSaved": "Perfil actualizado",
+  "toast.profileError": "No se pudo actualizar tu perfil. Inténtalo de nuevo.",
+  "toast.passwordChanged": "Contraseña cambiada",
+  "toast.passwordSet": "Contraseña establecida",
+  "toast.passwordError":
+    "No se pudo actualizar tu contraseña. Inténtalo de nuevo.",
+  "toast.disconnected": "Cuenta desconectada",
+  "toast.connectError":
+    "No se pudo actualizar esa conexión. Inténtalo de nuevo.",
 };

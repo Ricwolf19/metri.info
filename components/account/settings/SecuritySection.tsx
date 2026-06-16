@@ -8,6 +8,7 @@ import {
 } from "@/components/account/settings/SettingsPanel";
 import { AuthInput } from "@/components/auth/AuthInput";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/toast";
 import { setAccountPassword } from "@/app/account/settings/actions";
 import { authClient } from "@/lib/auth/client";
 import { useT } from "@/lib/i18n";
@@ -25,6 +26,7 @@ export const SecuritySection = ({
   hasPassword: boolean;
 }) => {
   const t = useT();
+  const { toast } = useToast();
 
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
@@ -61,18 +63,28 @@ export const SecuritySection = ({
           revokeOtherSessions: true,
         });
         if (res.error) {
-          setStatus({
-            tone: "error",
-            message: res.error.message ?? t("settings.errorCurrentPassword"),
+          const message =
+            res.error.message ?? t("settings.errorCurrentPassword");
+          setStatus({ tone: "error", message });
+          toast({
+            title: t("toast.passwordError"),
+            description: message,
+            variant: "error",
           });
           return;
         }
         reset();
         setStatus({ tone: "success", message: t("settings.passwordSaved") });
+        toast({ title: t("toast.passwordChanged"), variant: "success" });
       } else {
         const res = await setAccountPassword(next);
         if (!res.ok) {
           setStatus({ tone: "error", message: res.error.message });
+          toast({
+            title: t("toast.passwordError"),
+            description: res.error.message,
+            variant: "error",
+          });
           return;
         }
         reset();
@@ -83,9 +95,11 @@ export const SecuritySection = ({
               ? t("settings.setPasswordEmailFallback")
               : t("settings.passwordSet"),
         });
+        toast({ title: t("toast.passwordSet"), variant: "success" });
       }
     } catch {
       setStatus({ tone: "error", message: t("settings.errorGeneric") });
+      toast({ title: t("toast.genericError"), variant: "error" });
     } finally {
       setPending(false);
     }

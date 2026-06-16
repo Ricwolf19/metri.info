@@ -6,6 +6,7 @@ import { useState } from "react";
 import { BookmarkIcon, CheckIcon } from "@/components/icons";
 import { BenefitsPanel } from "@/components/marketing/BenefitsPanel";
 import { Spinner } from "@/components/ui/Spinner";
+import { useToast } from "@/components/ui/toast";
 import {
   Dialog,
   DialogContent,
@@ -37,16 +38,20 @@ const baseBtn = cn(
 export const SaveCalcButton = ({
   id,
   values,
+  canSave = true,
 }: {
   id: CalcId;
   values: CalcValues;
+  canSave?: boolean;
 }) => {
   const { t, locale } = useI18n();
   const { data: session } = useSession();
+  const { toast } = useToast();
   const [state, setState] = useState<State>("idle");
   const [promptOpen, setPromptOpen] = useState(false);
 
   const onClick = async () => {
+    if (!canSave) return;
     if (!session) {
       setPromptOpen(true);
       return;
@@ -59,8 +64,13 @@ export const SaveCalcButton = ({
       inputs: values,
       results,
     });
-    if (res.ok) setState("saved");
-    else setState("error");
+    if (res.ok) {
+      setState("saved");
+      toast({ title: t("toast.calcSaved"), variant: "success" });
+    } else {
+      setState("error");
+      toast({ title: t("toast.calcSaveError"), variant: "error" });
+    }
   };
 
   return (
@@ -69,13 +79,14 @@ export const SaveCalcButton = ({
         <button
           type="button"
           onClick={onClick}
-          disabled={state === "saving"}
+          disabled={!canSave || state === "saving"}
           className={cn(
             baseBtn,
-            state === "saved"
-              ? "border-ink-500 text-accent"
-              : "border-ink-600 text-ink-300 hover:bg-ink-700 hover:text-ink-50",
+            "border-lime-600 text-lime-700 hover:bg-lime-50",
+            "dark:border-lime-400/40 dark:text-lime-400 dark:hover:bg-lime-400/10",
             state === "saving" && "opacity-60",
+            !canSave &&
+              "cursor-not-allowed opacity-40 hover:bg-transparent dark:hover:bg-transparent",
           )}
         >
           {state === "saving" ? (

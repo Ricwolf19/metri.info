@@ -353,15 +353,6 @@ export const en = {
   "docs.onThisPage": "On this page",
   "docs.disclaimer":
     "Educational content only. Not medical advice — consult a professional for your situation.",
-  "docs.catNutrition": "Nutrition",
-  "docs.catNutritionDesc":
-    "Macros, calories, meal timing and hydration — what actually moves body composition.",
-  "docs.catTraining": "Training",
-  "docs.catTrainingDesc":
-    "Progressive overload, RIR/RPE, volume landmarks and how to program for growth.",
-  "docs.catRecovery": "Recovery",
-  "docs.catRecoveryDesc":
-    "Sleep, deloads and managing fatigue so your training actually sticks.",
   "docs.category.gettingStarted": "Getting started",
   "docs.category.calculators": "Calculators",
   "docs.category.nutrition": "Nutrition",
@@ -592,6 +583,19 @@ export const en = {
     "This is your only way to sign in — add another sign-in method before disconnecting it.",
   "settings.disconnected": "Disconnected.",
   "settings.connectError": "Couldn't connect that account. Please try again.",
+
+  "toast.dismiss": "Dismiss",
+  "toast.genericError": "Something went wrong. Please try again.",
+  "toast.calcSaved": "Saved to your history",
+  "toast.calcSaveError": "Couldn't save your calculation. Please try again.",
+  "toast.favError": "Couldn't update your favorites. Please try again.",
+  "toast.profileSaved": "Profile updated",
+  "toast.profileError": "Couldn't update your profile. Please try again.",
+  "toast.passwordChanged": "Password changed",
+  "toast.passwordSet": "Password set",
+  "toast.passwordError": "Couldn't update your password. Please try again.",
+  "toast.disconnected": "Account disconnected",
+  "toast.connectError": "Couldn't update that connection. Please try again.",
 } as const;
 
 export type TranslationKey = keyof typeof en;

@@ -12,14 +12,11 @@ import {
   Apple,
   ArrowLeft,
   ArrowRight,
-  Bell,
   Book,
   Bookmark,
   Calculator,
-  Camera,
   Check,
   Code,
-  Computer,
   Copy,
   Download,
   Droplet,
@@ -33,7 +30,7 @@ import {
   HalfMoon,
   Heart,
   Home,
-  Language,
+  InfoCircle,
   Link as LinkIcoit,
   Lock,
   LogOut,
@@ -41,9 +38,6 @@ import {
   Menu,
   ProfileCircle,
   NavArrowRight,
-  OpenNewWindow,
-  Play,
-  Plus,
   Ruler,
   Search,
   Settings,
@@ -53,8 +47,8 @@ import {
   Star,
   StarSolid,
   SunLight,
-  Timer,
   Trophy,
+  WarningTriangle,
   Weight,
   WifiOff,
   Xmark,
@@ -79,31 +73,23 @@ const sized = (Icon: IconComponent, name: string) => {
 
 export const HomeIcon = sized(Home, "HomeIcon");
 export const ActivityIcon = sized(Activity, "ActivityIcon");
-export const BellIcon = sized(Bell, "BellIcon");
 export const BookIcon = sized(Book, "BookIcon");
 export const BookmarkIcon = sized(Bookmark, "BookmarkIcon");
 export const GearIcon = sized(Settings, "GearIcon");
-export const CameraIcon = sized(Camera, "CameraIcon");
 export const ChevronRightIcon = sized(NavArrowRight, "ChevronRightIcon");
 export const FlameIcon = sized(FireFlame, "FlameIcon");
 export const LogOutIcon = sized(LogOut, "LogOutIcon");
 export const ShieldIcon = sized(Shield, "ShieldIcon");
 export const DumbbellIcon = sized(Gym, "DumbbellIcon");
-export const PlusIcon = sized(Plus, "PlusIcon");
 export const CheckIcon = sized(Check, "CheckIcon");
-export const TimerIcon = sized(Timer, "TimerIcon");
-export const PlayIcon = sized(Play, "PlayIcon");
 export const XIcon = sized(Xmark, "XIcon");
 export const TrophyIcon = sized(Trophy, "TrophyIcon");
 export const MenuIcon = sized(Menu, "MenuIcon");
 export const SunIcon = sized(SunLight, "SunIcon");
 export const MoonIcon = sized(HalfMoon, "MoonIcon");
-export const MonitorIcon = sized(Computer, "MonitorIcon");
-export const LanguagesIcon = sized(Language, "LanguagesIcon");
 export const SearchIcon = sized(Search, "SearchIcon");
 export const ArrowRightIcon = sized(ArrowRight, "ArrowRightIcon");
 export const ArrowLeftIcon = sized(ArrowLeft, "ArrowLeftIcon");
-export const ExternalLinkIcon = sized(OpenNewWindow, "ExternalLinkIcon");
 export const ZapIcon = sized(Flash, "ZapIcon");
 export const WifiOffIcon = sized(WifiOff, "WifiOffIcon");
 export const TrendingUpIcon = sized(GraphUp, "TrendingUpIcon");
@@ -127,3 +113,5 @@ export const LockIcon = sized(Lock, "LockIcon");
 export const LinkIcon = sized(LinkIcoit, "LinkIcon");
 export const ProfileIcon = sized(ProfileCircle, "ProfileIcon");
 export const UsersIcon = sized(Group, "UsersIcon");
+export const AlertTriangleIcon = sized(WarningTriangle, "AlertTriangleIcon");
+export const InfoIcon = sized(InfoCircle, "InfoIcon");

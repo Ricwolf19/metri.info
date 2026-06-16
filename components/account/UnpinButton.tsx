@@ -5,6 +5,7 @@ import { useTransition } from "react";
 
 import { StarSolidIcon } from "@/components/icons";
 import { Spinner } from "@/components/ui/Spinner";
+import { useToast } from "@/components/ui/toast";
 import { type FavoriteItemType, toggleFavorite } from "@/lib/favorites/actions";
 import { useT } from "@/lib/i18n";
 
@@ -18,11 +19,16 @@ export const UnpinButton = ({
 }) => {
   const t = useT();
   const router = useRouter();
+  const { toast } = useToast();
   const [pending, startTransition] = useTransition();
 
   const handleClick = () => {
     startTransition(async () => {
-      await toggleFavorite({ itemType, itemId });
+      const res = await toggleFavorite({ itemType, itemId });
+      if (!res.ok) {
+        toast({ title: t("toast.favError"), variant: "error" });
+        return;
+      }
       router.refresh();
     });
   };

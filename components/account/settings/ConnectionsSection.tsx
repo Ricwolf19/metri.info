@@ -9,6 +9,7 @@ import {
   SettingsPanel,
 } from "@/components/account/settings/SettingsPanel";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/toast";
 import { authClient } from "@/lib/auth/client";
 import { type SocialProvider, SOCIAL_PROVIDERS } from "@/lib/account/providers";
 import { useI18n } from "@/lib/i18n";
@@ -67,6 +68,7 @@ export const ConnectionsSection = ({
 }) => {
   const { t, locale } = useI18n();
   const router = useRouter();
+  const { toast } = useToast();
 
   const [providerIds, setProviderIds] = useState(initialProviderIds);
   const [busy, setBusy] = useState<string | null>(null);
@@ -86,6 +88,7 @@ export const ConnectionsSection = ({
     } catch {
       setBusy(null);
       setStatus({ tone: "error", message: t("settings.connectError") });
+      toast({ title: t("toast.connectError"), variant: "error" });
     }
   };
 
@@ -96,13 +99,16 @@ export const ConnectionsSection = ({
       const res = await authClient.unlinkAccount({ providerId });
       if (res.error) {
         setStatus({ tone: "error", message: t("settings.connectError") });
+        toast({ title: t("toast.connectError"), variant: "error" });
         return;
       }
       setProviderIds((ids) => ids.filter((p) => p !== providerId));
       setStatus({ tone: "success", message: t("settings.disconnected") });
+      toast({ title: t("toast.disconnected"), variant: "success" });
       router.refresh();
     } catch {
       setStatus({ tone: "error", message: t("settings.connectError") });
+      toast({ title: t("toast.connectError"), variant: "error" });
     } finally {
       setBusy(null);
     }

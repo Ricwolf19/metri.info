@@ -10,6 +10,7 @@ import {
 import { AuthInput } from "@/components/auth/AuthInput";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/toast";
 import {
   Select,
   SelectContent,
@@ -49,6 +50,7 @@ export const ProfileSection = ({
   profile: AccountProfile | null;
 }) => {
   const t = useT();
+  const { toast } = useToast();
 
   const [name, setName] = useState(initialName);
   const [displayName, setDisplayName] = useState(profile?.displayName ?? "");
@@ -81,11 +83,17 @@ export const ProfileSection = ({
     };
     const res = await saveProfile(input);
     setPending(false);
-    setStatus(
-      res.ok
-        ? { tone: "success", message: t("settings.profileSaved") }
-        : { tone: "error", message: res.error.message },
-    );
+    if (res.ok) {
+      setStatus({ tone: "success", message: t("settings.profileSaved") });
+      toast({ title: t("toast.profileSaved"), variant: "success" });
+    } else {
+      setStatus({ tone: "error", message: res.error.message });
+      toast({
+        title: t("toast.profileError"),
+        description: res.error.message,
+        variant: "error",
+      });
+    }
   };
 
   return (
