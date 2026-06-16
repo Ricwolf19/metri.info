@@ -118,6 +118,9 @@ export const auth = betterAuth({
     schema: { user, session, account, verification },
   }),
   emailAndPassword: { enabled: true, sendResetPassword },
+  session: {
+    cookieCache: { enabled: true, maxAge: 5 * 60 },
+  },
   socialProviders,
   account: {
     accountLinking: {
