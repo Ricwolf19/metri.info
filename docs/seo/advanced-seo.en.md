@@ -1,8 +1,23 @@
 # Advanced SEO playbook (Next.js App Router)
 
-> This is the SEO standard for Metri and a template for future projects.
-> Goal: rank for high-intent, competitive queries (e.g. `ffmi calculator`,
-> `tdee calculator`) in **English and Spanish**, with excellent Core Web Vitals.
+> A reusable, project-agnostic SEO playbook for the Next.js App Router.
+> Goal: rank for high-intent, competitive queries (in any niche) across
+> **multiple languages**, with excellent Core Web Vitals.
+
+**Contents**
+
+- [1. Philosophy — server-first SEO](#1-philosophy--server-first-seo)
+- [2. Internationalization & routing](#2-internationalization--routing)
+- [3. Metadata strategy](#3-metadata-strategy)
+- [4. File-based SEO assets](#4-file-based-seo-assets)
+- [5. Structured data (JSON-LD)](#5-structured-data-json-ld)
+- [6. Dynamic Open Graph images](#6-dynamic-open-graph-images)
+- [7. Programmatic SEO (the money pages)](#7-programmatic-seo-the-money-pages)
+- [8. Core Web Vitals](#8-core-web-vitals)
+- [9. Measurement & analytics](#9-measurement--analytics)
+- [Content & trust elements by page type](#content--trust-elements-by-page-type)
+- [10. Pre-launch checklist](#10-pre-launch-checklist)
+- [11. Concept reference — what / why / impact / code](#11-concept-reference--what--why--impact--code)
 
 ---
 
@@ -15,16 +30,19 @@ after client-side JS is, at best, indexed unreliably. So the rule is:
 > small client "islands"; everything that matters for SEO (headings, copy,
 > links, metadata, structured data) is server-rendered.
 
-Concretely in this repo:
+Concretely:
 
 - Pages are **statically generated** (SSG) wherever possible — instant TTFB on
   the edge, fully-formed HTML for crawlers.
-- A calculator is a tiny `"use client"` island inside an otherwise static page.
+- Any interactive widget is a tiny `"use client"` island inside an otherwise
+  static page. A calculator is one example; the same pattern applies to a
+  product configurator, a booking form, a map, a pricing slider — anything that
+  needs the browser.
 - The static page carries the H1, the explanatory content, the FAQ, breadcrumbs
   and JSON-LD — that is what ranks.
 
-This single principle is why a content-rich calculator page outranks a bare
-embedded widget.
+This single principle is why a content-rich page outranks a bare embedded
+widget.
 
 ---
 
@@ -32,9 +50,9 @@ embedded widget.
 
 ### The decision
 
-- **English at the root**: `https://metri.info/tools/ffmi-calculator`
+- **English at the root**: `https://example.com/tools/ffmi-calculator`
 - **Spanish under `/es` with localized slugs**:
-  `https://metri.info/es/herramientas/calculadora-ffmi`
+  `https://example.com/es/herramientas/calculadora-ffmi`
 
 Why localized slugs (not `/es/tools/ffmi-calculator`)? Spanish SERPs reward the
 keyword in the URL: real competitors rank `…/salud/calculadora-ffmi` and
@@ -85,7 +103,7 @@ language codes (`en`, `es`), and always include `x-default`.
 ### Static (root `app/layout.tsx`)
 
 Set once, inherited by all pages: `metadataBase` (required for relative OG/
-canonical URLs to resolve absolute), title template (`%s · Metri`), default
+canonical URLs to resolve absolute), title template (`%s · Brand`), default
 description, Open Graph, Twitter card, robots, `appleWebApp`, `category`.
 
 ### Dynamic (per page)
@@ -153,10 +171,11 @@ Emit JSON-LD server-side via a `<script type="application/ld+json">` (a small
 **Only mark up content that is actually visible on the page**, or it's a
 violation.
 
-E-E-A-T / YMYL: fitness + health calculators are "Your Money or Your Life"
-content. Google demands trust signals to rank them: a real author, an About
-page, **cited scientific sources**, a "last reviewed" date, and a medical
-disclaimer. Build these in, don't bolt them on.
+E-E-A-T / YMYL: pages that can affect a person's health, finances or safety
+(health/fitness calculators, financial tools, legal/medical advice) are "Your
+Money or Your Life" content. Google demands trust signals to rank them: a real
+named author/reviewer, an About page, **cited authoritative sources**, a "last
+reviewed" date, and a disclaimer. Build these in, don't bolt them on.
 
 ---
 
@@ -170,28 +189,32 @@ SERP features.
 
 ---
 
-## 7. Programmatic calculator SEO (the money pages)
+## 7. Programmatic SEO (the money pages)
 
-This is how we compete with omnicalculator/ffmicalculator.org.
+The pattern: generate one focused page per target keyword, with the keyword as
+the slug, from a single template fed by structured data. This is how you compete
+at scale for a family of related queries — whatever the niche.
 
-**One page per calculator, the keyword as the slug.** Each page renders, as
+**One page per entity, the keyword as the slug.** Each page renders, as
 static HTML:
 
-1. **H1** = the keyword ("FFMI Calculator").
-2. The **interactive calculator** (client island).
-3. **"How it's calculated"** — the real formula, plainly explained.
-4. **"How to interpret your result"** — ranges/categories.
+1. **H1** = the keyword.
+2. The **interactive widget** (client island) — the calculator, configurator,
+   booking form, etc.
+3. **"How it works"** — the real method/formula, plainly explained.
+4. **"How to interpret your result"** — ranges/categories/next steps.
 5. **FAQ** (drives `FAQPage` rich results).
-6. **Related** calculators + knowledge-base links (topical cluster).
+6. **Related** pages + knowledge-base links (topical cluster).
 
-~600–900 words of genuinely useful copy per page. Bilingual (EN + ES localized
-slugs).
+~600–900 words of genuinely useful copy per page. Multilingual (e.g. EN + ES
+localized slugs).
 
 **Shareable result URLs**: inputs go in query params (`?w=80&h=180`) so results
 are linkable, but those URLs are `robots: noindex` with a `canonical` back to the
 clean slug — no thin/duplicate-content dilution.
 
-**Slug map** (EN at root / ES localized):
+**Example: a site of calculators** (EN at root / ES localized). The same
+slug-map approach works for product pages, locations, or any other entity set:
 
 | Calculator         | EN                               | ES                                            |
 | ------------------ | -------------------------------- | --------------------------------------------- |
@@ -203,6 +226,9 @@ clean slug — no thin/duplicate-content dilution.
 | BMI / ideal weight | `/tools/bmi-calculator`          | `/es/herramientas/calculadora-imc`            |
 | Hydration          | `/tools/water-intake-calculator` | `/es/herramientas/calculadora-agua`           |
 | Plates             | `/tools/plate-calculator`        | `/es/herramientas/calculadora-discos`         |
+
+(Competing against incumbents like the big calculator aggregators is a matter of
+better content depth + trust signals + Core Web Vitals on each of these pages.)
 
 ---
 
@@ -217,15 +243,14 @@ Rankings are influenced by field CWV. Targets:
 | INP    | < 200ms | tiny client islands; defer non-critical JS                        |
 | TTFB   | < 600ms | static pages served from the edge/CDN                             |
 
-Practical: `next/image` for all imagery, `next/font` (already wired: Spline Sans
-
-- JetBrains Mono with CSS variables), lazy-load below-the-fold heavy components.
+Practical: `next/image` for all imagery, `next/font` for self-hosted fonts with
+CSS variables (no layout shift), lazy-load below-the-fold heavy components.
 
 ---
 
 ## 9. Measurement & analytics
 
-What's wired in this repo:
+A typical wiring:
 
 - **Vercel Analytics** (`@vercel/analytics`) — privacy-friendly pageviews/events,
   no cookie banner needed, zero config on Vercel.
@@ -235,19 +260,47 @@ What's wired in this repo:
   `NEXT_PUBLIC_GA_ID`. Off until you set the env var.
 
 Set up GA4: analytics.google.com → create a property → add a **Web** data stream
-for `metri.info` → copy the **Measurement ID** (`G-XXXXXXXXXX`) → set
-`NEXT_PUBLIC_GA_ID` in Vercel env. That's it; the component loads gtag.
+for `your-domain.com` → copy the **Measurement ID** (`G-XXXXXXXXXX`) → set
+`NEXT_PUBLIC_GA_ID` in your hosting env. That's it; the component loads gtag.
 
 **Google Search Console** (do this first, it's the most important SEO tool):
 
-- Add `metri.info` as a property; verify via DNS TXT (or the `verification.google`
-  meta — supported by our root metadata).
-- Submit `https://metri.info/sitemap.xml`.
+- Add `your-domain.com` as a property; verify via DNS TXT (or the
+  `verification.google` meta — supported by the root metadata).
+- Submit `https://your-domain.com/sitemap.xml`.
 - Watch: Performance (queries/impressions/CTR/position), Pages (index coverage),
   and the Rich Results / Enhancements reports for FAQ/Breadcrumb validity.
 
-Optional future "metrics panel in the app": GA4 has a Data API and Search Console
+Optional "metrics panel in the app": GA4 has a Data API and Search Console
 has an API — a server route can pull both and render an internal dashboard.
+
+> **Going deeper:** product analytics (PostHog), GA4's read/write split, the
+> `/ingest` reverse proxy, HogQL funnels and dashboard caching have their own
+> project-agnostic guide → [`analytics.en.md`](./analytics.en.md).
+
+---
+
+## Content & trust elements by page type
+
+Different page types rank on different signals. Match the content, structured
+data and trust elements to what the page is _for_:
+
+| Page type                      | H1 / heading structure                                          | FAQ?         | Author / citations / last-reviewed / disclaimer (YMYL) | Best-fit JSON-LD                                                  | hreflang note                                         |
+| ------------------------------ | -------------------------------------------------------------- | ------------ | ------------------------------------------------------ | ---------------------------------------------------------------- | ----------------------------------------------------- |
+| Homepage                       | Brand/value H1, then H2 per major section                      | Optional     | No                                                     | `Organization` + `WebSite` (+ `SearchAction`)                    | `x-default` → primary language home                   |
+| Blog / Article                 | Headline as H1, H2/H3 outline of the argument                  | Optional     | Author byline + dates; citations if factual            | `Article` (or `NewsArticle`/`BlogPosting`) + `BreadcrumbList`    | Translate slug; reciprocal alternates per article     |
+| Product / E-commerce           | Product name H1, H2 for specs/reviews                          | Often (Q\&A) | Reviews/ratings, not author                             | `Product` (+ `Offer`, `AggregateRating`) + `BreadcrumbList`      | Per-locale price/currency; alternates per product     |
+| SaaS / landing                 | Outcome-focused H1, H2 per feature/benefit                     | Recommended  | Optional; testimonials build trust                      | `SoftwareApplication` + `FAQPage` + `BreadcrumbList`             | Localized landing per market                          |
+| Health/finance (YMYL) tool/calc | Keyword H1, H2 for method + interpretation + FAQ              | **Yes**      | **Required** (named reviewer, sources, date, disclaimer) | `SoftwareApplication`/`WebApplication` + `MedicalWebPage` + `FAQPage` + `BreadcrumbList` | Localized slug; reciprocal alternates                 |
+| Local service business         | "{Service} in {City}" H1, H2 for services/areas/reviews        | **Yes**      | Reviews + NAP, not academic citations                   | `LocalBusiness` (+ `Service`, `AggregateRating`) + `FAQPage`     | One page per city/locale; alternates if multilingual  |
+| Multi-language site            | Same outline per language; never mix languages on one URL      | Mirror EN/ES | Mirror per language                                     | Same type per locale, translated values                          | **Reciprocal `hreflang` + `x-default` on every page** |
+
+YMYL pages (health, finance, legal) **require** a named author/reviewer, cited
+authoritative sources, a last-reviewed date, and a disclaimer to rank at all —
+trust is the gate, not a bonus. Informational and local pages instead lean on
+**NAP** (name, address, phone), a `LocalBusiness` profile, and genuine reviews;
+a fumigation/pest-control company, for example, ranks on consistent NAP, service
+areas, and star ratings far more than on academic citations.
 
 ---
 
@@ -271,4 +324,147 @@ has an API — a server route can pull both and render an internal dashboard.
 - Google **Rich Results Test** (JSON-LD), **URL Inspection** (Search Console).
 - **PageSpeed Insights** / Lighthouse (CWV, lab + field).
 - **Schema Markup Validator** (schema.org).
-- `hreflang` checkers; `site:metri.info` to watch indexation.
+- `hreflang` checkers; `site:your-domain.com` to watch indexation.
+
+---
+
+## 11. Concept reference — what / why / impact / code
+
+Each concept in one place: **what** it is, **what** it gives you, **what** it
+affects, and the minimal correct **code**. Project-agnostic.
+
+### Canonical URL
+
+- **What:** the one "official" URL for a piece of content.
+- **Gives:** consolidates duplicates (params, `www`/trailing-slash variants).
+- **Affects:** prevents duplicate-content dilution; concentrates ranking signals.
+
+```ts
+export const metadata = { alternates: { canonical: "/tools/ffmi-calculator" } };
+```
+
+### hreflang + x-default
+
+- **What:** declares the language/region variants of a page.
+- **Gives:** Google serves the right language; avoids EN/ES competing.
+- **Affects:** international ranking + CTR. Must be **reciprocal**.
+
+```ts
+alternates: {
+  canonical: "/tools/ffmi-calculator",
+  languages: {
+    en: "/tools/ffmi-calculator",
+    es: "/es/herramientas/calculadora-ffmi",
+    "x-default": "/tools/ffmi-calculator",
+  },
+}
+```
+
+### metadataBase
+
+- **What:** the absolute base URL for resolving relative metadata.
+- **Gives:** correct absolute OG/canonical URLs.
+- **Affects:** broken social previews if missing.
+
+```ts
+export const metadata = { metadataBase: new URL("https://example.com") };
+```
+
+### Title & description
+
+- **What:** the SERP headline + snippet.
+- **Gives:** keyword relevance + click-through.
+- **Affects:** ranking (title) and CTR (both). Keep ≤ ~60 / ~160 chars; unique.
+
+```ts
+export const metadata = {
+  title: { default: "Example", template: "%s · Example" },
+  description: "One clear sentence with the primary keyword.",
+};
+```
+
+### robots / noindex
+
+- **What:** indexing directives per page.
+- **Gives:** keeps thin/duplicate/param URLs out of the index.
+- **Affects:** index hygiene; an accidental `noindex` in prod tanks traffic.
+
+```ts
+// a shareable ?param result page — don't index, canonical to the clean slug:
+export const metadata = {
+  robots: { index: false, follow: true },
+  alternates: { canonical: "/tools/ffmi-calculator" },
+};
+```
+
+### Sitemap & robots.txt
+
+- **What:** machine list of indexable URLs + crawl rules.
+- **Gives:** faster, complete discovery; per-URL hreflang.
+- **Affects:** crawl coverage and freshness.
+
+```ts
+// app/sitemap.ts
+export default function sitemap() {
+  return ROUTES.map((r) => ({
+    url: abs(r.en),
+    lastModified: new Date(),
+    alternates: { languages: { en: abs(r.en), es: abs(r.es) } },
+    priority: r.isCalculator ? 0.9 : 0.6,
+  }));
+}
+```
+
+### Structured data (JSON-LD)
+
+- **What:** machine-readable description of the page (schema.org).
+- **Gives:** rich results (FAQ, breadcrumbs, ratings) — more SERP real estate.
+- **Affects:** CTR strongly; only mark up **visible** content.
+
+```tsx
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+  "@context": "https://schema.org", "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a } })),
+}) }} />
+```
+
+### Open Graph image
+
+- **What:** the preview card when a link is shared.
+- **Gives:** intentional, branded social/SERP previews.
+- **Affects:** CTR on social and some SERP features.
+
+```tsx
+// app/tools/[calc]/opengraph-image.tsx
+export const size = { width: 1200, height: 630 };
+export const contentType = "image/png";
+export default function OG() { return new ImageResponse(<Card/>, size); }
+```
+
+### Semantic HTML & headings
+
+- **What:** one `<h1>`, ordered headings, `<nav>/<main>/<footer>`, alt text.
+- **Gives:** clear document structure for crawlers + a11y.
+- **Affects:** comprehension, accessibility score, featured-snippet eligibility.
+
+### Internal linking / topical clusters
+
+- **What:** related pages link to each other around a topic.
+- **Gives:** spreads link equity; signals topical authority.
+- **Affects:** ranking of the whole cluster, not just one page.
+
+### Server-first rendering (SSG/RSC)
+
+- **What:** ship complete HTML from the server; JS only for small islands.
+- **Gives:** reliable indexing + fast TTFB/LCP.
+- **Affects:** both indexing quality and Core Web Vitals.
+
+### Core Web Vitals
+
+- **What:** LCP < 2.5s, CLS < 0.1, INP < 200ms (field data).
+- **Gives:** better UX and a ranking signal.
+- **Affects:** ranking (tie-breaker) and bounce. Measure with Speed Insights.
+
+> For the analytics that measure all of the above, see
+> [`analytics.en.md`](./analytics.en.md).

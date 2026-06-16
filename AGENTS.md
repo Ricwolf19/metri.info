@@ -97,4 +97,22 @@ lib/
   i18n, theme, docs, contact, legal, seo, og
 public/         brand mark + PWA icons, sw.js (service worker)
 drizzle/        generated migrations (after db:generate)
+docs/seo/       project-agnostic playbooks: advanced-seo, analytics
+               (PostHog/GA4), glossary — EN + ES, kept in sync
 ```
+
+## Reference docs
+
+`docs/seo/` holds reusable, **project-agnostic** playbooks (each in EN + ES,
+kept 1:1 in sync):
+
+- **`advanced-seo.{en,es}.md`** — server-first SEO, i18n/hreflang, metadata,
+  sitemap/robots, JSON-LD, OG images, programmatic SEO, Core Web Vitals,
+  content & trust elements by page type (incl. YMYL), and a concept reference.
+- **`analytics.{en,es}.md`** — PostHog vs GA4 vs Vercel vs Search Console, the
+  `/ingest` reverse proxy, HogQL funnels, dashboard caching.
+- **`glossary.{en,es}.md`** — slug, YMYL, E-E-A-T, JSON-LD types, CWV
+  (LCP/CLS/INP/TTFB), HogQL, GA4 Measurement vs Property ID, etc.
+
+When you touch SEO, analytics, or i18n routing, read the relevant playbook
+first and keep it accurate.

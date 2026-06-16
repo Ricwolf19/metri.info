@@ -27,7 +27,9 @@ const runHogQL = async (query: string): Promise<unknown[] | null> => {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({ query: { kind: "HogQLQuery", query } }),
-      next: { revalidate: 3600, tags: [POSTHOG_METRICS_TAG] },
+      // 5-min cache: fresh enough for an admin dashboard while staying well
+      // under PostHog's Query API rate limits. Matches the GA panel's freshness.
+      next: { revalidate: 300, tags: [POSTHOG_METRICS_TAG] },
     });
     if (!res.ok) return null;
     const json = (await res.json()) as { results?: unknown[] };

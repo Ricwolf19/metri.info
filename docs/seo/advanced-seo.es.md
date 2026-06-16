@@ -1,9 +1,23 @@
 # Manual de SEO avanzado (Next.js App Router)
 
-> Este es el estándar de SEO de Metri y una plantilla para futuros proyectos.
-> Objetivo: posicionar para búsquedas competitivas de alta intención (p. ej.
-> `calculadora ffmi`, `calculadora tdee`) en **inglés y español**, con
-> excelentes Core Web Vitals.
+> Un manual de SEO reutilizable e independiente del proyecto para el App Router
+> de Next.js. Objetivo: posicionar para búsquedas competitivas de alta intención
+> (en cualquier nicho) en **varios idiomas**, con excelentes Core Web Vitals.
+
+**Contenido**
+
+- [1. Filosofía — SEO "servidor primero"](#1-filosofía--seo-servidor-primero)
+- [2. Internacionalización y rutas](#2-internacionalización-y-rutas)
+- [3. Estrategia de metadatos](#3-estrategia-de-metadatos)
+- [4. Activos SEO basados en archivos](#4-activos-seo-basados-en-archivos)
+- [5. Datos estructurados (JSON-LD)](#5-datos-estructurados-json-ld)
+- [6. Imágenes Open Graph dinámicas](#6-imágenes-open-graph-dinámicas)
+- [7. SEO programático (las páginas clave)](#7-seo-programático-las-páginas-clave)
+- [8. Core Web Vitals](#8-core-web-vitals)
+- [9. Medición y analítica](#9-medición-y-analítica)
+- [Contenido y elementos de confianza por tipo de página](#contenido-y-elementos-de-confianza-por-tipo-de-página)
+- [10. Checklist previo al lanzamiento](#10-checklist-previo-al-lanzamiento)
+- [11. Referencia de conceptos — qué es / qué brinda / en qué afecta / código](#11-referencia-de-conceptos--qué-es--qué-brinda--en-qué-afecta--código)
 
 ---
 
@@ -16,17 +30,19 @@ solo con JS en el cliente se indexa de forma poco fiable. La regla:
 > en pequeñas "islas" cliente; todo lo relevante para SEO (encabezados, texto,
 > enlaces, metadatos, datos estructurados) se renderiza en el servidor.
 
-En este repo:
+En concreto:
 
 - Las páginas se **generan estáticamente** (SSG) siempre que se puede — TTFB
   instantáneo en el edge y HTML completo para los crawlers.
-- Una calculadora es una pequeña isla `"use client"` dentro de una página
-  estática.
+- Cualquier widget interactivo es una pequeña isla `"use client"` dentro de una
+  página estática. Una calculadora es un ejemplo; el mismo patrón aplica a un
+  configurador de producto, un formulario de reserva, un mapa, un control de
+  precios — cualquier cosa que necesite el navegador.
 - La página estática lleva el H1, el contenido explicativo, las FAQ, las
   migas (breadcrumbs) y el JSON-LD — eso es lo que posiciona.
 
-Por este principio una página de calculadora con contenido supera a un simple
-widget incrustado.
+Por este principio una página con contenido supera a un simple widget
+incrustado.
 
 ---
 
@@ -34,9 +50,9 @@ widget incrustado.
 
 ### La decisión
 
-- **Inglés en la raíz**: `https://metri.info/tools/ffmi-calculator`
+- **Inglés en la raíz**: `https://example.com/tools/ffmi-calculator`
 - **Español bajo `/es` con slugs localizados**:
-  `https://metri.info/es/herramientas/calculadora-ffmi`
+  `https://example.com/es/herramientas/calculadora-ffmi`
 
 ¿Por qué slugs localizados (y no `/es/tools/ffmi-calculator`)? Los resultados en
 español premian la keyword en la URL: los competidores reales posicionan
@@ -89,7 +105,7 @@ usar códigos de idioma reales (`en`, `es`) e incluir siempre `x-default`.
 
 Se definen una vez y los heredan todas las páginas: `metadataBase` (obligatorio
 para que las URLs relativas de OG/canonical se resuelvan a absolutas), plantilla
-de título (`%s · Metri`), descripción por defecto, Open Graph, Twitter card,
+de título (`%s · Brand`), descripción por defecto, Open Graph, Twitter card,
 robots, `appleWebApp`, `category`.
 
 ### Dinámicos (por página)
@@ -158,10 +174,12 @@ pequeño componente `<JsonLd>`). Ajusta el tipo a la página:
 SERP. **Marca solo contenido realmente visible** en la página, o es una
 infracción.
 
-E-E-A-T / YMYL: las calculadoras de fitness y salud son contenido "Your Money or
-Your Life". Google exige señales de confianza para posicionarlas: un autor real,
-una página "Acerca de", **fuentes científicas citadas**, fecha de "última
-revisión" y un aviso médico. Constrúyelo desde el inicio.
+E-E-A-T / YMYL: las páginas que pueden afectar la salud, las finanzas o la
+seguridad de una persona (calculadoras de salud/fitness, herramientas
+financieras, consejo legal/médico) son contenido "Your Money or Your Life".
+Google exige señales de confianza para posicionarlas: un autor/revisor real con
+nombre, una página "Acerca de", **fuentes autorizadas citadas**, fecha de
+"última revisión" y un aviso (disclaimer). Constrúyelo desde el inicio.
 
 ---
 
@@ -175,28 +193,33 @@ algunas funciones del SERP.
 
 ---
 
-## 7. SEO programático de calculadoras (las páginas clave)
+## 7. SEO programático (las páginas clave)
 
-Así competimos con omnicalculator/ffmicalculator.org.
+El patrón: generar una página enfocada por keyword objetivo, con la keyword como
+slug, desde una sola plantilla alimentada por datos estructurados. Así se compite
+a escala por una familia de búsquedas relacionadas — sea cual sea el nicho.
 
-**Una página por calculadora, la keyword como slug.** Cada página renderiza, en
+**Una página por entidad, la keyword como slug.** Cada página renderiza, en
 HTML estático:
 
-1. **H1** = la keyword ("Calculadora FFMI").
-2. La **calculadora interactiva** (isla cliente).
-3. **"Cómo se calcula"** — la fórmula real, explicada con claridad.
-4. **"Cómo interpretar tu resultado"** — rangos/categorías.
+1. **H1** = la keyword.
+2. El **widget interactivo** (isla cliente) — la calculadora, el configurador,
+   el formulario de reserva, etc.
+3. **"Cómo funciona"** — el método/fórmula real, explicado con claridad.
+4. **"Cómo interpretar tu resultado"** — rangos/categorías/siguientes pasos.
 5. **FAQ** (genera resultados enriquecidos `FAQPage`).
-6. **Relacionadas** — calculadoras + enlaces a la base de conocimiento (clúster).
+6. **Relacionadas** — páginas + enlaces a la base de conocimiento (clúster).
 
-~600–900 palabras de contenido útil por página. Bilingüe (EN + slugs localizados
-ES).
+~600–900 palabras de contenido útil por página. Multilingüe (p. ej. EN + slugs
+localizados ES).
 
 **URLs de resultado compartibles**: las entradas van en query params
 (`?w=80&h=180`) para poder enlazarlas, pero esas URLs son `robots: noindex` con
 `canonical` al slug limpio — sin contenido fino/duplicado.
 
-**Mapa de slugs** (EN en raíz / ES localizado):
+**Ejemplo: un sitio de calculadoras** (EN en raíz / ES localizado). El mismo
+enfoque de mapa de slugs sirve para páginas de producto, ubicaciones o cualquier
+otro conjunto de entidades:
 
 | Calculadora      | EN                               | ES                                            |
 | ---------------- | -------------------------------- | --------------------------------------------- |
@@ -208,6 +231,10 @@ ES).
 | IMC / peso ideal | `/tools/bmi-calculator`          | `/es/herramientas/calculadora-imc`            |
 | Hidratación      | `/tools/water-intake-calculator` | `/es/herramientas/calculadora-agua`           |
 | Discos           | `/tools/plate-calculator`        | `/es/herramientas/calculadora-discos`         |
+
+(Competir con los grandes agregadores de calculadoras es cuestión de mejor
+profundidad de contenido + señales de confianza + Core Web Vitals en cada una de
+estas páginas.)
 
 ---
 
@@ -222,15 +249,15 @@ El posicionamiento se ve influido por los CWV de campo. Objetivos:
 | INP     | < 200ms  | islas cliente diminutas; diferir JS no crítico                 |
 | TTFB    | < 600ms  | páginas estáticas servidas desde el edge/CDN                   |
 
-Práctico: `next/image` para toda imagen, `next/font` (ya cableado: Spline Sans +
-JetBrains Mono con variables CSS), carga diferida de componentes pesados bajo el
-pliegue.
+Práctico: `next/image` para toda imagen, `next/font` para fuentes auto-alojadas
+con variables CSS (sin saltos de layout), carga diferida de componentes pesados
+bajo el pliegue.
 
 ---
 
 ## 9. Medición y analítica
 
-Lo que ya está cableado en este repo:
+Un cableado típico:
 
 - **Vercel Analytics** (`@vercel/analytics`) — vistas/eventos respetuosos con la
   privacidad, sin banner de cookies, cero configuración en Vercel.
@@ -241,21 +268,51 @@ Lo que ya está cableado en este repo:
   `NEXT_PUBLIC_GA_ID`. Apagado hasta que pongas la variable.
 
 Configurar GA4: analytics.google.com → crea una propiedad → añade un flujo de
-datos **Web** para `metri.info` → copia el **Measurement ID** (`G-XXXXXXXXXX`) →
-ponlo en `NEXT_PUBLIC_GA_ID` en las variables de Vercel. Listo; el componente
-carga gtag.
+datos **Web** para `your-domain.com` → copia el **Measurement ID**
+(`G-XXXXXXXXXX`) → ponlo en `NEXT_PUBLIC_GA_ID` en las variables de tu hosting.
+Listo; el componente carga gtag.
 
 **Google Search Console** (hazlo primero, es la herramienta SEO más importante):
 
-- Añade `metri.info` como propiedad; verifica por TXT de DNS (o la meta
-  `verification.google`, soportada por nuestros metadatos raíz).
-- Envía `https://metri.info/sitemap.xml`.
+- Añade `your-domain.com` como propiedad; verifica por TXT de DNS (o la meta
+  `verification.google`, soportada por los metadatos raíz).
+- Envía `https://your-domain.com/sitemap.xml`.
 - Vigila: Rendimiento (consultas/impresiones/CTR/posición), Páginas (cobertura de
   indexación) y los informes de Resultados enriquecidos (FAQ/Breadcrumb).
 
-"Panel de métricas en la app" (futuro opcional): GA4 tiene Data API y Search
+"Panel de métricas en la app" (opcional): GA4 tiene Data API y Search
 Console tiene API — una ruta de servidor puede consumir ambas y renderizar un
 dashboard interno.
+
+> **Más a fondo:** la analítica de producto (PostHog), la división lectura/
+> escritura de GA4, el reverse proxy `/ingest`, los funnels en HogQL y el caché
+> del dashboard tienen su propia guía independiente del proyecto →
+> [`analytics.es.md`](./analytics.es.md).
+
+---
+
+## Contenido y elementos de confianza por tipo de página
+
+Cada tipo de página posiciona con señales distintas. Ajusta el contenido, los
+datos estructurados y los elementos de confianza a _para qué_ sirve la página:
+
+| Tipo de página                  | H1 / estructura de encabezados                                 | ¿FAQ?         | Autor / citas / última revisión / disclaimer (YMYL)      | JSON-LD más adecuado                                              | Nota hreflang                                            |
+| ------------------------------- | -------------------------------------------------------------- | ------------- | -------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------- |
+| Inicio                          | H1 de marca/valor, luego H2 por sección                        | Opcional      | No                                                       | `Organization` + `WebSite` (+ `SearchAction`)                    | `x-default` → inicio en idioma principal                |
+| Blog / Artículo                 | Titular como H1, esquema H2/H3 del argumento                   | Opcional      | Firma de autor + fechas; citas si es factual             | `Article` (o `NewsArticle`/`BlogPosting`) + `BreadcrumbList`     | Traduce el slug; alternativas recíprocas por artículo   |
+| Producto / E-commerce           | Nombre del producto H1, H2 para specs/reseñas                  | A menudo (Q\&A) | Reseñas/ratings, no autor                                | `Product` (+ `Offer`, `AggregateRating`) + `BreadcrumbList`      | Precio/moneda por locale; alternativas por producto     |
+| SaaS / landing                  | H1 orientado al resultado, H2 por feature/beneficio            | Recomendado   | Opcional; los testimonios dan confianza                  | `SoftwareApplication` + `FAQPage` + `BreadcrumbList`            | Landing localizada por mercado                          |
+| Herramienta/calc salud/finanzas (YMYL) | H1 keyword, H2 para método + interpretación + FAQ      | **Sí**        | **Obligatorio** (revisor con nombre, fuentes, fecha, disclaimer) | `SoftwareApplication`/`WebApplication` + `MedicalWebPage` + `FAQPage` + `BreadcrumbList` | Slug localizado; alternativas recíprocas                |
+| Negocio de servicios local      | "{Servicio} en {Ciudad}" H1, H2 para servicios/zonas/reseñas   | **Sí**        | Reseñas + NAP, no citas académicas                       | `LocalBusiness` (+ `Service`, `AggregateRating`) + `FAQPage`    | Una página por ciudad/locale; alternativas si es multilingüe |
+| Sitio multilingüe               | Mismo esquema por idioma; nunca mezclar idiomas en una URL     | Espeja EN/ES  | Espeja por idioma                                        | Mismo tipo por locale, valores traducidos                       | **`hreflang` recíproco + `x-default` en cada página**   |
+
+Las páginas YMYL (salud, finanzas, legal) **requieren** un autor/revisor con
+nombre, fuentes autorizadas citadas, fecha de última revisión y un disclaimer
+para posicionar siquiera — la confianza es la puerta de entrada, no un extra. Las
+páginas informativas y locales, en cambio, se apoyan en el **NAP** (nombre,
+dirección, teléfono), un perfil `LocalBusiness` y reseñas genuinas; una empresa
+de fumigación/control de plagas, por ejemplo, posiciona por un NAP consistente,
+zonas de servicio y valoraciones mucho más que por citas académicas.
 
 ---
 
@@ -281,4 +338,147 @@ dashboard interno.
   (Search Console).
 - **PageSpeed Insights** / Lighthouse (CWV, lab + campo).
 - **Validador de Schema** (schema.org).
-- Verificadores de `hreflang`; `site:metri.info` para vigilar la indexación.
+- Verificadores de `hreflang`; `site:your-domain.com` para vigilar la indexación.
+
+---
+
+## 11. Referencia de conceptos — qué es / qué brinda / en qué afecta / código
+
+Cada concepto en un solo lugar: **qué** es, **qué** te brinda, **en qué** afecta y
+el **código** mínimo correcto. Independiente del proyecto.
+
+### URL canónica
+
+- **Qué:** la única URL "oficial" de un contenido.
+- **Brinda:** consolida duplicados (params, variantes `www`/slash final).
+- **Afecta:** evita la dilución por contenido duplicado; concentra señales de ranking.
+
+```ts
+export const metadata = { alternates: { canonical: "/tools/ffmi-calculator" } };
+```
+
+### hreflang + x-default
+
+- **Qué:** declara las variantes de idioma/región de una página.
+- **Brinda:** Google sirve el idioma correcto; evita que EN/ES compitan.
+- **Afecta:** ranking internacional + CTR. Debe ser **recíproco**.
+
+```ts
+alternates: {
+  canonical: "/tools/ffmi-calculator",
+  languages: {
+    en: "/tools/ffmi-calculator",
+    es: "/es/herramientas/calculadora-ffmi",
+    "x-default": "/tools/ffmi-calculator",
+  },
+}
+```
+
+### metadataBase
+
+- **Qué:** la URL base absoluta para resolver metadatos relativos.
+- **Brinda:** URLs OG/canónicas absolutas correctas.
+- **Afecta:** previews sociales rotos si falta.
+
+```ts
+export const metadata = { metadataBase: new URL("https://example.com") };
+```
+
+### Título y descripción
+
+- **Qué:** el titular del SERP + el snippet.
+- **Brinda:** relevancia por keyword + clics.
+- **Afecta:** ranking (título) y CTR (ambos). Máx. ~60 / ~160 caracteres; únicos.
+
+```ts
+export const metadata = {
+  title: { default: "Example", template: "%s · Example" },
+  description: "Una frase clara con la keyword principal.",
+};
+```
+
+### robots / noindex
+
+- **Qué:** directivas de indexación por página.
+- **Brinda:** mantiene fuera del índice URLs thin/duplicadas/con params.
+- **Afecta:** higiene del índice; un `noindex` accidental en prod hunde el tráfico.
+
+```ts
+// página de resultado ?param compartible — no indexar, canónica al slug limpio:
+export const metadata = {
+  robots: { index: false, follow: true },
+  alternates: { canonical: "/tools/ffmi-calculator" },
+};
+```
+
+### Sitemap y robots.txt
+
+- **Qué:** lista para máquinas de URLs indexables + reglas de rastreo.
+- **Brinda:** descubrimiento más rápido y completo; hreflang por URL.
+- **Afecta:** cobertura y frescura del rastreo.
+
+```ts
+// app/sitemap.ts
+export default function sitemap() {
+  return ROUTES.map((r) => ({
+    url: abs(r.en),
+    lastModified: new Date(),
+    alternates: { languages: { en: abs(r.en), es: abs(r.es) } },
+    priority: r.isCalculator ? 0.9 : 0.6,
+  }));
+}
+```
+
+### Datos estructurados (JSON-LD)
+
+- **Qué:** descripción legible por máquinas de la página (schema.org).
+- **Brinda:** resultados enriquecidos (FAQ, breadcrumbs, ratings) — más espacio en SERP.
+- **Afecta:** CTR fuertemente; marca solo contenido **visible**.
+
+```tsx
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+  "@context": "https://schema.org", "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({ "@type": "Question", name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a } })),
+}) }} />
+```
+
+### Imagen Open Graph
+
+- **Qué:** la tarjeta de preview al compartir un enlace.
+- **Brinda:** previews sociales/SERP intencionales y con marca.
+- **Afecta:** CTR en redes y en algunas features del SERP.
+
+```tsx
+// app/tools/[calc]/opengraph-image.tsx
+export const size = { width: 1200, height: 630 };
+export const contentType = "image/png";
+export default function OG() { return new ImageResponse(<Card/>, size); }
+```
+
+### HTML semántico y encabezados
+
+- **Qué:** un `<h1>`, encabezados ordenados, `<nav>/<main>/<footer>`, alt text.
+- **Brinda:** estructura clara para crawlers + accesibilidad.
+- **Afecta:** comprensión, score de a11y, elegibilidad para featured snippet.
+
+### Enlazado interno / clusters temáticos
+
+- **Qué:** páginas relacionadas se enlazan entre sí alrededor de un tema.
+- **Brinda:** reparte link equity; señala autoridad temática.
+- **Afecta:** ranking de todo el cluster, no solo de una página.
+
+### Renderizado servidor-primero (SSG/RSC)
+
+- **Qué:** entregar HTML completo desde el servidor; JS solo para islas pequeñas.
+- **Brinda:** indexación fiable + TTFB/LCP rápidos.
+- **Afecta:** tanto la calidad de indexación como los Core Web Vitals.
+
+### Core Web Vitals
+
+- **Qué:** LCP < 2.5s, CLS < 0.1, INP < 200ms (datos de campo).
+- **Brinda:** mejor UX y una señal de ranking.
+- **Afecta:** ranking (desempate) y rebote. Mídelos con Speed Insights.
+
+> Para la analítica que mide todo lo anterior, ver
+> [`analytics.es.md`](./analytics.es.md).

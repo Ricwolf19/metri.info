@@ -104,6 +104,18 @@ accounts, OAuth pairs enable social sign-in, `RESEND_API_KEY` powers contact +
 password-reset email, and the `*_POSTHOG_*` / `NEXT_PUBLIC_GA_ID` keys enable
 analytics. Copy the file to `.env` and fill in only what you need.
 
+## Documentation
+
+Reusable, **project-agnostic** playbooks live in [`docs/seo/`](./docs/seo) (EN +
+ES, kept in sync):
+
+- [`advanced-seo`](./docs/seo/advanced-seo.en.md) — server-first SEO, i18n/
+  hreflang, metadata, JSON-LD, OG images, Core Web Vitals, content & trust
+  elements by page type, and a concept reference.
+- [`analytics`](./docs/seo/analytics.en.md) — PostHog · GA4 · Vercel · Search
+  Console, the `/ingest` reverse proxy, HogQL funnels, dashboard caching.
+- [`glossary`](./docs/seo/glossary.en.md) — every technical term in one place.
+
 ## Deploying
 
 Deploys on **Vercel**. Database migrations apply automatically during the build
