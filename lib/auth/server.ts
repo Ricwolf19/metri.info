@@ -68,4 +68,12 @@ export const auth = betterAuth({
   }),
   emailAndPassword: { enabled: true },
   socialProviders,
+  user: {
+    // Expose `role` on the session (UI gating). `input: false` keeps it off the
+    // sign-up payload, so it can never be self-assigned — only the bootstrap
+    // script / DB grants admin. Authoritative checks still re-query the DB.
+    additionalFields: {
+      role: { type: "string", input: false, required: false },
+    },
+  },
 });
