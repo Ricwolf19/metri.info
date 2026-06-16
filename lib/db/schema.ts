@@ -1,15 +1,12 @@
 import {
   boolean,
-  integer,
   jsonb,
   pgTable,
   real,
   text,
   timestamp,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
-
-/* ── Better Auth core tables ────────────────────────────────────────────────
- * Column shape matches Better Auth's Drizzle adapter expectations. */
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -62,8 +59,6 @@ export const verification = pgTable("verification", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-/* ── Extended profile (mirrors the mobile `users` body-metric columns) ────── */
-
 export const userProfile = pgTable("user_profile", {
   id: text("id")
     .primaryKey()
@@ -82,44 +77,27 @@ export const userProfile = pgTable("user_profile", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-/* ── Saved calculator results (auth users) ──────────────────────────────── */
-
 export const calculationLog = pgTable("calculation_log", {
   id: text("id").primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
+  userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
   calculatorType: text("calculator_type").notNull(),
   inputs: jsonb("inputs").notNull(),
   results: jsonb("results").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-/* ── Catalog mirror (for API / future mobile sync) ──────────────────────────
- * The public website renders exercises/programs from bundled static data;
- * these tables mirror that catalog for the API layer and cloud sync. */
-
-export const exercise = pgTable("exercise", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  category: text("category").notNull(),
-  primaryMuscles: jsonb("primary_muscles").$type<string[]>(),
-  secondaryMuscles: jsonb("secondary_muscles").$type<string[]>(),
-  equipment: text("equipment"),
-  difficulty: text("difficulty"),
-  instructions: jsonb("instructions").$type<string[]>(),
-  imageUrl: text("image_url"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
-export const program = pgTable("program", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  description: text("description"),
-  durationWeeks: integer("duration_weeks"),
-  daysPerWeek: integer("days_per_week"),
-  difficulty: text("difficulty"),
-  goal: text("goal"),
-  isFeatured: boolean("is_featured").default(false).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+export const favorite = pgTable(
+  "favorite",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    itemType: text("item_type").notNull(),
+    itemId: text("item_id").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => [
+    uniqueIndex("favorite_user_item_unique").on(t.userId, t.itemType, t.itemId),
+  ],
+);
