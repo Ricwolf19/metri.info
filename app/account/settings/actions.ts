@@ -4,13 +4,14 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth/server";
+import { getSession } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { user, userProfile } from "@/lib/db/schema";
 import { UnauthorizedError, ValidationError } from "@/lib/errors";
 import { type Result, safeAsync } from "@/lib/result";
 
 const requireSessionUser = async () => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   if (!session) throw new UnauthorizedError();
   return session.user;
 };

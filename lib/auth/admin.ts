@@ -1,10 +1,9 @@
 import "server-only";
 
 import { eq } from "drizzle-orm";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { auth } from "@/lib/auth/server";
+import { getSession } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { user } from "@/lib/db/schema";
 
@@ -15,7 +14,7 @@ import { user } from "@/lib/db/schema";
  * logged in but not an admin. Returns the session user on success.
  */
 export const requireAdmin = async () => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   if (!session) redirect("/sign-in");
 
   const [row] = await db
@@ -33,7 +32,7 @@ export const requireAdmin = async () => {
  * and redirects to sign-in when logged out. Returns the session user on success.
  */
 export const requireUser = async () => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   if (!session) redirect("/sign-in");
   return session.user;
 };

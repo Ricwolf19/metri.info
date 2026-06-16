@@ -1,7 +1,9 @@
 import "server-only";
 
 import { count, gte, sql } from "drizzle-orm";
+import { unstable_cache } from "next/cache";
 
+import { DB_METRICS_TAG } from "@/lib/analytics/tags";
 import { CALC_CONTENT } from "@/lib/calculators/content";
 import type { CalcId } from "@/lib/calculators/types";
 import { db } from "@/lib/db";
@@ -57,7 +59,7 @@ const since = () => {
 /** First-party metrics aggregated in Postgres. Returns null when the DB is not
  * configured (no DATABASE_URL) or a query fails, so the page degrades to a
  * placeholder instead of crashing. */
-export const getDbMetrics = async (): Promise<DbMetrics> => {
+const loadDbMetrics = async (): Promise<DbMetrics> => {
   try {
     const from = since();
     const now = new Date();
@@ -123,3 +125,18 @@ export const getDbMetrics = async (): Promise<DbMetrics> => {
     return null;
   }
 };
+
+/**
+ * Cached wrapper. These aggregates power the admin dashboard and don't need to
+ * be real-time, so they're cached for 5 minutes and tagged `metrics:db` —
+ * `saveCalculation` / `toggleFavorite` call `updateTag(DB_METRICS_TAG)` to
+ * refresh on writes that change the totals.
+ */
+export const getDbMetrics = unstable_cache(
+  loadDbMetrics,
+  ["admin-db-metrics"],
+  {
+    revalidate: 300,
+    tags: [DB_METRICS_TAG],
+  },
+);

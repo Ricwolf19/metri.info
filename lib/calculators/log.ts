@@ -1,8 +1,9 @@
 "use server";
 
-import { headers } from "next/headers";
+import { updateTag } from "next/cache";
 
-import { auth } from "@/lib/auth/server";
+import { DB_METRICS_TAG } from "@/lib/analytics/tags";
+import { getSession } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { calculationLog } from "@/lib/db/schema";
 
@@ -29,7 +30,7 @@ export const saveCalculation = async ({
 }: SaveArgs): Promise<SaveResult> => {
   if (!process.env.DATABASE_URL) return { ok: false, reason: "error" };
   try {
-    const session = await auth.api.getSession({ headers: await headers() });
+    const session = await getSession();
     if (!session) return { ok: false, reason: "unauthenticated" };
     await db.insert(calculationLog).values({
       id: crypto.randomUUID(),
@@ -38,6 +39,7 @@ export const saveCalculation = async ({
       inputs,
       results,
     });
+    updateTag(DB_METRICS_TAG);
     return { ok: true };
   } catch {
     return { ok: false, reason: "error" };
