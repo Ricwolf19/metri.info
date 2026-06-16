@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { track } from "@/lib/analytics/track";
 import { useI18n, useT } from "@/lib/i18n";
 import { CALCULATORS } from "@/lib/calculators/registry";
 import { buildSearch, decodeValues, readValues } from "@/lib/calculators/share";
@@ -416,6 +417,7 @@ export const Calculator = ({ id }: { id: CalcId }) => {
     setCompare(next);
     setB(nextB);
     commit(a, nextB, next);
+    track("compare_toggled", { calculator: id, on: next });
   };
 
   return (

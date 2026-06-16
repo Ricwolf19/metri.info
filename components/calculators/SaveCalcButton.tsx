@@ -13,6 +13,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { track } from "@/lib/analytics/track";
 import { useSession } from "@/lib/auth/client";
 import { saveCalculation } from "@/lib/calculators/log";
 import { CALCULATORS } from "@/lib/calculators/registry";
@@ -53,6 +54,7 @@ export const SaveCalcButton = ({
   const onClick = async () => {
     if (!canSave) return;
     if (!session) {
+      track("save_prompt_shown", { calculator: id });
       setPromptOpen(true);
       return;
     }
@@ -66,6 +68,7 @@ export const SaveCalcButton = ({
     });
     if (res.ok) {
       setState("saved");
+      track("calculation_saved", { calculator: id });
       toast({ title: t("toast.calcSaved"), variant: "success" });
     } else {
       setState("error");

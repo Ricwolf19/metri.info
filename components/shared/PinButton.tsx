@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 import { StarIcon, StarSolidIcon } from "@/components/icons";
 import { useToast } from "@/components/ui/toast";
+import { track } from "@/lib/analytics/track";
 import { useSession } from "@/lib/auth/client";
 import { type FavoriteItemType, toggleFavorite } from "@/lib/favorites/actions";
 import { useI18n } from "@/lib/i18n";
@@ -56,6 +57,11 @@ export const PinButton = ({
         }
       } else {
         setPinned(res.favorited);
+        track("favorite_toggled", {
+          item_type: itemType,
+          item_id: itemId,
+          favorited: res.favorited,
+        });
       }
     });
   };

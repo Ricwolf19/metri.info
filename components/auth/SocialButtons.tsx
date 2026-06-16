@@ -5,6 +5,7 @@ import { useState } from "react";
 import { GithubIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/Spinner";
+import { track } from "@/lib/analytics/track";
 import { authClient } from "@/lib/auth/client";
 import { useT } from "@/lib/i18n";
 
@@ -37,6 +38,7 @@ export const SocialButtons = ({ callbackURL }: { callbackURL: string }) => {
   const go = async (provider: "google" | "github") => {
     setError(null);
     setLoading(provider);
+    track("social_auth_started", { provider });
     try {
       await authClient.signIn.social({ provider, callbackURL });
     } catch {

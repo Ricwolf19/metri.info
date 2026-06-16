@@ -9,6 +9,8 @@ import {
   useState,
 } from "react";
 
+import { track } from "@/lib/analytics/track";
+
 export type ThemeScheme = "light" | "dark";
 export type ThemePreference = "system" | "light" | "dark";
 
@@ -84,6 +86,7 @@ export const ThemeProvider = ({
       localStorage.setItem(THEME_COOKIE, next);
     } catch {}
     document.cookie = `${THEME_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`;
+    track("theme_changed", { theme: next });
   }, []);
 
   const value = useMemo<ThemeContextValue>(

@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { track } from "@/lib/analytics/track";
 import { useT } from "@/lib/i18n";
 import type { CalcId } from "@/lib/calculators/types";
 import type { Locale } from "@/lib/i18n/config";
@@ -53,6 +54,7 @@ export const ShareDialog = ({
 
   const capture = (open: boolean) => {
     if (!open) return;
+    track("share_clicked", { calculator: calcId });
     const { origin } = window.location;
     const suffix = `id=${calcId}&locale=${locale}${search ? `&${search}` : ""}`;
     setUrl(
@@ -65,11 +67,13 @@ export const ShareDialog = ({
   const copy = () => {
     navigator.clipboard?.writeText(url).then(() => {
       setCopied(true);
+      track("share_method", { calculator: calcId, method: "copy" });
       setTimeout(() => setCopied(false), 1600);
     });
   };
 
   const nativeShare = () => {
+    track("share_method", { calculator: calcId, method: "native" });
     navigator.share?.({ url, title: document.title }).catch(() => {});
   };
 
@@ -154,6 +158,9 @@ export const ShareDialog = ({
           <a
             href={imageUrl}
             download={`metri-${calcId}.png`}
+            onClick={() =>
+              track("share_method", { calculator: calcId, method: "image" })
+            }
             className="mt-2.5 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-ink-600 py-2 text-sm font-medium text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50"
           >
             <DownloadIcon size={15} />

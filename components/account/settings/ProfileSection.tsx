@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { track } from "@/lib/analytics/track";
 import { useT } from "@/lib/i18n";
 import { type ProfileInput, saveProfile } from "@/app/account/settings/actions";
 import type { AccountProfile } from "@/lib/account/settings";
@@ -85,6 +86,7 @@ export const ProfileSection = ({
     setPending(false);
     if (res.ok) {
       setStatus({ tone: "success", message: t("settings.profileSaved") });
+      track("profile_saved");
       toast({ title: t("toast.profileSaved"), variant: "success" });
     } else {
       setStatus({ tone: "error", message: res.error.message });

@@ -7,6 +7,7 @@ import { useState } from "react";
 import { AuthDivider, AuthInput } from "@/components/auth/AuthInput";
 import { SocialButtons } from "@/components/auth/SocialButtons";
 import { Button } from "@/components/ui/button";
+import { track } from "@/lib/analytics/track";
 import { authClient } from "@/lib/auth/client";
 import { useI18n } from "@/lib/i18n";
 import { routePath } from "@/lib/i18n/routes";
@@ -33,6 +34,7 @@ export const SignInForm = () => {
         setError(res.error.message ?? t("auth.errorGeneric"));
         return;
       }
+      track("login_completed", { method: "email" });
       router.push(home);
       router.refresh();
     } catch {

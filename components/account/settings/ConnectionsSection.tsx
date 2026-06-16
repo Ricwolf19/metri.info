@@ -10,6 +10,7 @@ import {
 } from "@/components/account/settings/SettingsPanel";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast";
+import { track } from "@/lib/analytics/track";
 import { authClient } from "@/lib/auth/client";
 import { type SocialProvider, SOCIAL_PROVIDERS } from "@/lib/account/providers";
 import { useI18n } from "@/lib/i18n";
@@ -83,6 +84,7 @@ export const ConnectionsSection = ({
   const link = async (provider: SocialProvider) => {
     setStatus(null);
     setBusy(provider);
+    track("connection_link_started", { provider });
     try {
       await authClient.linkSocial({ provider, callbackURL: settingsPath });
     } catch {
@@ -104,6 +106,7 @@ export const ConnectionsSection = ({
       }
       setProviderIds((ids) => ids.filter((p) => p !== providerId));
       setStatus({ tone: "success", message: t("settings.disconnected") });
+      track("connection_unlinked", { provider: providerId });
       toast({ title: t("toast.disconnected"), variant: "success" });
       router.refresh();
     } catch {

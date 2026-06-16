@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { AuthInput } from "@/components/auth/AuthInput";
 import { Button } from "@/components/ui/button";
+import { track } from "@/lib/analytics/track";
 import { authClient } from "@/lib/auth/client";
 import { useI18n } from "@/lib/i18n";
 import { routePath } from "@/lib/i18n/routes";
@@ -28,6 +29,7 @@ export const ForgotPasswordForm = () => {
         email,
         redirectTo: routePath("resetPassword", locale),
       });
+      track("password_reset_requested");
     } catch {
     } finally {
       setLoading(false);

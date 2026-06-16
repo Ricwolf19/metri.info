@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { DownloadIcon, XIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
+import { track } from "@/lib/analytics/track";
 import { useT } from "@/lib/i18n";
 
 type BeforeInstallPromptEvent = Event & {
@@ -34,8 +35,12 @@ export const InstallPrompt = () => {
     const onBeforeInstall = (event: Event) => {
       event.preventDefault();
       setDeferred(event as BeforeInstallPromptEvent);
+      track("pwa_install_prompted");
     };
-    const onInstalled = () => setDeferred(null);
+    const onInstalled = () => {
+      track("pwa_installed");
+      setDeferred(null);
+    };
 
     window.addEventListener("beforeinstallprompt", onBeforeInstall);
     window.addEventListener("appinstalled", onInstalled);
@@ -53,7 +58,8 @@ export const InstallPrompt = () => {
   const install = async () => {
     if (!deferred) return;
     await deferred.prompt();
-    await deferred.userChoice;
+    const { outcome } = await deferred.userChoice;
+    track("pwa_install_choice", { outcome });
     setDeferred(null);
   };
 

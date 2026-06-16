@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { TrackView } from "@/components/analytics/TrackView";
 import { DocArticle } from "@/components/docs/DocArticle";
 import { getDoc, getDocSlugs } from "@/lib/docs";
 
@@ -35,7 +36,12 @@ export const generateMetadata = async ({
 
 const DocPageEs = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
-  return <DocArticle locale="es" slug={slug} />;
+  return (
+    <>
+      <TrackView event="docs_viewed" properties={{ slug, locale: "es" }} />
+      <DocArticle locale="es" slug={slug} />
+    </>
+  );
 };
 
 export default DocPageEs;

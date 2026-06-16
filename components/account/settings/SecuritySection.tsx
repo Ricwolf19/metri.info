@@ -10,6 +10,7 @@ import { AuthInput } from "@/components/auth/AuthInput";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast";
 import { setAccountPassword } from "@/app/account/settings/actions";
+import { track } from "@/lib/analytics/track";
 import { authClient } from "@/lib/auth/client";
 import { useT } from "@/lib/i18n";
 
@@ -75,6 +76,7 @@ export const SecuritySection = ({
         }
         reset();
         setStatus({ tone: "success", message: t("settings.passwordSaved") });
+        track("password_changed", { mode: "change" });
         toast({ title: t("toast.passwordChanged"), variant: "success" });
       } else {
         const res = await setAccountPassword(next);
@@ -95,6 +97,7 @@ export const SecuritySection = ({
               ? t("settings.setPasswordEmailFallback")
               : t("settings.passwordSet"),
         });
+        track("password_changed", { mode: "set" });
         toast({ title: t("toast.passwordSet"), variant: "success" });
       }
     } catch {
