@@ -1,9 +1,10 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
+import { Spinner } from "@/components/ui/Spinner";
 import { cn } from "@/lib/utils";
 
 /**
- * shadcn-style button — owned in-repo and themed with METRI's ink/accent tokens
+ * shadcn-style button — owned in-repo and themed with Metri's ink/accent tokens
  * (not shadcn's --background palette). Export `buttonVariants` so links can be
  * styled as buttons: `<Link className={buttonVariants({ variant: "outline" })}>`.
  */
@@ -30,11 +31,27 @@ export const buttonVariants = cva(
 );
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
-  VariantProps<typeof buttonVariants>;
+  VariantProps<typeof buttonVariants> & {
+    /** Show a leading spinner and disable the button while a request is in flight. */
+    loading?: boolean;
+  };
 
-export const Button = ({ className, variant, size, ...props }: ButtonProps) => (
+export const Button = ({
+  className,
+  variant,
+  size,
+  loading = false,
+  disabled,
+  children,
+  ...props
+}: ButtonProps) => (
   <button
     className={cn(buttonVariants({ variant, size }), className)}
+    disabled={disabled || loading}
+    aria-busy={loading || undefined}
     {...props}
-  />
+  >
+    {loading ? <Spinner size="sm" /> : null}
+    {children}
+  </button>
 );

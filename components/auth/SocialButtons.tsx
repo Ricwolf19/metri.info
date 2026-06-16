@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { GithubIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/Spinner";
 import { authClient } from "@/lib/auth/client";
 import { useT } from "@/lib/i18n";
 
@@ -53,7 +54,7 @@ export const SocialButtons = ({ callbackURL }: { callbackURL: string }) => {
         onClick={() => go("google")}
         className="w-full font-medium"
       >
-        <GoogleMark />
+        {loading === "google" ? <Spinner size="sm" /> : <GoogleMark />}
         {t("auth.continueGoogle")}
       </Button>
       <Button
@@ -63,7 +64,11 @@ export const SocialButtons = ({ callbackURL }: { callbackURL: string }) => {
         onClick={() => go("github")}
         className="w-full font-medium"
       >
-        <GithubIcon size={18} />
+        {loading === "github" ? (
+          <Spinner size="sm" />
+        ) : (
+          <GithubIcon size={18} />
+        )}
         {t("auth.continueGithub")}
       </Button>
       {error && (

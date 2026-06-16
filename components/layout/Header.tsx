@@ -2,13 +2,16 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 
 import {
   GithubIcon,
   LogOutIcon,
   MenuIcon,
   ShieldIcon,
+  StarIcon,
 } from "@/components/icons";
+import { Spinner } from "@/components/ui/Spinner";
 import { Logo } from "@/components/layout/Logo";
 import { LocaleToggle } from "@/components/layout/LocaleToggle";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
@@ -41,14 +44,16 @@ export const Header = () => {
   const pathname = usePathname() ?? "/";
   const router = useRouter();
   const { data: session } = useSession();
+  const [signingOut, setSigningOut] = useState(false);
   const isAdmin =
     (session?.user as { role?: string } | undefined)?.role === "admin";
 
-  // Auth + admin pages render their own shell — no site chrome.
   if (isChromelessPath(pathname)) return null;
 
   const signInHref = routePath("signIn", locale);
   const handleSignOut = () => {
+    if (signingOut) return;
+    setSigningOut(true);
     signOut().finally(() => router.refresh());
   };
 
@@ -135,6 +140,15 @@ export const Header = () => {
                       {session.user.email}
                     </p>
                   </div>
+                  <SheetClose asChild>
+                    <Link
+                      href="/account"
+                      className="flex items-center gap-2.5 rounded-lg px-3 py-3 text-base font-medium text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50"
+                    >
+                      <StarIcon size={18} />
+                      {t("nav.account")}
+                    </Link>
+                  </SheetClose>
                   {isAdmin && (
                     <SheetClose asChild>
                       <Link
@@ -146,16 +160,19 @@ export const Header = () => {
                       </Link>
                     </SheetClose>
                   )}
-                  <SheetClose asChild>
-                    <button
-                      type="button"
-                      onClick={handleSignOut}
-                      className="flex w-full items-center gap-2.5 rounded-lg px-3 py-3 text-base font-medium text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50"
-                    >
+                  <button
+                    type="button"
+                    onClick={handleSignOut}
+                    disabled={signingOut}
+                    className="flex w-full items-center gap-2.5 rounded-lg px-3 py-3 text-base font-medium text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50 disabled:opacity-60"
+                  >
+                    {signingOut ? (
+                      <Spinner size="sm" />
+                    ) : (
                       <LogOutIcon size={18} />
-                      {t("nav.signOut")}
-                    </button>
-                  </SheetClose>
+                    )}
+                    {signingOut ? t("nav.signingOut") : t("nav.signOut")}
+                  </button>
                 </div>
               ) : (
                 <SheetClose asChild>

@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-import { LogOutIcon, ShieldIcon } from "@/components/icons";
+import { GearIcon, LogOutIcon, ShieldIcon, StarIcon } from "@/components/icons";
+import { Spinner } from "@/components/ui/Spinner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +25,7 @@ export const UserMenu = ({ className }: { className?: string }) => {
   const { data } = useSession();
   const t = useT();
   const router = useRouter();
+  const [signingOut, setSigningOut] = useState(false);
 
   if (!data) return null;
   const user = data.user;
@@ -32,7 +35,10 @@ export const UserMenu = ({ className }: { className?: string }) => {
     .charAt(0)
     .toUpperCase();
 
-  const handleSignOut = () => {
+  const handleSignOut = (e: Event) => {
+    e.preventDefault();
+    if (signingOut) return;
+    setSigningOut(true);
     signOut().finally(() => router.refresh());
   };
 
@@ -65,6 +71,18 @@ export const UserMenu = ({ className }: { className?: string }) => {
           <p className="truncate text-xs text-ink-400">{user.email}</p>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href="/account">
+            <StarIcon size={15} />
+            {t("nav.account")}
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/account/settings">
+            <GearIcon size={15} />
+            {t("account.settingsLink")}
+          </Link>
+        </DropdownMenuItem>
         {role === "admin" && (
           <DropdownMenuItem asChild>
             <Link href="/admin">
@@ -73,9 +91,9 @@ export const UserMenu = ({ className }: { className?: string }) => {
             </Link>
           </DropdownMenuItem>
         )}
-        <DropdownMenuItem onSelect={handleSignOut}>
-          <LogOutIcon size={15} />
-          {t("nav.signOut")}
+        <DropdownMenuItem onSelect={handleSignOut} disabled={signingOut}>
+          {signingOut ? <Spinner size="sm" /> : <LogOutIcon size={15} />}
+          {signingOut ? t("nav.signingOut") : t("nav.signOut")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

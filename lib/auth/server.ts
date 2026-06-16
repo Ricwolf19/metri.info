@@ -2,10 +2,63 @@ import "server-only";
 
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { Resend } from "resend";
 
 import { db } from "@/lib/db";
 import { account, session, user, verification } from "@/lib/db/schema";
 import { siteUrl } from "@/lib/utils";
+
+/** Resend's shared sender (test mode) works without domain verification; swap
+ * to a verified sender via AUTH_FROM_EMAIL / CONTACT_FROM_EMAIL in production. */
+const RESET_FROM = "Metri <onboarding@resend.dev>";
+
+/**
+ * Email the password-reset link via Resend, reusing the same client/setup as the
+ * contact form. When RESEND_API_KEY isn't configured we log a warning and return
+ * (never throw) so local dev and DB-less builds keep working — mirrors the
+ * skip-on-missing-key behaviour of the contact flow.
+ */
+const sendResetPassword = async ({
+  user: target,
+  url,
+}: {
+  user: { email: string; name?: string | null };
+  url: string;
+}): Promise<void> => {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.warn(
+      "[auth] RESEND_API_KEY not set — skipping password-reset email.",
+    );
+    return;
+  }
+
+  const resend = new Resend(apiKey);
+  const greeting = target.name ? `Hi ${target.name},` : "Hi,";
+  const { error } = await resend.emails.send({
+    from:
+      process.env.AUTH_FROM_EMAIL ??
+      process.env.CONTACT_FROM_EMAIL ??
+      RESET_FROM,
+    to: target.email,
+    subject: "Reset your Metri password",
+    text: [
+      greeting,
+      "",
+      "We received a request to reset your Metri password.",
+      "Open the link below to choose a new one (it expires in 1 hour):",
+      "",
+      url,
+      "",
+      "If you didn't request this, you can safely ignore this email.",
+      "",
+      "— Metri",
+    ].join("\n"),
+  });
+  if (error) {
+    console.error("[auth] failed to send password-reset email:", error.message);
+  }
+};
 
 /** Build the socialProviders map from whichever OAuth env vars are present. */
 const socialProviders: NonNullable<
@@ -39,9 +92,7 @@ const trustedOrigins = (() => {
     const apex = host.replace(/^www\./, "");
     origins.add(`${protocol}//${apex}`);
     origins.add(`${protocol}//www.${apex}`);
-  } catch {
-    // siteUrl unparseable — rely on env override + localhost below.
-  }
+  } catch {}
   for (const raw of process.env.BETTER_AUTH_TRUSTED_ORIGINS?.split(",") ?? []) {
     const origin = raw.trim().replace(/\/$/, "");
     if (origin) origins.add(origin);
@@ -66,12 +117,15 @@ export const auth = betterAuth({
     provider: "pg",
     schema: { user, session, account, verification },
   }),
-  emailAndPassword: { enabled: true },
+  emailAndPassword: { enabled: true, sendResetPassword },
   socialProviders,
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google", "github"],
+    },
+  },
   user: {
-    // Expose `role` on the session (UI gating). `input: false` keeps it off the
-    // sign-up payload, so it can never be self-assigned — only the bootstrap
-    // script / DB grants admin. Authoritative checks still re-query the DB.
     additionalFields: {
       role: { type: "string", input: false, required: false },
     },

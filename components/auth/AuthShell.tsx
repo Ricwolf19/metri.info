@@ -37,7 +37,7 @@ export const AuthShell = ({
         >
           <MetriMark className="h-8 w-8 text-lime-400" />
           <span className="text-lg font-bold tracking-tight text-white">
-            METRI
+            Metri
           </span>
         </Link>
 

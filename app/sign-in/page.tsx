@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { AuthShell } from "@/components/auth/AuthShell";
 import { SignInForm } from "@/components/auth/SignInForm";
@@ -17,7 +18,9 @@ const SignInPage = () => {
       title={t("auth.signInTitle")}
       subtitle={t("auth.signInSubtitle")}
     >
-      <SignInForm />
+      <Suspense fallback={null}>
+        <SignInForm />
+      </Suspense>
     </AuthShell>
   );
 };

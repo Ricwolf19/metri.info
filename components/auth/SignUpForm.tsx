@@ -35,8 +35,6 @@ export const SignUpForm = () => {
       router.push(home);
       router.refresh();
     } catch {
-      // A thrown/hung request (network, CORS, 5xx) used to leave the spinner
-      // stuck forever — finally guarantees the button re-enables.
       setError(t("auth.errorGeneric"));
     } finally {
       setLoading(false);
@@ -78,7 +76,7 @@ export const SignUpForm = () => {
             {error}
           </p>
         )}
-        <Button type="submit" disabled={loading} className="w-full">
+        <Button type="submit" loading={loading} className="w-full">
           {loading ? t("common.loading") : t("auth.signUp")}
         </Button>
       </form>

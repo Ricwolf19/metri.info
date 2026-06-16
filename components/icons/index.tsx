@@ -14,6 +14,7 @@ import {
   ArrowRight,
   Bell,
   Book,
+  Bookmark,
   Calculator,
   Camera,
   Check,
@@ -27,14 +28,18 @@ import {
   FireFlame,
   Flash,
   GraphUp,
+  Group,
   Gym,
   HalfMoon,
   Heart,
   Home,
   Language,
+  Link as LinkIcoit,
+  Lock,
   LogOut,
   Mail,
   Menu,
+  ProfileCircle,
   NavArrowRight,
   OpenNewWindow,
   Play,
@@ -45,6 +50,8 @@ import {
   ShareAndroid,
   Shield,
   SmartphoneDevice,
+  Star,
+  StarSolid,
   SunLight,
   Timer,
   Trophy,
@@ -70,11 +77,11 @@ const sized = (Icon: IconComponent, name: string) => {
   return Wrapped;
 };
 
-// Mirrored from the mobile app's barrel
 export const HomeIcon = sized(Home, "HomeIcon");
 export const ActivityIcon = sized(Activity, "ActivityIcon");
 export const BellIcon = sized(Bell, "BellIcon");
 export const BookIcon = sized(Book, "BookIcon");
+export const BookmarkIcon = sized(Bookmark, "BookmarkIcon");
 export const GearIcon = sized(Settings, "GearIcon");
 export const CameraIcon = sized(Camera, "CameraIcon");
 export const ChevronRightIcon = sized(NavArrowRight, "ChevronRightIcon");
@@ -88,7 +95,6 @@ export const TimerIcon = sized(Timer, "TimerIcon");
 export const PlayIcon = sized(Play, "PlayIcon");
 export const XIcon = sized(Xmark, "XIcon");
 export const TrophyIcon = sized(Trophy, "TrophyIcon");
-// Web-specific additions
 export const MenuIcon = sized(Menu, "MenuIcon");
 export const SunIcon = sized(SunLight, "SunIcon");
 export const MoonIcon = sized(HalfMoon, "MoonIcon");
@@ -115,3 +121,9 @@ export const EyeIcon = sized(Eye, "EyeIcon");
 export const EyeOffIcon = sized(EyeClosed, "EyeOffIcon");
 export const MailIcon = sized(Mail, "MailIcon");
 export const ShareIcon = sized(ShareAndroid, "ShareIcon");
+export const StarIcon = sized(Star, "StarIcon");
+export const StarSolidIcon = sized(StarSolid, "StarSolidIcon");
+export const LockIcon = sized(Lock, "LockIcon");
+export const LinkIcon = sized(LinkIcoit, "LinkIcon");
+export const ProfileIcon = sized(ProfileCircle, "ProfileIcon");
+export const UsersIcon = sized(Group, "UsersIcon");

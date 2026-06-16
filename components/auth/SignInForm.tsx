@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import { AuthDivider, AuthInput } from "@/components/auth/AuthInput";
@@ -14,7 +14,9 @@ import { routePath } from "@/lib/i18n/routes";
 export const SignInForm = () => {
   const { t, locale } = useI18n();
   const router = useRouter();
+  const params = useSearchParams();
   const home = routePath("home", locale);
+  const justReset = params.get("reset") === "1";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,8 +36,6 @@ export const SignInForm = () => {
       router.push(home);
       router.refresh();
     } catch {
-      // A thrown/hung request (network, CORS, 5xx) used to leave the spinner
-      // stuck forever — finally guarantees the button re-enables.
       setError(t("auth.errorGeneric"));
     } finally {
       setLoading(false);
@@ -44,6 +44,14 @@ export const SignInForm = () => {
 
   return (
     <div className="space-y-5">
+      {justReset && (
+        <p
+          role="status"
+          className="rounded-xl border border-accent/40 bg-accent/10 px-4 py-3 text-center text-sm font-medium text-accent"
+        >
+          {t("auth.resetSuccess")}
+        </p>
+      )}
       <SocialButtons callbackURL={home} />
       <AuthDivider label={t("auth.or")} />
 
@@ -56,20 +64,30 @@ export const SignInForm = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <AuthInput
-          label={t("auth.password")}
-          type="password"
-          autoComplete="current-password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div>
+          <AuthInput
+            label={t("auth.password")}
+            type="password"
+            autoComplete="current-password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <div className="mt-1.5 text-right">
+            <Link
+              href={routePath("forgotPassword", locale)}
+              className="text-xs font-medium text-ink-300 hover:text-accent"
+            >
+              {t("auth.forgotPassword")}
+            </Link>
+          </div>
+        </div>
         {error && (
           <p role="alert" className="text-sm font-medium text-red-500">
             {error}
           </p>
         )}
-        <Button type="submit" disabled={loading} className="w-full">
+        <Button type="submit" loading={loading} className="w-full">
           {loading ? t("common.loading") : t("auth.signIn")}
         </Button>
       </form>

@@ -27,3 +27,13 @@ export const requireAdmin = async () => {
   if (row?.role !== "admin") redirect("/");
   return session.user;
 };
+
+/**
+ * Gate a Server Component to any signed-in user. Reads the Better Auth session
+ * and redirects to sign-in when logged out. Returns the session user on success.
+ */
+export const requireUser = async () => {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect("/sign-in");
+  return session.user;
+};
