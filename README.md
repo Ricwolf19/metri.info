@@ -125,4 +125,5 @@ generate migrations locally with `db:generate`, commit them, and the deploy runs
 
 ## License
 
-MIT.
+Released under the [MIT License](./LICENSE) — © 2026 Ricardo Tapia. You're free
+to use, modify and distribute it; just keep the copyright and license notice.
