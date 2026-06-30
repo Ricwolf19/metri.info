@@ -1,6 +1,7 @@
 "use server";
 
 import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth/server";
@@ -75,6 +76,11 @@ export const saveProfile = async (
       .set({ name, updatedAt: new Date() })
       .where(eq(user.id, sessionUser.id));
 
+    // Bust the Router Cache for the whole account area (settings + activity +
+    // header user menu) so freshly-saved profile data never renders stale.
+    revalidatePath("/account", "layout");
+    revalidatePath("/es/cuenta", "layout");
+
     return { saved: true as const };
   });
 
@@ -100,6 +106,8 @@ export const setAccountPassword = async (
 
     if (typeof setPassword === "function") {
       await setPassword({ body: { newPassword }, headers: reqHeaders });
+      revalidatePath("/account", "layout");
+      revalidatePath("/es/cuenta", "layout");
       return { method: "set" as const };
     }
 

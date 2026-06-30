@@ -6,9 +6,11 @@ import { useSession } from "@/lib/auth/client";
 import { type FavoriteItemType, listFavorites } from "@/lib/favorites/actions";
 
 /**
- * Client set of the current user's favorite ids for one item type. Loads once a
- * session is present; empty for anonymous visitors. Used to seed each card's
- * initial pinned state without an extra request per card.
+ * Client set of the current user's favorite ids for one item type. Refetched on
+ * mount so it's always consistent with the server (e.g. unpinning from the
+ * account page is reflected everywhere). Empty for anonymous visitors. The DB
+ * read behind `listFavorites` is server-cached + tagged, so the round-trip is
+ * cheap; a brief star fill on first paint is the only cost.
  */
 export const useFavoriteIds = (itemType: FavoriteItemType): Set<string> => {
   const { data } = useSession();

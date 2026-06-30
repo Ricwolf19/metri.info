@@ -79,7 +79,7 @@ export const ConnectionsSection = ({
   } | null>(null);
 
   const loginMethodCount = new Set(providerIds).size;
-  const settingsPath = routePath("accountSettings", locale);
+  const settingsPath = routePath("account", locale);
 
   const link = async (provider: SocialProvider) => {
     setStatus(null);

@@ -15,7 +15,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "@/lib/auth/client";
-import { useT } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
+import { routePath } from "@/lib/i18n/routes";
 import { cn } from "@/lib/utils";
 
 /** Header account menu — shown when a session exists. Surfaces the admin link
@@ -23,7 +24,7 @@ import { cn } from "@/lib/utils";
  * stay statically generated. */
 export const UserMenu = ({ className }: { className?: string }) => {
   const { data } = useSession();
-  const t = useT();
+  const { t, locale } = useI18n();
   const router = useRouter();
   const [signingOut, setSigningOut] = useState(false);
 
@@ -72,15 +73,15 @@ export const UserMenu = ({ className }: { className?: string }) => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/account">
-            <StarIcon size={15} />
+          <Link href={routePath("account", locale)}>
+            <GearIcon size={15} />
             {t("nav.account")}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/account/settings">
-            <GearIcon size={15} />
-            {t("account.settingsLink")}
+          <Link href={routePath("activity", locale)}>
+            <StarIcon size={15} />
+            {t("nav.activity")}
           </Link>
         </DropdownMenuItem>
         {role === "admin" && (

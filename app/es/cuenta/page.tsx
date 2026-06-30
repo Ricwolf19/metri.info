@@ -6,11 +6,11 @@ import { getAccountStats } from "@/lib/account/stats";
 import { requireUser } from "@/lib/auth/admin";
 
 export const metadata: Metadata = {
-  title: "My account · Metri",
+  title: "Mi cuenta · Metri",
   robots: { index: false, follow: false },
 };
 
-const AccountPage = async () => {
+const CuentaPage = async () => {
   const user = await requireUser();
   const [profile, providerIds, stats] = await Promise.all([
     getUserProfile(user.id),
@@ -24,9 +24,9 @@ const AccountPage = async () => {
       profile={profile}
       providerIds={providerIds}
       stats={stats}
-      locale="en"
+      locale="es"
     />
   );
 };
 
-export default AccountPage;
+export default CuentaPage;
