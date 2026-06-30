@@ -45,14 +45,22 @@
   --color-accent: rgb(var(--accent));
   --color-accent-fill: rgb(var(--accent-fill));
 
+  /* Brand green — the dumbbell lime, theme-aware (bright on dark, deeper on
+   * light) for legibility. Used for focus rings, active nav, key CTAs. */
+  --color-brand: rgb(var(--brand));
+  --color-brand-contrast: rgb(var(--brand-contrast));
+
   /* Secondary "PR" orange (used sparingly for highlights). */
   --color-flame: #ff6b35;
 
-  --font-sans: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono:
-    var(--font-mono-stack), ui-monospace, SFMono-Regular, Menlo, monospace;
+    var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --radius-card: 1rem;
+  /* Radius scale — sharper, more "direct" than before (Better Auth / Zed feel).
+   * `rounded-field` drives buttons/inputs/selects from one token. */
+  --radius-field: 0.5rem;
+  --radius-card: 0.625rem;
 }
 
 /* Dark scheme (default, dark-first) — neutral zinc grays, not blue-tinted */
@@ -73,6 +81,8 @@
   --ink-50: 245 245 247; /* primary text */
   --accent: 212 212 216; /* silver — accent text on dark (green stays on logo) */
   --accent-fill: 244 244 245; /* near-white — mono button fills on dark */
+  --brand: 190 248 43; /* lime-400 — bright brand green on dark */
+  --brand-contrast: 8 9 13; /* ink-950 — dark text on brand fills */
 }
 
 [data-theme="light"] {
@@ -91,6 +101,8 @@
   --ink-50: 24 24 27; /* primary text (near-black) */
   --accent: 63 63 70; /* zinc-700 — legible neutral accent text on white */
   --accent-fill: 24 24 27; /* near-black — mono button fills on light */
+  --brand: 77 124 15; /* lime-800 — deeper green stays legible on white */
+  --brand-contrast: 247 254 231; /* lime-50 — light text on brand fills */
 }
 
 * {
@@ -107,6 +119,11 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Kill stray horizontal scroll (decorative glows, in-view x-offsets) without
+   * creating a scroll container — `clip` keeps `position: sticky` working,
+   * unlike `hidden`. overflow-y stays visible (clip is exempt from the
+   * "visible becomes auto" rule). */
+  overflow-x: clip;
 }
 
 ::selection {
@@ -141,6 +158,111 @@ summary {
 
 .animate-rise {
   animation: metri-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/*
+ * Ambient glow — replaces expensive `blur-[120px]` filter orbs (which are slow
+ * to paint on mobile GPUs and delayed our LCP). A radial-gradient paints in a
+ * single cheap pass. `.glow-brand` adds a faint lime tint for hero/CTA depth.
+ */
+.glow-ambient {
+  background: radial-gradient(
+    60% 60% at 50% 0%,
+    rgb(var(--ink-700) / 0.55),
+    transparent 70%
+  );
+}
+.glow-brand {
+  background:
+    radial-gradient(
+      50% 55% at 50% 0%,
+      rgb(var(--brand) / 0.1),
+      transparent 65%
+    ),
+    radial-gradient(
+      55% 60% at 50% 0%,
+      rgb(var(--ink-700) / 0.5),
+      transparent 72%
+    );
+}
+
+/*
+ * Neon ring — a brand-green light that travels smoothly around an element's
+ * border (the floating command launcher). A conic gradient rotated via an
+ * animated @property angle, masked to just the border ring. Degrades to a
+ * static ring where @property isn't supported, and freezes under reduced motion.
+ */
+@property --metri-neon-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes metri-neon-spin {
+  to {
+    --metri-neon-angle: 360deg;
+  }
+}
+.neon-ring {
+  position: relative;
+  isolation: isolate;
+}
+.neon-ring::before {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--metri-neon-angle),
+    transparent 0deg,
+    rgb(var(--brand) / 0.15) 30deg,
+    rgb(var(--brand)) 70deg,
+    rgb(var(--brand) / 0.15) 110deg,
+    transparent 150deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: metri-neon-spin 4s linear infinite;
+}
+
+/* Cursor-following brand spotlight for interactive cards (see GlowCard). The
+ * radial centre tracks `--mx`/`--my` set on mousemove; opacity is toggled by
+ * Tailwind's group-hover. Behind the content (-z-10) so text stays crisp. */
+.spotlight-overlay {
+  background: radial-gradient(
+    240px circle at var(--mx, 50%) var(--my, 50%),
+    rgb(var(--brand) / 0.14),
+    transparent 70%
+  );
+}
+
+/* Glossary term flash — when you land on `#<term-id>` from a highlighted Term,
+ * the entry briefly lights up brand-green. Pure CSS via `:target`. */
+@keyframes metri-flash {
+  0% {
+    background-color: rgb(var(--brand) / 0.18);
+    border-color: rgb(var(--brand) / 0.8);
+    box-shadow:
+      0 0 0 1px rgb(var(--brand) / 0.6),
+      0 0 26px -2px rgb(var(--brand) / 0.65);
+  }
+  100% {
+    background-color: transparent;
+    border-color: rgb(var(--ink-600));
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+/* Three deliberate pulses (~2.7s) so the redirect is unmistakable. */
+.glossary-flash {
+  animation: metri-flash 0.9s ease-out 3;
 }
 
 /* Radix overlay / sheet / popover entrances (no tailwindcss-animate plugin). */
