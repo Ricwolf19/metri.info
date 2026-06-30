@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 
 import { ArrowRightIcon, DownloadIcon } from "@/components/icons";
@@ -10,7 +11,12 @@ import type { TranslationKey } from "@/lib/i18n/en";
 import { routePath } from "@/lib/i18n/routes";
 import { cn } from "@/lib/utils";
 
-/** Trust proof points, inlined under the CTAs. */
+// Lazy Three.js beams — keeps ~150KB gz out of the critical path; `ssr: false` because there's no GPU/canvas on the server.
+const Beams = dynamic(
+  () => import("@/components/background/Beams").then((m) => m.Beams),
+  { ssr: false },
+);
+
 const STATS: { value: string; key: TranslationKey }[] = [
   { value: "16", key: "stats.calculators" },
   { value: "20+", key: "stats.guides" },
@@ -19,21 +25,39 @@ const STATS: { value: string; key: TranslationKey }[] = [
 ];
 
 /**
- * Above-the-fold hero. Intentionally NOT Framer-animated: the content must be
- * present and visible in the server HTML for fast FCP/LCP on mobile. The subtle
- * entrance is a pure-CSS `animate-rise` (see globals.css) that paints on the
- * first frame and never depends on hydration.
+ * Viewport-bound hero (`min-h-[100svh]` + flex centering) so the headline,
+ * CTAs and trust stats all land in the first screen.
+ *
+ * Background layers are decorative and `pointer-events-none`:
+ *   1. `<Beams />` — WebGL light beams (Three.js).
+ *   2. Soft `glow-brand` lime aura (legacy, dimmed).
+ *
+ * Entrance is pure-CSS `animate-rise` from globals.css — no Framer Motion,
+ * so the content is present in server HTML for fast FCP/LCP.
  */
 export const Hero = () => {
   const { t, locale } = useI18n();
 
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative isolate flex min-h-[100svh] items-center overflow-hidden">
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <Beams
+          beamWidth={3}
+          beamHeight={30}
+          beamNumber={20}
+          lightColor="#ffffff"
+          speed={2}
+          noiseIntensity={1.75}
+          scale={0.2}
+          rotation={30}
+        />
+      </div>
       <div
         aria-hidden
-        className="glow-brand pointer-events-none absolute inset-x-0 top-[-6rem] h-[34rem]"
+        className="glow-brand pointer-events-none absolute inset-x-0 top-[-6rem] h-[34rem] opacity-40"
       />
-      <Container className="relative py-24 text-center sm:py-32">
+
+      <Container className="relative z-10 py-20 text-center sm:py-24">
         <div className="mx-auto max-w-3xl">
           <span className="animate-rise inline-flex items-center gap-2 rounded-full border border-ink-600 bg-ink-800/80 px-3 py-1 font-mono text-xs font-medium tracking-wide text-ink-300 backdrop-blur">
             <span className="h-1.5 w-1.5 rounded-full bg-brand" />
@@ -48,14 +72,14 @@ export const Hero = () => {
           </h1>
 
           <p
-            className="animate-rise mx-auto mt-6 max-w-2xl text-lg text-pretty text-ink-300"
+            className="animate-rise mx-auto mt-5 max-w-2xl text-base text-pretty text-ink-300 sm:text-lg"
             style={{ animationDelay: "120ms" }}
           >
             {t("hero.subtitle")}
           </p>
 
           <div
-            className="animate-rise mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row"
+            className="animate-rise mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
             style={{ animationDelay: "180ms" }}
           >
             <Link
@@ -78,15 +102,22 @@ export const Hero = () => {
           </div>
 
           <dl
-            className="animate-rise mx-auto mt-14 flex max-w-xl flex-wrap items-center justify-center gap-x-8 gap-y-4 border-t border-ink-600/60 pt-8"
+            className="animate-rise mx-auto mt-12 flex max-w-2xl flex-wrap items-center justify-center gap-2.5"
             style={{ animationDelay: "240ms" }}
           >
             {STATS.map(({ value, key }) => (
-              <div key={key} className="flex items-baseline gap-2">
-                <dt className="font-mono text-xl font-semibold text-ink-50">
+              <div
+                key={key}
+                className="inline-flex items-center gap-2 rounded-full border border-ink-600/70 bg-ink-900/70 px-3.5 py-1.5 backdrop-blur"
+              >
+                <span
+                  aria-hidden
+                  className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand"
+                />
+                <dt className="font-mono text-sm font-semibold text-ink-50">
                   {value}
                 </dt>
-                <dd className="font-mono text-xs tracking-wide text-ink-400 uppercase">
+                <dd className="font-mono text-[11px] tracking-wide text-ink-400 uppercase">
                   {t(key)}
                 </dd>
               </div>

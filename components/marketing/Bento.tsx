@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { MouseGlow } from "@/components/background/MouseGlow";
 import {
   ArrowRightIcon,
   BookIcon,
@@ -54,7 +55,6 @@ const IconTile = ({
   </span>
 );
 
-/** Mono numeric eyebrow label. */
 const Eyebrow = ({ n }: { n: string }) => (
   <span className="font-mono text-xs tracking-widest text-ink-500">{n}</span>
 );
@@ -74,9 +74,10 @@ export const Bento = () => {
       <AnimatedSection className="mt-12 grid gap-4 sm:grid-cols-2 lg:auto-rows-[minmax(0,1fr)] lg:grid-cols-6">
         <AnimatedItem className="sm:col-span-2 lg:col-span-4 lg:row-span-2">
           <Card className="group relative flex h-full flex-col overflow-hidden p-7">
+            <MouseGlow intensity={0.1} radius={320} />
             <div
               aria-hidden
-              className="glow-brand pointer-events-none absolute -top-20 right-0 h-64 w-2/3"
+              className="glow-brand pointer-events-none absolute -top-20 right-0 h-64 w-2/3 opacity-70"
             />
             <div className="relative">
               <div className="flex items-center justify-between">
