@@ -23,6 +23,13 @@ const isStandalone = () =>
   (window.matchMedia("(display-mode: standalone)").matches ||
     (window.navigator as { standalone?: boolean }).standalone === true);
 
+/** The floating prompt is mobile-only now: on desktop the "Add to home screen"
+ * helper added little value, so install lives on the /download page there. On
+ * phones the banner is the crucial nudge, so we keep it. */
+const isMobileViewport = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(max-width: 767px)").matches;
+
 /** True when the banner should stay hidden: already running as the installed app,
  * or snoozed via a recent dismiss. We deliberately do NOT persist an "installed"
  * flag — the browser only fires `beforeinstallprompt` while the app is
@@ -43,7 +50,7 @@ export const InstallPrompt = () => {
   );
 
   useEffect(() => {
-    if (isSuppressed()) return;
+    if (isSuppressed() || !isMobileViewport()) return;
 
     const onBeforeInstall = (event: Event) => {
       event.preventDefault();
