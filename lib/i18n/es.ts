@@ -1,6 +1,4 @@
-/**
- * Spanish strings — must provide every key from `en.ts`.
- */
+// Must cover every key from `en.ts`.
 import type { TranslationKey } from "./en";
 
 export const es: Record<TranslationKey, string> = {
@@ -113,6 +111,14 @@ export const es: Record<TranslationKey, string> = {
     "Este enlace no es válido o ha caducado. Solicita uno nuevo.",
   "auth.errorPasswordShort": "La contraseña debe tener al menos 8 caracteres.",
   "auth.errorPasswordMatch": "Las contraseñas no coinciden.",
+  "auth.signUpCheckEmail":
+    "Revisa tu bandeja — te enviamos un enlace de confirmación para terminar de crear tu cuenta.",
+  "auth.errorEmailNotVerified":
+    "Primero confirma tu correo. Revisa tu bandeja (o la carpeta de spam) para encontrar el enlace que te enviamos.",
+  "auth.errorBot":
+    "No pudimos verificar que seas humano. Inténtalo otra vez en un momento.",
+  "auth.recaptchaNotice":
+    "Protegido por reCAPTCHA. Aplican la Política de Privacidad y los Términos de Servicio de Google.",
 
   "hero.badge": "Tracker de fitness de código abierto",
   "hero.title": "Mide. Progresa. Evoluciona.",

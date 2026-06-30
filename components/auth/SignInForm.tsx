@@ -31,6 +31,11 @@ export const SignInForm = () => {
     try {
       const res = await authClient.signIn.email({ email, password });
       if (res.error) {
+        const code = (res.error as { code?: string }).code ?? "";
+        if (code === "email_not_verified") {
+          setError(t("auth.errorEmailNotVerified"));
+          return;
+        }
         setError(res.error.message ?? t("auth.errorGeneric"));
         return;
       }

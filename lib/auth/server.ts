@@ -2,30 +2,95 @@ import "server-only";
 
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { APIError } from "better-auth/api";
 import { Resend } from "resend";
 
 import { captureServer } from "@/lib/analytics/posthog-server";
+import { verifyRecaptcha } from "@/lib/captcha/verify";
 import { db } from "@/lib/db";
 import { account, session, user, verification } from "@/lib/db/schema";
+import {
+  renderResetPasswordEmail,
+  renderVerifyEmail,
+} from "@/lib/emails/render";
 import { siteUrl } from "@/lib/utils";
 
-/** Resend's shared sender (test mode) works without domain verification; swap
- * to a verified sender via AUTH_FROM_EMAIL / CONTACT_FROM_EMAIL in production. */
+// Resend's shared sender (test mode) — no domain verification needed; swap via AUTH_FROM_EMAIL / CONTACT_FROM_EMAIL in production.
 const RESET_FROM = "Metri <onboarding@resend.dev>";
+const VERIFY_FROM = "Metri <onboarding@resend.dev>";
+
+/** Args for the auth-email helpers. */
+type SendAuthEmailArgs = {
+  user: { email: string; name?: string | null };
+  url: string;
+};
+
+const deliverAuthEmail = async (
+  args: SendAuthEmailArgs,
+  rendered: { html: string; text: string },
+  subject: string,
+  fromOverride: string,
+  missingKeyLog: string,
+): Promise<void> => {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.error(missingKeyLog);
+    throw new Error("RESEND_API_KEY not configured");
+  }
+  const resend = new Resend(apiKey);
+  const { error } = await resend.emails.send({
+    from: fromOverride,
+    to: args.user.email,
+    subject,
+    html: rendered.html,
+    text: rendered.text,
+  });
+  if (error) {
+    console.error(`[auth] failed to send email "${subject}":`, error.message);
+    throw error;
+  }
+};
 
 /**
- * Email the password-reset link via Resend, reusing the same client/setup as the
- * contact form. When RESEND_API_KEY isn't configured we log a warning and return
- * (never throw) so local dev and DB-less builds keep working — mirrors the
- * skip-on-missing-key behaviour of the contact flow.
+ * Verification email for a freshly-created account. Better Auth invokes this
+ * from `databaseHooks.user.create.after` once the row exists with
+ * `emailVerified: false`. Throws on RESEND errors so failures surface instead
+ * of producing silently-unverified rows.
+ */
+const sendVerificationEmail = async ({
+  user: target,
+  url,
+}: SendAuthEmailArgs): Promise<void> => {
+  if (process.env.NODE_ENV !== "production") {
+    console.info(
+      `[auth] verification link (${process.env.NODE_ENV ?? "dev"}) → ${target.email} : ${url}`,
+    );
+  }
+  const rendered = await renderVerifyEmail({
+    name: target.name,
+    url,
+    expiresIn: "1 hour",
+  });
+  await deliverAuthEmail(
+    { user: target, url },
+    rendered,
+    "Confirm your Metri email",
+    process.env.AUTH_FROM_EMAIL ??
+      process.env.CONTACT_FROM_EMAIL ??
+      VERIFY_FROM,
+    "[auth] RESEND_API_KEY not set — refusing to create unverified account.",
+  );
+};
+
+/**
+ * Password-reset email. Skips with a warning when RESEND_API_KEY is unset so
+ * dev / DB-less builds still run; production must set the key (the contact
+ * form already enforces it).
  */
 const sendResetPassword = async ({
   user: target,
   url,
-}: {
-  user: { email: string; name?: string | null };
-  url: string;
-}): Promise<void> => {
+}: SendAuthEmailArgs): Promise<void> => {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.warn(
@@ -33,9 +98,17 @@ const sendResetPassword = async ({
     );
     return;
   }
-
+  if (process.env.NODE_ENV !== "production") {
+    console.info(
+      `[auth] reset link (${process.env.NODE_ENV ?? "dev"}) → ${target.email} : ${url}`,
+    );
+  }
+  const rendered = await renderResetPasswordEmail({
+    name: target.name,
+    url,
+    expiresIn: "1 hour",
+  });
   const resend = new Resend(apiKey);
-  const greeting = target.name ? `Hi ${target.name},` : "Hi,";
   const { error } = await resend.emails.send({
     from:
       process.env.AUTH_FROM_EMAIL ??
@@ -43,25 +116,14 @@ const sendResetPassword = async ({
       RESET_FROM,
     to: target.email,
     subject: "Reset your Metri password",
-    text: [
-      greeting,
-      "",
-      "We received a request to reset your Metri password.",
-      "Open the link below to choose a new one (it expires in 1 hour):",
-      "",
-      url,
-      "",
-      "If you didn't request this, you can safely ignore this email.",
-      "",
-      "— Metri",
-    ].join("\n"),
+    html: rendered.html,
+    text: rendered.text,
   });
   if (error) {
     console.error("[auth] failed to send password-reset email:", error.message);
   }
 };
 
-/** Build the socialProviders map from whichever OAuth env vars are present. */
 const socialProviders: NonNullable<
   Parameters<typeof betterAuth>[0]["socialProviders"]
 > = {};
@@ -80,11 +142,10 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 }
 
 /**
- * Origins allowed to call the auth API. Better Auth rejects requests whose
- * Origin isn't trusted; by default only `baseURL`'s origin counts. We must list
- * BOTH the apex and `www` host of the site (the canonical 301 between them is
- * exactly what broke sign-in), plus localhost in dev, plus any explicit
- * comma-separated overrides via BETTER_AUTH_TRUSTED_ORIGINS.
+ * Origins allowed to call the auth API. Better Auth rejects untrusted Origins;
+ * we list apex + `www` (the canonical 301 between them is what originally broke
+ * sign-in), localhost in dev, and any comma-separated
+ * `BETTER_AUTH_TRUSTED_ORIGINS` overrides.
  */
 const trustedOrigins = (() => {
   const origins = new Set<string>();
@@ -106,9 +167,8 @@ const trustedOrigins = (() => {
 
 /**
  * Cookie domain for cross-subdomain sessions. Returns `.apex` (e.g.
- * `.metri.info`) so the session cookie set on the apex is also sent on `www`
- * (and vice-versa) — this is what keeps you signed in across the apex↔www 308.
- * Null on localhost / raw IPs, where a Domain attribute would break dev cookies.
+ * `.metri.info`) so the session cookie flows across the apex↔www 308.
+ * Null on localhost / raw IPs where a Domain attr would break dev cookies.
  */
 const cookieDomain = (() => {
   try {
@@ -121,10 +181,41 @@ const cookieDomain = (() => {
 })();
 
 /**
- * Better Auth server config. Self-hosted on our Neon DB via Drizzle. Builds
- * fine without env vars (no connection at construction); sign-in works once
- * BETTER_AUTH_SECRET + DATABASE_URL are set. Each OAuth provider turns on only
- * when its client id/secret pair is present.
+ * Before-hook: reCAPTCHA gate on `/sign-up/email` only — sign-in stays captcha-free
+ * so returning users aren't slowed, and friction lands on the surface that's
+ * actually being spammed.
+ *
+ * IMPORTANT: short-circuit by THROWING `APIError`, never by returning a `Response`.
+ * Better Auth's hook runner reads `result.response` off the return value; a raw
+ * `Response` has no `.response`, so it's silently dropped and the sign-up proceeds —
+ * the captcha wouldn't block anything. A thrown `APIError` is caught and converted
+ * to a real HTTP error.
+ */
+const beforeAuthHook = async (inputContext: {
+  request?: Request;
+}): Promise<void> => {
+  const { request } = inputContext;
+  if (!request) return;
+  const url = new URL(request.url);
+  if (!url.pathname.endsWith("/sign-up/email")) return;
+
+  const token =
+    request.headers.get("x-recaptcha-token") ??
+    request.headers.get("X-Recaptcha-Token");
+  const result = await verifyRecaptcha(token);
+  if (!result.ok) {
+    throw new APIError("FORBIDDEN", {
+      // `code` is surfaced to the client as `error.code`; SignUpForm matches it.
+      code: "captcha_failed",
+      message: `captcha_failed: ${result.reason}`,
+    });
+  }
+};
+
+/**
+ * Better Auth server config (Drizzle/Neon). Builds without env vars; sign-in
+ * works once `BETTER_AUTH_SECRET` + `DATABASE_URL` are set. OAuth providers
+ * turn on only when their client id/secret pair is present.
  */
 export const auth = betterAuth({
   baseURL: siteUrl,
@@ -134,7 +225,15 @@ export const auth = betterAuth({
     provider: "pg",
     schema: { user, session, account, verification },
   }),
-  emailAndPassword: { enabled: true, sendResetPassword },
+  emailAndPassword: {
+    enabled: true,
+    requireEmailVerification: true,
+    sendResetPassword,
+  },
+  emailVerification: {
+    sendVerificationEmail,
+    autoSignInAfterVerification: true,
+  },
   session: {
     cookieCache: { enabled: true, maxAge: 5 * 60 },
   },
@@ -143,15 +242,11 @@ export const auth = betterAuth({
     accountLinking: {
       enabled: true,
       trustedProviders: ["google", "github"],
-      // Trusted providers (Google/GitHub) verify the email themselves, so allow
-      // linking even when the pre-existing local account is unverified — without
-      // this, a bootstrap admin created via email+password (emailVerified=false)
-      // hits `account_not_linked` when signing in with the same Google/GitHub email.
+      // Trusted providers verify the email themselves, so allow linking to a pre-existing unverified local account — otherwise a bootstrap admin (emailVerified=false) hits `account_not_linked` when signing in with the same Google/GitHub email.
       requireLocalEmailVerified: false,
     },
   },
-  // Share the session cookie across apex + www so the canonical 308 between them
-  // never drops the session. Omitted entirely on localhost (no Domain attr).
+  // Share the session cookie across apex + www so the canonical 308 between them never drops the session.
   ...(cookieDomain && {
     advanced: {
       crossSubDomainCookies: { enabled: true, domain: cookieDomain },
@@ -162,13 +257,26 @@ export const auth = betterAuth({
       role: { type: "string", input: false, required: false },
     },
   },
+  // Rate limits: stay generous for ordinary visitors but throttled so bulk sign-up hits 429 before creating accounts. In-memory in v1 — switch to `storage: "database"` when going multi-region.
+  rateLimit: {
+    enabled: true,
+    window: 60,
+    max: 100,
+    customRules: {
+      "/sign-up/email": { window: 60 * 60, max: 3 },
+      "/sign-in/email": { window: 60 * 5, max: 10 },
+      "/forget-password": { window: 60 * 60, max: 3 },
+      "/reset-password": { window: 60 * 60, max: 5 },
+      "/verify-email": { window: 60 * 60, max: 10 },
+    },
+  },
+  hooks: {
+    before: beforeAuthHook,
+  },
   databaseHooks: {
     user: {
       create: {
-        // Fires exactly once per new account — the funnel's final step. Captured
-        // server-side so email and social signups count uniformly (the client
-        // can't distinguish a new social user from a returning one). Method is a
-        // best-effort read of the endpoint path (`/callback/<provider>` vs email).
+        // Funnel's final step — fires once per new account. Captured server-side so email + social signups count uniformly; `method` is a best-effort read of the endpoint path (`/callback/<provider>` vs email).
         after: async (newUser, context) => {
           const path = (context as { path?: string } | null)?.path ?? "";
           const method = path.includes("callback")

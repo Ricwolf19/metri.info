@@ -1,8 +1,4 @@
-/**
- * English strings — the source of truth for translation keys (web).
- * Mirrors the mobile app's flat dotted-key convention. `es.ts` must provide the
- * same keys. Use `{name}`-style placeholders for interpolation (see `t()`).
- */
+/** English strings — source of truth for translation keys. `es.ts` must cover every key. Use `{name}` for interpolation. */
 export const en = {
   "common.and": "and",
   "common.continue": "Continue",
@@ -110,6 +106,14 @@ export const en = {
     "This reset link is invalid or has expired. Request a new one.",
   "auth.errorPasswordShort": "Password must be at least 8 characters.",
   "auth.errorPasswordMatch": "Passwords don't match.",
+  "auth.signUpCheckEmail":
+    "Check your inbox — we sent a confirmation link to finish setting up your account.",
+  "auth.errorEmailNotVerified":
+    "Please confirm your email first. Check your inbox (or spam folder) for the link we sent.",
+  "auth.errorBot":
+    "We couldn't verify you're human. Please try again in a moment.",
+  "auth.recaptchaNotice":
+    "Protected by reCAPTCHA. The Google Privacy Policy and Terms of Service apply.",
 
   "hero.badge": "Open-source fitness tracker",
   "hero.title": "Track. Progress. Evolve.",
