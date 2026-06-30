@@ -5,12 +5,22 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import {
+  BookmarkIcon,
+  GearIcon,
   GithubIcon,
+  InfoIcon,
   LogOutIcon,
   MenuIcon,
   ShieldIcon,
   StarIcon,
 } from "@/components/icons";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { webAppRepo } from "@/lib/site";
 import { Spinner } from "@/components/ui/Spinner";
 import { Logo } from "@/components/layout/Logo";
 import { LocaleToggle } from "@/components/layout/LocaleToggle";
@@ -29,7 +39,6 @@ import { signOut, useSession } from "@/lib/auth/client";
 import { useI18n } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
 import { isChromelessPath, type RouteId, routePath } from "@/lib/i18n/routes";
-import { webAppRepo } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 const NAV: { id: RouteId; key: TranslationKey }[] = [
@@ -71,28 +80,58 @@ export const Header = () => {
                 key={id}
                 href={href}
                 className={cn(
-                  "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                  active ? "text-accent" : "text-ink-300 hover:text-ink-50",
+                  "relative px-3 py-2 font-mono text-xs font-medium tracking-wider uppercase transition-colors",
+                  active ? "text-ink-50" : "text-ink-400 hover:text-ink-100",
                 )}
               >
                 {t(key)}
+                {active && (
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-3 -bottom-px h-px bg-brand"
+                  />
+                )}
               </Link>
             );
           })}
         </nav>
 
         <div className="flex items-center gap-2 md:justify-self-end">
-          <a
-            href={webAppRepo}
-            target="_blank"
-            rel="noreferrer noopener"
-            aria-label={t("nav.github")}
-            className="hidden h-9 w-9 items-center justify-center rounded-lg border border-ink-600 bg-ink-800 text-ink-200 transition-colors hover:bg-ink-700 hover:text-ink-50 sm:inline-flex"
-          >
-            <GithubIcon size={18} />
-          </a>
           <LocaleToggle />
           <ThemeToggle />
+
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              aria-label={t("nav.more")}
+              className="hidden h-9 w-9 items-center justify-center rounded-lg border border-ink-600 bg-ink-800 text-ink-300 transition-colors hover:bg-ink-700 hover:text-ink-50 focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:outline-none sm:inline-flex"
+            >
+              <span className="flex items-center gap-[3px]">
+                <span className="h-1 w-1 rounded-full bg-current" />
+                <span className="h-1 w-1 rounded-full bg-current" />
+                <span className="h-1 w-1 rounded-full bg-current" />
+              </span>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem asChild>
+                <Link href={routePath("changelog", locale)}>
+                  <BookmarkIcon size={15} />
+                  {t("nav.changelog")}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={routePath("about", locale)}>
+                  <InfoIcon size={15} />
+                  {t("footer.about")}
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <a href={webAppRepo} target="_blank" rel="noreferrer noopener">
+                  <GithubIcon size={15} />
+                  {t("nav.github")}
+                </a>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           {session ? (
             <UserMenu className="hidden sm:inline-flex" />
           ) : (
@@ -128,6 +167,14 @@ export const Header = () => {
                     </Link>
                   </SheetClose>
                 ))}
+                <SheetClose asChild>
+                  <Link
+                    href={routePath("changelog", locale)}
+                    className="rounded-lg px-3 py-3 text-base font-medium text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50"
+                  >
+                    {t("nav.changelog")}
+                  </Link>
+                </SheetClose>
               </nav>
 
               {session ? (
@@ -142,11 +189,20 @@ export const Header = () => {
                   </div>
                   <SheetClose asChild>
                     <Link
-                      href="/account"
+                      href={routePath("account", locale)}
+                      className="flex items-center gap-2.5 rounded-lg px-3 py-3 text-base font-medium text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50"
+                    >
+                      <GearIcon size={18} />
+                      {t("nav.account")}
+                    </Link>
+                  </SheetClose>
+                  <SheetClose asChild>
+                    <Link
+                      href={routePath("activity", locale)}
                       className="flex items-center gap-2.5 rounded-lg px-3 py-3 text-base font-medium text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50"
                     >
                       <StarIcon size={18} />
-                      {t("nav.account")}
+                      {t("nav.activity")}
                     </Link>
                   </SheetClose>
                   {isAdmin && (

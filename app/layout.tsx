@@ -1,30 +1,26 @@
 import type { Metadata, Viewport } from "next";
-import { JetBrains_Mono, Spline_Sans } from "next/font/google";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
+import { ConsentedGA } from "@/components/analytics/ConsentedGA";
+import { CommandLauncher } from "@/components/command/CommandLauncher";
+import { CommandPaletteMount } from "@/components/command/CommandPaletteMount";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { CookieConsent } from "@/components/legal/CookieConsent";
 import { Providers } from "@/components/providers";
-import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
+import { getAllDocs } from "@/lib/docs";
 import { siteUrl } from "@/lib/utils";
 
 import "./globals.css";
 
-const display = Spline_Sans({
-  subsets: ["latin"],
-  variable: "--font-display",
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-});
-
-const mono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono-stack",
-  display: "swap",
-});
+/**
+ * Geist Sans (body + headings) and Geist Mono (nav, eyebrows, labels, numeric
+ * values), self-hosted via the `geist` package — no Google Fonts round-trip.
+ */
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -99,11 +95,18 @@ const NO_FLASH = `(function(){try{var m=document.cookie.match(/(?:^|; )metri_the
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
+  // Built once at build time (static) so the ⌘K palette can list docs without a
+  // client-side filesystem read.
+  const docsIndex = {
+    en: getAllDocs("en").map((d) => ({ slug: d.slug, title: d.title })),
+    es: getAllDocs("es").map((d) => ({ slug: d.slug, title: d.title })),
+  };
+
   return (
     <html
       lang="en"
       data-theme="dark"
-      className={`${display.variable} ${mono.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -116,12 +119,14 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             <main className="flex-1">{children}</main>
             <Footer />
           </div>
-          <InstallPrompt />
+          <CookieConsent />
+          <CommandLauncher />
+          <CommandPaletteMount docsIndex={docsIndex} />
           <ServiceWorkerRegister />
         </Providers>
         <Analytics />
         <SpeedInsights />
-        {gaId ? <GoogleAnalytics gaId={gaId} /> : null}
+        {gaId ? <ConsentedGA gaId={gaId} /> : null}
       </body>
     </html>
   );
