@@ -9,8 +9,9 @@ import {
   ArrowRightIcon,
   ChevronRightIcon,
 } from "@/components/icons";
-import { mdxComponents } from "@/components/docs/MdxComponents";
+import { getMdxComponents } from "@/components/docs/MdxComponents";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
+import { GlossaryView } from "@/components/glossary/GlossaryView";
 import { TableOfContents } from "@/components/docs/TableOfContents";
 import { Container } from "@/components/shared/Container";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -55,6 +56,9 @@ export const DocArticle = async ({
   const { prev, next } = getDocSiblings(locale, slug);
   const allDocs = getAllDocs(locale);
 
+  const isGlossary = doc.meta.category === "glossary";
+  const docTitles = Object.fromEntries(allDocs.map((d) => [d.slug, d.title]));
+
   const sources = DOC_SOURCES[slug] ?? [];
   const isHealth = HEALTH_DOCS.has(slug);
   const reviewedDate = new Date(DOC_LAST_REVIEWED).toLocaleDateString(locale, {
@@ -65,7 +69,7 @@ export const DocArticle = async ({
 
   const { content } = await compileMDX({
     source: doc.content,
-    components: mdxComponents,
+    components: getMdxComponents(locale),
     options: {
       mdxOptions: { remarkPlugins: [remarkGfm], rehypePlugins: [rehypeSlug] },
     },
@@ -160,7 +164,23 @@ export const DocArticle = async ({
             <time dateTime={DOC_LAST_REVIEWED}>{reviewedDate}</time>
           </p>
 
-          <div className="mt-8">{content}</div>
+          {doc.meta.tags && doc.meta.tags.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {doc.meta.tags.map((tag) => (
+                <Link
+                  key={tag}
+                  href={`${basePath}?q=${encodeURIComponent(tag)}`}
+                  className="rounded-full bg-ink-800 px-2.5 py-1 font-mono text-xs text-ink-400 transition-colors hover:bg-ink-700 hover:text-ink-200"
+                >
+                  #{tag}
+                </Link>
+              ))}
+            </div>
+          )}
+
+          <div className="mt-8">
+            {isGlossary ? <GlossaryView docTitles={docTitles} /> : content}
+          </div>
 
           {sources.length > 0 && (
             <section className="mt-12">

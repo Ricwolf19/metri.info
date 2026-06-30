@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import {
@@ -18,6 +19,7 @@ import { GlowCard } from "@/components/shared/GlowCard";
 import { PinButton } from "@/components/shared/PinButton";
 import { useFavoriteIds } from "@/lib/favorites/useFavorites";
 import { useT } from "@/lib/i18n";
+import { textMatches } from "@/lib/search";
 import type { TranslationKey } from "@/lib/i18n/en";
 import type { DocCategory, DocMeta } from "@/lib/docs";
 
@@ -47,19 +49,18 @@ export const DocsBrowser = ({
   basePath: string;
 }) => {
   const t = useT();
-  const [query, setQuery] = useState("");
+  const searchParams = useSearchParams();
+  // Seed from `?q=` so a tag link from a doc page lands pre-filtered.
+  const [query, setQuery] = useState(() => searchParams.get("q") ?? "");
   const pinned = useFavoriteIds("doc");
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return docs;
-    return docs.filter((d) =>
-      [d.title, d.description, ...(d.tags ?? [])]
-        .join(" ")
-        .toLowerCase()
-        .includes(q),
-    );
-  }, [docs, query]);
+  const filtered = useMemo(
+    () =>
+      docs.filter((d) =>
+        textMatches(query, d.title, d.description, (d.tags ?? []).join(" ")),
+      ),
+    [docs, query],
+  );
 
   return (
     <div>
@@ -109,6 +110,24 @@ export const DocsBrowser = ({
                           <span className="mt-1 line-clamp-2 block text-xs leading-relaxed text-ink-300">
                             {doc.description}
                           </span>
+                          {doc.tags && doc.tags.length > 0 && (
+                            <span className="mt-2 flex flex-wrap gap-1.5">
+                              {doc.tags.slice(0, 3).map((tag) => (
+                                <button
+                                  key={tag}
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    setQuery(tag);
+                                  }}
+                                  className="rounded-full bg-ink-800 px-2 py-0.5 font-mono text-[10px] text-ink-400 transition-colors hover:bg-ink-700 hover:text-ink-200"
+                                >
+                                  #{tag}
+                                </button>
+                              ))}
+                            </span>
+                          )}
                         </span>
                         <PinButton
                           itemType="doc"

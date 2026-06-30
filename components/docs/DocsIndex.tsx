@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { DocsBrowser } from "@/components/docs/DocsBrowser";
 import { Container } from "@/components/shared/Container";
 import { PageHeader } from "@/components/shared/Section";
@@ -23,11 +25,15 @@ export const DocsIndex = ({ locale }: { locale: Locale }) => {
         className="mb-12"
       />
 
-      <DocsBrowser
-        docs={docs}
-        categories={categories}
-        basePath={routePath("docs", locale)}
-      />
+      {/* Suspense isolates `useSearchParams` (tag deep-links) so the page stays
+          statically prerendered. */}
+      <Suspense>
+        <DocsBrowser
+          docs={docs}
+          categories={categories}
+          basePath={routePath("docs", locale)}
+        />
+      </Suspense>
     </Container>
   );
 };
