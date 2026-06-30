@@ -7,6 +7,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CalcChart } from "@/components/calculators/CalcChart";
 import { SaveCalcButton } from "@/components/calculators/SaveCalcButton";
 import { ShareDialog } from "@/components/calculators/ShareDialog";
+import { XIcon } from "@/components/icons";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -17,9 +18,16 @@ import {
 } from "@/components/ui/select";
 import { track } from "@/lib/analytics/track";
 import { useI18n, useT } from "@/lib/i18n";
+import { applyProfileToValues } from "@/lib/calculators/prefill";
+import { getCalcProfile } from "@/lib/calculators/profile";
 import { CALCULATORS } from "@/lib/calculators/registry";
 import { buildSearch, decodeValues, readValues } from "@/lib/calculators/share";
-import type { CalcConfig, CalcId, CalcValues } from "@/lib/calculators/types";
+import type {
+  CalcConfig,
+  CalcId,
+  CalcResult,
+  CalcValues,
+} from "@/lib/calculators/types";
 import { cn } from "@/lib/utils";
 
 type Units = "metric" | "imperial";
@@ -51,9 +59,9 @@ const StepButton = ({
     disabled={disabled}
     onClick={onClick}
     className={cn(
-      "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-ink-600 bg-ink-800 font-mono text-lg text-ink-100 transition-colors",
+      "flex h-11 w-11 shrink-0 items-center justify-center rounded-field border border-ink-600 bg-ink-800 font-mono text-lg text-ink-100 transition-colors",
       "hover:bg-ink-700",
-      "focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:outline-none",
+      "focus-visible:border-brand/60 focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:outline-none",
       "disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-ink-800",
     )}
   >
@@ -66,11 +74,14 @@ const FieldInputs = ({
   values,
   units,
   onChange,
+  columns = false,
 }: {
   config: CalcConfig;
   values: CalcValues;
   units: Units;
   onChange: (name: string, metricValue: number | string) => void;
+  /** Lay fields out in a responsive 2-column grid (single-calculator view). */
+  columns?: boolean;
 }) => {
   const t = useT();
   const toDisplay = (m: number, unit?: string) =>
@@ -89,7 +100,11 @@ const FieldInputs = ({
       : unit;
 
   return (
-    <div className="space-y-5">
+    <div
+      className={cn(
+        columns ? "grid gap-x-6 gap-y-5 sm:grid-cols-2" : "space-y-5",
+      )}
+    >
       {config.fields.map((f) => {
         if (f.kind === "select") {
           return (
@@ -199,6 +214,51 @@ const FieldInputs = ({
   );
 };
 
+const ResultHeader = ({
+  result,
+  align,
+}: {
+  result: NonNullable<CalcResult>;
+  align: "center" | "left";
+}) => {
+  const t = useT();
+  return (
+    <div
+      className={cn(
+        align === "center" ? "text-center" : "text-center md:text-left",
+      )}
+    >
+      <p className="font-mono text-xs tracking-widest text-ink-400 uppercase">
+        {t(result.primaryLabelKey)}
+      </p>
+      <p
+        className={cn(
+          "mt-1.5 font-mono font-bold text-brand",
+          align === "center" ? "text-3xl" : "text-5xl",
+        )}
+      >
+        {result.primaryValue}
+        {result.primaryUnit && (
+          <span className="ml-1 text-lg text-ink-300">
+            {result.primaryUnit}
+          </span>
+        )}
+      </p>
+      {result.noteKey && (
+        <span
+          className={cn(
+            "mt-3 inline-flex w-fit items-center gap-1.5 rounded-full border border-brand/30 bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand",
+            align === "center" && "mx-auto",
+          )}
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+          {t(result.noteKey)}
+        </span>
+      )}
+    </div>
+  );
+};
+
 const ResultPanel = ({
   config,
   values,
@@ -213,75 +273,80 @@ const ResultPanel = ({
 
   if (!result) {
     return (
-      <div
-        className={cn(
-          "flex min-h-44 flex-col rounded-xl border border-ink-600 bg-ink-850 p-5",
-          !compact && "h-full",
-        )}
-      >
-        <p className="m-auto text-sm text-ink-400">{t("common.loading")}</p>
+      <div className="flex min-h-40 flex-col items-center justify-center rounded-card border border-amber-500/30 bg-amber-500/[0.04] p-5 text-center">
+        <p className="text-sm font-medium text-amber-400">
+          {t("calc.invalid")}
+        </p>
+        <p className="mt-1 text-xs text-ink-400">{t("calc.invalidHint")}</p>
       </div>
     );
   }
 
   const chart = result.chart;
-  const chartSize = compact ? "sm" : "lg";
 
+  // Compact (compare A/B) — narrow, stacked vertically.
+  if (compact) {
+    return (
+      <div className="flex flex-col rounded-card border border-ink-600 bg-ink-850 p-4">
+        <ResultHeader result={result} align="center" />
+        {chart && (
+          <div className="mt-4 flex items-center justify-center">
+            <div className="w-full">
+              <CalcChart chart={chart} size="sm" />
+            </div>
+          </div>
+        )}
+        {result.rows && result.rows.length > 0 && (
+          <ul className="mt-4 space-y-1.5 border-t border-ink-700 pt-4">
+            {result.rows.map((row, i) => (
+              <li key={i} className="flex items-center justify-between text-sm">
+                <span className="text-ink-300">
+                  {row.labelKey ? t(row.labelKey) : row.label}
+                </span>
+                <span className="font-mono text-ink-100">{row.value}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  }
+
+  // Single-calculator — wide horizontal band: value beside the chart, detail
+  // rows in a horizontal grid below, using the full width.
   return (
-    <div
-      className={cn(
-        "flex flex-col rounded-xl border border-ink-600 bg-ink-850",
-        compact ? "p-4" : "h-full p-5",
-      )}
-    >
-      <div className="flex flex-col items-center text-center">
-        <p className="text-sm text-ink-400">{t(result.primaryLabelKey)}</p>
-        <p
-          className={cn(
-            "mt-1 font-mono font-bold text-accent",
-            compact ? "text-3xl" : "text-4xl",
-          )}
-        >
-          {result.primaryValue}
-          {result.primaryUnit && (
-            <span className="ml-1 text-lg text-ink-300">
-              {result.primaryUnit}
-            </span>
-          )}
-        </p>
-        {result.noteKey && (
-          <span className="mt-2.5 inline-flex w-fit items-center rounded-md border border-ink-500 bg-ink-700 px-2.5 py-1 text-xs font-semibold text-accent">
-            {t(result.noteKey)}
-          </span>
+    <div className="relative overflow-hidden rounded-card border border-brand/20 bg-ink-850 p-5 sm:p-6">
+      <div
+        aria-hidden
+        className="glow-brand pointer-events-none absolute inset-x-0 top-0 h-28"
+      />
+      <div
+        className={cn(
+          "relative grid gap-6",
+          chart && "md:grid-cols-[minmax(0,15rem)_1fr] md:items-center",
+        )}
+      >
+        <ResultHeader result={result} align="left" />
+        {chart && (
+          <div className="min-w-0">
+            <CalcChart chart={chart} size="lg" />
+          </div>
         )}
       </div>
 
-      {chart && (
-        <div
-          className={cn(
-            "flex items-center justify-center",
-            compact ? "mt-4" : "mt-6 flex-1",
-          )}
-        >
-          <div className="w-full">
-            <CalcChart chart={chart} size={chartSize} />
-          </div>
-        </div>
-      )}
-
       {result.rows && result.rows.length > 0 && (
-        <ul
-          className={cn(
-            "space-y-1.5 border-t border-ink-700 pt-4",
-            chart ? "mt-4" : "mt-auto pt-4",
-          )}
-        >
+        <ul className="relative mt-5 grid gap-2.5 border-t border-ink-700 pt-4 sm:grid-cols-2 lg:grid-cols-3">
           {result.rows.map((row, i) => (
-            <li key={i} className="flex items-center justify-between text-sm">
-              <span className="text-ink-300">
+            <li
+              key={i}
+              className="rounded-field border border-ink-600/60 bg-ink-900/40 px-3 py-2"
+            >
+              <p className="truncate text-xs text-ink-400">
                 {row.labelKey ? t(row.labelKey) : row.label}
-              </span>
-              <span className="font-mono text-ink-100">{row.value}</span>
+              </p>
+              <p className="mt-0.5 font-mono text-sm font-medium text-ink-100">
+                {row.value}
+              </p>
             </li>
           ))}
         </ul>
@@ -338,6 +403,17 @@ const ScenarioBadge = ({ tag }: { tag: "A" | "B" }) => {
   );
 };
 
+/** Debounce a value so the result/chart only recompute once input settles —
+ * dragging a slider or typing fast no longer thrashes the UI. */
+const useDebouncedValue = <T,>(value: T, delay: number): T => {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+  return debounced;
+};
+
 export const Calculator = ({ id }: { id: CalcId }) => {
   const config = CALCULATORS[id];
   const { t, locale } = useI18n();
@@ -365,6 +441,8 @@ export const Calculator = ({ id }: { id: CalcId }) => {
     } catch {}
   };
 
+  const [prefilled, setPrefilled] = useState(false);
+
   const [a, setA] = useState<CalcValues>(() =>
     readValues(config, (k) => searchParams.get(k)),
   );
@@ -377,6 +455,11 @@ export const Calculator = ({ id }: { id: CalcId }) => {
       ? decodeValues(config, packed)
       : readValues(config, (k) => searchParams.get(k));
   });
+
+  // Debounced copies drive the result panel + chart so they don't jump on every
+  // keystroke / slider tick (inputs themselves stay instant).
+  const aDebounced = useDebouncedValue(a, 200);
+  const bDebounced = useDebouncedValue(b, 200);
 
   const search = buildSearch(config, a, b, compare);
   const canSave = useMemo(() => config.compute(a) !== null, [config, a]);
@@ -401,6 +484,38 @@ export const Calculator = ({ id }: { id: CalcId }) => {
     [config, pathname, router],
   );
 
+  // One-time prefill from the signed-in user's saved profile — only on a fresh
+  // visit (no shared/edited state in the URL). Runs client-side so the page
+  // stays statically generated. Values stay fully editable afterwards.
+  const prefillRan = useRef(false);
+  useEffect(() => {
+    if (prefillRan.current) return;
+    prefillRan.current = true;
+    const urlHasState =
+      config.fields.some((f) => searchParams.get(f.name) !== null) ||
+      searchParams.get("b") !== null ||
+      searchParams.get("compare") !== null;
+    if (urlHasState) return;
+
+    let active = true;
+    void getCalcProfile().then((profile) => {
+      if (!active || !profile) return;
+      const { values, changed } = applyProfileToValues(id, a, profile);
+      if (changed) {
+        setA(values);
+        setPrefilled(true);
+        commit(values, b, compare);
+      }
+      if (hasUnits) {
+        setUnits(profile.unitsPreference === "lb" ? "imperial" : "metric");
+      }
+    });
+    return () => {
+      active = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const updateA = (name: string, val: number | string) => {
     const next = { ...a, [name]: val };
     setA(next);
@@ -422,6 +537,20 @@ export const Calculator = ({ id }: { id: CalcId }) => {
 
   return (
     <div className="rounded-card border border-ink-600 bg-ink-800 p-4 sm:p-6">
+      {prefilled && (
+        <div className="mb-5 flex items-center gap-2 rounded-field border border-brand/25 bg-brand/5 px-3 py-2 text-xs text-ink-300">
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
+          <span>{t("calc.profilePrefilled")}</span>
+          <button
+            type="button"
+            onClick={() => setPrefilled(false)}
+            aria-label={t("toast.dismiss")}
+            className="ml-auto shrink-0 text-ink-400 transition-colors hover:text-ink-100"
+          >
+            <XIcon size={14} />
+          </button>
+        </div>
+      )}
       {hasUnits && (
         <div className="mb-6 inline-flex rounded-lg border border-ink-600 bg-ink-900 p-0.5 text-xs font-medium">
           {(["metric", "imperial"] as const).map((u) => (
@@ -453,7 +582,7 @@ export const Calculator = ({ id }: { id: CalcId }) => {
                 units={units}
                 onChange={updateA}
               />
-              <ResultPanel config={config} values={a} compact />
+              <ResultPanel config={config} values={aDebounced} compact />
             </div>
             <div className="space-y-4">
               <ScenarioBadge tag="B" />
@@ -463,20 +592,25 @@ export const Calculator = ({ id }: { id: CalcId }) => {
                 units={units}
                 onChange={updateB}
               />
-              <ResultPanel config={config} values={b} compact />
+              <ResultPanel config={config} values={bDebounced} compact />
             </div>
           </div>
-          <DeltaBar config={config} a={a} b={b} />
+          <DeltaBar config={config} a={aDebounced} b={bDebounced} />
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="space-y-6">
+          {/* Result as a full-width band on top, sticky on desktop so the live
+              number stays in view while you scroll the inputs below it. */}
+          <div className="z-10 lg:sticky lg:top-24">
+            <ResultPanel config={config} values={aDebounced} />
+          </div>
           <FieldInputs
             config={config}
             values={a}
             units={units}
             onChange={updateA}
+            columns
           />
-          <ResultPanel config={config} values={a} />
         </div>
       )}
 

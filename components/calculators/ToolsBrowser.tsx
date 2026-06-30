@@ -10,6 +10,7 @@ import { PinButton } from "@/components/shared/PinButton";
 import { useFavoriteIds } from "@/lib/favorites/useFavorites";
 import { useT } from "@/lib/i18n";
 import type { CalcRouteId } from "@/lib/i18n/routes";
+import { textMatches } from "@/lib/search";
 
 export type ToolCard = {
   id: CalcRouteId;
@@ -18,6 +19,7 @@ export type ToolCard = {
   tagline: string;
   keywords: string;
   popular: boolean;
+  tags: string[];
 };
 
 export const ToolsBrowser = ({ cards }: { cards: ToolCard[] }) => {
@@ -25,13 +27,13 @@ export const ToolsBrowser = ({ cards }: { cards: ToolCard[] }) => {
   const [query, setQuery] = useState("");
   const pinned = useFavoriteIds("calculator");
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return cards;
-    return cards.filter((c) =>
-      `${c.title} ${c.tagline} ${c.keywords}`.toLowerCase().includes(q),
-    );
-  }, [cards, query]);
+  const filtered = useMemo(
+    () =>
+      cards.filter((c) =>
+        textMatches(query, c.title, c.tagline, c.keywords, c.tags.join(" ")),
+      ),
+    [cards, query],
+  );
 
   return (
     <div>
@@ -80,6 +82,24 @@ export const ToolsBrowser = ({ cards }: { cards: ToolCard[] }) => {
                     <span className="mt-1 line-clamp-2 block text-xs leading-relaxed text-ink-300">
                       {c.tagline}
                     </span>
+                    {c.tags.length > 0 && (
+                      <span className="mt-2 flex flex-wrap gap-1.5">
+                        {c.tags.slice(0, 3).map((tag) => (
+                          <button
+                            key={tag}
+                            type="button"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setQuery(tag);
+                            }}
+                            className="rounded-full bg-ink-800 px-2 py-0.5 font-mono text-[10px] text-ink-400 transition-colors hover:bg-ink-700 hover:text-ink-200"
+                          >
+                            #{tag}
+                          </button>
+                        ))}
+                      </span>
+                    )}
                   </span>
                   <PinButton
                     itemType="calculator"

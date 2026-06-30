@@ -8,6 +8,7 @@ import { createT, type Locale } from "@/lib/i18n/config";
 import { CALC_IDS, routePath } from "@/lib/i18n/routes";
 import { CALC_CONTENT } from "@/lib/calculators/content";
 import { isPopularCalc } from "@/lib/calculators/registry";
+import { CALC_TAGS } from "@/lib/calculators/tags";
 
 export const ToolsIndex = ({ locale }: { locale: Locale }) => {
   const t = createT(locale);
@@ -21,6 +22,7 @@ export const ToolsIndex = ({ locale }: { locale: Locale }) => {
       tagline: c.tagline,
       keywords: c.seoTitle,
       popular: isPopularCalc(id),
+      tags: CALC_TAGS[id][locale],
     };
   });
 

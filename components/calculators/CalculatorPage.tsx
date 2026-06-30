@@ -3,12 +3,15 @@ import { Suspense } from "react";
 
 import { Calculator } from "@/components/calculators/Calculator";
 import { CALC_ICONS } from "@/components/calculators/calcIcons";
-import { ArrowRightIcon, ChevronRightIcon } from "@/components/icons";
+import { ArrowRightIcon, BookIcon, ChevronRightIcon } from "@/components/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Container } from "@/components/shared/Container";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { CALC_IDS, routePath, type CalcRouteId } from "@/lib/i18n/routes";
 import { CALC_CONTENT } from "@/lib/calculators/content";
+import { autoLinkTerms } from "@/components/docs/autoLinkTerms";
+import { CALC_GUIDES } from "@/lib/calculators/guides";
+import { getDoc } from "@/lib/docs";
 import { isPopularCalc } from "@/lib/calculators/registry";
 import {
   CALC_AUTHOR,
@@ -38,6 +41,18 @@ export const CalculatorPage = async ({
   const toolsPath = routePath("tools", locale);
   const selfPath = routePath(id, locale);
   const related = CALC_IDS.filter((x) => x !== id).slice(0, 4);
+
+  const docsPath = routePath("docs", locale);
+  const guides = (CALC_GUIDES[id] ?? [])
+    .map((slug) => {
+      const meta = getDoc(locale, slug)?.meta;
+      return meta
+        ? { slug, title: meta.title, href: `${docsPath}/${slug}` }
+        : null;
+    })
+    .filter((g): g is { slug: string; title: string; href: string } =>
+      Boolean(g),
+    );
 
   const sources = CALC_SOURCES[id];
   const isHealth = HEALTH_CALCS.has(id);
@@ -179,6 +194,26 @@ export const CalculatorPage = async ({
           </Suspense>
         </div>
 
+        {guides.length > 0 && (
+          <div className="mt-6 rounded-card border border-ink-600 bg-ink-850 p-5">
+            <p className="font-mono text-xs tracking-widest text-ink-400 uppercase">
+              {t("calc.relatedGuides")}
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {guides.map((g) => (
+                <Link
+                  key={g.slug}
+                  href={g.href}
+                  className="inline-flex items-center gap-1.5 rounded-field border border-ink-600 bg-ink-800 px-3 py-1.5 text-sm text-ink-200 transition-colors hover:border-brand/40 hover:text-ink-50"
+                >
+                  <BookIcon size={14} className="text-brand" />
+                  {g.title}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="mt-16 grid gap-12 lg:grid-cols-[1fr_16rem]">
           <article className="min-w-0 space-y-12">
             <section id={SECTION.overview} className="scroll-mt-24">
@@ -188,7 +223,7 @@ export const CalculatorPage = async ({
               <div className="mt-4 space-y-4">
                 {c.about.map((p, i) => (
                   <p key={i} className="leading-relaxed text-ink-200">
-                    {p}
+                    {autoLinkTerms(p, locale)}
                   </p>
                 ))}
               </div>
@@ -201,7 +236,7 @@ export const CalculatorPage = async ({
               <div className="mt-4 space-y-4">
                 {c.how.map((p, i) => (
                   <p key={i} className="leading-relaxed text-ink-200">
-                    {p}
+                    {autoLinkTerms(p, locale)}
                   </p>
                 ))}
               </div>
@@ -219,7 +254,7 @@ export const CalculatorPage = async ({
               <div className="mt-4 space-y-4">
                 {c.interpret.map((p, i) => (
                   <p key={i} className="leading-relaxed text-ink-200">
-                    {p}
+                    {autoLinkTerms(p, locale)}
                   </p>
                 ))}
               </div>
@@ -243,7 +278,7 @@ export const CalculatorPage = async ({
                       />
                     </summary>
                     <p className="mt-3 text-sm leading-relaxed text-ink-300">
-                      {f.a}
+                      {autoLinkTerms(f.a, locale)}
                     </p>
                   </details>
                 ))}
