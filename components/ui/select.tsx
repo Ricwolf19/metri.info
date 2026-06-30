@@ -16,9 +16,9 @@ export const SelectTrigger = ({
 }: React.ComponentProps<typeof SelectPrimitive.Trigger>) => (
   <SelectPrimitive.Trigger
     className={cn(
-      "flex h-11 w-full items-center justify-between gap-2 rounded-xl border border-ink-600 bg-ink-900 px-4 text-sm text-ink-50 transition-colors",
+      "flex h-11 w-full items-center justify-between gap-2 rounded-field border border-ink-600 bg-ink-900 px-4 text-sm text-ink-50 transition-colors",
       "data-[placeholder]:text-ink-400",
-      "focus-visible:border-ink-400 focus-visible:ring-2 focus-visible:ring-ink-500/40 focus-visible:outline-none",
+      "focus-visible:border-brand/60 focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:outline-none data-[state=open]:border-brand/60",
       "disabled:cursor-not-allowed disabled:opacity-60",
       className,
     )}
@@ -41,7 +41,7 @@ export const SelectContent = ({
     <SelectPrimitive.Content
       position={position}
       className={cn(
-        "relative z-50 max-h-72 min-w-[8rem] [animation:metri-pop-in_0.14s_ease-out] overflow-hidden rounded-xl border border-ink-600 bg-ink-800 text-ink-100 shadow-xl",
+        "relative z-50 max-h-72 min-w-[8rem] [animation:metri-pop-in_0.14s_ease-out] overflow-hidden rounded-card border border-ink-600 bg-ink-800 text-ink-100 shadow-xl",
         position === "popper" &&
           "w-[var(--radix-select-trigger-width)] data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
         className,

@@ -9,14 +9,16 @@ import { cn } from "@/lib/utils";
  * styled as buttons: `<Link className={buttonVariants({ variant: "outline" })}>`.
  */
 export const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center gap-2 rounded-xl font-semibold whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-ink-500/50 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-field font-semibold whitespace-nowrap transition-[color,background-color,border-color,transform] duration-150 focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-900 focus-visible:outline-none active:translate-y-px disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
         primary: "bg-ink-50 text-ink-900 hover:bg-ink-200",
+        brand: "bg-brand text-brand-contrast hover:bg-brand/90",
         secondary:
-          "border border-ink-600 bg-ink-800 text-ink-50 hover:bg-ink-700",
-        outline: "border border-ink-600 text-ink-100 hover:bg-ink-800",
+          "border border-ink-600 bg-ink-800 text-ink-50 hover:border-ink-500 hover:bg-ink-700",
+        outline:
+          "border border-ink-600 text-ink-100 hover:border-ink-500 hover:bg-ink-800",
         ghost: "text-ink-200 hover:bg-ink-800 hover:text-ink-50",
       },
       size: {

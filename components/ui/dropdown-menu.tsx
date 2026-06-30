@@ -23,7 +23,7 @@ export const DropdownMenuContent = ({
       sideOffset={sideOffset}
       align={align}
       className={cn(
-        "z-50 min-w-52 [animation:metri-pop-in_0.15s_ease-out] rounded-xl border border-ink-600 bg-ink-850 p-1.5 shadow-2xl focus:outline-none",
+        "z-50 min-w-52 [animation:metri-pop-in_0.15s_ease-out] rounded-card border border-ink-600 bg-ink-850 p-1.5 shadow-2xl focus:outline-none",
         className,
       )}
       {...props}
