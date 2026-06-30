@@ -41,9 +41,34 @@ export const es: Record<TranslationKey, string> = {
   "nav.signingOut": "Cerrando sesión…",
   "nav.admin": "Panel admin",
   "nav.account": "Mi cuenta",
+  "nav.activity": "Mi actividad",
   "nav.github": "GitHub",
   "nav.contact": "Contacto",
+  "nav.changelog": "Cambios",
+  "nav.more": "Más",
   "nav.menu": "Menú",
+
+  "cmd.title": "Menú de comandos",
+  "cmd.open": "Buscar",
+  "cmd.hide": "Ocultar",
+  "cmd.placeholder": "Busca calculadoras, guías, páginas…",
+  "cmd.empty": "Sin resultados.",
+  "cmd.group.pages": "Páginas",
+  "cmd.group.calculators": "Calculadoras",
+  "cmd.group.docs": "Guías",
+  "cmd.group.account": "Cuenta",
+
+  "changelog.title": "Registro de cambios",
+  "changelog.subtitle": "Lo nuevo en Metri — y lo que viene en la app móvil.",
+  "changelog.tabWeb": "Web",
+  "changelog.tabMobile": "App móvil",
+  "changelog.added": "Nuevo",
+  "changelog.improved": "Mejorado",
+  "changelog.fixed": "Corregido",
+  "changelog.inDevelopment": "En desarrollo",
+  "changelog.mobileIntro":
+    "Las apps nativas de iOS y Android están en construcción. Esto es lo que hay en el roadmap.",
+  "changelog.plannedTitle": "Qué viene",
   "nav.close": "Cerrar",
 
   "auth.signIn": "Iniciar sesión",
@@ -97,16 +122,18 @@ export const es: Record<TranslationKey, string> = {
   "hero.ctaDocs": "Ver documentación",
   "hero.ctaTools": "Probar las calculadoras",
 
-  "showcase.badge": "También en el móvil",
-  "showcase.title": "¿Prefieres el teléfono?",
-  "showcase.highlight": "Llévalo contigo.",
+  "showcase.badge": "En desarrollo",
+  "showcase.title": "Una app nativa está",
+  "showcase.highlight": "en camino.",
   "showcase.subtitle":
-    "Todo en Metri es gratis en la web. Una app nativa está en camino como extra opcional — las mismas herramientas, sin conexión.",
+    "Hoy todo en Metri es gratis en la web. Estamos construyendo apps nativas para iOS y Android con las mismas fórmulas, soporte sin conexión y progreso sincronizado. Esto es lo que viene.",
   "showcase.feature1": "Calculadoras instantáneas que responden a cada tecla",
   "showcase.feature2":
     "Funciona 100% sin conexión — tus datos se quedan contigo",
-  "showcase.feature3": "Fotos de progreso y recordatorios",
+  "showcase.feature3":
+    "Fotos de progreso, recordatorios e historial sincronizado",
   "showcase.feature4": "Gratis y de código abierto, para siempre",
+  "showcase.cta": "Ver lo que viene",
 
   "bento.eyebrow": "Por qué Metri",
   "bento.title": "Todo lo que un atleta necesita,",
@@ -137,6 +164,14 @@ export const es: Record<TranslationKey, string> = {
   "tools.searchPlaceholder": "Buscar calculadoras…",
   "tools.noResults": "Ninguna calculadora coincide con tu búsqueda.",
   "tools.popular": "Popular",
+  "tools.example.title": "Lo ves en cuanto escribes.",
+  "tools.example.body":
+    "Cada dato recalcula al instante — sin botón de enviar. Los resultados van codificados por color según rangos saludables y se comparten con un toque.",
+  "tools.example.p1": "Instantáneo — responde a cada tecla",
+  "tools.example.p2": "Rangos y objetivos codificados por color",
+  "tools.example.p3": "Comparte o guarda cualquier resultado",
+  "tools.example.caption":
+    "Ejemplo: calorías de mantenimiento, con objetivos de definición / mantenimiento / volumen.",
   "tools.popularAria": "Calculadora popular",
   "tools.bmr.title": "TMB y GET",
   "tools.bmr.desc":
@@ -225,6 +260,10 @@ export const es: Record<TranslationKey, string> = {
     "Se calcula al instante en tu navegador — ábrela para cambiar los datos.",
   "calc.metric": "Métrico",
   "calc.imperial": "Imperial",
+  "calc.profilePrefilled":
+    "Rellenado desde tu perfil — edita lo que quieras abajo.",
+  "calc.invalid": "Valor inválido",
+  "calc.invalidHint": "Introduce números válidos para ver tu resultado.",
   "calc.bodyFat": "Grasa corporal",
   "calc.neck": "Cuello",
   "calc.waist": "Cintura",
@@ -335,6 +374,7 @@ export const es: Record<TranslationKey, string> = {
   "calc.disclaimer":
     "Esta calculadora es solo para fines educativos generales y no es consejo médico. Las estimaciones se basan en fórmulas poblacionales y pueden no ajustarse a tu situación individual. Consulta a un profesional de la salud o del fitness cualificado antes de tomar decisiones de salud, nutrición o entrenamiento.",
   "calc.relatedTitle": "Calculadoras relacionadas",
+  "calc.relatedGuides": "Aprende los conceptos",
   "calc.trustTitle": "Gratis y de código abierto",
   "calc.trustBody":
     "Cada calculadora de Metri corre en tu navegador — sin cuenta, sin muros de pago, sin rastreo.",
@@ -362,6 +402,39 @@ export const es: Record<TranslationKey, string> = {
   "docs.subtitle":
     "Guías basadas en evidencia sobre nutrición, entrenamiento y recuperación — escritas para lifters, no clickbait.",
   "docs.searchPlaceholder": "Buscar en la documentación…",
+  "docs.example.title": "En lenguaje claro y con evidencia.",
+  "docs.example.body":
+    "Cada guía explica el porqué — fórmulas, rangos y compensaciones — con fuentes que puedes verificar.",
+  "docs.example.p1": "Escrito para personas, no para libros de texto",
+  "docs.example.p2": "Citado, revisado y al día",
+  "docs.example.snippetTitle": "Cómo leer tu IMC",
+  "docs.example.snippetBody":
+    "El IMC es una herramienta de cribado, no un diagnóstico — no distingue músculo de grasa, por eso muchos atletas marcan «sobrepeso».",
+  "glossary.search": "Buscar términos…",
+  "glossary.empty": "Ningún término coincide.",
+  "glossary.relatedLabel": "Guías",
+
+  "about.features.eyebrow": "Funciones",
+  "about.features.title": "Qué puedes hacer con Metri",
+  "about.features.lead":
+    "Herramientas y guías gratis para quienes entrenan en serio — sin cuenta para empezar.",
+  "about.features.calc.title": "16 calculadoras instantáneas",
+  "about.features.calc.desc":
+    "1RM, TDEE, macros, grasa corporal y más — los resultados se actualizan mientras escribes, y puedes compartir o guardar cualquiera.",
+  "about.features.docs.title": "Guías basadas en evidencia",
+  "about.features.docs.desc":
+    "Una base de conocimientos sobre nutrición, entrenamiento y recuperación, con fuentes que puedes verificar.",
+  "about.features.account.title": "Tu cuenta",
+  "about.features.account.desc":
+    "Guarda historial de cálculos y favoritos, y sigue el nivel de tu cuenta.",
+  "about.features.offline.title": "Instalable y sin conexión",
+  "about.features.offline.desc":
+    "Añade Metri a tu dispositivo y usa cada calculadora sin conexión.",
+  "about.features.cmd.title": "Paleta de comandos (⌘K)",
+  "about.features.cmd.desc":
+    "Salta a cualquier calculadora, guía o página con una tecla.",
+  "about.features.glossaryHint":
+    "¿Ves un término resaltado? Tócalo para una definición clara — como",
   "docs.noResults": "Sin resultados.",
   "docs.readingTime": "{minutes} min de lectura",
   "docs.onThisPage": "En esta página",
@@ -476,11 +549,36 @@ export const es: Record<TranslationKey, string> = {
   "download.notifyNote":
     "Dale una estrella al repo para enterarte cuando salga la primera versión.",
 
+  "download.pwaTitle": "Instala la app web",
+  "download.pwaBody":
+    "Añade Metri a tu dispositivo para una experiencia tipo app, lista sin conexión — sin tiendas. Funciona en escritorio y móvil.",
+  "download.pwaInstall": "Instalar app web",
+  "download.pwaInstalled": "Ya está instalada en este dispositivo",
+  "download.pwaIosHint":
+    "En iPhone o iPad: toca el botón Compartir y luego «Añadir a inicio».",
+  "download.pwaHint":
+    "En Chrome o Edge, abre el menú del navegador y elige «Instalar Metri».",
+
   "favorites.pin": "Añadir a favoritos",
   "favorites.unpin": "Quitar de favoritos",
 
   "account.title": "Mi cuenta",
   "account.subtitle": "Tu historial de cálculos y favoritos, en un solo lugar.",
+  "account.memberSince": "Miembro desde",
+  "account.activityLink": "Ver mi actividad",
+  "account.activityEyebrow": "Mi actividad",
+  "account.activityTitle": "Actividad",
+  "account.activitySubtitle":
+    "Tus cálculos guardados y favoritos, en un solo lugar.",
+  "account.statsCalcs": "guardados",
+  "account.statsFavs": "favoritos",
+  "account.tier.title": "Tu plan",
+  "account.tier.current": "Actual",
+  "account.tier.soon": "Próximamente",
+  "account.tier.free": "Cuenta gratis",
+  "account.tier.freeDesc": "Calculadoras, historial y favoritos.",
+  "account.tier.pro": "Pro",
+  "account.tier.proDesc": "Sync en la nube, datos históricos y la app móvil.",
   "account.historyTitle": "Historial de cálculos",
   "account.historySubtitle": "Tus cálculos más recientes.",
   "account.historyEmpty":
@@ -608,6 +706,13 @@ export const es: Record<TranslationKey, string> = {
   "settings.disconnected": "Desconectado.",
   "settings.connectError":
     "No se pudo conectar esa cuenta. Inténtalo de nuevo.",
+
+  "cookies.title": "Cookies",
+  "cookies.message":
+    "Usamos cookies para entender el uso y mejorar tu experiencia.",
+  "cookies.learnMore": "Política de privacidad",
+  "cookies.accept": "Aceptar",
+  "cookies.decline": "Rechazar",
 
   "toast.dismiss": "Descartar",
   "toast.genericError": "Algo salió mal. Inténtalo de nuevo.",

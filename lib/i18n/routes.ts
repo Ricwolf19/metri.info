@@ -14,6 +14,7 @@ export type RouteId =
   | "docs"
   | "download"
   | "about"
+  | "changelog"
   | "privacy"
   | "terms"
   | "contact"
@@ -21,7 +22,8 @@ export type RouteId =
   | "signUp"
   | "forgotPassword"
   | "resetPassword"
-  | "accountSettings"
+  | "account"
+  | "activity"
   | "ffmi"
   | "onerm"
   | "tdee"
@@ -47,6 +49,7 @@ export const ROUTES: Record<RouteId, RouteEntry> = {
   docs: { en: "/docs", es: "/es/docs" },
   download: { en: "/download", es: "/es/descargar" },
   about: { en: "/about", es: "/es/acerca" },
+  changelog: { en: "/changelog", es: "/es/changelog" },
   privacy: { en: "/privacy", es: "/es/privacidad" },
   terms: { en: "/terms", es: "/es/terminos" },
   contact: { en: "/contact", es: "/es/contacto" },
@@ -60,7 +63,8 @@ export const ROUTES: Record<RouteId, RouteEntry> = {
     en: "/reset-password",
     es: "/es/restablecer-contrasena",
   },
-  accountSettings: { en: "/account/settings", es: "/account/settings" },
+  account: { en: "/account", es: "/es/cuenta" },
+  activity: { en: "/account/activity", es: "/es/cuenta/actividad" },
   ffmi: {
     en: "/tools/ffmi-calculator",
     es: "/es/herramientas/calculadora-ffmi",

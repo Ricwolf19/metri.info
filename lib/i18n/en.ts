@@ -40,9 +40,35 @@ export const en = {
   "nav.signingOut": "Signing out…",
   "nav.admin": "Admin panel",
   "nav.account": "My account",
+  "nav.activity": "My activity",
   "nav.github": "GitHub",
   "nav.contact": "Contact",
+  "nav.changelog": "Changelog",
+  "nav.more": "More",
   "nav.menu": "Menu",
+
+  "cmd.title": "Command menu",
+  "cmd.open": "Search",
+  "cmd.hide": "Hide",
+  "cmd.placeholder": "Search calculators, guides, pages…",
+  "cmd.empty": "No results.",
+  "cmd.group.pages": "Pages",
+  "cmd.group.calculators": "Calculators",
+  "cmd.group.docs": "Guides",
+  "cmd.group.account": "Account",
+
+  "changelog.title": "Changelog",
+  "changelog.subtitle":
+    "What's new on Metri — and what's coming to the mobile app.",
+  "changelog.tabWeb": "Web",
+  "changelog.tabMobile": "Mobile app",
+  "changelog.added": "Added",
+  "changelog.improved": "Improved",
+  "changelog.fixed": "Fixed",
+  "changelog.inDevelopment": "In development",
+  "changelog.mobileIntro":
+    "The native iOS and Android apps are being built. Here's what's on the roadmap.",
+  "changelog.plannedTitle": "What's planned",
   "nav.close": "Close",
 
   "auth.signIn": "Sign in",
@@ -93,15 +119,16 @@ export const en = {
   "hero.ctaDocs": "Explore Docs",
   "hero.ctaTools": "Try the Calculators",
 
-  "showcase.badge": "Also on mobile",
-  "showcase.title": "Prefer your phone?",
-  "showcase.highlight": "Take it with you.",
+  "showcase.badge": "In development",
+  "showcase.title": "A native app is",
+  "showcase.highlight": "in the works.",
   "showcase.subtitle":
-    "Everything on Metri is free on the web. A native app is on the way as an optional extra — the same tools, fully offline.",
+    "Everything on Metri is free on the web today. We're building native iOS and Android apps with the same formulas, full offline support and synced progress. Here's what's coming.",
   "showcase.feature1": "Instant calculators that run on every keystroke",
   "showcase.feature2": "Works 100% offline — your data stays on device",
-  "showcase.feature3": "Progress photos and reminders",
+  "showcase.feature3": "Progress photos, reminders and synced history",
   "showcase.feature4": "Free and open source, forever",
+  "showcase.cta": "See what's coming",
 
   "bento.eyebrow": "Why Metri",
   "bento.title": "Everything a lifter needs,",
@@ -132,6 +159,14 @@ export const en = {
   "tools.searchPlaceholder": "Search calculators…",
   "tools.noResults": "No calculators match your search.",
   "tools.popular": "Popular",
+  "tools.example.title": "See it the moment you type.",
+  "tools.example.body":
+    "Every input recalculates instantly — no submit button. Results are colour-coded against healthy ranges and shareable in one tap.",
+  "tools.example.p1": "Instant — runs on every keystroke",
+  "tools.example.p2": "Colour-coded ranges and goals",
+  "tools.example.p3": "Share or save any result",
+  "tools.example.caption":
+    "Example: maintenance calories, with cut / maintain / bulk targets.",
   "tools.popularAria": "Popular calculator",
   "tools.bmr.title": "BMR & TDEE",
   "tools.bmr.desc":
@@ -217,6 +252,9 @@ export const en = {
     "Computed instantly in your browser — open it to change the inputs.",
   "calc.metric": "Metric",
   "calc.imperial": "Imperial",
+  "calc.profilePrefilled": "Prefilled from your profile — edit anything below.",
+  "calc.invalid": "Invalid value",
+  "calc.invalidHint": "Enter valid numbers to see your result.",
   "calc.bodyFat": "Body fat",
   "calc.neck": "Neck",
   "calc.waist": "Waist",
@@ -327,6 +365,7 @@ export const en = {
   "calc.disclaimer":
     "This calculator is for general educational purposes only and is not medical advice. Estimates are based on population formulas and may not fit your individual situation. Consult a qualified healthcare or fitness professional before making health, nutrition or training decisions.",
   "calc.relatedTitle": "Related calculators",
+  "calc.relatedGuides": "Learn the concepts",
   "calc.trustTitle": "Free & open source",
   "calc.trustBody":
     "Every Metri calculator runs in your browser — no account, no paywall, no tracking.",
@@ -354,6 +393,39 @@ export const en = {
   "docs.subtitle":
     "Evidence-based guides on nutrition, training and recovery — written for lifters, not clickbait.",
   "docs.searchPlaceholder": "Search the docs…",
+  "docs.example.title": "Plain-English, evidence-based.",
+  "docs.example.body":
+    "Every guide explains the why — formulas, ranges and trade-offs — with sources you can check.",
+  "docs.example.p1": "Written for humans, not textbooks",
+  "docs.example.p2": "Cited, reviewed and kept current",
+  "docs.example.snippetTitle": "How to read your BMI",
+  "docs.example.snippetBody":
+    "BMI is a screening tool, not a diagnosis — it can't tell muscle from fat, which is why many athletes read as “overweight”.",
+  "glossary.search": "Search terms…",
+  "glossary.empty": "No terms match.",
+  "glossary.relatedLabel": "Guides",
+
+  "about.features.eyebrow": "Features",
+  "about.features.title": "What you can do with Metri",
+  "about.features.lead":
+    "Free tools and guides for serious lifters — no account needed to start.",
+  "about.features.calc.title": "16 instant calculators",
+  "about.features.calc.desc":
+    "1RM, TDEE, macros, body fat and more — results update as you type, and you can share or save any of them.",
+  "about.features.docs.title": "Evidence-based guides",
+  "about.features.docs.desc":
+    "A knowledge base on nutrition, training and recovery, with sources you can check.",
+  "about.features.account.title": "Your account",
+  "about.features.account.desc":
+    "Save calculation history and favorites, and track your account level.",
+  "about.features.offline.title": "Installable & offline",
+  "about.features.offline.desc":
+    "Add Metri to your device and run every calculator without a connection.",
+  "about.features.cmd.title": "Command palette (⌘K)",
+  "about.features.cmd.desc":
+    "Jump to any calculator, guide or page in a keystroke.",
+  "about.features.glossaryHint":
+    "See a highlighted term anywhere? Tap it for a plain-English definition — like",
   "docs.noResults": "No results found.",
   "docs.readingTime": "{minutes} min read",
   "docs.onThisPage": "On this page",
@@ -465,11 +537,36 @@ export const en = {
   "download.notifyNote":
     "Star the repo to get notified when the first build drops.",
 
+  "download.pwaTitle": "Install the web app",
+  "download.pwaBody":
+    "Add Metri to your device for an app-like, offline-ready experience — no store needed. Works on desktop and mobile.",
+  "download.pwaInstall": "Install web app",
+  "download.pwaInstalled": "Already installed on this device",
+  "download.pwaIosHint":
+    "On iPhone or iPad: tap the Share button, then “Add to Home Screen”.",
+  "download.pwaHint":
+    "In Chrome or Edge, open the browser menu and choose “Install Metri”.",
+
   "favorites.pin": "Add to favorites",
   "favorites.unpin": "Remove from favorites",
 
   "account.title": "My account",
   "account.subtitle": "Your calculation history and favorites, in one place.",
+  "account.memberSince": "Member since",
+  "account.activityLink": "View my activity",
+  "account.activityEyebrow": "My activity",
+  "account.activityTitle": "Activity",
+  "account.activitySubtitle":
+    "Your saved calculations and favorites, in one place.",
+  "account.statsCalcs": "saved",
+  "account.statsFavs": "favorites",
+  "account.tier.title": "Your plan",
+  "account.tier.current": "Current",
+  "account.tier.soon": "Coming soon",
+  "account.tier.free": "Free account",
+  "account.tier.freeDesc": "Calculators, history and favorites.",
+  "account.tier.pro": "Pro",
+  "account.tier.proDesc": "Cloud sync, historical data and the mobile app.",
   "account.historyTitle": "Calculation history",
   "account.historySubtitle": "Your most recent calculations.",
   "account.historyEmpty":
@@ -592,6 +689,13 @@ export const en = {
     "This is your only way to sign in — add another sign-in method before disconnecting it.",
   "settings.disconnected": "Disconnected.",
   "settings.connectError": "Couldn't connect that account. Please try again.",
+
+  "cookies.title": "Cookies",
+  "cookies.message":
+    "We use cookies to understand usage and improve your experience.",
+  "cookies.learnMore": "Privacy policy",
+  "cookies.accept": "Accept",
+  "cookies.decline": "Decline",
 
   "toast.dismiss": "Dismiss",
   "toast.genericError": "Something went wrong. Please try again.",
