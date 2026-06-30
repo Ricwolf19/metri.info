@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 
 import {
   ArrowRightIcon,
@@ -14,11 +13,11 @@ import {
   ZapIcon,
   type IconProps,
 } from "@/components/icons";
+import { AnimatedItem } from "@/components/shared/AnimatedSection";
 import { Container } from "@/components/shared/Container";
 import { GradientText } from "@/components/shared/GradientText";
 import { Parallax } from "@/components/shared/Parallax";
 import { buttonVariants } from "@/components/ui/button";
-import { inViewOnce } from "@/lib/animations";
 import { useI18n } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
 import { routePath } from "@/lib/i18n/routes";
@@ -141,12 +140,7 @@ export const AppShowcase = () => {
   return (
     <section className="border-y border-ink-600/40 bg-ink-850 py-16 sm:py-24">
       <Container className="grid items-center gap-16 lg:grid-cols-2">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={inViewOnce}
-          transition={{ duration: 0.5 }}
-        >
+        <AnimatedItem>
           <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 font-mono text-xs font-medium tracking-wide text-brand">
             <span className="h-1.5 w-1.5 rounded-full bg-brand" />
             {t("showcase.badge")}
@@ -175,18 +169,13 @@ export const AppShowcase = () => {
             {t("showcase.cta")}
             <ArrowRightIcon size={16} />
           </Link>
-        </motion.div>
+        </AnimatedItem>
 
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={inViewOnce}
-          transition={{ duration: 0.5 }}
-        >
+        <AnimatedItem delay={0.08}>
           <Parallax offset={28} className="lg:px-6">
             <PreviewTiles />
           </Parallax>
-        </motion.div>
+        </AnimatedItem>
       </Container>
     </section>
   );

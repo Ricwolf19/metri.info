@@ -1,12 +1,62 @@
 "use client";
 
-import { motion } from "framer-motion";
+import {
+  Children,
+  cloneElement,
+  isValidElement,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
-import { fadeInUp, inViewOnce, staggerContainer } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 
-/** Reveals children on scroll with a staggered fade-up — the web equivalent of
- * the mobile app's FadeInUp-on-mount pattern. Wrap items in <AnimatedItem>. */
+/**
+ * Scroll-reveal with a staggered fade-up — IntersectionObserver + the CSS
+ * `metri-rise` keyframe (no animation library). `AnimatedSection` injects a
+ * per-child `delay` for the stagger; each `AnimatedItem` reveals once when it
+ * enters the viewport. `prefers-reduced-motion` is handled globally (the rise
+ * keyframe collapses to ~0ms).
+ */
+export const AnimatedItem = ({
+  className,
+  children,
+  delay = 0,
+}: {
+  className?: string;
+  children: React.ReactNode;
+  delay?: number;
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "0px 0px -80px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={cn(visible ? "animate-rise" : "opacity-0", className)}
+      style={visible && delay ? { animationDelay: `${delay}s` } : undefined}
+    >
+      {children}
+    </div>
+  );
+};
+
 export const AnimatedSection = ({
   className,
   children,
@@ -14,25 +64,13 @@ export const AnimatedSection = ({
   className?: string;
   children: React.ReactNode;
 }) => (
-  <motion.div
-    variants={staggerContainer}
-    initial="hidden"
-    whileInView="visible"
-    viewport={inViewOnce}
-    className={className}
-  >
-    {children}
-  </motion.div>
-);
-
-export const AnimatedItem = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => (
-  <motion.div variants={fadeInUp} className={cn(className)}>
-    {children}
-  </motion.div>
+  <div className={className}>
+    {Children.map(children, (child, i) =>
+      isValidElement(child)
+        ? cloneElement(child as React.ReactElement<{ delay?: number }>, {
+            delay: i * 0.06,
+          })
+        : child,
+    )}
+  </div>
 );
