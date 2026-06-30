@@ -5,6 +5,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
 
 import { authClient } from "@/lib/auth/client";
+import { CONSENT_EVENT, readConsent } from "@/lib/legal/consent";
 
 const key = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 
@@ -75,14 +76,22 @@ const Identify = () => {
   return null;
 };
 
-/** Initializes PostHog only when a key is configured; otherwise a true no-op so
- * local dev and unconfigured deployments stay clean. */
+/** Initializes PostHog only when a key is configured AND the visitor has
+ * granted cookie consent; otherwise a true no-op. Listens for the consent
+ * event so accepting the banner starts tracking immediately, no reload. */
 export const PostHogProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  useEffect(start, []);
+  useEffect(() => {
+    if (readConsent() === "granted") start();
+    const onConsent = (event: Event) => {
+      if ((event as CustomEvent<string>).detail === "granted") start();
+    };
+    window.addEventListener(CONSENT_EVENT, onConsent);
+    return () => window.removeEventListener(CONSENT_EVENT, onConsent);
+  }, []);
 
   if (!key) return <>{children}</>;
 
