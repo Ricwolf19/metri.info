@@ -6,6 +6,7 @@ import {
   GithubIcon,
   SmartphoneIcon,
 } from "@/components/icons";
+import { InstallPwaCard } from "@/components/pwa/InstallPwaCard";
 import { Container } from "@/components/shared/Container";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
@@ -37,7 +38,7 @@ export const DownloadView = ({ locale }: { locale: Locale }) => {
         <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
             href={routePath("tools", locale)}
-            className="inline-flex h-12 items-center gap-2 rounded-xl bg-ink-50 px-6 font-semibold text-ink-900 transition-transform hover:scale-[1.02]"
+            className="inline-flex h-12 items-center gap-2 rounded-field bg-ink-50 px-6 font-semibold text-ink-900 transition-transform hover:scale-[1.02]"
           >
             {t("download.devCtaTools")}
             <ArrowRightIcon size={18} />
@@ -46,7 +47,7 @@ export const DownloadView = ({ locale }: { locale: Locale }) => {
             href={mobileAppRepo}
             target="_blank"
             rel="noreferrer noopener"
-            className="inline-flex h-12 items-center gap-2 rounded-xl border border-ink-600 bg-ink-800 px-6 font-semibold text-ink-50 transition-colors hover:bg-ink-700"
+            className="inline-flex h-12 items-center gap-2 rounded-field border border-ink-600 bg-ink-800 px-6 font-semibold text-ink-50 transition-colors hover:bg-ink-700"
           >
             <GithubIcon size={18} />
             {t("download.devCtaGithub")}
@@ -76,6 +77,8 @@ export const DownloadView = ({ locale }: { locale: Locale }) => {
           {t("download.notifyNote")}
         </p>
       </div>
+
+      <InstallPwaCard />
     </Container>
   );
 };

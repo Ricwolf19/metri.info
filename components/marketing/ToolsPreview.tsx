@@ -3,7 +3,8 @@
 import Link from "next/link";
 
 import { CALC_ICONS } from "@/components/calculators/calcIcons";
-import { ArrowRightIcon } from "@/components/icons";
+import { ArrowRightIcon, CheckIcon } from "@/components/icons";
+import { CalcExample, SAMPLE_TDEE } from "@/components/marketing/CalcExample";
 import {
   AnimatedItem,
   AnimatedSection,
@@ -70,7 +71,40 @@ export const ToolsPreview = () => {
         subtitle={t("home.toolsLead")}
       />
 
-      <AnimatedSection className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-12 grid items-center gap-8 lg:grid-cols-2">
+        <div>
+          <h3 className="text-2xl font-bold tracking-tight text-balance text-ink-50">
+            {t("tools.example.title")}
+          </h3>
+          <p className="mt-3 text-pretty text-ink-300">
+            {t("tools.example.body")}
+          </p>
+          <ul className="mt-6 space-y-3">
+            {[
+              t("tools.example.p1"),
+              t("tools.example.p2"),
+              t("tools.example.p3"),
+            ].map((p) => (
+              <li
+                key={p}
+                className="flex items-center gap-2.5 text-sm text-ink-200"
+              >
+                <CheckIcon size={16} className="shrink-0 text-brand" />
+                {p}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <CalcExample
+          label={t("calc.result.tdee")}
+          value="2,759"
+          unit="kcal"
+          chart={SAMPLE_TDEE}
+          caption={t("tools.example.caption")}
+        />
+      </div>
+
+      <AnimatedSection className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {POPULAR.map((id) => {
           const Icon = CALC_ICONS[id];
           return (
@@ -78,7 +112,7 @@ export const ToolsPreview = () => {
               <Link href={routePath(id, locale)} className="block h-full">
                 <GlowCard className="flex h-full flex-col">
                   <div className="flex items-center gap-2">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-ink-700 text-accent">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-field bg-ink-700 text-accent">
                       <Icon size={22} />
                     </span>
                     <span

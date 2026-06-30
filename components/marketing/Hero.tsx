@@ -6,8 +6,17 @@ import { ArrowRightIcon, DownloadIcon } from "@/components/icons";
 import { Container } from "@/components/shared/Container";
 import { buttonVariants } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
+import type { TranslationKey } from "@/lib/i18n/en";
 import { routePath } from "@/lib/i18n/routes";
 import { cn } from "@/lib/utils";
+
+/** Trust proof points, inlined under the CTAs. */
+const STATS: { value: string; key: TranslationKey }[] = [
+  { value: "16", key: "stats.calculators" },
+  { value: "20+", key: "stats.guides" },
+  { value: "0", key: "stats.account" },
+  { value: "MIT", key: "stats.license" },
+];
 
 /**
  * Above-the-fold hero. Intentionally NOT Framer-animated: the content must be
@@ -22,11 +31,12 @@ export const Hero = () => {
     <section className="relative overflow-hidden">
       <div
         aria-hidden
-        className="pointer-events-none absolute top-[-10rem] left-1/2 h-[28rem] w-[44rem] -translate-x-1/2 rounded-full bg-ink-700 blur-[120px]"
+        className="glow-brand pointer-events-none absolute inset-x-0 top-[-6rem] h-[34rem]"
       />
       <Container className="relative py-24 text-center sm:py-32">
         <div className="mx-auto max-w-3xl">
-          <span className="animate-rise inline-flex items-center rounded-full border border-ink-600 bg-ink-700 px-3 py-1 text-xs font-medium text-accent">
+          <span className="animate-rise inline-flex items-center gap-2 rounded-full border border-ink-600 bg-ink-800/80 px-3 py-1 font-mono text-xs font-medium tracking-wide text-ink-300 backdrop-blur">
+            <span className="h-1.5 w-1.5 rounded-full bg-brand" />
             {t("hero.badge")}
           </span>
 
@@ -66,6 +76,22 @@ export const Hero = () => {
               {t("hero.ctaDownload")}
             </Link>
           </div>
+
+          <dl
+            className="animate-rise mx-auto mt-14 flex max-w-xl flex-wrap items-center justify-center gap-x-8 gap-y-4 border-t border-ink-600/60 pt-8"
+            style={{ animationDelay: "240ms" }}
+          >
+            {STATS.map(({ value, key }) => (
+              <div key={key} className="flex items-baseline gap-2">
+                <dt className="font-mono text-xl font-semibold text-ink-50">
+                  {value}
+                </dt>
+                <dd className="font-mono text-xs tracking-wide text-ink-400 uppercase">
+                  {t(key)}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </Container>
     </section>

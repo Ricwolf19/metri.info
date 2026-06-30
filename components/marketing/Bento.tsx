@@ -11,6 +11,8 @@ import {
   ShieldIcon,
   WifiOffIcon,
 } from "@/components/icons";
+import { CalcChart } from "@/components/calculators/CalcChart";
+import { SAMPLE_MACROS } from "@/components/marketing/CalcExample";
 import {
   AnimatedItem,
   AnimatedSection,
@@ -22,6 +24,7 @@ import { useI18n } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
 import { type RouteId, routePath } from "@/lib/i18n/routes";
 import { webAppRepo } from "@/lib/site";
+import { cn } from "@/lib/utils";
 
 const CALC_CHIPS: { id: RouteId; key: TranslationKey }[] = [
   { id: "tdee", key: "tools.bmr.title" },
@@ -32,10 +35,28 @@ const CALC_CHIPS: { id: RouteId; key: TranslationKey }[] = [
   { id: "heartrate", key: "tools.heartrate.title" },
 ];
 
-const IconTile = ({ icon: Icon }: { icon: React.ComponentType<IconProps> }) => (
-  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-ink-700 text-accent">
+const IconTile = ({
+  icon: Icon,
+  brand = false,
+}: {
+  icon: React.ComponentType<IconProps>;
+  brand?: boolean;
+}) => (
+  <span
+    className={cn(
+      "flex h-11 w-11 items-center justify-center rounded-field",
+      brand
+        ? "border border-brand/30 bg-brand/10 text-brand"
+        : "bg-ink-700 text-accent",
+    )}
+  >
     <Icon size={22} />
   </span>
+);
+
+/** Mono numeric eyebrow label. */
+const Eyebrow = ({ n }: { n: string }) => (
+  <span className="font-mono text-xs tracking-widest text-ink-500">{n}</span>
 );
 
 export const Bento = () => {
@@ -50,15 +71,18 @@ export const Bento = () => {
         subtitle={t("bento.subtitle")}
       />
 
-      <AnimatedSection className="mt-12 grid auto-rows-[minmax(0,1fr)] gap-4 sm:grid-cols-2 lg:grid-cols-6">
+      <AnimatedSection className="mt-12 grid gap-4 sm:grid-cols-2 lg:auto-rows-[minmax(0,1fr)] lg:grid-cols-6">
         <AnimatedItem className="sm:col-span-2 lg:col-span-4 lg:row-span-2">
           <Card className="group relative flex h-full flex-col overflow-hidden p-7">
             <div
               aria-hidden
-              className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-ink-700/60 blur-3xl"
+              className="glow-brand pointer-events-none absolute -top-20 right-0 h-64 w-2/3"
             />
             <div className="relative">
-              <IconTile icon={CalculatorIcon} />
+              <div className="flex items-center justify-between">
+                <IconTile icon={CalculatorIcon} brand />
+                <Eyebrow n="01" />
+              </div>
               <h3 className="mt-5 text-2xl font-bold text-ink-50">
                 {t("bento.calc.title")}
               </h3>
@@ -78,6 +102,15 @@ export const Bento = () => {
                   </Link>
                 ))}
               </div>
+
+              <div className="mt-6 rounded-field border border-ink-600/70 bg-ink-900/50 p-4">
+                <p className="font-mono text-[10px] tracking-widest text-ink-400 uppercase">
+                  {t("tools.macros.title")}
+                </p>
+                <div className="mt-3">
+                  <CalcChart chart={SAMPLE_MACROS} size="sm" />
+                </div>
+              </div>
             </div>
 
             <Link
@@ -95,7 +128,10 @@ export const Bento = () => {
 
         <AnimatedItem className="lg:col-span-2">
           <Card className="flex h-full flex-col p-6">
-            <IconTile icon={CodeIcon} />
+            <div className="flex items-center justify-between">
+              <IconTile icon={CodeIcon} />
+              <Eyebrow n="02" />
+            </div>
             <h3 className="mt-4 text-lg font-semibold text-ink-50">
               {t("bento.oss.title")}
             </h3>
@@ -114,7 +150,10 @@ export const Bento = () => {
 
         <AnimatedItem className="lg:col-span-2">
           <Card className="flex h-full flex-col p-6">
-            <IconTile icon={WifiOffIcon} />
+            <div className="flex items-center justify-between">
+              <IconTile icon={WifiOffIcon} />
+              <Eyebrow n="03" />
+            </div>
             <h3 className="mt-4 text-lg font-semibold text-ink-50">
               {t("bento.offline.title")}
             </h3>
@@ -126,7 +165,10 @@ export const Bento = () => {
 
         <AnimatedItem className="sm:col-span-2 lg:col-span-3">
           <Card className="flex h-full flex-col p-6">
-            <IconTile icon={BookIcon} />
+            <div className="flex items-center justify-between">
+              <IconTile icon={BookIcon} />
+              <Eyebrow n="04" />
+            </div>
             <h3 className="mt-4 text-lg font-semibold text-ink-50">
               {t("bento.docs.title")}
             </h3>
@@ -143,7 +185,10 @@ export const Bento = () => {
 
         <AnimatedItem className="sm:col-span-2 lg:col-span-3">
           <Card className="flex h-full flex-col p-6">
-            <IconTile icon={ShieldIcon} />
+            <div className="flex items-center justify-between">
+              <IconTile icon={ShieldIcon} />
+              <Eyebrow n="05" />
+            </div>
             <h3 className="mt-4 text-lg font-semibold text-ink-50">
               {t("bento.privacy.title")}
             </h3>
