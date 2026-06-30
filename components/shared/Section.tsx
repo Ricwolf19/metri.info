@@ -12,7 +12,7 @@ export const Section = ({
   id?: string;
   children: React.ReactNode;
 }) => (
-  <section id={id} className={cn("py-20 sm:py-28", className)}>
+  <section id={id} className={cn("py-16 sm:py-24", className)}>
     <Container>{children}</Container>
   </section>
 );
@@ -46,7 +46,7 @@ export const PageHeader = ({
     )}
   >
     {eyebrow && (
-      <p className="text-sm font-semibold tracking-wide text-accent uppercase">
+      <p className="font-mono text-xs font-medium tracking-widest text-brand uppercase">
         {eyebrow}
       </p>
     )}
@@ -88,7 +88,7 @@ export const SectionHeading = ({
 }) => (
   <div className={cn("mx-auto max-w-2xl text-center", className)}>
     {eyebrow && (
-      <p className="text-sm font-semibold tracking-wide text-accent uppercase">
+      <p className="font-mono text-xs font-medium tracking-widest text-brand uppercase">
         {eyebrow}
       </p>
     )}
