@@ -1,8 +1,10 @@
 import Link from "next/link";
 import type { MDXComponents } from "mdx/types";
 
+import { autoLinkTerms } from "@/components/docs/autoLinkTerms";
 import { Callout } from "@/components/docs/Callout";
 import { MuscleBadge } from "@/components/docs/MuscleBadge";
+import { Term } from "@/components/docs/Term";
 import {
   Table,
   TableBody,
@@ -11,9 +13,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import type { Locale } from "@/lib/i18n/config";
 
-/** Tailwind-styled HTML elements + custom components available inside MDX docs. */
-export const mdxComponents: MDXComponents = {
+/** Factory for MDX element overrides — prose auto-links glossary terms per locale. */
+export const getMdxComponents = (locale: Locale): MDXComponents => ({
   h2: (props) => (
     <h2
       className="mt-12 scroll-mt-24 text-2xl font-bold tracking-tight text-ink-50"
@@ -26,16 +29,26 @@ export const mdxComponents: MDXComponents = {
       {...props}
     />
   ),
-  p: (props) => <p className="mt-4 leading-relaxed text-ink-200" {...props} />,
+  p: ({ children, ...props }) => (
+    <p className="mt-4 leading-relaxed text-ink-200" {...props}>
+      {autoLinkTerms(children, locale)}
+    </p>
+  ),
   ul: (props) => (
     <ul className="mt-4 list-disc space-y-2 pl-6 text-ink-200" {...props} />
   ),
   ol: (props) => (
     <ol className="mt-4 list-decimal space-y-2 pl-6 text-ink-200" {...props} />
   ),
-  li: (props) => <li className="leading-relaxed" {...props} />,
-  strong: (props) => (
-    <strong className="font-semibold text-ink-50" {...props} />
+  li: ({ children, ...props }) => (
+    <li className="leading-relaxed" {...props}>
+      {autoLinkTerms(children, locale)}
+    </li>
+  ),
+  strong: ({ children, ...props }) => (
+    <strong className="font-semibold text-ink-50" {...props}>
+      {autoLinkTerms(children, locale)}
+    </strong>
   ),
   a: ({ href = "", ...props }) =>
     href.startsWith("/") ? (
@@ -77,7 +90,14 @@ export const mdxComponents: MDXComponents = {
   tbody: (props) => <TableBody {...props} />,
   tr: (props) => <TableRow {...props} />,
   th: (props) => <TableHead {...props} />,
-  td: (props) => <TableCell {...props} />,
+  td: ({ children, ...props }) => (
+    <TableCell {...props}>{autoLinkTerms(children, locale)}</TableCell>
+  ),
   Callout,
   MuscleBadge,
-};
+  Term: ({ id, children }: { id: string; children: React.ReactNode }) => (
+    <Term id={id} locale={locale}>
+      {children}
+    </Term>
+  ),
+});
