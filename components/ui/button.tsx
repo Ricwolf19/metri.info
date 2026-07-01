@@ -15,8 +15,12 @@ export const buttonVariants = cva(
       variant: {
         primary: "bg-ink-50 text-ink-900 hover:bg-ink-200",
         brand: "bg-brand text-brand-contrast hover:bg-brand/90",
+        // `text-ink-50` already inverts per theme (near-white on dark, near-black
+        // on light) — do NOT override it with `light:text-ink-900`, which in
+        // light mode resolves to the near-white app background and paints
+        // white-on-light-grey. Only the surface/border get light overrides.
         secondary:
-          "border border-ink-600 bg-ink-800 text-ink-50 hover:border-ink-500 hover:bg-ink-700",
+          "border border-ink-600 bg-ink-800 text-ink-50 hover:border-ink-500 hover:bg-ink-700 light:border-ink-500 light:bg-ink-700 light:hover:bg-ink-600",
         outline:
           "border border-ink-600 text-ink-100 hover:border-ink-500 hover:bg-ink-800",
         ghost: "text-ink-200 hover:bg-ink-800 hover:text-ink-50",

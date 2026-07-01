@@ -117,7 +117,7 @@ const SharePage = async ({
 
         <Link
           href={data.calcHref}
-          className="mt-8 inline-flex items-center gap-2 rounded-xl bg-accent-fill px-6 py-3 font-semibold text-ink-950 transition-transform hover:scale-[1.03]"
+          className="mt-8 inline-flex items-center gap-2 rounded-xl bg-accent-fill px-6 py-3 font-semibold text-ink-900 transition-transform hover:scale-[1.03]"
         >
           {t("share.open")}
           <ArrowRightIcon size={18} />

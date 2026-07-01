@@ -21,6 +21,10 @@ export const DownloadView = ({ locale }: { locale: Locale }) => {
   return (
     <Container className="py-20 sm:py-28">
       <div className="mx-auto max-w-2xl text-center">
+        <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-2xl border border-ink-600 bg-ink-800 text-accent shadow-sm">
+          <SmartphoneIcon size={30} />
+        </div>
+
         {isDev && (
           <span className="inline-flex items-center gap-2 rounded-full border border-flame/30 bg-flame/10 px-3 py-1 text-xs font-medium text-flame">
             <span className="h-1.5 w-1.5 rounded-full bg-flame" />

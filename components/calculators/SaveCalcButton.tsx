@@ -147,7 +147,7 @@ export const SaveCalcButton = ({
               href={routePath("signUp", locale)}
               className={cn(
                 baseBtn,
-                "h-11 border-transparent bg-accent-fill text-sm text-ink-950 hover:opacity-90",
+                "h-11 border-transparent bg-accent-fill text-sm text-ink-900 hover:opacity-90",
               )}
             >
               {t("calc.savePromptCreate")}

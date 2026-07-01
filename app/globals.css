@@ -12,6 +12,7 @@
  */
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
 
 @theme inline {
   /* Brand accent — the dumbbell lime from the logo. */
@@ -184,6 +185,90 @@ summary {
       rgb(var(--ink-700) / 0.5),
       transparent 72%
     );
+}
+
+/*
+ * Hero surface tweaks — the dark theme uses near-black surface tokens for
+ * badge/pill backgrounds; the same tokens translate to near-white in light mode
+ * and the hero washes out. Per-theme overrides lift contrast (subtle grey
+ * backgrounds, visible borders) so the hero reads cleanly in both schemes.
+ * `glow-brand` is the dark-mode lime aura at the top of the section; in light
+ * mode it floats a dim grey blob that competes with the typography, so we
+ * hide it there and let the Beams back-layer carry the depth on their own.
+ */
+.hero-badge {
+  background-color: rgb(var(--ink-800) / 0.8);
+  border-color: rgb(var(--ink-600));
+  color: rgb(var(--ink-300));
+}
+[data-theme="light"] .hero-badge {
+  background-color: rgb(var(--ink-700) / 0.7);
+  border-color: rgb(var(--ink-500) / 0.55);
+  color: rgb(var(--ink-200));
+}
+.hero-stat-pill {
+  background-color: rgb(var(--ink-900) / 0.7);
+  border-color: rgb(var(--ink-600) / 0.7);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+[data-theme="light"] .hero-stat-pill {
+  background-color: rgb(var(--ink-800) / 0.92);
+  border-color: rgb(var(--ink-500) / 0.55);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+}
+[data-theme="light"] .glow-brand {
+  opacity: 0;
+}
+
+/*
+ * Hero secondary button (the "Download" CTA). The hero always sits on the black
+ * Beams canvas, so it must read as dark-mode in BOTH schemes. The shared
+ * `secondary` button variant carries `light:` overrides (dark text on a light
+ * fill) that, under the hero's re-scoped dark `--ink-*`, paint dark-on-dark and
+ * become invisible. This class pins it to the dark palette; declared after the
+ * Tailwind layer so it wins the cascade over those low-specificity `:where()`
+ * `light:` utilities. Reads `--ink-*` so it tracks `.hero-dark-treat`.
+ */
+.hero-btn-secondary {
+  background-color: rgb(var(--ink-800));
+  border-color: rgb(var(--ink-600));
+  color: rgb(var(--ink-50));
+}
+.hero-btn-secondary:hover {
+  background-color: rgb(var(--ink-700));
+  border-color: rgb(var(--ink-500));
+}
+
+/*
+ * `hero-dark-treat` — opt the `<section>` out of the global theme's surface
+ * palette. We do this because `<Beams>` paints a black clear color (Three.js
+ * `scene.background`), so the hero always sits on a near-black canvas. If we
+ * let the section inherit the global light-mode tokens the result is unread-
+ * able (white text on the white pill/border, dark buttons on dark canvas).
+ * Re-scoping `--ink-*` makes every descendant `bg-ink-*` / `text-ink-*`
+ * utility render as if we were in dark mode — without affecting the rest of
+ * the page, which keeps its real light/dark behaviour below the fold.
+ *
+ * Tailwind v4's `@theme inline` keeps the `rgb(var(--ink-X))` chain dynamic,
+ * so redefining the channel vars here propagates into every utility that
+ * reads them, no matter how deep.
+ */
+.hero-dark-treat {
+  --ink-900: 9 9 11;
+  --ink-850: 13 13 16;
+  --ink-800: 18 18 21;
+  --ink-750: 24 24 27;
+  --ink-700: 32 32 36;
+  --ink-600: 42 42 47;
+  --ink-500: 63 63 70;
+  --ink-400: 113 113 122;
+  --ink-300: 161 161 170;
+  --ink-200: 212 212 216;
+  --ink-100: 228 228 231;
+  --ink-50: 245 245 247;
+  background-color: rgb(var(--ink-900));
+  color: rgb(var(--ink-50));
 }
 
 /*

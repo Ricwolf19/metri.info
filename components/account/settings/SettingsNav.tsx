@@ -29,7 +29,7 @@ const SECTIONS = [
 export const SettingsNav = () => {
   const t = useT();
   return (
-    <nav className="flex w-full shrink-0 gap-1 overflow-x-auto lg:w-60 lg:flex-col lg:overflow-visible">
+    <nav className="flex w-full shrink-0 gap-1 overflow-x-auto lg:sticky lg:top-24 lg:w-60 lg:flex-col lg:self-start lg:overflow-visible">
       {SECTIONS.map((s) => (
         <a
           key={s.id}

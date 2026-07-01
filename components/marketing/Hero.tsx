@@ -39,7 +39,7 @@ export const Hero = () => {
   const { t, locale } = useI18n();
 
   return (
-    <section className="relative isolate flex min-h-[100svh] items-center overflow-hidden">
+    <section className="hero-dark-treat relative isolate flex min-h-[100svh] items-center overflow-hidden">
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <Beams
           beamWidth={3}
@@ -59,7 +59,7 @@ export const Hero = () => {
 
       <Container className="relative z-10 py-20 text-center sm:py-24">
         <div className="mx-auto max-w-3xl">
-          <span className="animate-rise inline-flex items-center gap-2 rounded-full border border-ink-600 bg-ink-800/80 px-3 py-1 font-mono text-xs font-medium tracking-wide text-ink-300 backdrop-blur">
+          <span className="hero-badge animate-rise inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-xs font-medium tracking-wide backdrop-blur">
             <span className="h-1.5 w-1.5 rounded-full bg-brand" />
             {t("hero.badge")}
           </span>
@@ -94,7 +94,10 @@ export const Hero = () => {
             </Link>
             <Link
               href={routePath("download", locale)}
-              className={buttonVariants({ variant: "secondary", size: "lg" })}
+              className={cn(
+                buttonVariants({ variant: "secondary", size: "lg" }),
+                "hero-btn-secondary",
+              )}
             >
               <DownloadIcon size={18} />
               {t("hero.ctaDownload")}
@@ -108,7 +111,7 @@ export const Hero = () => {
             {STATS.map(({ value, key }) => (
               <div
                 key={key}
-                className="inline-flex items-center gap-2 rounded-full border border-ink-600/70 bg-ink-900/70 px-3.5 py-1.5 backdrop-blur"
+                className="hero-stat-pill inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5"
               >
                 <span
                   aria-hidden

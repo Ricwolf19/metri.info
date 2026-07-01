@@ -116,7 +116,10 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         <Providers>
           <div className="flex min-h-dvh flex-col">
             <Header />
-            <main className="flex-1">{children}</main>
+            {/* `min-h-dvh` keeps short pages (contact, download, auth) at least a
+                full viewport tall so the footer always sits below the fold, not
+                floating up into the first screen. */}
+            <main className="min-h-dvh flex-1">{children}</main>
             <Footer />
           </div>
           <CookieConsent />

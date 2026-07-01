@@ -14,7 +14,7 @@ export const ContactView = ({ locale }: { locale: Locale }) => {
 
   return (
     <Container className="py-16 sm:py-20">
-      <div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-2 lg:gap-16">
+      <div className="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <div className="max-w-md">
           <PageHeader
             align="left"
@@ -23,25 +23,34 @@ export const ContactView = ({ locale }: { locale: Locale }) => {
             subtitle={t("contact.subtitle")}
           />
 
-          <a
-            href={`mailto:${CONTACT_EMAIL}`}
-            className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-ink-200 transition-colors hover:text-accent"
-          >
-            <MailIcon size={16} />
-            {CONTACT_EMAIL}
-          </a>
-
-          <p className="mt-6 text-sm text-ink-400">
-            {t("contact.developer")}{" "}
+          <div className="mt-8 rounded-card border border-ink-600 bg-ink-850/60 p-5">
             <a
-              href={DEVELOPER_URL}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="font-medium text-ink-200 transition-colors hover:text-accent"
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="group flex items-center gap-3"
             >
-              ricardotapia.dev
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-ink-600 bg-ink-800 text-accent transition-colors group-hover:border-accent/40">
+                <MailIcon size={18} />
+              </span>
+              <span className="flex min-w-0 flex-col">
+                <span className="text-xs text-ink-400">{t("auth.email")}</span>
+                <span className="truncate text-sm font-medium text-ink-100 transition-colors group-hover:text-accent">
+                  {CONTACT_EMAIL}
+                </span>
+              </span>
             </a>
-          </p>
+
+            <p className="mt-4 border-t border-ink-700 pt-4 text-sm text-ink-400">
+              {t("contact.developer")}{" "}
+              <a
+                href={DEVELOPER_URL}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="font-medium text-ink-200 transition-colors hover:text-accent"
+              >
+                ricardotapia.dev
+              </a>
+            </p>
+          </div>
         </div>
 
         <Card>

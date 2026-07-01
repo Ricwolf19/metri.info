@@ -63,7 +63,7 @@ const TierCard = ({ tier, compact }: { tier: Tier; compact: boolean }) => {
             className={cn(
               "inline-flex shrink-0 items-center rounded-md px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase",
               tier.highlight
-                ? "bg-accent-fill text-ink-950"
+                ? "bg-accent-fill text-ink-900"
                 : "border border-ink-500 bg-ink-700 text-ink-300",
             )}
           >
