@@ -18,6 +18,58 @@ export const localize = (value: L, locale: Locale): string => value[locale];
 
 export const WEB_CHANGELOG: ChangelogEntry[] = [
   {
+    version: "0.4.0",
+    date: "2026-06-30",
+    title: {
+      en: "Secure accounts & hero refresh",
+      es: "Cuentas seguras y nuevo hero",
+    },
+    changes: [
+      {
+        type: "added",
+        text: {
+          en: "Sign-ups now confirm your email and are shielded from bots, so your account stays yours and the community stays clean.",
+          es: "El registro ahora confirma tu correo y está protegido contra bots, así tu cuenta es solo tuya y la comunidad se mantiene limpia.",
+        },
+      },
+      {
+        type: "added",
+        text: {
+          en: "After signing up, a one-tap “Open Gmail” button takes you straight to your confirmation email.",
+          es: "Tras registrarte, un botón «Abrir Gmail» te lleva directo a tu correo de confirmación.",
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          en: "Redesigned homepage hero with animated light beams.",
+          es: "Hero de la página principal rediseñado con haces de luz animados.",
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          en: "Calculators no longer jump while you type — the result and chart hold their place as you tweak values.",
+          es: "Las calculadoras ya no saltan mientras escribes — el resultado y la gráfica se quedan en su lugar al ajustar valores.",
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          en: "Sign-in and sign-up error messages are now clear and fully translated in English and Spanish.",
+          es: "Los mensajes de error al iniciar sesión y registrarse ahora son claros y están traducidos en inglés y español.",
+        },
+      },
+      {
+        type: "fixed",
+        text: {
+          en: "Light-mode legibility on the homepage and a clearer footer placement across pages.",
+          es: "Legibilidad en modo claro en la página principal y mejor ubicación del pie de página en todo el sitio.",
+        },
+      },
+    ],
+  },
+  {
     version: "0.3.0",
     date: "2026-06-30",
     title: { en: "Glossary, tags & polish", es: "Glosario, tags y pulido" },

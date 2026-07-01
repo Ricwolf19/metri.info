@@ -73,7 +73,7 @@ export const InstallPwaCard = () => {
   const ios = mounted && isIOS() && !standalone;
 
   return (
-    <div className="mx-auto mt-12 max-w-2xl">
+    <div className="mt-12 w-full">
       <div className="relative overflow-hidden rounded-card border border-brand/20 bg-ink-850 p-6 sm:p-8">
         <div
           aria-hidden
