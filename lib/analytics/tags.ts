@@ -4,7 +4,9 @@
  *
  * - `metrics:db`       — first-party Postgres admin aggregates (getDbMetrics).
  * - `metrics:posthog`  — PostHog HogQL admin queries.
+ * - `metrics:sentry`   — Sentry API reads (error volume, top issues).
  * - `favorites:<id>`   — one user's pinned list (built inline in favorites).
  */
 export const DB_METRICS_TAG = "metrics:db";
 export const POSTHOG_METRICS_TAG = "metrics:posthog";
+export const SENTRY_METRICS_TAG = "metrics:sentry";
