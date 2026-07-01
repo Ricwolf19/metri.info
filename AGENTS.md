@@ -56,6 +56,55 @@ same i18n philosophy — built for the web with Next.js 16.
   deploy via `scripts/vercel-migrate.mjs` (`db:migrate`). Never auto-generate in
   CI.
 
+## Auth & email
+
+- **Senders**: `AUTH_FROM_EMAIL` and `CONTACT_FROM_EMAIL` are the from-address
+  for auth and contact emails respectively. Both fall back to
+  `Metri <onboarding@resend.dev>` (Resend's shared test sender) when unset.
+  Verify your domain on Resend and set at least `AUTH_FROM_EMAIL` to a
+  `<your-domain>` address before going to production — the test sender is
+  restricted to your Resend account's test recipients and silently drops every
+  other delivery. See "Diagnosing missing emails" below for the failure mode.
+- **Better Auth callbacks never throw**. `deliverAuthEmail` (in
+  `lib/auth/server.ts`) is log-and-continue; if Resend rejects or your key is
+  missing, the user is still created in `user` (or the password-reset request
+  still completes) — the failure lands in Vercel logs under the
+  `auth.email.send-failed` event.
+- **Rate limits are hardcoded**. Defaults live in `RATE_LIMITS` at the top
+  of `lib/auth/server.ts` (3/hour for sign-up, 10/5min for sign-in, 3/hour for
+  forgot, 5/hour for reset, 10/hour for verify). To bump them temporarily
+  during prod testing, edit the constant and redeploy; do not expose them as
+  env vars — `.env` is for secrets, not knobs. To disable entirely during a
+  load-test, set `BETTER_AUTH_RATE_LIMIT_ENABLED=false` in Vercel (still
+  supported, kept as the single env-tunable).
+- **Errors**: every auth form routes its `res.error` through
+  `authErrorMessage()` in `lib/auth/errors.ts`. When you add a new Better Auth
+  error code, add the mapping there; do **not** surface `res.error.message`
+  directly to clients (it leaks English strings on the ES locale).
+
+### Diagnosing missing emails
+
+If a user reports "I never got the verification email":
+
+1. **Vercel logs** — search for the user's email at signup time. You want one
+   of:
+   - `auth.email.send-ok resendId=<uuid>` — the message reached Resend.
+   - `auth.email.send-failed resendError="…"` — Resend rejected it (most often
+     "You can only send emails to addresses you've added to your account" —
+     the from-address is still the restricted `onboarding@resend.dev`).
+   - `auth.email.send-skipped reason=RESEND_API_KEY_missing` — env key is unset.
+2. **Resend dashboard** — confirm the `resendId` from the log appears with
+   "Delivered" status. If it's missing, the call never reached Resend.
+3. **DB check** — if the user row exists with `emailVerified: false` but no
+   entry in the `verification` table, the Better Auth flow bailed before
+   generating the token (rare; usually a 429).
+4. **Re-send** — trigger Better Auth's re-send from the sign-in page (an
+   unverified sign-in surfaces the "resend verification" path).
+
+The most common cause we've seen is the `onboarding@resend.dev` sender in
+production — verify a domain on Resend and set `AUTH_FROM_EMAIL` to fix it
+permanently.
+
 ## Commands
 
 ```bash

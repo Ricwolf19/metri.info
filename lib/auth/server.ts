@@ -4,6 +4,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { APIError } from "better-auth/api";
 import { Resend } from "resend";
+import * as Sentry from "@sentry/nextjs";
 
 import { captureServer } from "@/lib/analytics/posthog-server";
 import { verifyRecaptcha } from "@/lib/captcha/verify";
@@ -13,11 +14,26 @@ import {
   renderResetPasswordEmail,
   renderVerifyEmail,
 } from "@/lib/emails/render";
+import { event } from "@/lib/log/logger";
 import { siteUrl } from "@/lib/utils";
 
 // Resend's shared sender (test mode) — no domain verification needed; swap via AUTH_FROM_EMAIL / CONTACT_FROM_EMAIL in production.
 const RESET_FROM = "Metri <onboarding@resend.dev>";
 const VERIFY_FROM = "Metri <onboarding@resend.dev>";
+
+/**
+ * Hardcoded rate-limit caps — no `.env` plumbing required for a deploy.
+ * Edit + commit to bump temporarily (e.g. during prod pen-testing of signup).
+ * Values follow Better Auth's `(window in seconds, max requests)` shape.
+ */
+const RATE_LIMITS = {
+  signup: { window: 60 * 60, max: 3 }, // 3 signups / hour / IP
+  signin: { window: 60 * 5, max: 10 }, // 10 signins / 5min / IP
+  forgot: { window: 60 * 60, max: 3 }, // 3 forgot-password / hour / IP
+  reset: { window: 60 * 60, max: 5 }, // 5 resets / hour / IP
+  verify: { window: 60 * 60, max: 10 }, // 10 verify-email clicks / hour / IP
+  default: { window: 60, max: 100 }, // any other auth route
+} as const;
 
 /** Args for the auth-email helpers. */
 type SendAuthEmailArgs = {
@@ -25,20 +41,36 @@ type SendAuthEmailArgs = {
   url: string;
 };
 
+/**
+ * Send a transactional email via Resend. **Never throws** — failures are
+ * logged with a stable `[auth]` prefix so we can grep Vercel logs after a
+ * "the user didn't get the email" report. Better Auth swallows the throw
+ * anyway (the user row is already committed), so propagating only promises
+ * silent drops; an explicit log line is the only way to find the missing
+ * message later.
+ *
+ * Returns `{ ok, id, error }` so the caller can attach the Resend `id` to
+ * PostHog / structured logs without re-deriving it.
+ */
 const deliverAuthEmail = async (
   args: SendAuthEmailArgs,
   rendered: { html: string; text: string },
   subject: string,
   fromOverride: string,
   missingKeyLog: string,
-): Promise<void> => {
+): Promise<{ ok: boolean; id?: string; error?: string }> => {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.error(missingKeyLog);
-    throw new Error("RESEND_API_KEY not configured");
+    event.error("auth.email.send-skipped", {
+      reason: "RESEND_API_KEY_missing",
+      kind: missingKeyLog,
+      to: args.user.email,
+      subject,
+    });
+    return { ok: false, error: "RESEND_API_KEY not configured" };
   }
   const resend = new Resend(apiKey);
-  const { error } = await resend.emails.send({
+  const { data, error } = await resend.emails.send({
     from: fromOverride,
     to: args.user.email,
     subject,
@@ -46,25 +78,58 @@ const deliverAuthEmail = async (
     text: rendered.text,
   });
   if (error) {
-    console.error(`[auth] failed to send email "${subject}":`, error.message);
-    throw error;
+    event.error("auth.email.send-failed", {
+      subject,
+      to: args.user.email,
+      from: fromOverride,
+      resendError: error.message,
+    });
+    // Surface to Sentry so the failure is visible in the dashboard; the
+    // toast/console-log isn't enough when you can't repro the user's path.
+    Sentry.captureException(
+      new Error(`auth email send failed: ${error.message}`),
+      {
+        tags: { flow: "auth.email", subject },
+        extra: { to: args.user.email, from: fromOverride },
+      },
+    );
+    return { ok: false, error: error.message };
   }
+  if (data?.id) {
+    event.info("auth.email.send-ok", {
+      subject,
+      to: args.user.email,
+      from: fromOverride,
+      resendId: data.id,
+    });
+    return { ok: true, id: data.id };
+  }
+  event.warn("auth.email.send-ok-but-no-data", {
+    subject,
+    to: args.user.email,
+    from: fromOverride,
+  });
+  return { ok: false, error: "no data returned" };
 };
 
 /**
  * Verification email for a freshly-created account. Better Auth invokes this
  * from `databaseHooks.user.create.after` once the row exists with
- * `emailVerified: false`. Throws on RESEND errors so failures surface instead
- * of producing silently-unverified rows.
+ * `emailVerified: false`. `deliverAuthEmail` never throws — failures land in
+ * Vercel logs under `[auth] send-failed` so we can debug "user didn't get
+ * the email" reports without having to ask the user to dig through their
+ * inbox tab.
  */
 const sendVerificationEmail = async ({
   user: target,
   url,
 }: SendAuthEmailArgs): Promise<void> => {
   if (process.env.NODE_ENV !== "production") {
-    console.info(
-      `[auth] verification link (${process.env.NODE_ENV ?? "dev"}) → ${target.email} : ${url}`,
-    );
+    event.info("auth.email.verify-link", {
+      env: process.env.NODE_ENV ?? "dev",
+      to: target.email,
+      url,
+    });
   }
   const rendered = await renderVerifyEmail({
     name: target.name,
@@ -78,50 +143,38 @@ const sendVerificationEmail = async ({
     process.env.AUTH_FROM_EMAIL ??
       process.env.CONTACT_FROM_EMAIL ??
       VERIFY_FROM,
-    "[auth] RESEND_API_KEY not set — refusing to create unverified account.",
+    "verification email not sent — refusing to create unverified account",
   );
 };
 
 /**
- * Password-reset email. Skips with a warning when RESEND_API_KEY is unset so
- * dev / DB-less builds still run; production must set the key (the contact
- * form already enforces it).
+ * Password-reset email. `deliverAuthEmail` logs failures instead of throwing,
+ * keeping this handler symmetric with the verification path so debug logs
+ * live in the same `[auth]` namespace.
  */
 const sendResetPassword = async ({
   user: target,
   url,
 }: SendAuthEmailArgs): Promise<void> => {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.warn(
-      "[auth] RESEND_API_KEY not set — skipping password-reset email.",
-    );
-    return;
-  }
   if (process.env.NODE_ENV !== "production") {
-    console.info(
-      `[auth] reset link (${process.env.NODE_ENV ?? "dev"}) → ${target.email} : ${url}`,
-    );
+    event.info("auth.email.reset-link", {
+      env: process.env.NODE_ENV ?? "dev",
+      to: target.email,
+      url,
+    });
   }
   const rendered = await renderResetPasswordEmail({
     name: target.name,
     url,
     expiresIn: "1 hour",
   });
-  const resend = new Resend(apiKey);
-  const { error } = await resend.emails.send({
-    from:
-      process.env.AUTH_FROM_EMAIL ??
-      process.env.CONTACT_FROM_EMAIL ??
-      RESET_FROM,
-    to: target.email,
-    subject: "Reset your Metri password",
-    html: rendered.html,
-    text: rendered.text,
-  });
-  if (error) {
-    console.error("[auth] failed to send password-reset email:", error.message);
-  }
+  await deliverAuthEmail(
+    { user: target, url },
+    rendered,
+    "Reset your Metri password",
+    process.env.AUTH_FROM_EMAIL ?? process.env.CONTACT_FROM_EMAIL ?? RESET_FROM,
+    "password-reset email not sent",
+  );
 };
 
 const socialProviders: NonNullable<
@@ -257,17 +310,17 @@ export const auth = betterAuth({
       role: { type: "string", input: false, required: false },
     },
   },
-  // Rate limits: stay generous for ordinary visitors but throttled so bulk sign-up hits 429 before creating accounts. In-memory in v1 — switch to `storage: "database"` when going multi-region.
+  // In-memory in v1 — switch to `storage: "database"` when going multi-region.
   rateLimit: {
-    enabled: true,
-    window: 60,
-    max: 100,
+    enabled: process.env.BETTER_AUTH_RATE_LIMIT_ENABLED !== "false",
+    window: RATE_LIMITS.default.window,
+    max: RATE_LIMITS.default.max,
     customRules: {
-      "/sign-up/email": { window: 60 * 60, max: 3 },
-      "/sign-in/email": { window: 60 * 5, max: 10 },
-      "/forget-password": { window: 60 * 60, max: 3 },
-      "/reset-password": { window: 60 * 60, max: 5 },
-      "/verify-email": { window: 60 * 60, max: 10 },
+      "/sign-up/email": RATE_LIMITS.signup,
+      "/sign-in/email": RATE_LIMITS.signin,
+      "/forget-password": RATE_LIMITS.forgot,
+      "/reset-password": RATE_LIMITS.reset,
+      "/verify-email": RATE_LIMITS.verify,
     },
   },
   hooks: {
