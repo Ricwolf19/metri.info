@@ -259,6 +259,54 @@ const ResultHeader = ({
   );
 };
 
+/**
+ * Disabled/empty shell for when the inputs don't produce a valid result.
+ * Same DOM shape as the real panel (same border, padding, two-column grid,
+ * rows grid) so toggling from "no result" → "result" doesn't cause layout
+ * shift on big charts — the user's pointer position stays put while they
+ * tweak the value, which is the whole point (the previous "Invalid value"
+ * banner collapsed the panel and made the chart jump).
+ */
+const EmptyResultPanel = ({ compact = false }: { compact?: boolean }) => {
+  if (compact) {
+    return (
+      <div
+        aria-hidden="true"
+        className="rounded-card border border-ink-700 bg-ink-850 p-4"
+      >
+        <div className="flex flex-col items-center gap-1.5">
+          <span className="block h-2.5 w-14 rounded-full bg-ink-700/70" />
+          <span className="block h-7 w-20 rounded-md bg-ink-700/70" />
+        </div>
+        <div className="mt-4 h-24 rounded-field bg-ink-700/30" />
+        <ul className="mt-4 space-y-1.5 border-t border-ink-700 pt-4">
+          <li className="h-3 w-3/4 rounded-full bg-ink-700/50" />
+          <li className="h-3 w-1/2 rounded-full bg-ink-700/50" />
+        </ul>
+      </div>
+    );
+  }
+  return (
+    <div
+      aria-hidden="true"
+      className="overflow-hidden rounded-card border border-ink-700 bg-ink-850 p-5 sm:p-6"
+    >
+      <div className="grid gap-6 md:grid-cols-[minmax(0,15rem)_1fr] md:items-center">
+        <div className="text-center md:text-left">
+          <span className="block h-2.5 w-16 rounded-full bg-ink-700/70" />
+          <span className="mt-1.5 block h-10 w-28 rounded-md bg-ink-700/70" />
+        </div>
+        <div className="h-32 min-w-0 rounded-field bg-ink-700/30" />
+      </div>
+      <ul className="mt-5 grid gap-2.5 border-t border-ink-700 pt-4 sm:grid-cols-2 lg:grid-cols-3">
+        <li className="h-12 rounded-field bg-ink-700/40" />
+        <li className="h-12 rounded-field bg-ink-700/40" />
+        <li className="h-12 rounded-field bg-ink-700/40" />
+      </ul>
+    </div>
+  );
+};
+
 const ResultPanel = ({
   config,
   values,
@@ -272,14 +320,7 @@ const ResultPanel = ({
   const result = useMemo(() => config.compute(values), [config, values]);
 
   if (!result) {
-    return (
-      <div className="flex min-h-40 flex-col items-center justify-center rounded-card border border-amber-500/30 bg-amber-500/[0.04] p-5 text-center">
-        <p className="text-sm font-medium text-amber-400">
-          {t("calc.invalid")}
-        </p>
-        <p className="mt-1 text-xs text-ink-400">{t("calc.invalidHint")}</p>
-      </div>
-    );
+    return <EmptyResultPanel compact={compact} />;
   }
 
   const chart = result.chart;
@@ -457,9 +498,12 @@ export const Calculator = ({ id }: { id: CalcId }) => {
   });
 
   // Debounced copies drive the result panel + chart so they don't jump on every
-  // keystroke / slider tick (inputs themselves stay instant).
-  const aDebounced = useDebouncedValue(a, 200);
-  const bDebounced = useDebouncedValue(b, 200);
+  // keystroke / slider tick (inputs themselves stay instant). 550ms is long
+  // enough that big charts (BMI gauge, macro donut) settle before re-rendering
+  // — so the chart doesn't shift under your cursor while you tap +/- — yet short
+  // enough that the value still feels live.
+  const aDebounced = useDebouncedValue(a, 550);
+  const bDebounced = useDebouncedValue(b, 550);
 
   const search = buildSearch(config, a, b, compare);
   const canSave = useMemo(() => config.compute(a) !== null, [config, a]);
