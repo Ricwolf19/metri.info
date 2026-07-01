@@ -111,8 +111,22 @@ export const es: Record<TranslationKey, string> = {
     "Este enlace no es válido o ha caducado. Solicita uno nuevo.",
   "auth.errorPasswordShort": "La contraseña debe tener al menos 8 caracteres.",
   "auth.errorPasswordMatch": "Las contraseñas no coinciden.",
+  "auth.errorPasswordLong":
+    "La contraseña no puede tener más de 128 caracteres.",
+  "auth.errorUserExists":
+    "Ya existe una cuenta con ese correo. Probá iniciando sesión.",
+  "auth.errorEmailInvalid": "Ingresá un correo electrónico válido.",
+  "auth.errorInvalidCredentials": "Correo o contraseña incorrectos.",
+  "auth.errorRateLimit":
+    "Demasiados intentos. Esperá unos minutos y probá de nuevo.",
+  "auth.errorNetwork":
+    "No se pudo contactar al servidor. Revisá tu conexión e intentá de nuevo.",
+  "auth.errorInvalidToken": "Este enlace no es válido o ha caducado.",
   "auth.signUpCheckEmail":
     "Revisa tu bandeja — te enviamos un enlace de confirmación para terminar de crear tu cuenta.",
+  "auth.openInbox": "Abrir Gmail",
+  "auth.checkSpam":
+    "¿No lo ves? Revisa la carpeta de spam o espera un minuto — algunos proveedores tardan en entregar.",
   "auth.errorEmailNotVerified":
     "Primero confirma tu correo. Revisa tu bandeja (o la carpeta de spam) para encontrar el enlace que te enviamos.",
   "auth.errorBot":
@@ -268,8 +282,6 @@ export const es: Record<TranslationKey, string> = {
   "calc.imperial": "Imperial",
   "calc.profilePrefilled":
     "Rellenado desde tu perfil — edita lo que quieras abajo.",
-  "calc.invalid": "Valor inválido",
-  "calc.invalidHint": "Introduce números válidos para ver tu resultado.",
   "calc.bodyFat": "Grasa corporal",
   "calc.neck": "Cuello",
   "calc.waist": "Cintura",

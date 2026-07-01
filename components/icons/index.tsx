@@ -55,6 +55,7 @@ import {
 } from "iconoir-react";
 
 export { GithubIcon } from "./GithubMark";
+export { GmailIcon } from "./GmailMark";
 
 /** Square size in px (maps to width + height). Mirrors lucide's `size`. */
 export type IconProps = Omit<SVGProps<SVGSVGElement>, "ref"> & {

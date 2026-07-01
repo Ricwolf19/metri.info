@@ -106,8 +106,21 @@ export const en = {
     "This reset link is invalid or has expired. Request a new one.",
   "auth.errorPasswordShort": "Password must be at least 8 characters.",
   "auth.errorPasswordMatch": "Passwords don't match.",
+  "auth.errorPasswordLong": "Password must be at most 128 characters.",
+  "auth.errorUserExists":
+    "An account with this email already exists. Try signing in instead.",
+  "auth.errorEmailInvalid": "Please enter a valid email address.",
+  "auth.errorInvalidCredentials": "Incorrect email or password.",
+  "auth.errorRateLimit":
+    "Too many attempts. Please wait a few minutes and try again.",
+  "auth.errorNetwork":
+    "Couldn't reach the server. Check your connection and try again.",
+  "auth.errorInvalidToken": "This link is invalid or has expired.",
   "auth.signUpCheckEmail":
     "Check your inbox — we sent a confirmation link to finish setting up your account.",
+  "auth.openInbox": "Open Gmail",
+  "auth.checkSpam":
+    "Didn't see it? Check your spam folder, or wait a minute — some providers take a moment to deliver.",
   "auth.errorEmailNotVerified":
     "Please confirm your email first. Check your inbox (or spam folder) for the link we sent.",
   "auth.errorBot":
@@ -257,8 +270,6 @@ export const en = {
   "calc.metric": "Metric",
   "calc.imperial": "Imperial",
   "calc.profilePrefilled": "Prefilled from your profile — edit anything below.",
-  "calc.invalid": "Invalid value",
-  "calc.invalidHint": "Enter valid numbers to see your result.",
   "calc.bodyFat": "Body fat",
   "calc.neck": "Neck",
   "calc.waist": "Waist",

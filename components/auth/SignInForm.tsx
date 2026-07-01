@@ -9,6 +9,7 @@ import { SocialButtons } from "@/components/auth/SocialButtons";
 import { Button } from "@/components/ui/button";
 import { track } from "@/lib/analytics/track";
 import { authClient } from "@/lib/auth/client";
+import { authErrorMessage } from "@/lib/auth/errors";
 import { useI18n } from "@/lib/i18n";
 import { routePath } from "@/lib/i18n/routes";
 
@@ -31,19 +32,18 @@ export const SignInForm = () => {
     try {
       const res = await authClient.signIn.email({ email, password });
       if (res.error) {
-        const code = (res.error as { code?: string }).code ?? "";
-        if (code === "email_not_verified") {
-          setError(t("auth.errorEmailNotVerified"));
-          return;
-        }
-        setError(res.error.message ?? t("auth.errorGeneric"));
+        setError(authErrorMessage(t, res.error));
         return;
       }
       track("login_completed", { method: "email" });
       router.push(home);
       router.refresh();
-    } catch {
-      setError(t("auth.errorGeneric"));
+    } catch (err) {
+      setError(
+        err instanceof Error && /network|fetch|offline/i.test(err.message)
+          ? t("auth.errorNetwork")
+          : t("auth.errorGeneric"),
+      );
     } finally {
       setLoading(false);
     }

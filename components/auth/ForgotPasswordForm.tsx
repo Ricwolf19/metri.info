@@ -7,6 +7,7 @@ import { AuthInput } from "@/components/auth/AuthInput";
 import { Button } from "@/components/ui/button";
 import { track } from "@/lib/analytics/track";
 import { authClient } from "@/lib/auth/client";
+import { authErrorMessage } from "@/lib/auth/errors";
 import { useI18n } from "@/lib/i18n";
 import { routePath } from "@/lib/i18n/routes";
 
@@ -20,20 +21,34 @@ export const ForgotPasswordForm = () => {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await authClient.requestPasswordReset({
+      const res = await authClient.requestPasswordReset({
         email,
         redirectTo: routePath("resetPassword", locale),
       });
+      if (res?.error && !/user.*not.*found/i.test(res.error.message ?? "")) {
+        // Better Auth returns "User not found" for unknown emails; per the
+        // design we always show the neutral confirmation, so ignore that path
+        // and surface anything else.
+        setError(authErrorMessage(t, res.error));
+        setLoading(false);
+        return;
+      }
       track("password_reset_requested");
-    } catch {
+      setSent(true);
+    } catch (err) {
+      setError(
+        err instanceof Error && /network|fetch|offline/i.test(err.message)
+          ? t("auth.errorNetwork")
+          : t("auth.errorGeneric"),
+      );
     } finally {
       setLoading(false);
-      setSent(true);
     }
   };
 
@@ -53,6 +68,11 @@ export const ForgotPasswordForm = () => {
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
+      {error && (
+        <p role="alert" className="text-sm font-medium text-red-500">
+          {error}
+        </p>
+      )}
       <AuthInput
         label={t("auth.email")}
         type="email"
