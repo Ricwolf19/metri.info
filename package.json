@@ -38,6 +38,7 @@
     "@react-email/components": "1.0.12",
     "@react-three/drei": "^10.7.4",
     "@react-three/fiber": "^9.3.0",
+    "@sentry/nextjs": "^10",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "better-auth": "^1.6.18",

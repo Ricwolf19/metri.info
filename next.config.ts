@@ -1,3 +1,4 @@
+import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -46,4 +47,24 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+/**
+ * Sentry build-time wrapping — uploads source maps + sourcemap the build.
+ * The `authToken` is read from env at build time (set in Vercel); absent in
+ * local `bun run dev` so the plugin just no-ops. `silent: !process.env.CI`
+ * matches Sentry's recommendation: quiet locally, verbose in CI to make
+ * upload failures visible.
+ */
+export default withSentryConfig(nextConfig, {
+  org: "metri-ku",
+  project: "javascript-nextjs",
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  silent: !process.env.CI,
+  // Tree-shake Sentry's own debug logging out of the production bundle (smaller
+  // client JS). Modern replacement for the deprecated `disableLogger` flag.
+  webpack: { treeshake: { removeDebugLogging: true } },
+  widenClientFileUpload: true,
+  // Proxy browser → Sentry through a first-party route so ad blockers (which
+  // blocklist `*.sentry.io`) don't drop error events — same trick as the
+  // PostHog `/ingest` rewrite. Routed under `/monitoring`.
+  tunnelRoute: "/monitoring",
+});
