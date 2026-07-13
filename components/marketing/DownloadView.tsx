@@ -1,17 +1,19 @@
 import Link from "next/link";
 
+import { Callout } from "@/components/docs/Callout";
 import {
   AppleIcon,
   ArrowRightIcon,
   GithubIcon,
   SmartphoneIcon,
 } from "@/components/icons";
+import { DownloadButtons } from "@/components/marketing/DownloadButtons";
 import { InstallPwaCard } from "@/components/pwa/InstallPwaCard";
 import { Container } from "@/components/shared/Container";
 import { buttonVariants } from "@/components/ui/button";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
-import { appDistribution, mobileAppRepo } from "@/lib/site";
+import { appDistribution, mobileAppReleases, mobileAppRepo } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 /** Download page body — shared by /download (EN) and /es/descargar (ES).
@@ -23,6 +25,8 @@ import { cn } from "@/lib/utils";
 export const DownloadView = ({ locale }: { locale: Locale }) => {
   const t = createT(locale);
   const isDev = appDistribution.status === "development";
+  const isBeta = appDistribution.status === "beta";
+  const apk = appDistribution.android.apk;
 
   const platforms = [
     { icon: AppleIcon, label: t("download.iosSoon") },
@@ -44,57 +48,84 @@ export const DownloadView = ({ locale }: { locale: Locale }) => {
               {t("download.devBadge")}
             </span>
           )}
+          {isBeta && (
+            <span className="mt-6 inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-medium text-accent">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+              {t("download.betaBadge")}
+            </span>
+          )}
 
           <h1 className="mt-5 text-4xl font-bold tracking-tight text-balance text-ink-50 sm:text-5xl lg:text-6xl">
-            {isDev ? t("download.devTitle") : t("download.title")}
+            {isBeta
+              ? t("download.betaTitle")
+              : isDev
+                ? t("download.devTitle")
+                : t("download.title")}
           </h1>
           <p className="mt-5 max-w-xl text-lg text-pretty text-ink-300">
-            {isDev ? t("download.devBody") : t("download.subtitle")}
+            {isBeta
+              ? t("download.betaBody")
+              : isDev
+                ? t("download.devBody")
+                : t("download.subtitle")}
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href={routePath("tools", locale)}
-              className={cn(
-                buttonVariants({ size: "lg" }),
-                "transition-transform hover:scale-[1.02]",
-              )}
-            >
-              {t("download.devCtaTools")}
-              <ArrowRightIcon size={18} />
-            </Link>
-            <a
-              href={mobileAppRepo}
-              target="_blank"
-              rel="noreferrer noopener"
-              className={buttonVariants({ variant: "secondary", size: "lg" })}
-            >
-              <GithubIcon size={18} />
-              {t("download.devCtaGithub")}
-            </a>
-          </div>
-        </div>
-
-        {/* Right — platforms panel */}
-        <div className="rounded-card border border-ink-600 bg-ink-850/60 p-6 sm:p-8">
-          <h2 className="text-xs font-semibold tracking-wider text-ink-400 uppercase">
-            {t("download.platformsTitle")}
-          </h2>
-          <div className="mt-5 space-y-3">
-            {platforms.map(({ icon: Icon, label }) => (
-              <div
-                key={label}
-                className="flex items-center gap-3 rounded-xl border border-dashed border-ink-600 bg-ink-850 px-5 py-4 text-ink-300"
+          {isBeta ? (
+            <DownloadButtons apk={apk} releasesUrl={mobileAppReleases} />
+          ) : (
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href={routePath("tools", locale)}
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  "transition-transform hover:scale-[1.02]",
+                )}
               >
-                <Icon size={22} className="shrink-0 text-ink-400" />
-                <span className="text-sm font-medium">{label}</span>
-              </div>
-            ))}
-          </div>
-          <p className="mt-5 text-sm text-ink-400">
-            {t("download.notifyNote")}
-          </p>
+                {t("download.devCtaTools")}
+                <ArrowRightIcon size={18} />
+              </Link>
+              <a
+                href={mobileAppRepo}
+                target="_blank"
+                rel="noreferrer noopener"
+                className={buttonVariants({ variant: "secondary", size: "lg" })}
+              >
+                <GithubIcon size={18} />
+                {t("download.devCtaGithub")}
+              </a>
+            </div>
+          )}
         </div>
+
+        {/* Right — disclaimer (beta) or platforms panel (dev) */}
+        {isBeta ? (
+          <Callout type="warning">
+            <p className="font-semibold text-ink-100">
+              {t("download.disclaimerTitle")}
+            </p>
+            <p className="mt-2">{t("download.disclaimer")}</p>
+          </Callout>
+        ) : (
+          <div className="rounded-card border border-ink-600 bg-ink-850/60 p-6 sm:p-8">
+            <h2 className="text-xs font-semibold tracking-wider text-ink-400 uppercase">
+              {t("download.platformsTitle")}
+            </h2>
+            <div className="mt-5 space-y-3">
+              {platforms.map(({ icon: Icon, label }) => (
+                <div
+                  key={label}
+                  className="flex items-center gap-3 rounded-xl border border-dashed border-ink-600 bg-ink-850 px-5 py-4 text-ink-300"
+                >
+                  <Icon size={22} className="shrink-0 text-ink-400" />
+                  <span className="text-sm font-medium">{label}</span>
+                </div>
+              ))}
+            </div>
+            <p className="mt-5 text-sm text-ink-400">
+              {t("download.notifyNote")}
+            </p>
+          </div>
+        )}
       </div>
 
       <InstallPwaCard />

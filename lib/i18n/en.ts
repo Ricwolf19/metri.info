@@ -552,6 +552,17 @@ export const en = {
   "download.notifyNote":
     "Star the repo to get notified when the first build drops.",
 
+  "download.betaBadge": "Beta build — manual install",
+  "download.betaTitle": "Try the Metri beta",
+  "download.betaBody":
+    "The native Android app is available as a direct download while we prepare the store release. Grab the latest APK below — it self-updates over the air between builds.",
+  "download.androidDownload": "Download APK for Android",
+  "download.iosBeta": "iOS beta — coming soon",
+  "download.githubReleases": "See all releases & changelog",
+  "download.disclaimerTitle": "Before you install",
+  "download.disclaimer":
+    "Metri isn’t on the App Store or Google Play yet. This is an early beta you install at your own risk. Your browser and phone will likely warn you about installing an app from outside the store — that’s normal for sideloaded apps and doesn’t mean it’s unsafe. The app is under active development, so features may change or break between builds.",
+
   "download.pwaTitle": "Install the web app",
   "download.pwaBody":
     "Add Metri to your device for an app-like, offline-ready experience — no store needed. Works on desktop and mobile.",

@@ -567,6 +567,17 @@ export const es: Record<TranslationKey, string> = {
   "download.notifyNote":
     "Dale una estrella al repo para enterarte cuando salga la primera versión.",
 
+  "download.betaBadge": "Versión beta — instalación manual",
+  "download.betaTitle": "Prueba la beta de Metri",
+  "download.betaBody":
+    "La app nativa de Android está disponible como descarga directa mientras preparamos el lanzamiento en tienda. Descarga el APK más reciente abajo — se actualiza por aire entre versiones.",
+  "download.androidDownload": "Descargar APK para Android",
+  "download.iosBeta": "Beta de iOS — próximamente",
+  "download.githubReleases": "Ver todos los releases y changelog",
+  "download.disclaimerTitle": "Antes de instalar",
+  "download.disclaimer":
+    "Metri todavía no está en el App Store ni en Google Play. Esta es una beta temprana que instalas bajo tu propio riesgo. Tu navegador y tu teléfono probablemente te mostrarán advertencias al instalar una app fuera de la tienda — es normal en apps sidecargadas y no significa que sea insegura. La app está en desarrollo activo, así que las funciones pueden cambiar o fallar entre versiones.",
+
   "download.pwaTitle": "Instala la app web",
   "download.pwaBody":
     "Añade Metri a tu dispositivo para una experiencia tipo app, lista sin conexión — sin tiendas. Funciona en escritorio y móvil.",
