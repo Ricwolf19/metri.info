@@ -25,6 +25,15 @@ Sentry.init({
   },
   tracesSampleRate: process.env.NODE_ENV === "development" ? 1.0 : 0.1,
   enableLogs: true,
+  // Benign network noise, not actionable bugs: cancelled RSC prefetches, ad
+  // blockers dropping analytics/tunnel requests, brief offline states. These
+  // surface as unhandled "Failed to fetch" rejections from Sentry's own fetch
+  // instrumentation and would otherwise drown the issue feed.
+  ignoreErrors: [
+    /Failed to fetch/i,
+    /Load failed/i,
+    /NetworkError when attempting to fetch/i,
+  ],
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
