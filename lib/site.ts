@@ -14,15 +14,11 @@ const repos = {
 export const webAppRepo = repos.web;
 export const mobileAppRepo = repos.app;
 
-export type AppStatus = "development" | "live";
+export type AppStatus = "development" | "beta" | "live";
 
-/**
- * Mobile app distribution. While `status === "development"` the download page
- * shows a "coming soon" state instead of store badges. To launch: set
- * status "live" and fill the store URLs (and optionally TestFlight/APK).
- */
+/** @see AGENTS.md#mobile-app-distribution */
 export const appDistribution = {
-  status: "development" as AppStatus,
+  status: "beta" as AppStatus,
   ios: {
     /** App Store URL once published. */
     url: null as string | null,
@@ -32,7 +28,9 @@ export const appDistribution = {
   android: {
     /** Play Store URL once published. */
     url: null as string | null,
-    /** Optional direct APK for sideloading. */
-    apk: null as string | null,
+    /** GitHub "latest release" permalink — asset name is load-bearing, see AGENTS. */
+    apk: `${repos.app}/releases/latest/download/metri.apk`,
   },
 } as const;
+
+export const mobileAppReleases = `${repos.app}/releases`;

@@ -122,6 +122,22 @@ bun run db:studio     # Drizzle Studio
 bun run admin:bootstrap  # create the first admin user
 ```
 
+## Mobile app distribution
+
+`appDistribution` in `lib/site.ts` is the single source of truth for what the
+Download page shows. Three states:
+
+- `development` — no build yet; page shows a "coming soon" panel.
+- `beta` — sideloadable APK is live; page shows direct-download + disclaimer.
+- `live` — published to the stores; fill the `ios.url` / `android.url`.
+
+**The APK asset MUST be named `metri.apk` on every release.** The URL is hard
+coded to `${mobileAppRepo}/releases/latest/download/metri.apk` (GitHub's stable
+"latest release" permalink), so it auto-tracks the newest release without code
+edits — but only as long as the asset name stays `metri.apk`. Rename it on a
+release and the download button silently 404s. Flip `status` to `beta` once
+the first `metri.apk` asset is uploaded.
+
 ## Layout
 
 ```
