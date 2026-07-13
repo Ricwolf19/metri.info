@@ -6,6 +6,7 @@ import { useTransition } from "react";
 import { StarSolidIcon } from "@/components/icons";
 import { Spinner } from "@/components/ui/Spinner";
 import { useToast } from "@/components/ui/toast";
+import { track } from "@/lib/analytics/track";
 import { type FavoriteItemType, toggleFavorite } from "@/lib/favorites/actions";
 import { useT } from "@/lib/i18n";
 
@@ -29,6 +30,11 @@ export const UnpinButton = ({
         toast({ title: t("toast.favError"), variant: "error" });
         return;
       }
+      track("favorite_toggled", {
+        item_type: itemType,
+        item_id: itemId,
+        favorited: false,
+      });
       router.refresh();
     });
   };

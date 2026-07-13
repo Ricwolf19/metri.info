@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { AuthInput } from "@/components/auth/AuthInput";
 import { Button } from "@/components/ui/button";
+import { track } from "@/lib/analytics/track";
 import { authClient } from "@/lib/auth/client";
 import { useI18n } from "@/lib/i18n";
 import { routePath } from "@/lib/i18n/routes";
@@ -67,6 +68,7 @@ export const ResetPasswordForm = () => {
         setError(res.error.message ?? t("auth.resetInvalidToken"));
         return;
       }
+      track("password_reset_completed");
       router.push(`${signIn}?reset=1`);
       router.refresh();
     } catch {

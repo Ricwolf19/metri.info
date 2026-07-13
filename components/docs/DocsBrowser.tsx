@@ -17,6 +17,7 @@ import {
 } from "@/components/icons";
 import { GlowCard } from "@/components/shared/GlowCard";
 import { PinButton } from "@/components/shared/PinButton";
+import { track } from "@/lib/analytics/track";
 import { useFavoriteIds } from "@/lib/favorites/useFavorites";
 import { useT } from "@/lib/i18n";
 import { textMatches } from "@/lib/search";
@@ -97,6 +98,7 @@ export const DocsBrowser = ({
                     <Link
                       key={doc.slug}
                       href={`${basePath}/${doc.slug}`}
+                      onClick={() => track("doc_opened", { slug: doc.slug })}
                       className="block h-full"
                     >
                       <GlowCard className="flex h-full items-start gap-3.5 p-4">
