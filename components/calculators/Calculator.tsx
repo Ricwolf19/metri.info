@@ -1,7 +1,6 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import posthog from "posthog-js";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { CalcChart } from "@/components/calculators/CalcChart";
@@ -513,9 +512,8 @@ export const Calculator = ({ id }: { id: CalcId }) => {
     if (!config.compute(a)) return;
     if (lastTracked.current === id) return;
     const timer = setTimeout(() => {
-      if (!posthog.__loaded) return;
       lastTracked.current = id;
-      posthog.capture("calculator_used", { calculator: id });
+      track("calculator_used", { calculator: id });
     }, 1500);
     return () => clearTimeout(timer);
   }, [config, id, a]);
