@@ -1,8 +1,8 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Link from "next/link";
 
+import { BeamsBackground } from "@/components/background/BeamsBackground";
 import { ArrowRightIcon, DownloadIcon } from "@/components/icons";
 import { Container } from "@/components/shared/Container";
 import { buttonVariants } from "@/components/ui/button";
@@ -10,12 +10,6 @@ import { useI18n } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
 import { routePath } from "@/lib/i18n/routes";
 import { cn } from "@/lib/utils";
-
-// Lazy Three.js beams — keeps ~150KB gz out of the critical path; `ssr: false` because there's no GPU/canvas on the server.
-const Beams = dynamic(
-  () => import("@/components/background/Beams").then((m) => m.Beams),
-  { ssr: false },
-);
 
 const STATS: { value: string; key: TranslationKey }[] = [
   { value: "16", key: "stats.calculators" },
@@ -29,7 +23,8 @@ const STATS: { value: string; key: TranslationKey }[] = [
  * CTAs and trust stats all land in the first screen.
  *
  * Background layers are decorative and `pointer-events-none`:
- *   1. `<Beams />` — WebGL light beams (Three.js).
+ *   1. `<BeamsBackground />` — WebGL light beams (Three.js), WebGL-guarded and
+ *      faded in on context-ready (falls back to nothing on GPU-less browsers).
  *   2. Soft `glow-brand` lime aura (legacy, dimmed).
  *
  * Entrance is pure-CSS `animate-rise` from globals.css — no Framer Motion,
@@ -41,7 +36,7 @@ export const Hero = () => {
   return (
     <section className="hero-dark-treat relative isolate flex min-h-[100svh] items-center overflow-hidden">
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <Beams
+        <BeamsBackground
           beamWidth={3}
           beamHeight={30}
           beamNumber={20}

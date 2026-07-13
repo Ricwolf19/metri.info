@@ -332,16 +332,21 @@ export interface BeamsProps {
   noiseIntensity?: number;
   scale?: number;
   rotation?: number;
+  /** Fires once the WebGL context + first frame are ready (r3f `onCreated`),
+   * so a parent can fade the canvas in instead of popping it in abruptly. */
+  onReady?: () => void;
 }
 
-const CanvasWrapper: FC<{ frozen: boolean; children: ReactNode }> = ({
-  frozen,
-  children,
-}) => (
+const CanvasWrapper: FC<{
+  frozen: boolean;
+  onReady?: () => void;
+  children: ReactNode;
+}> = ({ frozen, onReady, children }) => (
   <Canvas
     dpr={[1, 2]}
     frameloop={frozen ? "never" : "always"}
     className="h-full w-full"
+    onCreated={onReady ? () => onReady() : undefined}
   >
     {children}
   </Canvas>
@@ -356,6 +361,7 @@ export const Beams: FC<BeamsProps> = ({
   noiseIntensity = 1.75,
   scale = 0.2,
   rotation = 0,
+  onReady,
 }) => {
   const meshRef = useRef<
     THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>
@@ -429,7 +435,7 @@ export const Beams: FC<BeamsProps> = ({
   );
 
   return (
-    <CanvasWrapper frozen={frozen}>
+    <CanvasWrapper frozen={frozen} onReady={onReady}>
       <group rotation={[0, 0, degToRad(rotation)]}>
         <PlaneNoise
           ref={meshRef}
