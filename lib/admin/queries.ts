@@ -18,6 +18,7 @@ export const getAdminUsers = async () => {
           name: user.name,
           email: user.email,
           role: user.role,
+          plan: user.plan,
           emailVerified: user.emailVerified,
           createdAt: user.createdAt,
         })

@@ -1,6 +1,7 @@
 import { CheckIcon, LockIcon, StarIcon } from "@/components/icons";
 import type { AccountStats } from "@/lib/account/stats";
 import { createT, type Locale } from "@/lib/i18n/config";
+import { cn } from "@/lib/utils";
 
 /**
  * Account identity header — avatar/initial, name, email, member-since, the
@@ -14,6 +15,7 @@ export const AccountIdentity = ({
   createdAt,
   stats,
   locale,
+  plan = "free",
 }: {
   name: string;
   email: string;
@@ -21,8 +23,10 @@ export const AccountIdentity = ({
   createdAt?: Date | string | null;
   stats: AccountStats;
   locale: Locale;
+  plan?: string | null;
 }) => {
   const t = createT(locale);
+  const isPremium = plan === "premium";
   const initial = (name || email || "?").trim().charAt(0).toUpperCase();
   const since = createdAt
     ? new Date(createdAt).toLocaleDateString(locale, {
@@ -71,14 +75,28 @@ export const AccountIdentity = ({
           </div>
         </div>
 
-        {/* Plan — only what's real: Free (active) + Pro (coming soon, paid). */}
+        {/* Plan — reflects the real DB plan (denormalized on the session). */}
         <div className="w-full shrink-0 lg:w-72">
           <p className="font-mono text-xs tracking-widest text-brand uppercase">
             {t("account.tier.title")}
           </p>
           <div className="mt-2 space-y-2">
-            <div className="flex items-center gap-3 rounded-field border border-brand/30 bg-brand/5 px-3 py-2.5">
-              <CheckIcon size={16} className="shrink-0 text-brand" />
+            {/* Free tier */}
+            <div
+              className={cn(
+                "flex items-center gap-3 rounded-field border px-3 py-2.5",
+                isPremium
+                  ? "border-ink-600 bg-ink-900/40"
+                  : "border-brand/30 bg-brand/5",
+              )}
+            >
+              <CheckIcon
+                size={16}
+                className={cn(
+                  "shrink-0",
+                  isPremium ? "text-ink-500" : "text-brand",
+                )}
+              />
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold text-ink-50">
                   {t("account.tier.free")}
@@ -87,22 +105,46 @@ export const AccountIdentity = ({
                   {t("account.tier.freeDesc")}
                 </p>
               </div>
-              <span className="shrink-0 font-mono text-[10px] tracking-wide text-brand uppercase">
-                {t("account.tier.current")}
-              </span>
+              {!isPremium && (
+                <span className="shrink-0 font-mono text-[10px] tracking-wide text-brand uppercase">
+                  {t("account.tier.current")}
+                </span>
+              )}
             </div>
-            <div className="flex items-center gap-3 rounded-field border border-ink-600 bg-ink-900/40 px-3 py-2.5">
-              <LockIcon size={16} className="shrink-0 text-ink-500" />
+            {/* Premium tier */}
+            <div
+              className={cn(
+                "flex items-center gap-3 rounded-field border px-3 py-2.5",
+                isPremium
+                  ? "border-brand/30 bg-brand/5"
+                  : "border-ink-600 bg-ink-900/40",
+              )}
+            >
+              {isPremium ? (
+                <StarIcon size={16} className="shrink-0 text-brand" />
+              ) : (
+                <LockIcon size={16} className="shrink-0 text-ink-500" />
+              )}
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-ink-300">
+                <p
+                  className={cn(
+                    "text-sm font-semibold",
+                    isPremium ? "text-ink-50" : "text-ink-300",
+                  )}
+                >
                   {t("account.tier.pro")}
                 </p>
                 <p className="truncate text-xs text-ink-500">
                   {t("account.tier.proDesc")}
                 </p>
               </div>
-              <span className="shrink-0 font-mono text-[10px] tracking-wide text-ink-500 uppercase">
-                {t("account.tier.soon")}
+              <span
+                className={cn(
+                  "shrink-0 font-mono text-[10px] tracking-wide uppercase",
+                  isPremium ? "text-brand" : "text-ink-500",
+                )}
+              >
+                {isPremium ? t("account.tier.current") : t("account.tier.soon")}
               </span>
             </div>
           </div>

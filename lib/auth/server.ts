@@ -1,5 +1,6 @@
 import "server-only";
 
+import { expo } from "@better-auth/expo";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { APIError } from "better-auth/api";
@@ -215,6 +216,9 @@ const trustedOrigins = (() => {
   if (process.env.NODE_ENV !== "production") {
     origins.add("http://localhost:3000");
   }
+  // Metri mobile (Expo) app scheme — the @better-auth/expo client identifies
+  // itself with this Origin; without it the server rejects native requests.
+  origins.add("metri://");
   return [...origins];
 })();
 
@@ -273,6 +277,10 @@ const beforeAuthHook = async (inputContext: {
 export const auth = betterAuth({
   baseURL: siteUrl,
   trustedOrigins,
+  // Lets the Metri Expo app authenticate: rewrites the Origin from the
+  // `expo-origin` header and appends the session cookie to native-scheme
+  // (metri://) redirects so the mobile client can store it in SecureStore.
+  plugins: [expo()],
   secret: process.env.BETTER_AUTH_SECRET,
   database: drizzleAdapter(db, {
     provider: "pg",
@@ -308,6 +316,9 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       role: { type: "string", input: false, required: false },
+      // Denormalized entitlement, surfaced on the session for fast client reads.
+      // `input: false` → only the DB/admin can set it, never the client.
+      plan: { type: "string", input: false, required: false },
     },
   },
   // In-memory in v1 — switch to `storage: "database"` when going multi-region.

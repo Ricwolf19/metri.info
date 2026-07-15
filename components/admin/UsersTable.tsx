@@ -1,3 +1,4 @@
+import { PremiumToggle } from "@/components/admin/PremiumToggle";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -36,6 +37,7 @@ export const UsersTable = async () => {
             <TableHead>Name</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Role</TableHead>
+            <TableHead>Plan</TableHead>
             <TableHead>Verified</TableHead>
             <TableHead>Joined</TableHead>
           </TableRow>
@@ -51,6 +53,9 @@ export const UsersTable = async () => {
                 <Badge variant={u.role === "admin" ? "default" : "outline"}>
                   {u.role}
                 </Badge>
+              </TableCell>
+              <TableCell>
+                <PremiumToggle userId={u.id} plan={u.plan} />
               </TableCell>
               <TableCell>
                 {u.emailVerified ? (

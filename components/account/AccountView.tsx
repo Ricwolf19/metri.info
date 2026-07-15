@@ -20,6 +20,7 @@ type AccountUser = {
   email: string;
   image?: string | null;
   createdAt?: Date | string | null;
+  plan?: string | null;
 };
 
 /** "My account" — identity + level header, a link out to Activity, and the
@@ -49,6 +50,7 @@ export const AccountView = ({
         createdAt={user.createdAt}
         stats={stats}
         locale={locale}
+        plan={user.plan}
       />
 
       <div className="mt-5">
