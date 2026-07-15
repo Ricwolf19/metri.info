@@ -1,7 +1,9 @@
 import {
   boolean,
+  index,
   jsonb,
   pgTable,
+  primaryKey,
   real,
   text,
   timestamp,
@@ -15,6 +17,34 @@ export const user = pgTable("user", {
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
   role: text("role").default("user").notNull(),
+  // Denormalized entitlement cache, recomputed from `subscription` on every
+  // change so it rides on the Better Auth session (fast client read). The
+  // client never writes it (additionalFields `input: false`).
+  plan: text("plan").default("free").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+/**
+ * Billing source-of-truth (Stripe-shaped). Today rows are created by the admin
+ * "manual" grant; a future Stripe/RevenueCat webhook updates the same shape and
+ * recomputes `user.plan`. Feature access is derived via `lib/entitlements.ts`,
+ * never by reading `plan` directly.
+ */
+export const subscription = pgTable("subscription", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .unique()
+    .references(() => user.id, { onDelete: "cascade" }),
+  plan: text("plan").default("free").notNull(), // 'free' | 'premium'
+  status: text("status").default("active").notNull(), // active|canceled|past_due|trialing|expired
+  provider: text("provider").default("manual").notNull(), // 'manual' | 'stripe' | ...
+  providerCustomerId: text("provider_customer_id"),
+  providerSubscriptionId: text("provider_subscription_id"),
+  currentPeriodEnd: timestamp("current_period_end"),
+  cancelAtPeriodEnd: boolean("cancel_at_period_end").default(false).notNull(),
+  grantedBy: text("granted_by"), // admin.id for manual grants (audit)
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -99,5 +129,36 @@ export const favorite = pgTable(
   },
   (t) => [
     uniqueIndex("favorite_user_item_unique").on(t.userId, t.itemType, t.itemId),
+  ],
+);
+
+/**
+ * Generic per-user row mirror for the premium SQLite↔Neon sync (training data,
+ * adherence, custom programs/exercises). Each device pushes its changed rows as
+ * opaque JSON; the server stores them keyed by (user, table, row) and hands them
+ * back to the user's other devices on pull. `updatedAt` is the client content
+ * time (Last-Write-Wins); `serverUpdatedAt` is the pull cursor. `deleted` rows
+ * are tombstones (data cleared) so removals propagate. Kept opaque on purpose —
+ * the mobile client owns the schema; add relational mirrors later only if the
+ * web needs to render training natively.
+ */
+export const syncRow = pgTable(
+  "sync_row",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    tableName: text("table_name").notNull(),
+    rowId: text("row_id").notNull(),
+    data: jsonb("data"),
+    deleted: boolean("deleted").default(false).notNull(),
+    /** Client content-modified time — the LWW comparison key. */
+    updatedAt: timestamp("updated_at").notNull(),
+    /** Server write time — the delta-pull cursor. */
+    serverUpdatedAt: timestamp("server_updated_at").defaultNow().notNull(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.userId, t.tableName, t.rowId] }),
+    index("sync_row_pull_idx").on(t.userId, t.serverUpdatedAt),
   ],
 );
