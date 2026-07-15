@@ -51,6 +51,10 @@ same i18n philosophy — built for the web with Next.js 16.
   driven by a sidebar (`components/admin/nav.ts`). It's role-gated by
   `requireAdmin` (`lib/auth/admin.ts`); create the first admin with
   `bun run admin:bootstrap`.
+- **Entitlements**: gate features with `can(plan, feature)`
+  (`lib/entitlements.ts`), never `plan === "premium"`. `subscription` is the
+  billing source of truth; `user.plan` is a denormalized cache of it that rides
+  on the Better Auth session — the client never writes it (`input: false`).
 - **DB migration flow**: `db:generate` is run **manually/locally** against the
   schema, the generated SQL in `drizzle/` is committed, and Vercel applies it on
   deploy via `scripts/vercel-migrate.mjs` (`db:migrate`). Never auto-generate in

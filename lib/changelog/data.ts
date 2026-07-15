@@ -18,6 +18,51 @@ export const localize = (value: L, locale: Locale): string => value[locale];
 
 export const WEB_CHANGELOG: ChangelogEntry[] = [
   {
+    version: "0.5.0",
+    date: "2026-07-13",
+    title: {
+      en: "Mobile app & Premium (open beta)",
+      es: "App móvil y Premium (beta abierta)",
+    },
+    changes: [
+      {
+        type: "added",
+        text: {
+          en: "The Metri mobile app is here in open beta — 16 calculators, guides and a full training tracker, all offline-first.",
+          es: "La app móvil de Metri llega en beta abierta — 16 calculadoras, guías y un tracker de entrenamiento completo, todo offline-first.",
+        },
+      },
+      {
+        type: "added",
+        text: {
+          en: "One Metri account now works across web and mobile — sign in on your phone with the same email.",
+          es: "Una sola cuenta Metri funciona en web y móvil — inicia sesión en tu teléfono con el mismo correo.",
+        },
+      },
+      {
+        type: "added",
+        text: {
+          en: "Premium (open beta): cloud sync & backup for your training across devices. The core app — calculators, guides and tracking — stays free forever.",
+          es: "Premium (beta abierta): sync y respaldo en la nube de tu entrenamiento entre dispositivos. El núcleo —calculadoras, guías y seguimiento— es gratis para siempre.",
+        },
+      },
+      {
+        type: "added",
+        text: {
+          en: "Export your data anytime, in the app — your information is always yours to take with you.",
+          es: "Exporta tu información cuando quieras, desde la app — tus datos siempre son tuyos para llevar.",
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          en: "Your account page now shows your real plan (Free or Premium).",
+          es: "Tu página de cuenta ahora muestra tu plan real (Gratis o Premium).",
+        },
+      },
+    ],
+  },
+  {
     version: "0.4.0",
     date: "2026-06-30",
     title: {
