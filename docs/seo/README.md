@@ -17,6 +17,11 @@ Practical, reusable playbooks for **advanced SEO** and **analytics instrumentati
 - 🇬🇧 **English** → [`glossary.en.md`](./glossary.en.md)
 - 🇪🇸 **Español** → [`glossary.es.md`](./glossary.es.md)
 
+**Sitemap & indexing runbook** (operations: submit to GSC, `lastModified`, diagnose the "HTML page" / "couldn't fetch" errors)
+
+- 🇬🇧 **English** → [`sitemap-indexing.en.md`](./sitemap-indexing.en.md)
+- 🇪🇸 **Español** → [`sitemap-indexing.es.md`](./sitemap-indexing.es.md)
+
 The playbooks are **project-agnostic** (reusable for any site). Each doc is kept
 in sync across languages — if you change one, change the other.
 
