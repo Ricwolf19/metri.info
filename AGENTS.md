@@ -55,6 +55,14 @@ same i18n philosophy — built for the web with Next.js 16.
   (`lib/entitlements.ts`), never `plan === "premium"`. `subscription` is the
   billing source of truth; `user.plan` is a denormalized cache of it that rides
   on the Better Auth session — the client never writes it (`input: false`).
+- **Premium sync** (`app/api/sync/*`, `lib/sync/*`) serves the mobile app. Two
+  rules that are load-bearing, not stylistic: `userId` always comes from the
+  session (never the payload — that's what prevents cross-tenant access), and
+  `plan` is re-read from the DB per call via `requireSyncAccess`, because the
+  session copy is a 5-minute cookie cache and would keep a revoked subscription
+  alive. Every push body goes through `lib/sync/contract.ts` first. Sync is
+  **automatic** for premium users and never runs for free ones — there is no
+  opt-in. **Read `docs/sync.md` before touching any of it.**
 - **DB migration flow**: `db:generate` is run **manually/locally** against the
   schema, the generated SQL in `drizzle/` is committed, and Vercel applies it on
   deploy via `scripts/vercel-migrate.mjs` (`db:migrate`). Never auto-generate in
@@ -135,12 +143,25 @@ Download page shows. Three states:
 - `beta` — sideloadable APK is live; page shows direct-download + disclaimer.
 - `live` — published to the stores; fill the `ios.url` / `android.url`.
 
-**The APK asset MUST be named `metri.apk` on every release.** The URL is hard
-coded to `${mobileAppRepo}/releases/latest/download/metri.apk` (GitHub's stable
-"latest release" permalink), so it auto-tracks the newest release without code
-edits — but only as long as the asset name stays `metri.apk`. Rename it on a
-release and the download button silently 404s. Flip `status` to `beta` once
-the first `metri.apk` asset is uploaded.
+**The APK lives on a fixed-tag rolling pre-release, not on the semver ones.**
+The download URL is `${mobileAppRepo}/releases/download/apk-beta/metri.apk` —
+both `apk-beta` (the tag) and `metri.apk` (the asset name) are load-bearing;
+change either and the button silently 404s. Deliberately not
+`releases/latest/download/…`: release-please cuts a release on every feature
+merge and "latest" follows it, so that URL would break the first time a release
+ships without an APK attached.
+
+Publish or refresh the beta build from the mobile repo:
+
+```bash
+eas build --platform android --profile preview   # APK, not the AAB `production` makes
+# download the artifact, then:
+gh release upload apk-beta metri.apk --clobber --repo <owner>/<mobile-repo>
+```
+
+Create the rolling release once with `gh release create apk-beta metri.apk
+--prerelease` — the pre-release flag keeps it out of release-please's way.
+Flip `status` to `beta` once the first `metri.apk` is uploaded.
 
 ## Layout
 
@@ -166,11 +187,18 @@ lib/
   i18n, theme, docs, contact, legal, seo, og
 public/         brand mark + PWA icons, sw.js (service worker)
 drizzle/        generated migrations (after db:generate)
+docs/sync.md    premium mobile↔web sync protocol (contract, limits, gotchas)
 docs/seo/       project-agnostic playbooks: advanced-seo, analytics
                (PostHog/GA4), glossary — EN + ES, kept in sync
 ```
 
 ## Reference docs
+
+**`docs/sync.md`** is project-specific and authoritative: the wire contract
+between this server and the Expo app, what the server validates and why, what is
+deliberately excluded from sync, and the failure modes that already bit us
+(dead-locking pulls, secondary unique constraints, schema drift). Read it before
+changing anything under `app/api/sync/` or `lib/sync/`.
 
 `docs/seo/` holds reusable, **project-agnostic** playbooks (each in EN + ES,
 kept 1:1 in sync):
