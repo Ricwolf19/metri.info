@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { CalcChart } from "@/components/calculators/CalcChart";
@@ -205,6 +205,30 @@ const FieldInputs = ({
                 aria-label={t(f.labelKey)}
                 className="mt-2 w-full accent-ink-100"
               />
+            )}
+            {f.presets && f.presets.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {f.presets.map((p) => {
+                  const active = Number(values[f.name]) === p;
+                  return (
+                    <button
+                      key={p}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => onChange(f.name, p)}
+                      className={cn(
+                        "rounded-full border px-2.5 py-1 font-mono text-xs transition-colors",
+                        "focus-visible:border-brand/60 focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:outline-none",
+                        active
+                          ? "border-brand/30 bg-brand/10 font-semibold text-brand"
+                          : "border-ink-600 bg-ink-800 text-ink-300 hover:bg-ink-700",
+                      )}
+                    >
+                      {toDisplay(p, f.unit)}
+                    </button>
+                  );
+                })}
+              </div>
             )}
           </div>
         );
@@ -457,7 +481,6 @@ const useDebouncedValue = <T,>(value: T, delay: number): T => {
 export const Calculator = ({ id }: { id: CalcId }) => {
   const config = CALCULATORS[id];
   const { t, locale } = useI18n();
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -518,12 +541,33 @@ export const Calculator = ({ id }: { id: CalcId }) => {
     return () => clearTimeout(timer);
   }, [config, id, a]);
 
+  /** Mirror the inputs into the URL so a result stays shareable.
+   *
+   * React state is the source of truth — the URL is only a snapshot — so this
+   * uses the native History API instead of `router.replace`. Next syncs
+   * `usePathname` / `useSearchParams` from it, but does NOT request the route's
+   * RSC payload: `router.replace` fired one ~10KB round-trip per keystroke,
+   * which a slider drag turned into hundreds.
+   *
+   * Debounced because Safari throttles `replaceState` past roughly 100 calls
+   * per 30s, and a drag blows through that on its own. */
+  const urlTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const commit = useCallback(
     (nextA: CalcValues, nextB: CalcValues, nextCompare: boolean) => {
       const qs = buildSearch(config, nextA, nextB, nextCompare);
-      router.replace(`${pathname}?${qs}`, { scroll: false });
+      if (urlTimer.current) clearTimeout(urlTimer.current);
+      urlTimer.current = setTimeout(() => {
+        window.history.replaceState(null, "", `${pathname}?${qs}`);
+      }, 300);
     },
-    [config, pathname, router],
+    [config, pathname],
+  );
+
+  useEffect(
+    () => () => {
+      if (urlTimer.current) clearTimeout(urlTimer.current);
+    },
+    [],
   );
 
   // One-time prefill from the signed-in user's saved profile — only on a fresh

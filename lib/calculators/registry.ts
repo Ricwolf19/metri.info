@@ -15,6 +15,7 @@ import {
   tdeeConfig,
 } from "./configs/energy";
 import { onerm, plates, wilks } from "./configs/strength";
+import { lbkgConfig } from "./configs/units";
 import type { CalcConfig, CalcId } from "./types";
 
 /** The most globally searched/used calculators — flagged for a "Popular" marker. */
@@ -46,4 +47,5 @@ export const CALCULATORS: Record<CalcId, CalcConfig> = {
   whtr,
   wilks,
   calsburned,
+  lbkg: lbkgConfig,
 };

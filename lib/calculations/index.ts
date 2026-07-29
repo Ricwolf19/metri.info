@@ -42,3 +42,5 @@ export {
 } from "./body";
 
 export { HR_ZONES, heartRateZones, hydration } from "./cardio";
+
+export { KG_PER_LB, kgToLb, lbToKg } from "./units";

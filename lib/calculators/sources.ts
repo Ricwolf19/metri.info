@@ -155,4 +155,5 @@ export const CALC_SOURCES: Record<CalcId, Citation[]> = {
       text: "Ainsworth BE, et al. 2011 Compendium of Physical Activities: a second update of codes and MET values. Med Sci Sports Exerc. 2011;43(8):1575-1581.",
     },
   ],
+  lbkg: [],
 };

@@ -34,6 +34,7 @@ const TITLE_KEYS: Record<CalcRouteId, TranslationKey> = {
   whtr: "tools.whtr.title",
   wilks: "tools.wilks.title",
   calsburned: "tools.calsburned.title",
+  lbkg: "tools.lbkg.title",
 };
 
 const DESC_KEYS: Record<CalcRouteId, TranslationKey> = {
@@ -53,6 +54,7 @@ const DESC_KEYS: Record<CalcRouteId, TranslationKey> = {
   whtr: "tools.whtr.desc",
   wilks: "tools.wilks.desc",
   calsburned: "tools.calsburned.desc",
+  lbkg: "tools.lbkg.desc",
 };
 
 const POPULAR = CALC_IDS.filter(isPopularCalc);

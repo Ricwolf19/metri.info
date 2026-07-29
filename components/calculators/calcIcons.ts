@@ -35,4 +35,5 @@ export const CALC_ICONS: Record<CalcRouteId, ComponentType<IconProps>> = {
   whtr: RulerIcon,
   wilks: TrophyIcon,
   calsburned: ZapIcon,
+  lbkg: ScaleIcon,
 };

@@ -39,7 +39,8 @@ export type RouteId =
   | "heartrate"
   | "whtr"
   | "wilks"
-  | "calsburned";
+  | "calsburned"
+  | "lbkg";
 
 type RouteEntry = { en: string; es: string };
 
@@ -129,6 +130,10 @@ export const ROUTES: Record<RouteId, RouteEntry> = {
     en: "/tools/calories-burned-calculator",
     es: "/es/herramientas/calculadora-calorias-quemadas",
   },
+  lbkg: {
+    en: "/tools/lb-to-kg-converter",
+    es: "/es/herramientas/conversor-libras-kilos",
+  },
 };
 
 /** Calculator route ids (subset of RouteId), in display order. */
@@ -149,6 +154,7 @@ export const CALC_IDS = [
   "whtr",
   "wilks",
   "calsburned",
+  "lbkg",
 ] as const satisfies readonly RouteId[];
 
 export type CalcRouteId = (typeof CALC_IDS)[number];

@@ -62,8 +62,9 @@ export const en = {
   "changelog.improved": "Improved",
   "changelog.fixed": "Fixed",
   "changelog.inDevelopment": "In development",
+  "changelog.betaBadge": "Android · open beta",
   "changelog.mobileIntro":
-    "The native iOS and Android apps are being built. Here's what's on the roadmap.",
+    "The Android app is in open beta, installed from the APK on the download page. Here's what's next.",
   "changelog.plannedTitle": "What's planned",
   "nav.close": "Close",
 
@@ -131,7 +132,7 @@ export const en = {
   "hero.badge": "Open-source fitness tracker",
   "hero.title": "Track. Progress. Evolve.",
   "hero.subtitle":
-    "The open-source training companion for serious lifters — 16 calculators and an evidence-based knowledge base, free and private by design.",
+    "The open-source training companion for serious lifters — 17 calculators and an evidence-based knowledge base, free and private by design.",
   "hero.ctaDownload": "Download App",
   "hero.ctaDocs": "Explore Docs",
   "hero.ctaTools": "Try the Calculators",
@@ -152,7 +153,7 @@ export const en = {
   "bento.highlight": "free on the web.",
   "bento.subtitle":
     "No paywalls, no sign-up, no fluff — open-source tools you can actually trust. The app is just an optional extra.",
-  "bento.calc.title": "16 instant calculators",
+  "bento.calc.title": "17 instant calculators",
   "bento.calc.desc":
     "1RM, TDEE, macros, body fat, BMI, FFMI, ideal weight, protein, heart-rate zones, Wilks/DOTS and more — each with a visual chart and a shareable link.",
   "bento.calc.cta": "Open the calculators",
@@ -224,6 +225,8 @@ export const en = {
   "tools.calsburned.title": "Calories Burned",
   "tools.calsburned.desc":
     "Calories an activity burns for your weight and time.",
+  "tools.lbkg.title": "lb ↔ kg Converter",
+  "tools.lbkg.desc": "Convert pounds to kilograms and back, exactly.",
 
   "calc.weight": "Weight",
   "calc.reps": "Reps",
@@ -284,6 +287,10 @@ export const en = {
   "calc.restingHr": "Resting heart rate",
   "calc.liftTotal": "Lift total",
   "calc.minutes": "Duration",
+  "calc.value": "Amount",
+  "calc.direction": "Direction",
+  "calc.direction.lbkg": "Pounds → Kilograms",
+  "calc.direction.kglb": "Kilograms → Pounds",
   "activity.sedentary": "Sedentary",
   "activity.light": "Light",
   "activity.moderate": "Moderate",
@@ -333,6 +340,9 @@ export const en = {
   "calc.result.dots": "DOTS score",
   "calc.result.caloriesBurned": "Calories burned",
   "calc.result.perHour": "Per hour",
+  "calc.result.kilograms": "Kilograms",
+  "calc.result.pounds": "Pounds",
+  "calc.result.factor": "Conversion factor",
   "calc.bmi.underweight": "Underweight",
   "calc.bmi.normal": "Normal weight",
   "calc.bmi.overweight": "Overweight",
@@ -424,7 +434,7 @@ export const en = {
   "about.features.title": "What you can do with Metri",
   "about.features.lead":
     "Free tools and guides for serious lifters — no account needed to start.",
-  "about.features.calc.title": "16 instant calculators",
+  "about.features.calc.title": "17 instant calculators",
   "about.features.calc.desc":
     "1RM, TDEE, macros, body fat and more — results update as you type, and you can share or save any of them.",
   "about.features.docs.title": "Evidence-based guides",
@@ -469,10 +479,10 @@ export const en = {
   "docs.topics.progress": "Measuring and tracking real progress over time.",
   "docs.topics.glossary": "Plain-English definitions of every key term.",
 
-  "home.toolsCta": "See all 16 calculators",
+  "home.toolsCta": "See all 17 calculators",
   "home.docsCta": "Browse the knowledge base",
   "home.toolsLead":
-    "16 free calculators that run instantly in your browser — the most-used ones first, with the full set a click away.",
+    "17 free calculators that run instantly in your browser — the most-used ones first, with the full set a click away.",
   "home.docsLead":
     "An evidence-based, bilingual knowledge base — eight sections covering nutrition, training, recovery and more, written for lifters.",
   "stats.calculators": "Free calculators",
@@ -536,14 +546,15 @@ export const en = {
   "contact.recaptchaApply": "apply.",
 
   "download.title": "Get Metri on your phone",
-  "download.subtitle": "Free, offline-first, no account required.",
+  "download.subtitle":
+    "Free and offline-first. Needs a free account — no card, no payment.",
   "download.ios": "Download on the App Store",
   "download.android": "Get it on Google Play",
   "download.scan": "Scan to download",
   "download.devBadge": "Mobile app in development",
   "download.devTitle": "A native app is on the way",
   "download.devBody":
-    "Metri is free and open source on the web — every calculator and guide, no account, forever. A native iOS and Android app is in development as an optional extra.",
+    "Metri is free and open source on the web — every calculator and guide, no account, forever. The native iOS and Android app is an optional extra and asks for a free account, so your training syncs across devices.",
   "download.devCtaTools": "Explore the calculators",
   "download.devCtaGithub": "Follow progress on GitHub",
   "download.platformsTitle": "Coming to",
@@ -555,7 +566,7 @@ export const en = {
   "download.betaBadge": "Beta build — manual install",
   "download.betaTitle": "Try the Metri beta",
   "download.betaBody":
-    "The native Android app is available as a direct download while we prepare the store release. Grab the latest APK below — it self-updates over the air between builds.",
+    "The native Android app is available as a direct download while we prepare the store release. Grab the latest APK below — it self-updates over the air between builds. It asks for a free account on first launch: no card, no payment, just an email or Google / GitHub.",
   "download.androidDownload": "Download APK for Android",
   "download.iosBeta": "iOS beta — coming soon",
   "download.githubReleases": "See all releases & changelog",

@@ -73,4 +73,8 @@ export const CALC_TAGS: Record<CalcRouteId, LocalizedTags> = {
     en: ["calories", "met", "cardio"],
     es: ["calorías", "met", "cardio"],
   },
+  lbkg: {
+    en: ["lb", "kg", "pounds", "kilograms", "convert", "weight"],
+    es: ["lb", "kg", "libras", "kilos", "convertir", "peso"],
+  },
 };

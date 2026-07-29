@@ -20,4 +20,5 @@ export const CALC_GUIDES: Partial<Record<CalcRouteId, string[]>> = {
   onerm: ["one-rep-max-guide", "progressive-overload"],
   wilks: ["one-rep-max-guide"],
   water: ["hydration-calculator-guide", "hydration"],
+  lbkg: ["lb-kg-conversion"],
 };

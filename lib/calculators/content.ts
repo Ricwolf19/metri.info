@@ -1103,4 +1103,86 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
       ],
     },
   },
+
+  lbkg: {
+    en: {
+      seoTitle: "lb to kg Converter — Pounds ↔ Kilograms",
+      seoDescription:
+        "Free pounds to kilograms converter. Convert lb to kg (and kg to lb) with the exact 0.45359237 factor, plus gym-plate and barbell references.",
+      h1: "lb ↔ kg Converter",
+      tagline: "Convert pounds to kilograms and back — exact, both directions.",
+      about: [
+        "Gyms, programs and scales don't agree on units: a US rack is marked in pounds, an Olympic bar is 20 kg, and most training articles quote kilos. This converter moves any number between the two with the exact legal factor, so your numbers stay comparable across sources.",
+      ],
+      formula: "kg = lb × 0.45359237\nlb = kg ÷ 0.45359237",
+      how: [
+        "Enter an amount and pick the direction. Since 1959 the international pound has been defined as exactly 0.45359237 kg, so this is a definition, not an approximation — the only rounding happens at the second decimal in the displayed result. The preset chips cover the loads you meet most often: bumper plates, a 45 lb plate, and 135/225/315 lb bar totals.",
+      ],
+      interpret: [
+        "For mental math, divide pounds by 2.2 (or halve and subtract 10%) to get kilos, and multiply kilos by 2.2 to go back. That is accurate to under 1% — fine for picking a warm-up, not for a competition weigh-in. Use the exact result when you're logging a lift or reporting bodyweight.",
+      ],
+      faq: [
+        {
+          q: "How many kg is 1 lb?",
+          a: "Exactly 0.45359237 kg. Going the other way, 1 kg is about 2.2046 lb.",
+        },
+        {
+          q: "Why don't gym plates match after converting?",
+          a: "Because plates are manufactured in whole units of each system, not converted. A 45 lb plate is 20.41 kg and a 20 kg plate is 44.09 lb, so a 'same' loaded bar differs by roughly 1–2% between a pound gym and a kilo gym.",
+        },
+        {
+          q: "Is an Olympic bar 20 kg or 45 lb?",
+          a: "A competition Olympic bar is 20 kg, which is 44.09 lb — not 45. Many US gyms sell a 45 lb bar (20.41 kg) instead. Check the stamp on your bar before you trust a rounded conversion.",
+        },
+        {
+          q: "Is 225 lb really 100 kg?",
+          a: "No — 225 lb is 102.06 kg, and 100 kg is 220.46 lb. The 'two plates' benchmark is 225 lb in the US and 100 kg elsewhere, so they are not the same lift.",
+        },
+        {
+          q: "Are pounds and pound-force the same here?",
+          a: "This converter handles mass, which is what scales and plates measure. Pound-force is a unit of force and is a different quantity — you won't need it for training numbers.",
+        },
+      ],
+    },
+    es: {
+      seoTitle: "Conversor de libras a kilos — lb ↔ kg",
+      seoDescription:
+        "Conversor de libras a kilos gratis. Convierte lb a kg (y kg a lb) con el factor exacto 0.45359237, con referencias de discos y barras de gimnasio.",
+      h1: "Conversor lb ↔ kg",
+      tagline:
+        "Convierte libras a kilos y al revés — exacto, en ambos sentidos.",
+      about: [
+        "Los gimnasios, los programas y las básculas no usan las mismas unidades: un rack estadounidense viene marcado en libras, una barra olímpica pesa 20 kg y la mayoría de los artículos de entrenamiento hablan en kilos. Este conversor pasa cualquier número entre ambos con el factor legal exacto, para que tus cifras sigan siendo comparables.",
+      ],
+      formula: "kg = lb × 0.45359237\nlb = kg ÷ 0.45359237",
+      how: [
+        "Introduce una cantidad y elige la dirección. Desde 1959 la libra internacional está definida como exactamente 0.45359237 kg, así que esto es una definición, no una aproximación — el único redondeo ocurre en el segundo decimal del resultado mostrado. Los botones rápidos cubren las cargas más habituales: discos bumper, el disco de 45 lb y los totales de barra de 135/225/315 lb.",
+      ],
+      interpret: [
+        "Para calcular de cabeza, divide las libras entre 2.2 (o divide a la mitad y resta un 10%) para obtener kilos, y multiplica los kilos por 2.2 para volver. El error es inferior al 1% — suficiente para elegir un calentamiento, no para un pesaje de competición. Usa el resultado exacto cuando registres un levantamiento o reportes tu peso corporal.",
+      ],
+      faq: [
+        {
+          q: "¿Cuántos kg es 1 lb?",
+          a: "Exactamente 0.45359237 kg. En el otro sentido, 1 kg son unas 2.2046 lb.",
+        },
+        {
+          q: "¿Por qué los discos no coinciden al convertir?",
+          a: "Porque los discos se fabrican en unidades enteras de cada sistema, no convertidas. Un disco de 45 lb pesa 20.41 kg y uno de 20 kg pesa 44.09 lb, así que una barra 'igual' difiere en torno a un 1–2% entre un gimnasio en libras y uno en kilos.",
+        },
+        {
+          q: "¿La barra olímpica pesa 20 kg o 45 lb?",
+          a: "La barra olímpica de competición pesa 20 kg, es decir 44.09 lb — no 45. Muchos gimnasios de EE. UU. venden una barra de 45 lb (20.41 kg). Revisa la marca de tu barra antes de fiarte de una conversión redondeada.",
+        },
+        {
+          q: "¿225 lb son realmente 100 kg?",
+          a: "No — 225 lb son 102.06 kg, y 100 kg son 220.46 lb. La marca de 'dos discos' es 225 lb en EE. UU. y 100 kg en el resto, así que no es el mismo levantamiento.",
+        },
+        {
+          q: "¿Libra y libra-fuerza son lo mismo aquí?",
+          a: "Este conversor trabaja con masa, que es lo que miden las básculas y los discos. La libra-fuerza es una unidad de fuerza y es otra magnitud — no la necesitas para tus números de entrenamiento.",
+        },
+      ],
+    },
+  },
 };

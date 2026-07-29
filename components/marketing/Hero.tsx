@@ -12,7 +12,7 @@ import { routePath } from "@/lib/i18n/routes";
 import { cn } from "@/lib/utils";
 
 const STATS: { value: string; key: TranslationKey }[] = [
-  { value: "16", key: "stats.calculators" },
+  { value: "17", key: "stats.calculators" },
   { value: "20+", key: "stats.guides" },
   { value: "0", key: "stats.account" },
   { value: "MIT", key: "stats.license" },

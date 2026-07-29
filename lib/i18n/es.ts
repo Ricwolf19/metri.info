@@ -64,8 +64,9 @@ export const es: Record<TranslationKey, string> = {
   "changelog.improved": "Mejorado",
   "changelog.fixed": "Corregido",
   "changelog.inDevelopment": "En desarrollo",
+  "changelog.betaBadge": "Android · beta abierta",
   "changelog.mobileIntro":
-    "Las apps nativas de iOS y Android están en construcción. Esto es lo que hay en el roadmap.",
+    "La app de Android está en beta abierta, se instala desde el APK en la página de descarga. Esto es lo que sigue.",
   "changelog.plannedTitle": "Qué viene",
   "nav.close": "Cerrar",
 
@@ -137,7 +138,7 @@ export const es: Record<TranslationKey, string> = {
   "hero.badge": "Tracker de fitness de código abierto",
   "hero.title": "Mide. Progresa. Evoluciona.",
   "hero.subtitle":
-    "El compañero de entrenamiento de código abierto para lifters serios: 16 calculadoras y una base de conocimiento basada en evidencia, gratis y privado por diseño.",
+    "El compañero de entrenamiento de código abierto para lifters serios: 17 calculadoras y una base de conocimiento basada en evidencia, gratis y privado por diseño.",
   "hero.ctaDownload": "Descargar app",
   "hero.ctaDocs": "Ver documentación",
   "hero.ctaTools": "Probar las calculadoras",
@@ -160,7 +161,7 @@ export const es: Record<TranslationKey, string> = {
   "bento.highlight": "gratis en la web.",
   "bento.subtitle":
     "Sin muros de pago, sin registro, sin relleno: herramientas de código abierto en las que puedes confiar de verdad. La app es solo un extra opcional.",
-  "bento.calc.title": "16 calculadoras al instante",
+  "bento.calc.title": "17 calculadoras al instante",
   "bento.calc.desc":
     "1RM, TDEE, macros, grasa corporal, IMC, FFMI, peso ideal, proteína, zonas de frecuencia cardíaca, Wilks/DOTS y más — cada una con su gráfica visual y un enlace para compartir.",
   "bento.calc.cta": "Abrir las calculadoras",
@@ -235,6 +236,8 @@ export const es: Record<TranslationKey, string> = {
   "tools.calsburned.title": "Calorías quemadas",
   "tools.calsburned.desc":
     "Calorías que quema una actividad según tu peso y tiempo.",
+  "tools.lbkg.title": "Conversor lb ↔ kg",
+  "tools.lbkg.desc": "Convierte libras a kilos y al revés, con exactitud.",
 
   "calc.weight": "Peso",
   "calc.reps": "Reps",
@@ -296,6 +299,10 @@ export const es: Record<TranslationKey, string> = {
   "calc.restingHr": "Frecuencia cardíaca en reposo",
   "calc.liftTotal": "Total levantado",
   "calc.minutes": "Duración",
+  "calc.value": "Cantidad",
+  "calc.direction": "Dirección",
+  "calc.direction.lbkg": "Libras → Kilos",
+  "calc.direction.kglb": "Kilos → Libras",
   "activity.sedentary": "Sedentario",
   "activity.light": "Ligero",
   "activity.moderate": "Moderado",
@@ -345,6 +352,9 @@ export const es: Record<TranslationKey, string> = {
   "calc.result.dots": "Puntuación DOTS",
   "calc.result.caloriesBurned": "Calorías quemadas",
   "calc.result.perHour": "Por hora",
+  "calc.result.kilograms": "Kilogramos",
+  "calc.result.pounds": "Libras",
+  "calc.result.factor": "Factor de conversión",
   "calc.bmi.underweight": "Bajo peso",
   "calc.bmi.normal": "Peso normal",
   "calc.bmi.overweight": "Sobrepeso",
@@ -436,7 +446,7 @@ export const es: Record<TranslationKey, string> = {
   "about.features.title": "Qué puedes hacer con Metri",
   "about.features.lead":
     "Herramientas y guías gratis para quienes entrenan en serio — sin cuenta para empezar.",
-  "about.features.calc.title": "16 calculadoras instantáneas",
+  "about.features.calc.title": "17 calculadoras instantáneas",
   "about.features.calc.desc":
     "1RM, TDEE, macros, grasa corporal y más — los resultados se actualizan mientras escribes, y puedes compartir o guardar cualquiera.",
   "about.features.docs.title": "Guías basadas en evidencia",
@@ -481,10 +491,10 @@ export const es: Record<TranslationKey, string> = {
   "docs.topics.progress": "Medir y seguir el progreso real en el tiempo.",
   "docs.topics.glossary": "Definiciones claras de cada término clave.",
 
-  "home.toolsCta": "Ver las 16 calculadoras",
+  "home.toolsCta": "Ver las 17 calculadoras",
   "home.docsCta": "Explorar la base de conocimiento",
   "home.toolsLead":
-    "16 calculadoras gratis que corren al instante en tu navegador — primero las más usadas, con el set completo a un clic.",
+    "17 calculadoras gratis que corren al instante en tu navegador — primero las más usadas, con el set completo a un clic.",
   "home.docsLead":
     "Una base de conocimiento bilingüe basada en evidencia — ocho secciones sobre nutrición, entrenamiento, recuperación y más, escritas para lifters.",
   "stats.calculators": "Calculadoras gratis",
@@ -551,14 +561,15 @@ export const es: Record<TranslationKey, string> = {
   "contact.recaptchaApply": "de Google.",
 
   "download.title": "Lleva Metri en tu teléfono",
-  "download.subtitle": "Gratis, sin conexión primero, sin cuenta.",
+  "download.subtitle":
+    "Gratis y sin conexión primero. Requiere una cuenta gratuita — sin tarjeta, sin pagos.",
   "download.ios": "Descargar en el App Store",
   "download.android": "Disponible en Google Play",
   "download.scan": "Escanea para descargar",
   "download.devBadge": "App móvil en desarrollo",
   "download.devTitle": "Una app nativa está en camino",
   "download.devBody":
-    "Metri es gratis y de código abierto en la web — todas las calculadoras y guías, sin cuenta, para siempre. Una app nativa de iOS y Android está en desarrollo como extra opcional.",
+    "Metri es gratis y de código abierto en la web — todas las calculadoras y guías, sin cuenta, para siempre. La app nativa de iOS y Android es un extra opcional y pide una cuenta gratuita, para que tu entrenamiento se sincronice entre dispositivos.",
   "download.devCtaTools": "Explorar las calculadoras",
   "download.devCtaGithub": "Sigue el avance en GitHub",
   "download.platformsTitle": "Llegará a",
@@ -570,7 +581,7 @@ export const es: Record<TranslationKey, string> = {
   "download.betaBadge": "Versión beta — instalación manual",
   "download.betaTitle": "Prueba la beta de Metri",
   "download.betaBody":
-    "La app nativa de Android está disponible como descarga directa mientras preparamos el lanzamiento en tienda. Descarga el APK más reciente abajo — se actualiza por aire entre versiones.",
+    "La app nativa de Android está disponible como descarga directa mientras preparamos el lanzamiento en tienda. Descarga el APK más reciente abajo — se actualiza por aire entre versiones. Al abrirla te pedirá una cuenta gratuita: sin tarjeta, sin pagos, solo un correo o Google / GitHub.",
   "download.androidDownload": "Descargar APK para Android",
   "download.iosBeta": "Beta de iOS — próximamente",
   "download.githubReleases": "Ver todos los releases y changelog",

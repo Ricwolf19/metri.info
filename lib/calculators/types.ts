@@ -16,7 +16,8 @@ export type CalcId =
   | "heartrate"
   | "whtr"
   | "wilks"
-  | "calsburned";
+  | "calsburned"
+  | "lbkg";
 
 export type SelectOption = { value: string; labelKey: TranslationKey };
 
@@ -30,6 +31,8 @@ type CalcField =
       max?: number;
       step?: number;
       default: number;
+      /** Common values offered as one-tap chips under the input (base unit). */
+      presets?: number[];
     }
   | {
       name: string;

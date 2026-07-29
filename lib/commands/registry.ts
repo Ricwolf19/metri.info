@@ -50,6 +50,7 @@ const CALC_TITLE: Record<CalcRouteId, TranslationKey> = {
   whtr: "tools.whtr.title",
   wilks: "tools.wilks.title",
   calsburned: "tools.calsburned.title",
+  lbkg: "tools.lbkg.title",
 };
 
 const PAGES: {
