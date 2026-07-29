@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Component, type ReactNode, useEffect, useState } from "react";
+import { Component, type ReactNode, useEffect, useRef, useState } from "react";
 
 import type { BeamsProps } from "@/components/background/Beams";
 import { cn } from "@/lib/utils";
@@ -49,10 +49,33 @@ class CanvasBoundary extends Component<
   }
 }
 
-/** WebGL-guarded, fade-in wrapper around <Beams/>: see useWebGLSupport + CanvasBoundary. */
+/** WebGL-guarded, fade-in wrapper around <Beams/>: see useWebGLSupport + CanvasBoundary.
+ *
+ * Recovers from context loss. Two things cause it here: the browser's cap on
+ * live WebGL contexts (~16), and Cache Components keeping recent routes mounted
+ * in an `<Activity>` — hidden routes get their effects torn down, which disposes
+ * the renderer, while the component itself stays mounted with its state intact.
+ * Without a reset the canvas came back dead but still faded in, leaving a
+ * transparent hero. Bumping `generation` forces a genuinely fresh Canvas. */
 export const BeamsBackground = (props: BeamsProps) => {
   const supported = useWebGLSupport();
   const [ready, setReady] = useState(false);
+  const [generation, setGeneration] = useState(0);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const onLost = (e: Event) => {
+      // Default behaviour is to never fire `contextrestored`; preventing it
+      // lets the GPU hand the context back instead of leaving a dead canvas.
+      e.preventDefault();
+      setReady(false);
+      setGeneration((g) => g + 1);
+    };
+    canvas.addEventListener("webglcontextlost", onLost);
+    return () => canvas.removeEventListener("webglcontextlost", onLost);
+  }, [generation]);
 
   if (supported === false) return null;
 
@@ -64,8 +87,14 @@ export const BeamsBackground = (props: BeamsProps) => {
       )}
     >
       {supported && (
-        <CanvasBoundary>
-          <Beams {...props} onReady={() => setReady(true)} />
+        <CanvasBoundary key={generation}>
+          <Beams
+            {...props}
+            onReady={(canvas) => {
+              canvasRef.current = canvas;
+              setReady(true);
+            }}
+          />
         </CanvasBoundary>
       )}
     </div>

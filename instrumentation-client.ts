@@ -34,6 +34,17 @@ Sentry.init({
     /Load failed/i,
     /NetworkError when attempting to fetch/i,
   ],
+  // Errors thrown from an extension content script. The SDK's default
+  // eventFilters already cover the well-known extension *messages*
+  // ("Script error.", googletag, solana, _AutofillCallbackHandler); this adds
+  // the protocol-level catch. Deliberately not `allowUrls`, which would also
+  // drop real errors whose stack came back truncated or unsymbolicated.
+  denyUrls: [
+    /^chrome-extension:\/\//i,
+    /^moz-extension:\/\//i,
+    /^safari-(web-)?extension:\/\//i,
+    /^webkit-masked-url:/i,
+  ],
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

@@ -332,21 +332,22 @@ export interface BeamsProps {
   noiseIntensity?: number;
   scale?: number;
   rotation?: number;
-  /** Fires once the WebGL context + first frame are ready (r3f `onCreated`),
-   * so a parent can fade the canvas in instead of popping it in abruptly. */
-  onReady?: () => void;
+  /** Fires once the WebGL context + first frame are ready (r3f `onCreated`).
+   * Receives the backing canvas so the parent can fade it in and watch it for
+   * context loss. */
+  onReady?: (canvas: HTMLCanvasElement) => void;
 }
 
 const CanvasWrapper: FC<{
   frozen: boolean;
-  onReady?: () => void;
+  onReady?: (canvas: HTMLCanvasElement) => void;
   children: ReactNode;
 }> = ({ frozen, onReady, children }) => (
   <Canvas
     dpr={[1, 2]}
     frameloop={frozen ? "never" : "always"}
     className="h-full w-full"
-    onCreated={onReady ? () => onReady() : undefined}
+    onCreated={onReady ? (state) => onReady(state.gl.domElement) : undefined}
   >
     {children}
   </Canvas>

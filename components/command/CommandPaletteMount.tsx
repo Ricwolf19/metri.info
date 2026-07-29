@@ -40,7 +40,10 @@ export const CommandPaletteMount = ({
       setOpen(true);
     };
     const onKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+      // `key` is optional-chained because password managers and hotkey
+      // extensions dispatch partial synthetic "keydown" objects that set
+      // ctrlKey/metaKey but omit key entirely.
+      if ((e.metaKey || e.ctrlKey) && e.key?.toLowerCase() === "k") {
         e.preventDefault();
         setOpen((o) => {
           if (o) return false;
