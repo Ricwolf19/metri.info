@@ -1,6 +1,9 @@
 import "server-only";
 
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
+import { cacheLife, cacheTag } from "next/cache";
+
+import { tags } from "@/lib/cache/tags";
 
 /**
  * Google Analytics 4 reporting via the Data API (the read side of GA4 — distinct
@@ -54,6 +57,9 @@ export type GaSummary = {
 /** Active users, sessions and pageviews for the last 7 and 30 days. Two date
  * ranges in one report → GA adds a `dateRange` dimension (`date_range_0/1`). */
 export const getGaSummary = async (): Promise<GaSummary> => {
+  "use cache";
+  cacheTag(tags.metrics.ga);
+  cacheLife("minutes");
   const c = getClient();
   if (!c) return null;
   try {
@@ -95,12 +101,17 @@ export const getGaSummary = async (): Promise<GaSummary> => {
 
 export type GaRow = { label: string; value: number };
 
-/** Generic single-dimension top list (pages, countries, devices, sources). */
+/** Generic single-dimension top list (pages, countries, devices, sources).
+ * Cached: the Data API speaks gRPC, so it can't ride `fetch`'s `next.tags` like
+ * the PostHog/Sentry clients — `use cache` is the only way to tag it. */
 const topByDimension = async (
   dimension: string,
   metric: string,
   limit: number,
 ): Promise<GaRow[] | null> => {
+  "use cache";
+  cacheTag(tags.metrics.ga);
+  cacheLife("minutes");
   const c = getClient();
   if (!c) return null;
   try {
@@ -130,8 +141,12 @@ export const getGaDeviceBreakdown = () =>
 export const getGaTopSources = () =>
   topByDimension("sessionSource", "sessions", 10);
 
-/** Active users in the last 30 minutes (GA4 realtime). */
+/** Active users in the last 30 minutes (GA4 realtime). Short cache — the whole
+ * point is freshness, but this still collapses a burst of panel loads. */
 export const getGaRealtime = async (): Promise<number | null> => {
+  "use cache";
+  cacheTag(tags.metrics.ga);
+  cacheLife("seconds");
   const c = getClient();
   if (!c) return null;
   try {

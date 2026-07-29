@@ -5,6 +5,7 @@ import path from "node:path";
 
 import GithubSlugger from "github-slugger";
 import matter from "gray-matter";
+import { cacheLife } from "next/cache";
 import readingTime from "reading-time";
 
 import type { Locale } from "@/lib/i18n/config";
@@ -43,6 +44,9 @@ type DocFrontmatter = {
   category: DocCategory;
   tags?: string[];
   order?: number;
+  /** ISO date of this article's last revision — drives sitemap `<lastmod>`.
+   * Optional; falls back to `DOC_LAST_REVIEWED` when absent. */
+  updatedAt?: string;
 };
 
 export type DocMeta = DocFrontmatter & {
@@ -91,6 +95,21 @@ export const getAllDocs = (locale: Locale): DocMeta[] => {
       DOC_CATEGORIES.indexOf(a.category) - DOC_CATEGORIES.indexOf(b.category);
     return cat !== 0 ? cat : (a.order ?? 99) - (b.order ?? 99);
   });
+};
+
+/** Slug + title for every doc in both locales — what the ⌘K palette needs.
+ * Cached with `max` life: this reads and parses ~40 MDX files off disk, the
+ * content is baked into the deploy, and the root layout renders it on every
+ * request. Uncached filesystem access there would block the whole tree from
+ * prerendering under Cache Components. */
+export const getDocsIndex = async (): Promise<
+  Record<Locale, { slug: string; title: string }[]>
+> => {
+  "use cache";
+  cacheLife("max");
+  const forLocale = (locale: Locale) =>
+    getAllDocs(locale).map((d) => ({ slug: d.slug, title: d.title }));
+  return { en: forLocale("en"), es: forLocale("es") };
 };
 
 /** Build a table of contents from h2/h3 headings (ids match rehype-slug). */

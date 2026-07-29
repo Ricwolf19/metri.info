@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { Analytics } from "@vercel/analytics/next";
@@ -12,7 +13,7 @@ import { Header } from "@/components/layout/Header";
 import { CookieConsent } from "@/components/legal/CookieConsent";
 import { Providers } from "@/components/providers";
 import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
-import { getAllDocs } from "@/lib/docs";
+import { getDocsIndex } from "@/lib/docs";
 import { siteUrl } from "@/lib/utils";
 
 import "./globals.css";
@@ -92,15 +93,13 @@ export const viewport: Viewport = {
 
 const NO_FLASH = `(function(){try{var m=document.cookie.match(/(?:^|; )metri_theme=([^;]+)/);var p=m?m[1]:'dark';var s=p==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):p;document.documentElement.setAttribute('data-theme',s);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
-  // Built once at build time (static) so the ⌘K palette can list docs without a
-  // client-side filesystem read.
-  const docsIndex = {
-    en: getAllDocs("en").map((d) => ({ slug: d.slug, title: d.title })),
-    es: getAllDocs("es").map((d) => ({ slug: d.slug, title: d.title })),
-  };
+  // Cached (`use cache`, max life) so the ⌘K palette can list docs without a
+  // client-side filesystem read — and without the layout's disk I/O blocking
+  // every route from prerendering.
+  const docsIndex = await getDocsIndex();
 
   return (
     <html
@@ -115,7 +114,14 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       <body className="min-h-dvh font-sans antialiased">
         <Providers>
           <div className="flex min-h-dvh flex-col">
-            <Header />
+            {/* The header reads the URL (usePathname, for nav highlighting and
+                the locale switch). On routes whose path is known at build time
+                PPR resolves it into the static shell; on a fully dynamic route
+                like /s/[id] it can't, so the boundary keeps that one route from
+                blocking instead of failing the prerender. */}
+            <Suspense fallback={<div className="h-16 shrink-0" />}>
+              <Header />
+            </Suspense>
             {/* `min-h-dvh` keeps short pages (contact, download, auth) at least a
                 full viewport tall so the footer always sits below the fold, not
                 floating up into the first screen. */}

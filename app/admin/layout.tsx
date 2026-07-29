@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { AdminSignOut } from "@/app/admin/AdminSignOut";
 import { AdminBackToSite } from "@/components/admin/AdminBackToSite";
 import { AdminMobileBar } from "@/components/admin/AdminMobileBar";
 import { AdminNav } from "@/components/admin/AdminNav";
+import { AdminShellSkeleton } from "@/components/admin/AdminSkeleton";
 import { MetriMark } from "@/components/layout/MetriMark";
 import { requireAdmin } from "@/lib/auth/admin";
 
@@ -14,8 +16,13 @@ export const metadata: Metadata = {
 
 /** Admin shell. Guards every /admin/* route in one place via requireAdmin(),
  * then frames children with a persistent desktop sidebar (brand + section nav +
- * sign-out) that collapses to a top bar with a sheet menu on mobile. */
-const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
+ * sign-out) that collapses to a top bar with a sheet menu on mobile.
+ *
+ * Split from `AdminLayout` so the session read (which touches `headers()`) sits
+ * inside a Suspense boundary — a layout awaiting runtime data blocks every
+ * route below it from prerendering under Cache Components. The gate is
+ * unchanged: children still don't render until requireAdmin() resolves. */
+const AdminShell = async ({ children }: { children: React.ReactNode }) => {
   const admin = await requireAdmin();
 
   return (
@@ -52,5 +59,11 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
     </div>
   );
 };
+
+const AdminLayout = ({ children }: { children: React.ReactNode }) => (
+  <Suspense fallback={<AdminShellSkeleton />}>
+    <AdminShell>{children}</AdminShell>
+  </Suspense>
+);
 
 export default AdminLayout;

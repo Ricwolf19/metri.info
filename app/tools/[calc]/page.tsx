@@ -10,8 +10,6 @@ import {
   ROUTES,
 } from "@/lib/i18n/routes";
 
-export const dynamicParams = false;
-
 export const generateStaticParams = () =>
   CALC_IDS.map((id) => ({ calc: ROUTES[id].en.split("/").pop() as string }));
 

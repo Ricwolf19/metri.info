@@ -4,6 +4,11 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
+  // Enables `use cache` / `cacheTag` / `cacheLife`, makes PPR the default (a
+  // static shell streams immediately while dynamic content fills in), and lets
+  // React keep component state across client navigations via <Activity> —
+  // which is what actually stops a loaded panel from re-showing its skeleton.
+  cacheComponents: true,
   // Native gRPC/protobuf deps — keep them external instead of bundling them into
   // the server build (Next's recommended handling for such packages).
   serverExternalPackages: ["@google-analytics/data"],

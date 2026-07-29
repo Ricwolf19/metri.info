@@ -1,6 +1,7 @@
 import "server-only";
 
-import { SENTRY_METRICS_TAG } from "@/lib/analytics/tags";
+import { createApiClient } from "@/lib/cache/api";
+import { tags } from "@/lib/cache/tags";
 
 /**
  * Sentry admin reads via the Sentry Web API (https://sentry.io/api/0/).
@@ -23,21 +24,14 @@ const API = "https://sentry.io/api/0";
 
 export const sentryConfigured = (): boolean => Boolean(token);
 
-const sentryFetch = async (path: string): Promise<unknown | null> => {
-  if (!token) return null;
-  try {
-    const res = await fetch(`${API}${path}`, {
-      headers: { Authorization: `Bearer ${token}` },
-      // 5-min cache — matches the other admin panels, well under Sentry's API
-      // rate limits.
-      next: { revalidate: 300, tags: [SENTRY_METRICS_TAG] },
-    });
-    if (!res.ok) return null;
-    return (await res.json()) as unknown;
-  } catch {
-    return null;
-  }
-};
+const api = createApiClient({
+  baseUrl: API,
+  tag: tags.metrics.sentry,
+  headers: () => (token ? { Authorization: `Bearer ${token}` } : null),
+});
+
+const sentryFetch = (path: string): Promise<unknown | null> =>
+  api.request<unknown>(path);
 
 export type SentryErrorTotals = { last24h: number; last14d: number } | null;
 

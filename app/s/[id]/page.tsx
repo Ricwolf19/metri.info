@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
+import { ShareSkeleton } from "@/components/calculators/ShareSkeleton";
 import { ArrowRightIcon } from "@/components/icons";
 import { Container } from "@/components/shared/Container";
 import { CALC_CONTENT } from "@/lib/calculators/content";
@@ -43,6 +45,13 @@ const parse = (
   };
 };
 
+/** Share ids are calculator ids, not arbitrary tokens — enumerating them makes
+ * each path known at build time, so the shared layout (whose i18n provider
+ * derives the locale from the pathname) can prerender its shell. The payload
+ * still rides in the query string and stays fully runtime. */
+export const generateStaticParams = () =>
+  Object.keys(CALCULATORS).map((id) => ({ id }));
+
 export const generateMetadata = async ({
   params,
   searchParams,
@@ -72,7 +81,7 @@ export const generateMetadata = async ({
   };
 };
 
-const SharePage = async ({
+const ShareContent = async ({
   params,
   searchParams,
 }: {
@@ -127,5 +136,20 @@ const SharePage = async ({
     </Container>
   );
 };
+
+/** The payload lives in the query string, so the content is fully runtime.
+ * Keeping the page itself synchronous lets PPR prerender a shell and stream the
+ * result in, instead of the whole route blocking on `searchParams`. */
+const SharePage = ({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: Search;
+}) => (
+  <Suspense fallback={<ShareSkeleton />}>
+    <ShareContent params={params} searchParams={searchParams} />
+  </Suspense>
+);
 
 export default SharePage;

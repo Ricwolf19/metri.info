@@ -1,6 +1,7 @@
 import "server-only";
 
-import { POSTHOG_METRICS_TAG } from "@/lib/analytics/tags";
+import { createApiClient } from "@/lib/cache/api";
+import { tags } from "@/lib/cache/tags";
 
 const apiKey = process.env.POSTHOG_PERSONAL_API_KEY;
 const projectId = process.env.POSTHOG_PROJECT_ID;
@@ -14,29 +15,30 @@ const host = (process.env.POSTHOG_API_HOST || "https://us.posthog.com").replace(
 
 export const posthogConfigured = () => Boolean(apiKey && projectId);
 
+const api = createApiClient({
+  baseUrl: host,
+  tag: tags.metrics.posthog,
+  headers: () =>
+    apiKey && projectId
+      ? {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        }
+      : null,
+});
+
 /** POST a HogQL query to the PostHog Query API and return `results` (a 2D array
  * of rows). Returns null when unconfigured or on any failure — the personal API
  * key never reaches the client and errors never bubble to the page. */
 const runHogQL = async (query: string): Promise<unknown[] | null> => {
-  if (!apiKey || !projectId) return null;
-  try {
-    const res = await fetch(`${host}/api/projects/${projectId}/query`, {
+  const json = await api.request<{ results?: unknown[] }>(
+    `/api/projects/${projectId}/query`,
+    {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
       body: JSON.stringify({ query: { kind: "HogQLQuery", query } }),
-      // 5-min cache: fresh enough for an admin dashboard while staying well
-      // under PostHog's Query API rate limits. Matches the GA panel's freshness.
-      next: { revalidate: 300, tags: [POSTHOG_METRICS_TAG] },
-    });
-    if (!res.ok) return null;
-    const json = (await res.json()) as { results?: unknown[] };
-    return json.results ?? null;
-  } catch {
-    return null;
-  }
+    },
+  );
+  return json?.results ?? null;
 };
 
 export type PageviewTotals = { last7: number; last30: number } | null;

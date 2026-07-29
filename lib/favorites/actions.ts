@@ -1,10 +1,10 @@
 "use server";
 
 import { and, eq } from "drizzle-orm";
-import { unstable_cache, updateTag } from "next/cache";
+import { cacheLife, cacheTag, updateTag } from "next/cache";
 
 import { getSession } from "@/lib/auth/session";
-import { DB_METRICS_TAG } from "@/lib/analytics/tags";
+import { tags } from "@/lib/cache/tags";
 import { db } from "@/lib/db";
 import { favorite } from "@/lib/db/schema";
 
@@ -16,7 +16,6 @@ export type ToggleResult =
 
 /** Per-user cache tag — lets `toggleFavorite` invalidate exactly one user's
  * pinned list without touching anyone else's. */
-const favoritesTag = (userId: string) => `favorites:${userId}`;
 
 /**
  * Pin or unpin an item for the current user. Inserts when absent, deletes when
@@ -60,8 +59,8 @@ export const toggleFavorite = async ({
       });
       favorited = true;
     }
-    updateTag(favoritesTag(userId));
-    updateTag(DB_METRICS_TAG);
+    updateTag(tags.favorites(userId));
+    updateTag(tags.metrics.db);
     return { ok: true, favorited };
   } catch {
     return { ok: false, reason: "error" };
@@ -73,36 +72,32 @@ export type FavoriteRow = {
   itemId: string;
 };
 
-/**
- * All favorites for the current user (newest first). Empty when logged out. The
- * DB read is wrapped per-user in `unstable_cache` and tagged with
- * `favorites:<userId>`, so repeat reads are served from cache until the user
- * pins/unpins something (which revalidates exactly that tag).
- */
+/** Cached per user and tagged `favorites:<userId>` — `toggleFavorite` calls
+ * `updateTag` on the same tag, so a pin is visible on the very next read.
+ * `userId` is a parameter, not read from the session inside: a `use cache`
+ * function can't touch `headers()`. */
+const loadFavorites = async (userId: string): Promise<FavoriteRow[]> => {
+  "use cache";
+  cacheTag(tags.favorites(userId));
+  cacheLife("hours");
+  try {
+    const rows = await db
+      .select({ itemType: favorite.itemType, itemId: favorite.itemId })
+      .from(favorite)
+      .where(eq(favorite.userId, userId))
+      .orderBy(favorite.createdAt);
+    return rows.map((r) => ({
+      itemType: r.itemType as FavoriteItemType,
+      itemId: r.itemId,
+    }));
+  } catch {
+    return [];
+  }
+};
+
+/** All favorites for the current user (newest first). Empty when logged out. */
 export const listFavorites = async (): Promise<FavoriteRow[]> => {
   const session = await getSession();
   if (!session) return [];
-  const userId = session.user.id;
-
-  const load = unstable_cache(
-    async (): Promise<FavoriteRow[]> => {
-      try {
-        const rows = await db
-          .select({ itemType: favorite.itemType, itemId: favorite.itemId })
-          .from(favorite)
-          .where(eq(favorite.userId, userId))
-          .orderBy(favorite.createdAt);
-        return rows.map((r) => ({
-          itemType: r.itemType as FavoriteItemType,
-          itemId: r.itemId,
-        }));
-      } catch {
-        return [];
-      }
-    },
-    ["favorites-list", userId],
-    { tags: [favoritesTag(userId)] },
-  );
-
-  return load();
+  return loadFavorites(session.user.id);
 };

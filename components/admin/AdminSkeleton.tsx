@@ -24,6 +24,35 @@ export const AdminStatGridSkeleton = ({ count = 4 }: { count?: number }) => (
   </div>
 );
 
+/** Dashboard-panel placeholder: a stat row over a chart-sized card. Shared by
+ * the PostHog / GA / Sentry analytics tabs, which stream in behind Suspense. */
+export const AdminPanelSkeleton = () => (
+  <div className="space-y-6">
+    <AdminStatGridSkeleton />
+    <AdminCardSkeleton height="h-64" />
+  </div>
+);
+
+/** Full admin chrome (sidebar + content) — the fallback while the session that
+ * gates every /admin route resolves. */
+export const AdminShellSkeleton = () => (
+  <div className="min-h-dvh bg-ink-900 lg:flex">
+    <aside className="hidden w-60 shrink-0 border-r border-ink-600/60 bg-ink-850 p-5 lg:block">
+      <Skeleton className="h-7 w-32" />
+      <div className="mt-6 space-y-2">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton key={i} className="h-9 w-full" />
+        ))}
+      </div>
+    </aside>
+    <main className="min-w-0 flex-1">
+      <div className="mx-auto w-full max-w-6xl px-6 py-8 lg:py-10">
+        <Skeleton className="h-8 w-48" />
+      </div>
+    </main>
+  </div>
+);
+
 /** Table placeholder matching admin tables. */
 export const AdminTableSkeleton = ({ rows = 8 }: { rows?: number }) => (
   <div className="overflow-hidden rounded-card border border-ink-600 bg-ink-800">

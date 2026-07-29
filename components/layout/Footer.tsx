@@ -54,10 +54,14 @@ const linkClass = "text-sm text-ink-300 transition-colors hover:text-ink-50";
 const iconLinkClass =
   "inline-flex h-9 w-9 items-center justify-center rounded-lg border border-ink-600 bg-ink-800 text-ink-300 transition-colors hover:bg-ink-700 hover:text-ink-50";
 
+/** Resolved once at module load (build time), not per render — reading the
+ * clock during render is runtime data and PPR can't prerender it without a
+ * Suspense boundary. A copyright year only has to be right per deploy. */
+const YEAR = new Date().getFullYear();
+
 export const Footer = () => {
   const { t, locale } = useI18n();
   const pathname = usePathname() ?? "/";
-  const year = new Date().getFullYear();
 
   if (isChromelessPath(pathname)) return null;
 
@@ -125,7 +129,7 @@ export const Footer = () => {
       <div className="border-t border-ink-600/60">
         <Container className="flex flex-col items-center justify-between gap-2 py-6 text-xs text-ink-400 sm:flex-row">
           <p>
-            © {year} Metri. {t("footer.rights")}
+            © {YEAR} Metri. {t("footer.rights")}
           </p>
           <p className="flex items-center gap-1.5">
             <span>{t("footer.builtWith")}</span>

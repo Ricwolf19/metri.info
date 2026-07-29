@@ -2,7 +2,7 @@
 
 import { updateTag } from "next/cache";
 
-import { DB_METRICS_TAG } from "@/lib/analytics/tags";
+import { tags } from "@/lib/cache/tags";
 import { getSession } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { calculationLog } from "@/lib/db/schema";
@@ -39,7 +39,7 @@ export const saveCalculation = async ({
       inputs,
       results,
     });
-    updateTag(DB_METRICS_TAG);
+    updateTag(tags.metrics.db);
     return { ok: true };
   } catch {
     return { ok: false, reason: "error" };
