@@ -18,6 +18,65 @@ export const localize = (value: L, locale: Locale): string => value[locale];
 
 export const WEB_CHANGELOG: ChangelogEntry[] = [
   {
+    version: "0.6.0",
+    date: "2026-07-29",
+    title: {
+      en: "Android beta, a new converter and a faster site",
+      es: "Beta de Android, nuevo conversor y un sitio más rápido",
+    },
+    changes: [
+      {
+        type: "added",
+        text: {
+          en: "The Android app is downloadable right now — grab the APK from the download page. It's a beta, so it installs manually and your phone will warn you; the page explains every step.",
+          es: "La app de Android ya se puede descargar — obtén el APK desde la página de descarga. Es una beta, así que se instala manualmente y tu teléfono te mostrará advertencias; la página explica cada paso.",
+        },
+      },
+      {
+        type: "added",
+        text: {
+          en: "New lb ↔ kg converter, with one-tap presets for the plate and barbell loads you actually use.",
+          es: "Nuevo conversor lb ↔ kg, con valores rápidos para las cargas de discos y barra que de verdad usas.",
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          en: "Calculators no longer hit the network as you drag a slider — the shareable link still updates, it just stopped costing a round-trip per keystroke.",
+          es: "Las calculadoras ya no hacen peticiones mientras mueves un slider — el enlace para compartir se sigue actualizando, solo dejó de costar una petición por cada cambio.",
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          en: "Pages you've already opened keep their state when you navigate back, instead of flashing a loading skeleton again.",
+          es: "Las páginas que ya abriste conservan su estado al regresar, en vez de volver a mostrar un esqueleto de carga.",
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          en: "The app icon now sits on its own dark backdrop, so it stays legible in browser tabs and search results.",
+          es: "El ícono de la app ahora tiene su propio fondo oscuro, para que se lea bien en las pestañas del navegador y en los resultados de búsqueda.",
+        },
+      },
+      {
+        type: "fixed",
+        text: {
+          en: "Spanish pages are now submitted to search engines in their own right, not only as translations of the English ones.",
+          es: "Las páginas en español ahora se envían a los buscadores por derecho propio, no solo como traducción de las inglesas.",
+        },
+      },
+      {
+        type: "fixed",
+        text: {
+          en: "The hero animation recovers instead of disappearing when the browser reclaims its graphics context, and is skipped entirely on devices without one.",
+          es: "La animación principal se recupera en vez de desaparecer cuando el navegador libera su contexto gráfico, y se omite por completo en dispositivos que no lo tienen.",
+        },
+      },
+    ],
+  },
+  {
     version: "0.5.0",
     date: "2026-07-13",
     title: {
@@ -249,22 +308,87 @@ export const WEB_CHANGELOG: ChangelogEntry[] = [
   },
 ];
 
-/** The mobile app is still in development — show the roadmap, not versions. */
+/** Shipped mobile releases. The app is in open beta on Android (installed from
+ * the APK on the download page), so versions are real even though it isn't on
+ * Play Store yet. Newest first, same shape as the web changelog. */
+export const MOBILE_CHANGELOG: ChangelogEntry[] = [
+  {
+    version: "1.3.0",
+    date: "2026-07-28",
+    title: {
+      en: "Open beta on Android",
+      es: "Beta abierta en Android",
+    },
+    changes: [
+      {
+        type: "added",
+        text: {
+          en: "The app is downloadable as an APK. It needs a free account — no card, no payment — and the same one works on the web.",
+          es: "La app ya se puede descargar como APK. Requiere una cuenta gratuita — sin tarjeta ni pagos — y la misma sirve en la web.",
+        },
+      },
+      {
+        type: "added",
+        text: {
+          en: "Full training tracker: programs, custom routines, rest timers, workout history and per-set logging.",
+          es: "Tracker de entrenamiento completo: programas, rutinas personalizadas, timers de descanso, historial y registro serie por serie.",
+        },
+      },
+      {
+        type: "added",
+        text: {
+          en: "16 calculators and the knowledge base, all working with no connection.",
+          es: "16 calculadoras y la base de conocimiento, todo funcionando sin conexión.",
+        },
+      },
+      {
+        type: "added",
+        text: {
+          en: "Progress photos, reminders and adherence tracking — all stored on your device.",
+          es: "Fotos de progreso, recordatorios y seguimiento de adherencia — todo guardado en tu dispositivo.",
+        },
+      },
+      {
+        type: "added",
+        text: {
+          en: "Premium cloud sync: your training is backed up and mirrored across your devices, automatically. The ring around your avatar shows the status. Progress photos stay on the device.",
+          es: "Sync en la nube con Premium: tu entrenamiento se respalda y se replica entre tus dispositivos, automáticamente. El anillo alrededor de tu avatar muestra el estado. Las fotos de progreso se quedan en el dispositivo.",
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          en: "The app updates itself over the air — you only reinstall when a new APK is published.",
+          es: "La app se actualiza por aire — solo reinstalas cuando se publica un APK nuevo.",
+        },
+      },
+      {
+        type: "fixed",
+        text: {
+          en: "Hardened how your data is stored: nothing is backed up to Google Drive, and old credential material left over from the offline-only version was removed from the device.",
+          es: "Se endureció el almacenamiento de tus datos: nada se respalda en Google Drive, y se eliminaron del dispositivo credenciales antiguas que quedaban de la versión sin conexión.",
+        },
+      },
+    ],
+  },
+];
+
+/** What's next on mobile. */
 export const MOBILE_ROADMAP: L[] = [
   {
-    en: "Training programs with rest timers and custom routines.",
-    es: "Programas de entrenamiento con timers de descanso y rutinas personalizadas.",
+    en: "iOS beta through TestFlight.",
+    es: "Beta de iOS a través de TestFlight.",
   },
   {
-    en: "Progress tracking and historical data over time.",
-    es: "Seguimiento de progreso y datos históricos en el tiempo.",
+    en: "Play Store listing, so updates arrive without sideloading.",
+    es: "Publicación en Play Store, para que las actualizaciones lleguen sin instalación manual.",
   },
   {
-    en: "Cloud sync across web and mobile.",
-    es: "Sincronización en la nube entre web y móvil.",
+    en: "Progress photos included in cloud backup.",
+    es: "Fotos de progreso incluidas en el respaldo en la nube.",
   },
   {
-    en: "Reminders, macro logging and workout notes.",
-    es: "Recordatorios, registro de macros y notas de entrenamiento.",
+    en: "Shared body metrics between the web and the app.",
+    es: "Métricas corporales compartidas entre la web y la app.",
   },
 ];
