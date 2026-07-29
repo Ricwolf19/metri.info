@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 
-import { BeamsBackground } from "@/components/background/BeamsBackground";
 import { ArrowRightIcon, DownloadIcon } from "@/components/icons";
+import { HeroBackdrop } from "@/components/marketing/HeroBackdrop";
 import { Container } from "@/components/shared/Container";
 import { buttonVariants } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
@@ -22,10 +22,9 @@ const STATS: { value: string; key: TranslationKey }[] = [
  * Viewport-bound hero (`min-h-[100svh]` + flex centering) so the headline,
  * CTAs and trust stats all land in the first screen.
  *
- * Background layers are decorative and `pointer-events-none`:
- *   1. `<BeamsBackground />` — WebGL light beams (Three.js), WebGL-guarded and
- *      faded in on context-ready (falls back to nothing on GPU-less browsers).
- *   2. Soft `glow-brand` lime aura (legacy, dimmed).
+ * The backdrop (`<HeroBackdrop />`) reads as a dashboard, because the product
+ * is metrics — it owns its own layers and positioning so this file stays about
+ * the copy.
  *
  * Entrance is pure-CSS `animate-rise` from globals.css — no Framer Motion,
  * so the content is present in server HTML for fast FCP/LCP.
@@ -35,22 +34,7 @@ export const Hero = () => {
 
   return (
     <section className="hero-dark-treat relative isolate flex min-h-[100svh] items-center overflow-hidden">
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <BeamsBackground
-          beamWidth={3}
-          beamHeight={30}
-          beamNumber={20}
-          lightColor="#ffffff"
-          speed={2}
-          noiseIntensity={1.75}
-          scale={0.2}
-          rotation={30}
-        />
-      </div>
-      <div
-        aria-hidden
-        className="glow-brand pointer-events-none absolute inset-x-0 top-[-6rem] h-[34rem] opacity-40"
-      />
+      <HeroBackdrop />
 
       <Container className="relative z-10 py-20 text-center sm:py-24">
         <div className="mx-auto max-w-3xl">

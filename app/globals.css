@@ -188,13 +188,235 @@ summary {
 }
 
 /*
+ * Hero backdrop — a plot, because the product is metrics.
+ *
+ * Deliberately gradients + inline SVG, never a canvas. This was
+ * react-three-fiber, then a WebGL shader; both broke under React's `<Activity>`,
+ * which Next wraps around every route once `cacheComponents` is on. Hiding a
+ * route tears the effects down and the canvas came back dead, painting over the
+ * whole section. None of what follows has a context to lose, costs any JS, or
+ * can fail — which matters most here, since this section is the first thing
+ * anyone sees.
+ *
+ * `hero-grid` below is the plot area everything sits on: minor value lines,
+ * major every fourth, and a sparser vertical time axis. The widgets that stand
+ * on it (trend, bars, gauge, dumbbells) live in `HeroBackdrop.tsx`; what
+ * follows is only their paint, since SVG presentation attributes can't read
+ * `var()` and `--rig` is what keeps every layer on one accent.
+ *
+ * `--rig` lives on the section (below) so all of them inherit it.
+ */
+.hero-grid {
+  --grid-minor: rgb(var(--rig) / 0.055);
+  --grid-major: rgb(var(--rig) / 0.11);
+  --grid-axis: rgb(var(--rig) / 0.07);
+  --grid-step: 3.25rem;
+}
+
+.hero-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    /* major value lines — every fourth, the ones a reader actually tracks */
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 calc(var(--grid-step) * 4 - 1px),
+      var(--grid-major) calc(var(--grid-step) * 4 - 1px)
+        calc(var(--grid-step) * 4)
+    ),
+    /* minor value lines */
+    repeating-linear-gradient(
+        to bottom,
+        transparent 0 calc(var(--grid-step) - 1px),
+        var(--grid-minor) calc(var(--grid-step) - 1px) var(--grid-step)
+      ),
+    /* time axis — sparser, so the grid reads as landscape not graph paper */
+    repeating-linear-gradient(
+        to right,
+        transparent 0 calc(var(--grid-step) * 2.5 - 1px),
+        var(--grid-axis) calc(var(--grid-step) * 2.5 - 1px)
+          calc(var(--grid-step) * 2.5)
+      );
+  /* Composited: the radial keeps the grid off the headline, the linear
+   * dissolves it before the section ends so there is no hard seam. */
+  mask-image:
+    radial-gradient(125% 95% at 50% 45%, transparent 20%, #000 72%),
+    linear-gradient(to bottom, #000 58%, transparent 95%);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+}
+
+/* --- The trend series ---------------------------------------------------- */
+
+/* Both slots fade toward the copy, so a widget that runs long at some viewport
+ * dissolves instead of colliding with the headline. On mobile the trend is a
+ * full-width band, so there it fades upward instead of sideways. */
+.hero-trend-slot {
+  mask-image: linear-gradient(to top, #000 52%, transparent 100%);
+}
+/* On desktop the fade only has to soften the inner edge, not hide half the
+ * series: the widgets sit low and the copy sits mid-height, so vertical
+ * separation already does most of the work. */
+@media (min-width: 1024px) {
+  .hero-trend-slot {
+    mask-image: linear-gradient(to left, #000 72%, transparent 100%);
+  }
+}
+.hero-bars-slot {
+  mask-image: linear-gradient(to right, #000 74%, transparent 100%);
+}
+
+.hero-chart-line {
+  stroke: rgb(var(--rig) / 0.72);
+}
+.hero-chart-dot {
+  fill: rgb(var(--rig) / 0.85);
+}
+.hero-chart-halo {
+  fill: rgb(var(--rig) / 0.16);
+}
+/* Drop-line from the newest point to the axis — the marker a real dashboard
+ * puts under the value you're meant to read. */
+.hero-chart-drop {
+  stroke: rgb(var(--rig) / 0.3);
+  stroke-dasharray: 3 7;
+}
+.hero-chart-stop-top {
+  stop-color: rgb(var(--rig));
+  stop-opacity: 0.22;
+}
+.hero-chart-stop-bottom {
+  stop-color: rgb(var(--rig));
+  stop-opacity: 0;
+}
+
+/*
+ * The series plots itself left-to-right: a mask rect scaled on X, so the area
+ * fill, the line and the vertices all arrive together as the chart draws. A
+ * mask rather than `stroke-dashoffset` because that only draws the stroke and
+ * would leave the fill to appear on its own. `transform-box: fill-box` makes
+ * `transform-origin` resolve against the rect instead of the SVG viewport.
+ */
+.hero-chart-wipe {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: metri-chart-wipe 1.4s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+@keyframes metri-chart-wipe {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* --- Secondary widgets --------------------------------------------------- */
+
+/* Bar series (bottom-left). Each bar grows from the axis on a stagger, so the
+ * chart populates rather than appearing whole. */
+.hero-bar {
+  fill: rgb(var(--rig) / 0.3);
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: metri-bar-grow 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+/* The newest bar, brighter — same job as the trend's halo. */
+.hero-bar-current {
+  fill: rgb(var(--rig) / 0.6);
+}
+@keyframes metri-bar-grow {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+.hero-axis {
+  stroke: rgb(var(--rig) / 0.28);
+}
+
+/*
+ * Concentric ring loader (top-left). Four arcs over their own faint tracks,
+ * each spinning at its own speed and alternating direction, so the ring never
+ * repeats a pose and reads as live rather than looping.
+ *
+ * `pathLength="100"` lets each arc's `stroke-dasharray` be a plain percentage
+ * regardless of radius — otherwise every ring needs its own circumference
+ * arithmetic. Duration and direction come in as inline style (they're per-ring
+ * data, not styling); everything shared lives here.
+ *
+ * `transform-box: fill-box` is what makes `transform-origin: center` resolve
+ * against the circle instead of the SVG viewport — without it every ring
+ * orbits the top-left corner.
+ */
+.hero-ring-track {
+  stroke: rgb(var(--rig) / 0.09);
+}
+.hero-ring {
+  stroke: rgb(var(--rig) / 0.7);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-name: metri-ring-spin;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes metri-ring-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* Shared entrance for the standalone widgets. `to` deliberately omits
+ * `transform` so the element settles on whatever transform its own classes
+ * set, instead of being pinned to `none`. */
+.hero-widget-in {
+  animation: metri-widget-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes metri-widget-in {
+  from {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Tablet and below: the grid loosens and the trend gets out of the copy's way
+ * (positioning lives on the element in Hero.tsx). */
+@media (max-width: 1024px) {
+  .hero-grid {
+    --grid-step: 2.75rem;
+  }
+  .hero-grid::before {
+    mask-image:
+      radial-gradient(135% 90% at 50% 42%, transparent 26%, #000 80%),
+      linear-gradient(to bottom, #000 55%, transparent 94%);
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-grid {
+    --grid-step: 2.25rem;
+  }
+}
+
+/*
  * Hero surface tweaks — the dark theme uses near-black surface tokens for
  * badge/pill backgrounds; the same tokens translate to near-white in light mode
  * and the hero washes out. Per-theme overrides lift contrast (subtle grey
  * backgrounds, visible borders) so the hero reads cleanly in both schemes.
  * `glow-brand` is the dark-mode lime aura at the top of the section; in light
  * mode it floats a dim grey blob that competes with the typography, so we
- * hide it there and let the Beams back-layer carry the depth on their own.
+ * hide it there and let the beams back-layer carry the depth on their own.
  */
 .hero-badge {
   background-color: rgb(var(--ink-800) / 0.8);
@@ -223,7 +445,7 @@ summary {
 
 /*
  * Hero secondary button (the "Download" CTA). The hero always sits on the black
- * Beams canvas, so it must read as dark-mode in BOTH schemes. The shared
+ * hero backdrop, so it must read as dark-mode in BOTH schemes. The shared
  * `secondary` button variant carries `light:` overrides (dark text on a light
  * fill) that, under the hero's re-scoped dark `--ink-*`, paint dark-on-dark and
  * become invisible. This class pins it to the dark palette; declared after the
@@ -242,10 +464,10 @@ summary {
 
 /*
  * `hero-dark-treat` — opt the `<section>` out of the global theme's surface
- * palette. We do this because `<Beams>` paints a black clear color (Three.js
- * `scene.background`), so the hero always sits on a near-black canvas. If we
- * let the section inherit the global light-mode tokens the result is unread-
- * able (white text on the white pill/border, dark buttons on dark canvas).
+ * palette. The hero is designed against a near-black backdrop (it paints its
+ * own here, and `<HeroBackdrop>` plots on top of it), so if we let the
+ * section inherit the global light-mode tokens the result is unreadable —
+ * white text on the white pill/border, dark buttons on a dark backdrop.
  * Re-scoping `--ink-*` makes every descendant `bg-ink-*` / `text-ink-*`
  * utility render as if we were in dark mode — without affecting the rest of
  * the page, which keeps its real light/dark behaviour below the fold.
@@ -269,6 +491,15 @@ summary {
   --ink-50: 245 245 247;
   background-color: rgb(var(--ink-900));
   color: rgb(var(--ink-50));
+
+  /* One accent for every backdrop layer (grid, trend, bars, rings), in BOTH
+   * schemes — this section keeps its near-black backdrop in light mode, so
+   * there is nothing for a light-mode accent to adapt to.
+   *
+   * Pinned channels rather than `var(--brand)` for that same reason: light
+   * mode's brand is the deeper lime-800, which is tuned for white surfaces and
+   * all but vanishes on near-black. */
+  --rig: 190 248 43;
 }
 
 /*
