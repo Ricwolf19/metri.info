@@ -23,16 +23,29 @@
 ## What is Metri Web?
 
 Metri Web is a fully functional fitness toolkit you can use right now — no
-sign-up required. The 16 calculators and the knowledge base are bundled content
+sign-up required. The 17 calculators and the knowledge base are bundled content
 that renders without a database, so the core experience works offline and stays
 fast. Create an optional account only if you want to **save** results, pin
 favorites and sync across devices. It's free and open source.
 
+**Account model at a glance** — nothing here is ever paid:
+
+| | Account | Cost |
+| --- | --- | --- |
+| Web (this repo) | Optional — calculators and guides are open | Free |
+| [Mobile app](https://github.com/Ricwolf19/metri) | **Required** (free sign-up) | Free |
+| Premium (cloud sync, backup) | Same account, feature-flagged | Free while in beta |
+
+One account covers both: the mobile app authenticates against this backend, so you can
+register at **[metri.info/sign-up](https://metri.info/sign-up)**
+([español](https://metri.info/es/registrarse)) and sign straight in on your phone.
+
 ## Features
 
-- **16 free calculators** — 1RM, TDEE/BMR, macros, body fat, BMI, FFMI,
+- **17 free calculators** — 1RM, TDEE/BMR, macros, body fat, BMI, FFMI,
   hydration, barbell plates, ideal weight, calorie deficit, protein, lean body
-  mass, heart-rate zones, waist-to-height, Wilks/DOTS and calories burned. Each
+  mass, heart-rate zones, waist-to-height, Wilks/DOTS, calories burned and
+  lb↔kg conversion. Each
   supports metric/imperial units and a side-by-side **compare mode**. Inputs live
   in the URL, so every result is **shareable** as a link or QR code with a
   dynamic Open Graph share card. Commonly used ones carry a "Popular" marker.

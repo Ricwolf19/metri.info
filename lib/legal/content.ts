@@ -88,7 +88,7 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
   privacy: {
     en: {
       title: "Privacy Policy",
-      lead: "We collect as little as possible. The calculators work without an account, and we never sell your data.",
+      lead: "We collect as little as possible. On the web the calculators work without an account; the mobile app asks for a free one. We never sell your data, and there is nothing to pay.",
       updated: "Last updated: June 2026",
       sections: [
         {
@@ -132,7 +132,7 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
     },
     es: {
       title: "Política de Privacidad",
-      lead: "Recopilamos lo mínimo posible. Las calculadoras funcionan sin cuenta y nunca vendemos tus datos.",
+      lead: "Recopilamos lo mínimo posible. En la web las calculadoras funcionan sin cuenta; la app móvil pide una gratuita. Nunca vendemos tus datos y no hay nada que pagar.",
       updated: "Última actualización: junio de 2026",
       sections: [
         {
