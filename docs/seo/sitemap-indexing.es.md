@@ -15,6 +15,8 @@
 - [5. Solucionar los errores de GSC](#5-solucionar-los-errores-de-gsc)
 - [6. Comandos de verificación](#6-comandos-de-verificación)
 - [7. Notas que a Google sí le importan](#7-notas-que-a-google-sí-le-importan)
+- [8. Leer la Inspección de URLs y el reporte de Indexación de páginas](#8-leer-la-inspección-de-urls-y-el-reporte-de-indexación-de-páginas)
+- [9. Referencias oficiales](#9-referencias-oficiales)
 
 ---
 
@@ -60,7 +62,8 @@ empareje las dos versiones de idioma en vez de tratarlas como duplicados:
 alternates: { languages: { en: absoluteUrl(enPath), es: absoluteUrl(esPath) } }
 ```
 
-Actualmente emite **45 URLs**: home, hub de tools, cada calculadora, docs, changelog,
+Emite **un `<url>` por versión de idioma** (~94 hoy — cada página pública dos veces,
+EN en la raíz y ES bajo `/es`): home, hub de tools, cada calculadora, docs,
 download y las páginas legales. Las páginas de auth/privadas (`sign-in`, `sign-up`,
 `admin`, `forgot/reset-password`, `account`, compartir `/s/[id]`) quedan a propósito
 **fuera** del sitemap *y* marcadas con `robots: { index: false }` en su metadata —
@@ -185,14 +188,23 @@ luego lo lee bien en el siguiente rastreo. "Última lectura = hoy" es la señal.
 **Antes de preocuparte, descarta un problema real de fetch** con
 [§6](#6-comandos-de-verificación): el archivo debe devolver `200` + `application/xml`,
 ser XML válido y ser alcanzable por el user-agent de Googlebot (sin WAF/challenge de
-bots). En metri.info todo esto pasa (200, `application/xml`, 45 URLs, Googlebot recibe
-XML limpio, servido por Vercel en ~0.3s), así que la acción correcta es:
+bots). En metri.info todo esto pasa (200, `application/xml`, ~94 URLs, Googlebot
+recibe XML limpio, servido por Vercel), así que la acción correcta es:
 
 - **Espera 24-48 h y vuelve a revisar.** No reenvíes repetidamente — no ayuda y
   puede reiniciar el reloj.
 - Confirma que puedes abrirlo con **"Abrir sitemap"** (cargará el XML).
 - Si tras ~48 h sigue "No se ha podido obtener", borra y vuelve a añadir el sitemap
   **una vez**, y espera de nuevo.
+
+**Observado en metri.info (día 1, julio 2026):** enviado el 28 jul, seguía en "No se
+ha podido obtener" sin fecha de última lectura y 0 páginas descubiertas el 29 jul —
+mientras todos los checks de [§6](#6-comandos-de-verificación) pasaban y la home se
+rastreó e indexó por su cuenta ese mismo día. Esa combinación (archivo probadamente
+bien + rastreo probadamente funcionando + pestaña de Sitemaps en rojo) es exactamente
+el retraso conocido, no un problema de fetch. Solicitar indexación de una página
+**no** hace que GSC relea el sitemap — son pipelines separados; la pestaña de
+Sitemaps solo se actualiza cuando el procesador de sitemaps de Google llega a él.
 
 **Otras causas reales a revisar** (no es nuestro caso, pero para el runbook): la URL
 da 404; una cadena de redirecciones (http→https, loop de trailing-slash); el endpoint
@@ -244,3 +256,72 @@ Valida también el XML con las herramientas de Google: la **Inspección de URLs*
   *Rastreada – no indexada* (una cuestión de contenido/calidad/crawl-budget) versus
   realmente indexadas. Ahí te enteras si las páginas están aterrizando, una vez que el
   sitemap se lea bien.
+
+## 8. Leer la Inspección de URLs y el reporte de Indexación de páginas
+
+Qué significan de verdad los estados en las dos superficies de inspección de GSC,
+según los docs oficiales ([§9](#9-referencias-oficiales)). Conocerlos ahorra muchas
+falsas alarmas.
+
+### Los dos veredictos son herramientas distintas
+
+- **"La URL está en Google"** (inspección del índice) — la URL está en el índice y
+  es *elegible* para aparecer en resultados. En palabras de Google: "no está
+  garantizado que aparezca."
+- **"La URL está disponible para Google"** (prueba en vivo) — la página es
+  alcanzable, no está bloqueada y no tiene errores de indexación detectables
+  *ahora mismo*. Explícitamente **no** es una promesa de indexación: *"la prueba de
+  URL publicada solo confirma si Google-InspectionTool puede acceder a tu página
+  para indexarla."* Indexar además requiere no tener acciones manuales/legales, ser
+  la canónica seleccionada y calidad de página suficiente.
+
+### Campos de la prueba en vivo que parecen errores pero no lo son
+
+- **"Seleccionada por Google como canónica: información disponible tras la
+  indexación"** — normal. La selección de canónica ocurre al indexar; la prueba en
+  vivo no puede saberla.
+- **"Detección: la información no se ha comprobado en las pruebas"** — la prueba en
+  vivo omite a propósito la inclusión en sitemaps, las páginas de referencia, la
+  canónica seleccionada y el estado de duplicado. Solo la inspección del índice
+  reporta eso.
+- **"No se ha detectado ningún sitemap de referencia"** en una URL indexada — puede
+  significar que el sitemap aún no se procesa, pero Google también lo documenta
+  como bug conocido: *"en algunos casos no reportamos el sitemap de una página que
+  sí fue enviada en un sitemap. Estamos trabajando en arreglarlo."* No depurar el
+  sitemap solo con este campo.
+- **"Páginas de referencia" spam** (dominios SEO-scraper enlazando un sitio nuevo)
+  — ruido que recibe todo dominio nuevo; no afecta si Google te indexa.
+
+### Solicitar indexación — qué compra realmente
+
+- Encola un rastreo; *"la indexación normalmente tarda un día, pero puede tardar
+  mucho más en algunos casos"* (el doc del reporte dice que empezar a rastrear un
+  sitio nuevo puede tardar *"una semana más o menos"*, y la cobertura completa
+  *"hasta unas semanas"*).
+- **Sin garantía** de indexación, con cuota diaria por propiedad, y repetir la
+  solicitud no te adelanta en la cola. Re-solicita solo cuando la página cambió
+  sustancialmente.
+- Para más que un puñado de URLs, el sitemap **es** el mecanismo de envío masivo.
+
+### Reporte de Indexación de páginas — los estados que importan
+
+- **Descubierta – no indexada de momento:** Google conoce la URL, aún no la rastrea
+  (a menudo es pacing deliberado en sitios nuevos/chicos). Sin acción; reintenta
+  solo.
+- **Rastreada – no indexada de momento:** Google la leyó y decidió no indexarla —
+  una señal de contenido/calidad, la única que vale la pena atacar si persiste.
+- Filtra **Todas las páginas conocidas** vs **Todas las páginas enviadas** para ver
+  las URLs del sitemap contra todo lo que Google encontró por su cuenta.
+- Expectativas, directo del doc: *"Google no garantiza que todas las páginas de
+  todos los sitios entren al índice"* y solo se indexan las páginas canónicas. Un
+  sitio de menos de ~500 páginas "probablemente no necesita usar este reporte" a
+  diario.
+
+## 9. Referencias oficiales
+
+- **Herramienta de Inspección de URLs** — significado de veredictos, prueba en vivo
+  vs inspección del índice, límites de solicitar indexación:
+  <https://support.google.com/webmasters/answer/9012289>
+- **Reporte de Indexación de páginas** — estados de no-indexada, filtros de
+  sitemap, tiempos de indexación:
+  <https://support.google.com/webmasters/answer/7440203>

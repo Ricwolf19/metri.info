@@ -15,6 +15,8 @@
 - [5. Troubleshooting the GSC errors](#5-troubleshooting-the-gsc-errors)
 - [6. Verification commands](#6-verification-commands)
 - [7. Notes Google actually cares about](#7-notes-google-actually-cares-about)
+- [8. Reading the URL Inspection tool & Page indexing report](#8-reading-the-url-inspection-tool--page-indexing-report)
+- [9. Official references](#9-official-references)
 
 ---
 
@@ -58,7 +60,8 @@ two language versions instead of treating them as duplicates:
 alternates: { languages: { en: absoluteUrl(enPath), es: absoluteUrl(esPath) } }
 ```
 
-It currently emits **45 URLs**: home, tools hub, every calculator, docs, changelog,
+It emits **one `<url>` per language version** (~94 today — every public page twice,
+EN at root and ES under `/es`): home, tools hub, every calculator, docs,
 download, and the legal pages. Auth/private pages (`sign-in`, `sign-up`, `admin`,
 `forgot/reset-password`, `account`, share `/s/[id]`) are deliberately **kept out**
 of the sitemap *and* marked `robots: { index: false }` in their page metadata — you
@@ -183,14 +186,23 @@ then reads it successfully on the next crawl. "Última lectura = today" is the t
 **Before worrying, rule out a real fetch problem** with [§6](#6-verification-commands):
 the file must return `200` + `application/xml`, be valid XML, and be reachable by
 Googlebot's user-agent (no WAF/bot-challenge). For metri.info all of these pass
-(200, `application/xml`, 45 URLs, Googlebot UA gets clean XML, served from Vercel
-in ~0.3s), so the correct action is:
+(200, `application/xml`, ~94 URLs, Googlebot UA gets clean XML, served from
+Vercel), so the correct action is:
 
 - **Wait 24-48 h and re-check.** Do not resubmit repeatedly — it does not help and
   can reset the clock.
 - Confirm you can open it via **"Open sitemap"** (it will load the XML).
 - If after ~48 h it still says "Couldn't fetch", remove and re-add the sitemap
   **once**, then wait again.
+
+**Observed on metri.info (day 1, July 2026):** submitted 28 Jul, still "Couldn't
+fetch" with no last-read date and 0 pages discovered on 29 Jul — while every check
+in [§6](#6-verification-commands) passed and the homepage got itself crawled and
+indexed independently that same day. That combination (file provably fine + crawl
+provably working + Sitemaps tab red) is exactly the known lag, not a fetch problem.
+Requesting indexing on a page does **not** make GSC re-read the sitemap — they are
+separate pipelines; the Sitemaps tab only updates when Google's sitemap processor
+gets to it.
 
 **Other real causes to check** (not our case, but for the runbook): the URL 404s;
 a redirect chain (http→https, trailing-slash loop); the endpoint returned a 5xx at
@@ -240,3 +252,66 @@ Also validate the XML with Google's own tools: the **URL Inspection** tool on
   tells you if URLs are *Discovered – not indexed* or *Crawled – not indexed*
   (a content/quality/crawl-budget question) versus actually indexed. That is where
   you learn whether the pages are landing, once the sitemap reads successfully.
+
+## 8. Reading the URL Inspection tool & Page indexing report
+
+What the statuses in GSC's two inspection surfaces actually mean, per the official
+docs ([§9](#9-official-references)). Knowing these saves a lot of false alarms.
+
+### The two verdicts are different tools
+
+- **"URL is on Google"** (indexed inspection) — the URL is in the index and
+  *eligible* to appear in results. Google's own wording: it "is not guaranteed to
+  be there."
+- **"URL is available to Google"** (live test) — the page is fetchable, not
+  blocked, no detectable indexing error *right now*. Explicitly **not** a promise
+  of indexing: *"The live URL test only confirms if Google-InspectionTool can
+  access your page for indexing."* Indexing additionally requires no manual/legal
+  actions, being the selected canonical, and sufficient page quality.
+
+### Live-test fields that look like errors but aren't
+
+- **"Google-selected canonical: Information available after indexing"** — normal.
+  Canonical selection happens at indexing time; the live test cannot know it.
+- **"Detection: info not checked in live tests"** — the live test deliberately
+  skips sitemap inclusion, referring pages, canonical selection and
+  duplicate-status. Only the indexed inspection reports those.
+- **"No referring sitemap detected"** on an indexed URL — can mean the sitemap
+  hasn't been processed yet, but Google also documents it as a known bug: *"In a
+  few cases, we don't report the sitemap for a page that was submitted in a
+  sitemap. We are working to fix this."* Don't debug the sitemap off this field
+  alone.
+- **Spammy "referring pages"** (SEO-scraper domains linking a new site) — noise
+  every new domain gets; it does not affect whether Google indexes you.
+
+### Request indexing — what it actually buys
+
+- Queues a crawl; *"indexing typically takes only a day or so, but can take much
+  longer in some cases"* (the report doc says starting to crawl a new site can
+  take *"a week or so"*, full coverage *"up to a few weeks"*).
+- **No guarantee** of indexing, daily quota per property, and repeating the
+  request does not move you up the queue. Re-request only after the page changed
+  substantially.
+- For anything more than a handful of URLs, the sitemap **is** the bulk-submission
+  mechanism.
+
+### Page indexing report — the states that matter
+
+- **Discovered – currently not indexed:** Google knows the URL, hasn't crawled it
+  yet (often deliberate pacing on new/small sites). No action; it retries alone.
+- **Crawled – currently not indexed:** Google fetched it and chose not to index —
+  a content/quality signal, the one worth acting on if it persists.
+- Filter **All known pages** vs **All submitted pages** to see sitemap-submitted
+  URLs vs everything Google found by itself.
+- Expectations, straight from the doc: *"Google doesn't guarantee that all pages
+  everywhere will make it into the Google index"* and only canonical pages get
+  indexed. Sites under ~500 pages "probably don't need to use this report" daily.
+
+## 9. Official references
+
+- **URL Inspection tool** — verdict meanings, live test vs indexed inspection,
+  request-indexing limits:
+  <https://support.google.com/webmasters/answer/9012289>
+- **Page indexing report** — not-indexed states, sitemap filters, indexing
+  timelines:
+  <https://support.google.com/webmasters/answer/7440203>
