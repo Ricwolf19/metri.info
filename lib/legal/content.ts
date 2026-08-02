@@ -89,7 +89,7 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
     en: {
       title: "Privacy Policy",
       lead: "We collect as little as possible. On the web the calculators work without an account; the mobile app asks for a free one. We never sell your data, and there is nothing to pay.",
-      updated: "Last updated: June 2026",
+      updated: "Last updated: August 2026",
       sections: [
         {
           heading: "Calculators run locally",
@@ -108,6 +108,12 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
           heading: "Analytics",
           body: [
             "We may use privacy-friendly, aggregate analytics to understand which pages are useful. These measure traffic in aggregate and are not used to build advertising profiles. Analytics are disabled in development.",
+          ],
+        },
+        {
+          heading: "Error reports",
+          body: [
+            "When the website or the mobile app crashes or hits an unexpected error, a technical report is sent to our error-tracking provider (Sentry) so we can find and fix the bug. A report contains the error itself, your browser or device model and OS version, the app version and — if you are signed in — your account id. It never contains your email, your name, form contents, or any of your training data. Error reporting is disabled in development.",
           ],
         },
         {
@@ -133,7 +139,7 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
     es: {
       title: "Política de Privacidad",
       lead: "Recopilamos lo mínimo posible. En la web las calculadoras funcionan sin cuenta; la app móvil pide una gratuita. Nunca vendemos tus datos y no hay nada que pagar.",
-      updated: "Última actualización: junio de 2026",
+      updated: "Última actualización: agosto de 2026",
       sections: [
         {
           heading: "Las calculadoras funcionan localmente",
@@ -152,6 +158,12 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
           heading: "Analítica",
           body: [
             "Podemos usar analítica agregada y respetuosa con la privacidad para entender qué páginas son útiles. Mide el tráfico de forma agregada y no se usa para crear perfiles publicitarios. La analítica está desactivada en desarrollo.",
+          ],
+        },
+        {
+          heading: "Reportes de errores",
+          body: [
+            "Cuando el sitio web o la app móvil fallan o encuentran un error inesperado, se envía un reporte técnico a nuestro proveedor de monitoreo de errores (Sentry) para poder encontrar y corregir el bug. Un reporte contiene el error, tu navegador o modelo de dispositivo y versión del sistema, la versión de la app y — si iniciaste sesión — el id de tu cuenta. Nunca contiene tu correo, tu nombre, el contenido de formularios ni tus datos de entrenamiento. El reporte de errores está desactivado en desarrollo.",
           ],
         },
         {
