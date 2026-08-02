@@ -20,7 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { webAppRepo } from "@/lib/site";
+import { mobileAppReleases, webAppRepo } from "@/lib/site";
 import { Spinner } from "@/components/ui/Spinner";
 import { Logo } from "@/components/layout/Logo";
 import { LocaleToggle } from "@/components/layout/LocaleToggle";
@@ -113,10 +113,10 @@ export const Header = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem asChild>
-                <Link href={routePath("changelog", locale)}>
+                <a href={mobileAppReleases} target="_blank" rel="noreferrer">
                   <BookmarkIcon size={15} />
                   {t("nav.changelog")}
-                </Link>
+                </a>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href={routePath("about", locale)}>
@@ -168,12 +168,14 @@ export const Header = () => {
                   </SheetClose>
                 ))}
                 <SheetClose asChild>
-                  <Link
-                    href={routePath("changelog", locale)}
+                  <a
+                    href={mobileAppReleases}
+                    target="_blank"
+                    rel="noreferrer"
                     className="rounded-lg px-3 py-3 text-base font-medium text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50"
                   >
                     {t("nav.changelog")}
-                  </Link>
+                  </a>
                 </SheetClose>
               </nav>
 

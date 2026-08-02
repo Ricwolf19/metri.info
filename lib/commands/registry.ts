@@ -1,7 +1,6 @@
 import { CALC_ICONS } from "@/components/calculators/calcIcons";
 import {
   BookIcon,
-  BookmarkIcon,
   CalculatorIcon,
   DownloadIcon,
   GearIcon,
@@ -61,7 +60,6 @@ const PAGES: {
   { id: "tools", key: "nav.tools", icon: CalculatorIcon },
   { id: "docs", key: "nav.docs", icon: BookIcon },
   { id: "download", key: "nav.download", icon: DownloadIcon },
-  { id: "changelog", key: "nav.changelog", icon: BookmarkIcon },
   { id: "contact", key: "nav.contact", icon: MailIcon },
 ];
 

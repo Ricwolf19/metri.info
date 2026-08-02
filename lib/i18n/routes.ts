@@ -14,7 +14,6 @@ export type RouteId =
   | "docs"
   | "download"
   | "about"
-  | "changelog"
   | "privacy"
   | "terms"
   | "contact"
@@ -50,7 +49,6 @@ export const ROUTES: Record<RouteId, RouteEntry> = {
   docs: { en: "/docs", es: "/es/docs" },
   download: { en: "/download", es: "/es/descargar" },
   about: { en: "/about", es: "/es/acerca" },
-  changelog: { en: "/changelog", es: "/es/changelog" },
   privacy: { en: "/privacy", es: "/es/privacidad" },
   terms: { en: "/terms", es: "/es/terminos" },
   contact: { en: "/contact", es: "/es/contacto" },

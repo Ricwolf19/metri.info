@@ -34,13 +34,7 @@ const entry = (
 const sitemap = (): MetadataRoute.Sitemap => {
   const now = new Date();
 
-  const sections: RouteId[] = [
-    "home",
-    "tools",
-    "docs",
-    "download",
-    "changelog",
-  ];
+  const sections: RouteId[] = ["home", "tools", "docs", "download"];
   const staticEntries = sections.flatMap((id) =>
     entry(ROUTES[id].en, ROUTES[id].es, id === "home" ? 1 : 0.7, "weekly", now),
   );

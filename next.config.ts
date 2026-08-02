@@ -19,6 +19,19 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
   },
+  // The changelog pages were removed (the header now links to the GitHub
+  // releases) but both URLs were in the sitemap and submitted to GSC — keep
+  // them redirecting so indexed links don't 404.
+  async redirects() {
+    return [
+      { source: "/changelog", destination: "/download", permanent: true },
+      {
+        source: "/es/changelog",
+        destination: "/es/descargar",
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {

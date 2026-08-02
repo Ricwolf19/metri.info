@@ -56,18 +56,6 @@ export const es: Record<TranslationKey, string> = {
   "cmd.group.docs": "Guías",
   "cmd.group.account": "Cuenta",
 
-  "changelog.title": "Registro de cambios",
-  "changelog.subtitle": "Lo nuevo en Metri — y lo que viene en la app móvil.",
-  "changelog.tabWeb": "Web",
-  "changelog.tabMobile": "App móvil",
-  "changelog.added": "Nuevo",
-  "changelog.improved": "Mejorado",
-  "changelog.fixed": "Corregido",
-  "changelog.inDevelopment": "En desarrollo",
-  "changelog.betaBadge": "Android · beta abierta",
-  "changelog.mobileIntro":
-    "La app de Android está en beta abierta, se instala desde el APK en la página de descarga. Esto es lo que sigue.",
-  "changelog.plannedTitle": "Qué viene",
   "nav.close": "Cerrar",
 
   "auth.signIn": "Iniciar sesión",

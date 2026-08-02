@@ -53,19 +53,6 @@ export const en = {
   "cmd.group.docs": "Guides",
   "cmd.group.account": "Account",
 
-  "changelog.title": "Changelog",
-  "changelog.subtitle":
-    "What's new on Metri — and what's coming to the mobile app.",
-  "changelog.tabWeb": "Web",
-  "changelog.tabMobile": "Mobile app",
-  "changelog.added": "Added",
-  "changelog.improved": "Improved",
-  "changelog.fixed": "Fixed",
-  "changelog.inDevelopment": "In development",
-  "changelog.betaBadge": "Android · open beta",
-  "changelog.mobileIntro":
-    "The Android app is in open beta, installed from the APK on the download page. Here's what's next.",
-  "changelog.plannedTitle": "What's planned",
   "nav.close": "Close",
 
   "auth.signIn": "Sign in",
