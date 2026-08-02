@@ -7,10 +7,12 @@ import { requireSyncAccess } from "@/lib/sync/guard";
 import { pullSince } from "@/lib/sync/store";
 
 /**
- * POST /api/sync/pull — premium only. Body: `{ since: string | null }` (the ISO
- * cursor from the previous pull). Returns one page of the caller's rows changed
- * since then, the new cursor, and `hasMore` — the client keeps pulling until
- * that clears.
+ * POST /api/sync/pull — premium only. Body:
+ *   { since: string | null, deviceId?: string }
+ * (`since` is the ISO cursor from the previous pull; `deviceId` excludes the
+ * caller's own writes.) Returns one page of the caller's rows changed since
+ * then, the new cursor, and `hasMore` — the client keeps pulling until it
+ * clears.
  */
 export const POST = async (req: Request) => {
   const access = await requireSyncAccess();
@@ -28,7 +30,9 @@ export const POST = async (req: Request) => {
   }
 
   try {
-    return NextResponse.json(await pullSince(access.userId, parsed.since));
+    return NextResponse.json(
+      await pullSince(access.userId, parsed.since, parsed.deviceId),
+    );
   } catch (error) {
     event.error("sync.pull-failed", { userId: access.userId, error });
     Sentry.captureException(error);

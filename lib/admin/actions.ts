@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { subscription, user } from "@/lib/db/schema";
+import { invalidatePlanCache } from "@/lib/sync/guard";
 
 export type AdminActionResult = { ok: true } | { ok: false; reason: string };
 
@@ -64,6 +65,10 @@ export const setUserPremium = async (
     .update(user)
     .set({ plan, updatedAt: now })
     .where(eq(user.id, userId));
+
+  // Same-instance only, but it makes a grant/revoke bite on the next sync
+  // request instead of waiting out the guard's 30s TTL.
+  invalidatePlanCache(userId);
 
   revalidatePath("/admin/users");
   return { ok: true };

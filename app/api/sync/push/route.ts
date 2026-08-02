@@ -8,7 +8,7 @@ import { applyPush } from "@/lib/sync/store";
 
 /**
  * POST /api/sync/push — premium only. Body:
- *   { changes: PushRow[], deletions: PushDeletion[] }
+ *   { changes: PushRow[], deletions: PushDeletion[], deviceId?: string }
  *
  * Upserts the caller's rows into the mirror (Last-Write-Wins). The user comes
  * from the session, so a client can never write another user's data, and the
@@ -32,7 +32,12 @@ export const POST = async (req: Request) => {
   }
 
   try {
-    await applyPush(access.userId, parsed.rows, parsed.deletions);
+    await applyPush(
+      access.userId,
+      parsed.rows,
+      parsed.deletions,
+      parsed.origin,
+    );
   } catch (error) {
     // Reported, then flattened: this is the one endpoint that can corrupt a
     // user's data, and the client treats sync failures silently — so an

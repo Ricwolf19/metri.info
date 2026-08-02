@@ -1,20 +1,18 @@
 import "server-only";
 
-import { and, asc, eq, gt, sql } from "drizzle-orm";
+import { and, asc, eq, gt, isNull, lt, ne, or, sql } from "drizzle-orm";
 
 import { db } from "@/lib/db";
 import { syncRow } from "@/lib/db/schema";
 import { LIMITS, type PushDeletion, type PushRow } from "@/lib/sync/contract";
 
 /**
- * Server side of the premium delta sync. Rows are opaque JSON keyed by
- * (user, table, row). Writes are Last-Write-Wins on the client's `updatedAt`
- * (epoch ms); reads are delta by `serverUpdatedAt` (the pull cursor).
+ * Server side of the premium delta sync: opaque JSON rows keyed by
+ * (user, table, row), LWW writes on the client's `updatedAt` (epoch ms), delta
+ * reads by `serverUpdatedAt`. `userId` is always the session's, never the
+ * payload's; everything else goes through `lib/sync/contract` first.
  *
- * `userId` is a parameter, always sourced from the session by the route — it is
- * never read from the payload, which is what keeps one user out of another's
- * rows. Everything else arriving from the client goes through
- * `lib/sync/contract` first.
+ * @see docs/sync.md for the protocol and its invariants.
  */
 
 const CHUNK = 200;
@@ -23,7 +21,13 @@ export const applyPush = async (
   userId: string,
   rows: PushRow[],
   deletions: PushDeletion[],
+  origin: string | null,
 ): Promise<void> => {
+  // `clock_timestamp()` (per-row), never `now()`/`defaultNow()` (one value for
+  // the whole batch transaction): identical stamps would let the strict-`>`
+  // pull cursor skip past a page and drop the tail permanently.
+  // See docs/sync.md → "Neon driver constraint".
+  const serverNow = sql`clock_timestamp()`;
   const values = [
     ...rows.map((r) => ({
       userId,
@@ -31,7 +35,9 @@ export const applyPush = async (
       rowId: r.id,
       data: r.data as unknown,
       deleted: false,
+      origin,
       updatedAt: new Date(r.updatedAt),
+      serverUpdatedAt: serverNow,
     })),
     ...deletions.map((d) => ({
       userId,
@@ -39,17 +45,20 @@ export const applyPush = async (
       rowId: d.id,
       data: null,
       deleted: true,
+      origin,
       updatedAt: new Date(d.deletedAt),
+      serverUpdatedAt: serverNow,
     })),
   ];
   if (!values.length) return;
 
-  // One transaction for the whole batch: a mid-loop failure used to leave some
-  // chunks committed and the client's watermark advanced past rows that never
-  // landed.
-  await db.transaction(async (tx) => {
-    for (let i = 0; i < values.length; i += CHUNK) {
-      await tx
+  // One `db.batch` = one non-interactive transaction (neon-http throws on
+  // `db.transaction`): a mid-batch failure can't leave chunks committed while
+  // the client's watermark advances past rows that never landed.
+  const statements = [];
+  for (let i = 0; i < values.length; i += CHUNK) {
+    statements.push(
+      db
         .insert(syncRow)
         .values(values.slice(i, i + CHUNK))
         .onConflictDoUpdate({
@@ -57,23 +66,24 @@ export const applyPush = async (
           set: {
             data: sql`excluded.data`,
             deleted: sql`excluded.deleted`,
-            // `clock_timestamp()`, NOT `now()`: `now()` is the *transaction*
-            // start time, so every row in this batch would share one value.
-            // The pull cursor is `serverUpdatedAt` with a strict `>`, so a
-            // batch bigger than one page would hand back 500 identical
-            // timestamps, advance the cursor past them, and drop the tail
-            // permanently. `clock_timestamp()` is volatile and evaluated per
-            // row, so the ordering stays total.
+            origin: sql`excluded.origin`,
             updatedAt: sql`excluded.updated_at`,
             serverUpdatedAt: sql`clock_timestamp()`,
           },
-          // LWW: only accept the incoming row if it isn't older than what we
-          // hold. `contract.ts` clamps future timestamps so a bad clock can't
-          // park a row above every future write.
-          setWhere: sql`excluded.updated_at >= ${syncRow.updatedAt}`,
-        });
-    }
-  });
+          // LWW, strictly newer (`>`): an equal timestamp is an echo, and
+          // accepting it would re-stamp `serverUpdatedAt` and force every
+          // other device to re-download history. `contract.ts` clamps future
+          // timestamps. See docs/sync.md → "Rules the server enforces".
+          setWhere: sql`excluded.updated_at > ${syncRow.updatedAt}`,
+        }),
+    );
+  }
+  await db.batch(
+    statements as [
+      (typeof statements)[number],
+      ...(typeof statements)[number][],
+    ],
+  );
 };
 
 export type PullResult = {
@@ -90,19 +100,22 @@ export type PullResult = {
   hasMore: boolean;
 };
 
-/** One page of everything for this user changed after `since` (ISO server
- * time), oldest-first. Paged so a large history can't be loaded into memory and
- * serialized in a single response. */
+/** One page of this user's rows changed after `since` (ISO server time),
+ * oldest-first. `deviceId` excludes the caller's own writes (echo
+ * suppression); legacy rows with a null `origin` are always served. */
 export const pullSince = async (
   userId: string,
   since: string | null,
+  deviceId: string | null,
 ): Promise<PullResult> => {
-  const where = since
-    ? and(
-        eq(syncRow.userId, userId),
-        gt(syncRow.serverUpdatedAt, new Date(since)),
-      )
-    : eq(syncRow.userId, userId);
+  const notOwnEcho = deviceId
+    ? or(isNull(syncRow.origin), ne(syncRow.origin, deviceId))
+    : undefined;
+  const where = and(
+    eq(syncRow.userId, userId),
+    since ? gt(syncRow.serverUpdatedAt, new Date(since)) : undefined,
+    notOwnEcho,
+  );
 
   // Tie-broken ordering so pages can't interleave nondeterministically even if
   // two rows ever land on the same microsecond.
@@ -117,8 +130,6 @@ export const pullSince = async (
     )
     .limit(LIMITS.pullPage);
 
-  // The new cursor is the newest server time we returned — rows written after
-  // it are picked up on the next pull.
   const cursor = rows.length
     ? rows[rows.length - 1].serverUpdatedAt.toISOString()
     : since;
@@ -134,4 +145,26 @@ export const pullSince = async (
     cursor,
     hasMore: rows.length === LIMITS.pullPage,
   };
+};
+
+/** Correctness bound, not a tuning knob: a device offline longer than this
+ * never hears the deletion and a later local edit pushes the row back to life.
+ * See docs/sync.md → "Tombstone purge". */
+const TOMBSTONE_RETENTION_DAYS = 90;
+
+/** Delete tombstones older than the retention window (live rows are never
+ * touched). Returns the number of rows removed. */
+export const purgeTombstones = async (): Promise<number> => {
+  const result = await db
+    .delete(syncRow)
+    .where(
+      and(
+        eq(syncRow.deleted, true),
+        lt(
+          syncRow.serverUpdatedAt,
+          sql`now() - make_interval(days => ${TOMBSTONE_RETENTION_DAYS})`,
+        ),
+      ),
+    );
+  return result.rowCount ?? 0;
 };

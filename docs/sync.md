@@ -1,11 +1,40 @@
-# Premium sync — how it works
+# Premium sync — server side (API + storage)
 
-The mobile app (`Ricwolf19/metri`) is offline-first: SQLite on the device is the
-source of truth. Premium adds a **one-way-per-direction delta sync** that mirrors
-training data through this server so a user's other devices can read it back.
+This document covers the **web half** of metri's premium sync: the API
+endpoints, the validation rules, the storage model and the guarantees this
+server gives. The **mobile half** (when sync runs, how changes are gathered,
+how pulled rows are applied to SQLite, what the avatar ring shows) lives in the
+app repo:
 
-This document is the contract between the two repos. The server owns the rules
-below; the client implements them in `src/features/sync/`.
+> **Mobile companion doc:**
+> [`Ricwolf19/metri` → `docs/sync.md`](https://github.com/Ricwolf19/metri/blob/main/docs/sync.md)
+
+Start with the glossary if terms like *cursor* or *tombstone* are new — the
+rest of the doc uses them freely.
+
+## Glossary
+
+| Term | Meaning here |
+| --- | --- |
+| **Delta sync** | Moving only what changed since the last time, instead of re-sending everything. Both directions of metri sync are deltas. |
+| **Push** | The mobile app sending its local changes up to this server. |
+| **Pull** | The mobile app asking this server for changes it hasn't seen yet. |
+| **Cursor** | A bookmark the client keeps that means "I have everything up to this point". Ours is a timestamp: the pull request says *give me rows changed after `since`*, and the response includes the new bookmark. The client stores it and presents it on the next pull. Nothing is remembered server-side — the client carries its own position. |
+| **Watermark** | Same bookmark idea, but for the push direction (client-side only): the highest local change-timestamp already sent. Detailed in the mobile doc. |
+| **Tombstone** | A record that says "this row was deleted". You cannot sync a deletion by just deleting — the other device would never hear about it. So deletes are stored as rows with `deleted = true` and pushed like any other change. |
+| **LWW (Last-Write-Wins)** | The conflict rule. When two devices edit the same row, the version with the newer client `updatedAt` wins. Simple, predictable, and enough for single-user fitness data. |
+| **Upsert** | Insert-or-update in one statement (`ON CONFLICT DO UPDATE`). How every pushed row lands. |
+| **Opaque payload** | The server stores each row's contents as `jsonb` it never reads or interprets. Only the envelope (user, table, id, timestamps, deleted) is meaningful server-side. |
+
+## Technologies
+
+| Piece | Role |
+| --- | --- |
+| Next.js route handlers (`app/api/sync/{push,pull}`) | The two endpoints. Plain `POST` + JSON. |
+| Better Auth session | Identifies the caller. `userId` **always** comes from the session, never from the body. |
+| Drizzle ORM over **`neon-http`** | Database access. One HTTP request per statement — cheap and serverless-friendly, but **no interactive transactions** (see "Neon driver constraint"). |
+| Neon Postgres | Holds the mirror table `sync_row`. |
+| Sentry + `event.error` | Both endpoints report failures before flattening them to a 500 — the client is silent by design, so an unreported error here is invisible on both sides. |
 
 ## The shape of it
 
@@ -17,9 +46,30 @@ below; the client implements them in `src/features/sync/`.
 ```
 
 There is **no relational mirror**. Every synced row lands in one table,
-`sync_row`, keyed by `(userId, tableName, rowId)` with the row's contents as
-opaque `jsonb`. The server never interprets that payload — it only stores and
-returns it.
+`sync_row` (`lib/db/schema.ts`), keyed by `(userId, tableName, rowId)`:
+
+| Column | Meaning |
+| --- | --- |
+| `userId` | Owner. Part of the primary key; cascades on account deletion. |
+| `tableName` | The mobile SQLite table this row belongs to. Allow-listed. |
+| `rowId` | The row's id in that table. |
+| `data` | The row's full contents as opaque `jsonb` (`null` for tombstones). |
+| `deleted` | Tombstone flag. |
+| `origin` | Random id of the device that wrote this version (null for legacy rows) — what lets the pull skip a device's own writes. |
+| `updatedAt` | **Client** content-modified time — the LWW comparison key. |
+| `serverUpdatedAt` | **Server** write time — the delta-pull cursor. Indexed with `userId`. |
+
+**Retention:** the table holds the **latest state** of each row, not a history.
+An update overwrites in place; a delete flips the same row to a tombstone and
+nulls `data`. Growth is proportional to the user's data volume, not to time or
+write count.
+
+**Tombstone purge:** a daily Vercel Cron (`vercel.json` →
+`/api/cron/purge-sync`, guarded by `CRON_SECRET`) deletes tombstones older
+than **90 days** (`purgeTombstones` in `store.ts`). The window is a
+correctness bound, not a tuning knob: a device that never pulled a tombstone
+and stays offline longer than the window will keep the deleted row locally,
+and a later edit there can push it back to life. Live rows are never purged.
 
 **Why opaque:** the mobile schema changes far more often than this one. A
 relational mirror would mean a coordinated migration in both repos for every
@@ -37,14 +87,17 @@ All in `lib/sync/`:
 | `store.ts` | The actual upsert / delta read. |
 
 - **`userId` always comes from the session**, never from the payload. This is
-  what makes cross-tenant access impossible; do not add a user field to the wire
-  format.
-- **`plan` is re-read from the database** on every call, not taken from
-  `session.user.plan` — that rides a 5-minute signed cookie cache, so a
-  revoked subscription would keep syncing until it expired.
-- **Table names are allow-listed** against `SYNC_TABLES` in `contract.ts`, which
-  mirrors `src/features/sync/tables.ts` in the mobile repo. **Adding a synced
-  table means editing both.**
+  what makes cross-tenant access impossible; do not add a user field to the
+  wire format.
+- **`plan` is re-read from the database**, not taken from `session.user.plan` —
+  that rides a 5-minute signed cookie cache, so a revoked subscription would
+  keep syncing until it expired. The read goes through a **30-second in-memory
+  cache** (`guard.ts`): a sync cycle is up to ~21 requests in seconds, and each
+  paid the same SELECT — the endpoint's dominant Neon query. Per-warm-instance
+  only; `invalidatePlanCache(userId)` is called from the admin plan mutation.
+- **Table names are allow-listed** against `SYNC_TABLES` in `contract.ts`,
+  which mirrors `src/features/sync/tables.ts` in the mobile repo. **Adding a
+  synced table means editing both.**
 - **Timestamps are clamped**, not just validated. A client clock reporting a
   far-future `updatedAt` would win Last-Write-Wins forever and freeze that row
   permanently. Anything beyond `now + 5min` is pulled back to now.
@@ -53,13 +106,45 @@ All in `lib/sync/`:
   second time` when the same key appears twice in one statement, which would
   fail the whole chunk.
 - **Limits** (`LIMITS` in `contract.ts`): 1000 items per push, 64 KB per row,
-  500 rows per pull page.
-- The whole push runs **in one transaction**, so a failure can't leave the
-  client's watermark ahead of what actually landed. `serverUpdatedAt` is set
-  with **`clock_timestamp()`, not `now()`** — `now()` returns the transaction
-  start time, so a batch would stamp every row identically, and the pull cursor
-  (`>` on that column) would then skip everything past the first page. Do not
-  "simplify" this back to `now()` or `defaultNow()`.
+  1000 rows per pull page.
+- **Echo suppression.** The client sends a stable random `deviceId` with both
+  endpoints; pushes store it as `origin`, and the pull excludes rows whose
+  `origin` matches the caller (legacy null-origin rows are always served).
+  Without it, every push came straight back to its author on the next pull —
+  thousands of redundant rows per cycle.
+- **LWW is strictly newer (`>`), not `>=`.** A push carrying the exact stored
+  timestamp is an echo (a second device re-pushing rows it just pulled);
+  accepting it re-stamped `serverUpdatedAt` and forced every other device to
+  re-download the history. The tie a strict compare sacrifices — two devices
+  editing the same row in the same millisecond — is not a real case here.
+
+## Neon driver constraint — batches, not transactions
+
+The Drizzle client is built on **`drizzle-orm/neon-http`**, and that driver
+**throws unconditionally on `db.transaction()`** ("No transactions support in
+neon-http driver"). This took every push down in production once `applyPush`
+was wrapped in a transaction.
+
+The replacement is **`db.batch([...])`**: all statements are sent in a single
+HTTP request and Neon executes them inside **one non-interactive transaction**
+— atomic commit/rollback, so a mid-batch failure can't leave some chunks
+committed while the client's watermark advances past rows that never landed.
+The difference from a real transaction: you cannot read results between
+statements. `applyPush` doesn't need to, so the batch is a full replacement.
+
+Two standing rules follow:
+
+- **Never call `db.transaction()` anywhere in this repo** while the client is
+  `neon-http`. Use `db.batch()` for multi-statement atomicity, or switch the
+  whole client to `drizzle-orm/neon-serverless` (WebSocket) if interactive
+  transactions ever become necessary.
+- **`serverUpdatedAt` is set with `clock_timestamp()` on both the insert values
+  and the conflict update — never `now()` / `defaultNow()`.** Inside the batch
+  transaction `now()` is the transaction start time, so every row would share
+  one value; the pull cursor is a strict `>` on that column, so a push bigger
+  than one pull page would then skip everything past the first page,
+  permanently. `clock_timestamp()` is evaluated per row, keeping the ordering
+  total.
 
 ## Endpoints
 
@@ -70,7 +155,8 @@ Both are `POST`, both premium-only, both return `401` unauthenticated /
 
 ```jsonc
 // request
-{ "changes":   [{ "table": "set_logs", "id": "…", "updatedAt": 1730000000000, "data": { … } }],
+{ "deviceId":  "f3a…",   // optional; stored as `origin` for echo suppression
+  "changes":   [{ "table": "set_logs", "id": "…", "updatedAt": 1730000000000, "data": { … } }],
   "deletions": [{ "table": "set_logs", "id": "…", "deletedAt": 1730000000000 }] }
 
 // response
@@ -78,7 +164,8 @@ Both are `POST`, both premium-only, both return `401` unauthenticated /
 ```
 
 Conflict resolution is **Last-Write-Wins on the client's `updatedAt`** — the
-server keeps the incoming row only when `excluded.updated_at >= sync_row.updated_at`.
+server keeps the incoming row only when it is strictly newer:
+`excluded.updated_at > sync_row.updated_at`.
 
 Errors: `400 bad_request` (with a `detail`), `413 payload_too_large`,
 `500 sync_failed`.
@@ -87,7 +174,8 @@ Errors: `400 bad_request` (with a `detail`), `413 payload_too_large`,
 
 ```jsonc
 // request
-{ "since": "2026-07-28T22:10:00.000Z" }   // or null for a full read
+{ "since": "2026-07-28T22:10:00.000Z",    // or null for a full read
+  "deviceId": "f3a…" }                     // optional; excludes this device's own writes
 
 // response
 { "rows": [{ "table": "…", "id": "…", "data": { … }, "deleted": false, "updatedAt": 1730000000000 }],
@@ -95,10 +183,10 @@ Errors: `400 bad_request` (with a `detail`), `413 payload_too_large`,
   "hasMore": false }
 ```
 
-The cursor is **server** time (`serverUpdatedAt`), not client time — it has to be
-monotonic against a single clock. **`hasMore` must be honoured**: keep pulling
-with the returned cursor until it clears, or a large history converges one page
-at a time.
+The cursor is **server** time (`serverUpdatedAt`), not client time — it has to
+be monotonic against a single clock. **`hasMore` must be honoured**: keep
+pulling with the returned cursor until it clears, or a large history converges
+one page at a time.
 
 Known bound: the column stores microseconds but the cursor is an ISO string
 (milliseconds), so rows sharing a millisecond with the last row of a page get
@@ -121,9 +209,8 @@ in both repos.
 Because the mirror is opaque, **the client's apply path is where compatibility
 lives**, and old rows are never rewritten server-side.
 
-- Adding a column is safe: `applyRow` intersects the incoming keys against the
-  live table (`PRAGMA table_info`), so a device running an older schema drops
-  keys it doesn't know instead of throwing `no such column`.
+- Adding a column is safe: the client intersects incoming keys against its live
+  table, so an older device drops keys it doesn't know.
 - **Renaming or dropping a column is not.** Rows written before the change keep
   the old key in `jsonb` forever. There is no server-side migration path — the
   server can't interpret `data`. A rename needs a hand-written `jsonb` key
@@ -132,20 +219,17 @@ lives**, and old rows are never rewritten server-side.
 
 ## Failure modes worth knowing
 
-- **One unappliable row must not stop a page.** The client wraps each `applyRow`
-  in its own try/catch; without it, a single bad row aborted the loop before the
-  cursor was stored, so every later run re-fetched and re-failed the same page —
-  a silent, permanent dead sync.
-- **Secondary unique constraints.** `on conflict(id)` doesn't cover a table with
-  another unique index (`training_days` is unique on `(user_id, date)`). Two
-  devices can create the same logical row with different ids; the client clears
-  the local squatter before inserting. Any new table with a secondary unique key
-  must be added to `EXTRA_UNIQUE` in the client's `engine.ts`.
-- **Sync failures are silent by design.** No toast, no retry queue. The ring
-  around the avatar is the entire user-facing signal.
+- **Sync failures are silent on the device by design** — the avatar ring is the
+  only user-facing signal. That is why both routes report to Sentry *before*
+  flattening errors to `500 sync_failed`: an unreported error here is invisible
+  on both sides.
+- The client-side counterparts (per-row apply isolation, secondary unique
+  indexes, cursor stall guard) are documented in the
+  [mobile doc](https://github.com/Ricwolf19/metri/blob/main/docs/sync.md).
 
 ## Related
 
 - Entitlements: gate with `can(plan, "sync")` (`lib/entitlements.ts`), never
   `plan === "premium"`.
-- Client implementation and its watermarks: `AGENTS.md` in the mobile repo.
+- Mobile engine, watermark/cursor storage, UI states:
+  [`Ricwolf19/metri` → `docs/sync.md`](https://github.com/Ricwolf19/metri/blob/main/docs/sync.md).

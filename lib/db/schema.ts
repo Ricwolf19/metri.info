@@ -1,6 +1,7 @@
 import {
   boolean,
   index,
+  integer,
   jsonb,
   pgTable,
   primaryKey,
@@ -100,9 +101,16 @@ export const userProfile = pgTable("user_profile", {
   bodyWeightKg: real("body_weight_kg"),
   bodyHeightCm: real("body_height_cm"),
   sex: text("sex"),
+  // Account-level profile the mobile app restores after a reinstall (free
+  // feature — this is who the account is, not premium training sync).
+  age: integer("age"),
+  bodyFatPct: real("body_fat_pct"),
   activityLevel: text("activity_level"),
   latestBmr: real("latest_bmr"),
   latestTdee: real("latest_tdee"),
+  bmrFormula: text("bmr_formula"),
+  locale: text("locale"),
+  clockFormat: text("clock_format"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -152,6 +160,9 @@ export const syncRow = pgTable(
     rowId: text("row_id").notNull(),
     data: jsonb("data"),
     deleted: boolean("deleted").default(false).notNull(),
+    /** Device that wrote this version (null for legacy rows) — lets the pull
+     * exclude a device's own writes (echo suppression). */
+    origin: text("origin"),
     /** Client content-modified time — the LWW comparison key. */
     updatedAt: timestamp("updated_at").notNull(),
     /** Server write time — the delta-pull cursor. */

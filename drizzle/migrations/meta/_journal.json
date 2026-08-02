@@ -36,6 +36,13 @@
       "when": 1784069900451,
       "tag": "0004_chief_kid_colt",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1785694283513,
+      "tag": "0005_talented_cable",
+      "breakpoints": true
     }
   ]
 }

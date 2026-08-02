@@ -1,0 +1,1 @@
+ALTER TABLE "sync_row" ADD COLUMN "origin" text;
