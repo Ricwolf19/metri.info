@@ -18,6 +18,7 @@
     "gen:favicons": "node scripts/gen-favicons.mjs",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:status": "bun scripts/db-status.ts",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "admin:bootstrap": "bun --preload ./scripts/server-only-stub.ts scripts/bootstrap-admin.ts",
