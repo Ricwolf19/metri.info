@@ -6,210 +6,95 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 <!-- END:nextjs-agent-rules -->
 
-# Metri Web — agent & contributor guide
+# Metri Web — agent guide
 
-Public web companion to the Metri mobile app (Expo). Same brand, same formulas,
-same i18n philosophy — built for the web with Next.js 16.
+Public web companion to the Metri mobile app: open calculators + docs, optional accounts, and the
+premium sync API the mobile app consumes. Overview, quick start, env vars and deploy live in
+`README.md`; the sync protocol in `docs/sync.md`.
 
 ## Stack
 
-- **Next.js 16** (App Router, React 19, Server Components) — file-based routing.
-  Note: `cookies()`/`headers()`/route `params` are async — always `await` them.
-- **Bun** — package manager + TS script runner (`bun run scripts/*.ts`). Vercel
-  builds on Node; Bun is for installs and scripts.
-- **TypeScript (strict)** · **Tailwind CSS v4** (CSS-first `@theme`) · **Framer Motion**.
-- **Drizzle ORM + Neon (Postgres)** + **Better Auth** power the optional account
-  layer (email+password, Google/GitHub, account linking, password reset via
-  Resend) — bundled content (calculators, docs) renders without a DB.
-- **Analytics**: **PostHog** (autocapture, heatmaps, session replay), GA4, and
-  Vercel Analytics + Speed Insights — all env-gated, off when keys are absent.
-- **PWA**: installable + offline calculators via `public/sw.js`, `app/manifest.ts`
-  and an offline fallback (`app/offline`).
-- **Iconoir** icons via the `@/components/icons` barrel — each is wrapped to take a
-  `size` (px) prop and re-exported under stable names that mirror mobile. Brand
-  icons (GitHub) ship as local components. Never import `iconoir-react` directly.
-
-## Conventions
-
-- **Arrow functions everywhere** — enforced by ESLint (`func-style`,
-  `react/function-component-definition`). No `function` declarations.
-- **Design tokens, never hex.** Use `ink-*`, `accent`, `accent-fill`, `lime-*`.
-  Tokens are ported 1:1 from the mobile app and swap per theme via CSS vars
-  (`data-theme` on `<html>`). `ink-950` stays constant (dark text on lime).
-- **i18n**: flat dotted keys in `lib/i18n/{en,es}.ts` (same as mobile). Use
-  `useT()` in client components and `getT()`/`getLocale()` from
-  `lib/i18n/server` in Server Components. `es.ts` must cover every `en.ts` key.
-- **State**: no Zustand/Redux. Server Components fetch directly; client state is
-  URL params + React Context (`ThemeProvider`, `I18nProvider`).
-- **SEO**: server-first. Metadata API, JSON-LD, file-based `sitemap.ts`/
-  `robots.ts`/`manifest.ts`, dynamic OG via `opengraph-image` + `app/og/calc`.
-- **Calculation logging = explicit save only.** `saveCalculation` (`lib/calculators/log.ts`)
-  requires a session and rejects anonymous saves — no null-userId rows ever land
-  in `calculation_log`. Aggregate product usage is tracked via PostHog events,
-  not the DB.
-- **Admin** (`/admin`) is **EN-only**, chromeless (no marketing nav/footer) and
-  driven by a sidebar (`components/admin/nav.ts`). It's role-gated by
-  `requireAdmin` (`lib/auth/admin.ts`); create the first admin with
-  `bun run admin:bootstrap`.
-- **Entitlements**: gate features with `can(plan, feature)`
-  (`lib/entitlements.ts`), never `plan === "premium"`. `subscription` is the
-  billing source of truth; `user.plan` is a denormalized cache of it that rides
-  on the Better Auth session — the client never writes it (`input: false`).
-- **Premium sync** (`app/api/sync/*`, `lib/sync/*`) serves the mobile app. Two
-  rules that are load-bearing, not stylistic: `userId` always comes from the
-  session (never the payload — that's what prevents cross-tenant access), and
-  `plan` is re-read from the DB per call via `requireSyncAccess`, because the
-  session copy is a 5-minute cookie cache and would keep a revoked subscription
-  alive. Every push body goes through `lib/sync/contract.ts` first. Sync is
-  **automatic** for premium users and never runs for free ones — there is no
-  opt-in. **Read `docs/sync.md` before touching any of it.**
-- **DB migration flow**: `db:generate` is run **manually/locally** against the
-  schema, the generated SQL in `drizzle/` is committed, and Vercel applies it on
-  deploy via `scripts/vercel-migrate.mjs` (`db:migrate`). Never auto-generate in
-  CI.
-
-## Auth & email
-
-- **Senders**: `AUTH_FROM_EMAIL` and `CONTACT_FROM_EMAIL` are the from-address
-  for auth and contact emails respectively. Both fall back to
-  `Metri <onboarding@resend.dev>` (Resend's shared test sender) when unset.
-  Verify your domain on Resend and set at least `AUTH_FROM_EMAIL` to a
-  `<your-domain>` address before going to production — the test sender is
-  restricted to your Resend account's test recipients and silently drops every
-  other delivery. See "Diagnosing missing emails" below for the failure mode.
-- **Better Auth callbacks never throw**. `deliverAuthEmail` (in
-  `lib/auth/server.ts`) is log-and-continue; if Resend rejects or your key is
-  missing, the user is still created in `user` (or the password-reset request
-  still completes) — the failure lands in Vercel logs under the
-  `auth.email.send-failed` event.
-- **Rate limits are hardcoded**. Defaults live in `RATE_LIMITS` at the top
-  of `lib/auth/server.ts` (3/hour for sign-up, 10/5min for sign-in, 3/hour for
-  forgot, 5/hour for reset, 10/hour for verify). To bump them temporarily
-  during prod testing, edit the constant and redeploy; do not expose them as
-  env vars — `.env` is for secrets, not knobs. To disable entirely during a
-  load-test, set `BETTER_AUTH_RATE_LIMIT_ENABLED=false` in Vercel (still
-  supported, kept as the single env-tunable).
-- **Errors**: every auth form routes its `res.error` through
-  `authErrorMessage()` in `lib/auth/errors.ts`. When you add a new Better Auth
-  error code, add the mapping there; do **not** surface `res.error.message`
-  directly to clients (it leaks English strings on the ES locale).
-
-### Diagnosing missing emails
-
-If a user reports "I never got the verification email":
-
-1. **Vercel logs** — search for the user's email at signup time. You want one
-   of:
-   - `auth.email.send-ok resendId=<uuid>` — the message reached Resend.
-   - `auth.email.send-failed resendError="…"` — Resend rejected it (most often
-     "You can only send emails to addresses you've added to your account" —
-     the from-address is still the restricted `onboarding@resend.dev`).
-   - `auth.email.send-skipped reason=RESEND_API_KEY_missing` — env key is unset.
-2. **Resend dashboard** — confirm the `resendId` from the log appears with
-   "Delivered" status. If it's missing, the call never reached Resend.
-3. **DB check** — if the user row exists with `emailVerified: false` but no
-   entry in the `verification` table, the Better Auth flow bailed before
-   generating the token (rare; usually a 429).
-4. **Re-send** — trigger Better Auth's re-send from the sign-in page (an
-   unverified sign-in surfaces the "resend verification" path).
-
-The most common cause we've seen is the `onboarding@resend.dev` sender in
-production — verify a domain on Resend and set `AUTH_FROM_EMAIL` to fix it
-permanently.
+- **Next.js 16** (App Router, React 19, Server Components) — `cookies()`/`headers()`/route `params`
+  are async, always `await` them. **Bun** for installs/scripts (Vercel builds on Node).
+- TypeScript strict · Tailwind v4 (CSS-first `@theme`) · Framer Motion · Iconoir via the
+  `@/components/icons` barrel (never import `iconoir-react` directly).
+- Drizzle + Neon (Postgres) + Better Auth power the optional account layer; bundled content
+  (calculators, docs) renders without a DB.
+- Analytics (PostHog, GA4, Vercel) and PWA are env-gated — off when keys are absent.
 
 ## Commands
 
 ```bash
-bun install
-bun run dev        # dev server (Turbopack)
-bun run build      # production build
-bun run verify     # format + lint + typecheck + circular-deps + build (CI gate)
-bun run knip       # dead-code / unused-dependency check
-
-# Database (Drizzle) — generate locally, commit, Vercel migrates on deploy
-bun run db:generate   # author migrations from the schema (manual/local)
-bun run db:migrate    # apply migrations (also run by Vercel via vercel-migrate)
-bun run db:studio     # Drizzle Studio
-
-bun run admin:bootstrap  # create the first admin user
+bun run dev            # dev server (Turbopack)
+bun run verify         # bun run ci — format + lint + typecheck + test + circular + build (CI gate)
+bun run test           # vitest — unit + PGlite integration suites
+bun run db:generate    # author migrations locally, commit them; Vercel migrates on deploy
+bun run admin:bootstrap
 ```
+
+Never auto-generate migrations in CI — `db:generate` is manual/local, the SQL in `drizzle/` is
+committed, `scripts/vercel-migrate.mjs` applies it on deploy.
+
+## Invariants
+
+- **Arrow functions everywhere** (ESLint-enforced). **Design tokens, never hex** (`ink-*`,
+  `accent`, `lime-*`; `ink-950` stays constant). Tokens mirror the mobile app 1:1.
+- **i18n**: flat dotted keys in `lib/i18n/{en,es}.ts`; `es.ts` must cover every `en.ts` key.
+  `useT()` in client components, `getT()`/`getLocale()` from `lib/i18n/server` in Server Components.
+- **State**: no Zustand/Redux — Server Components fetch directly; client state is URL params +
+  Context providers.
+- **SEO is server-first**: Metadata API, JSON-LD, file-based sitemap/robots/manifest, dynamic OG.
+  Before touching SEO/analytics/i18n routing, read the playbooks in `docs/seo/` (EN+ES, kept 1:1).
+- **Entitlements**: gate with `can(plan, feature)` (`lib/entitlements.ts`), never
+  `plan === "premium"`. `subscription` is the billing source of truth; `user.plan` is a denormalized
+  cache the client can never write (`input: false`).
+- **`saveCalculation` requires a session** — no anonymous rows in `calculation_log`; aggregate usage
+  goes to PostHog, not the DB.
+- **Admin** (`/admin`) is EN-only, chromeless, gated by `requireAdmin`.
+
+## Premium sync (serves the mobile app)
+
+Read `docs/sync.md` before touching `app/api/sync/*` or `lib/sync/*`. Load-bearing rules:
+
+- `userId` always comes from the session, never the payload (cross-tenant guard).
+- `plan` is re-read from the DB per call (30s in-memory cache in `guard.ts`;
+  `invalidatePlanCache()` is called from the admin plan mutation).
+- Every push body goes through `lib/sync/contract.ts` first. `SYNC_TABLES` mirrors the mobile
+  repo's `tables.ts` — adding a table means editing both.
+- **Never call `db.transaction()`** — the neon-http driver throws unconditionally. Use `db.batch()`
+  (one non-interactive transaction). `serverUpdatedAt` is always `clock_timestamp()`, never
+  `now()`/`defaultNow()`.
+- LWW is strictly newer (`>`); pushes carry a `deviceId` stored as `origin` so pulls exclude a
+  device's own writes. Tombstones are purged after 90 days by `/api/cron/purge-sync`
+  (`CRON_SECRET`-guarded, daily via `vercel.json`).
+
+## Auth & email
+
+- Better Auth callbacks never throw: email delivery is log-and-continue (`auth.email.send-ok` /
+  `send-failed` / `send-skipped` events in Vercel logs). "User never got the email" almost always
+  means the from-address is still Resend's restricted `onboarding@resend.dev` — verify a domain and
+  set `AUTH_FROM_EMAIL`.
+- Rate limits are hardcoded in `RATE_LIMITS` (`lib/auth/server.ts`) — edit + redeploy, don't turn
+  them into env vars. `BETTER_AUTH_RATE_LIMIT_ENABLED=false` is the single env kill-switch.
+- Map new Better Auth error codes in `authErrorMessage()` (`lib/auth/errors.ts`); never surface
+  `res.error.message` raw (leaks English into the ES locale).
 
 ## Mobile app distribution
 
-`appDistribution` in `lib/site.ts` is the single source of truth for what the
-Download page shows. Three states:
-
-- `development` — no build yet; page shows a "coming soon" panel.
-- `beta` — sideloadable APK is live; page shows direct-download + disclaimer.
-- `live` — published to the stores; fill the `ios.url` / `android.url`.
-
-**The APK lives on a fixed-tag rolling pre-release, not on the semver ones.**
-The download URL is `${mobileAppRepo}/releases/download/apk-beta/metri.apk` —
-both `apk-beta` (the tag) and `metri.apk` (the asset name) are load-bearing;
-change either and the button silently 404s. Deliberately not
-`releases/latest/download/…`: release-please cuts a release on every feature
-merge and "latest" follows it, so that URL would break the first time a release
-ships without an APK attached.
-
-Publish or refresh the beta build from the mobile repo:
-
-```bash
-eas build --platform android --profile preview   # APK, not the AAB `production` makes
-# download the artifact, then:
-gh release upload apk-beta metri.apk --clobber --repo <owner>/<mobile-repo>
-```
-
-Create the rolling release once with `gh release create apk-beta metri.apk
---prerelease` — the pre-release flag keeps it out of release-please's way.
-Flip `status` to `beta` once the first `metri.apk` is uploaded.
+`appDistribution` in `lib/site.ts` drives the Download page (`development` | `beta` | `live`). The
+APK link `releases/download/apk-beta/metri.apk` is a contract with the mobile repo's release
+workflow — both the fixed tag and the asset name are load-bearing; deliberately NOT
+`releases/latest/…` (release-please's semver releases would break it). The pipeline itself lives in
+the mobile repo (`README.md` → "CI & Release Pipeline").
 
 ## Layout
 
 ```
-app/            App Router routes (EN at root, ES under /es) + SEO files.
-               Pages: tools/[calc], docs/[slug], account (+ settings),
-               admin (+ analytics/users/calculations/services), sign-in/up,
-               forgot/reset-password, offline, s/[id] (share), og/calc,
-               api/auth/[...all]
-components/     ui (primitives), icons (barrel), layout, marketing, shared,
-               calculators, docs, account, admin, analytics, pwa, auth,
-               contact, legal, seo
-content/docs/   MDX knowledge base (en/es) — 8 categories
-lib/
-  calculations/   pure formulas, split: shared, strength, energy, body, cardio
-  calculators/    config-driven registry + configs/ + content + share + log
-  analytics/      posthog + db-metrics (admin dashboards)
-  account/        profile providers + settings
-  favorites/      pin/unpin server actions + useFavorites hook
-  auth/           server (Better Auth) + client + admin (requireAdmin)
-  admin/          admin data helpers
-  db/             Drizzle schema + client
-  i18n, theme, docs, contact, legal, seo, og
-public/         brand mark + PWA icons, sw.js (service worker)
-drizzle/        generated migrations (after db:generate)
-docs/sync.md    premium mobile↔web sync protocol (contract, limits, gotchas)
-docs/seo/       project-agnostic playbooks: advanced-seo, analytics
-               (PostHog/GA4), glossary — EN + ES, kept in sync
+app/            App Router routes (EN at root, ES under /es) + SEO files + api/{auth,sync,cron}
+components/     ui, icons (barrel), layout, marketing, calculators, docs, account, admin, auth, …
+content/docs/   MDX knowledge base (en/es)
+lib/            calculations (pure math) · calculators (registry/configs) · sync · auth · db ·
+                i18n · seo · analytics · entitlements
+drizzle/        committed migrations
+docs/           sync.md (protocol, authoritative) · seo/ (EN+ES playbooks: seo, analytics, glossary)
 ```
-
-## Reference docs
-
-**`docs/sync.md`** is project-specific and authoritative: the wire contract
-between this server and the Expo app, what the server validates and why, what is
-deliberately excluded from sync, and the failure modes that already bit us
-(dead-locking pulls, secondary unique constraints, schema drift). Read it before
-changing anything under `app/api/sync/` or `lib/sync/`.
-
-`docs/seo/` holds reusable, **project-agnostic** playbooks (each in EN + ES,
-kept 1:1 in sync):
-
-- **`advanced-seo.{en,es}.md`** — server-first SEO, i18n/hreflang, metadata,
-  sitemap/robots, JSON-LD, OG images, programmatic SEO, Core Web Vitals,
-  content & trust elements by page type (incl. YMYL), and a concept reference.
-- **`analytics.{en,es}.md`** — PostHog vs GA4 vs Vercel vs Search Console, the
-  `/ingest` reverse proxy, HogQL funnels, dashboard caching.
-- **`glossary.{en,es}.md`** — slug, YMYL, E-E-A-T, JSON-LD types, CWV
-  (LCP/CLS/INP/TTFB), HogQL, GA4 Measurement vs Property ID, etc.
-
-When you touch SEO, analytics, or i18n routing, read the relevant playbook
-first and keep it accurate.
