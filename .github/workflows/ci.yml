@@ -33,6 +33,9 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
+      - name: Tests
+        run: bun run test
+
       - name: Circular deps
         run: bun run lint:circular
 
