@@ -43,6 +43,13 @@
       "when": 1785694283513,
       "tag": "0005_talented_cable",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1785702268590,
+      "tag": "0006_boring_victor_mancha",
+      "breakpoints": true
     }
   ]
 }
