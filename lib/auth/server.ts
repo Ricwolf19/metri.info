@@ -256,6 +256,15 @@ const beforeAuthHook = async (inputContext: {
   const url = new URL(request.url);
   if (!url.pathname.endsWith("/sign-up/email")) return;
 
+  // The Expo app cannot execute reCAPTCHA's browser JS, so its sign-ups are
+  // exempt. The `expo-origin` header is what the expo() plugin itself trusts
+  // for origin checks (`metri://`, from Linking.createURL). It is spoofable —
+  // a bot can claim to be the app — so this is deliberately defense-in-depth,
+  // not the only gate: sign-up stays behind RATE_LIMITS either way, and the
+  // captcha still stops the drive-by web-form spam it was added for.
+  const expoOrigin = request.headers.get("expo-origin");
+  if (expoOrigin?.startsWith("metri://")) return;
+
   const token =
     request.headers.get("x-recaptcha-token") ??
     request.headers.get("X-Recaptcha-Token");
