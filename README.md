@@ -119,15 +119,8 @@ analytics. Copy the file to `.env` and fill in only what you need.
 
 ## Documentation
 
-Reusable, **project-agnostic** playbooks live in [`docs/seo/`](./docs/seo) (EN +
-ES, kept in sync):
-
-- [`advanced-seo`](./docs/seo/advanced-seo.en.md) — server-first SEO, i18n/
-  hreflang, metadata, JSON-LD, OG images, Core Web Vitals, content & trust
-  elements by page type, and a concept reference.
-- [`analytics`](./docs/seo/analytics.en.md) — PostHog · GA4 · Vercel · Search
-  Console, the `/ingest` reverse proxy, HogQL funnels, dashboard caching.
-- [`glossary`](./docs/seo/glossary.en.md) — every technical term in one place.
+The sync protocol is documented in [`docs/sync.md`](./docs/sync.md); agent-facing
+conventions in [`AGENTS.md`](./AGENTS.md).
 
 ## Deploying
 
