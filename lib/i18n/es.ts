@@ -132,10 +132,11 @@ export const es: Record<TranslationKey, string> = {
   "hero.ctaTools": "Probar las calculadoras",
 
   "showcase.badge": "En desarrollo",
+  "showcase.badgeBeta": "Beta — instálala hoy",
   "showcase.title": "Una app nativa está",
   "showcase.highlight": "en camino.",
   "showcase.subtitle":
-    "Hoy todo en Metri es gratis en la web. Estamos construyendo apps nativas para iOS y Android con las mismas fórmulas, soporte sin conexión y progreso sincronizado. Esto es lo que viene.",
+    "Todo en Metri es gratis — web y app. La app de Android ya está en beta con las mismas fórmulas y soporte total sin conexión, sin requerir cuenta; iOS sigue. La cuenta opcional añade exportar/importar y Premium añade sync.",
   "showcase.feature1": "Calculadoras instantáneas que responden a cada tecla",
   "showcase.feature2":
     "Funciona 100% sin conexión — tus datos se quedan contigo",
@@ -550,14 +551,14 @@ export const es: Record<TranslationKey, string> = {
 
   "download.title": "Lleva Metri en tu teléfono",
   "download.subtitle":
-    "Gratis y sin conexión primero. Requiere una cuenta gratuita — sin tarjeta, sin pagos.",
+    "Gratis, open source y sin conexión primero. No requiere cuenta — una gratuita opcional añade extras.",
   "download.ios": "Descargar en el App Store",
   "download.android": "Disponible en Google Play",
   "download.scan": "Escanea para descargar",
   "download.devBadge": "App móvil en desarrollo",
   "download.devTitle": "Una app nativa está en camino",
   "download.devBody":
-    "Metri es gratis y de código abierto en la web — todas las calculadoras y guías, sin cuenta, para siempre. La app nativa de iOS y Android es un extra opcional y pide una cuenta gratuita, para que tu entrenamiento se sincronice entre dispositivos.",
+    "Metri es gratis y de código abierto en la web — todas las calculadoras y guías, sin cuenta, para siempre. La app nativa de iOS y Android es un extra opcional que funciona por completo sin cuenta (modo local); una cuenta gratuita añade exportar/importar y restauración del perfil, y Premium añade sync automático en la nube.",
   "download.devCtaTools": "Explorar las calculadoras",
   "download.devCtaGithub": "Sigue el avance en GitHub",
   "download.platformsTitle": "Llegará a",
@@ -569,7 +570,7 @@ export const es: Record<TranslationKey, string> = {
   "download.betaBadge": "Versión beta — instalación manual",
   "download.betaTitle": "Prueba la beta de Metri",
   "download.betaBody":
-    "La app nativa de Android está disponible como descarga directa mientras preparamos el lanzamiento en tienda. Descarga el APK más reciente abajo — se actualiza por aire entre versiones. Al abrirla te pedirá una cuenta gratuita: sin tarjeta, sin pagos, solo un correo o Google / GitHub.",
+    "La app nativa de Android está disponible como descarga directa mientras preparamos el lanzamiento en tienda. Descarga el APK más reciente abajo — se actualiza por aire entre versiones. Úsala sin cuenta (modo local, tus datos se quedan en tu teléfono) o crea una gratuita — correo o Google / GitHub, sin tarjeta — para exportar/importar y restaurar tu perfil. Premium añade sync automático en la nube.",
   "download.androidDownload": "Descargar APK para Android",
   "download.iosBeta": "Beta de iOS — próximamente",
   "download.githubReleases": "Ver todos los releases y changelog",
@@ -605,8 +606,9 @@ export const es: Record<TranslationKey, string> = {
   "account.tier.soon": "Próximamente",
   "account.tier.free": "Cuenta gratis",
   "account.tier.freeDesc": "Calculadoras, historial y favoritos.",
-  "account.tier.pro": "Pro",
-  "account.tier.proDesc": "Sync en la nube, datos históricos y la app móvil.",
+  "account.tier.pro": "Premium",
+  "account.tier.proDesc":
+    "Sync automático de tu entrenamiento, dispositivos ilimitados.",
   "account.historyTitle": "Historial de cálculos",
   "account.historySubtitle": "Tus cálculos más recientes.",
   "account.historyEmpty":
@@ -647,12 +649,13 @@ export const es: Record<TranslationKey, string> = {
   "benefits.free.f2": "Fija calculadoras y guías favoritas",
   "benefits.free.f3": "Vincula Google o GitHub",
   "benefits.free.f4": "Sincroniza en toda la app web",
-  "benefits.soon.name": "Próximamente",
-  "benefits.soon.badge": "Próximamente",
-  "benefits.soon.tagline": "En la hoja de ruta.",
-  "benefits.soon.f1": "Sincronización con la app móvil Metri",
+  "benefits.soon.name": "Premium",
+  "benefits.soon.badge": "En beta",
+  "benefits.soon.tagline":
+    "Gratis durante la beta — pago con Stripe en progreso.",
+  "benefits.soon.f1": "Sync automático con la app móvil Metri",
   "benefits.soon.f2": "Copia de seguridad en la nube",
-  "benefits.soon.f3": "Historial entre dispositivos",
+  "benefits.soon.f3": "Dispositivos ilimitados, historial entre dispositivos",
 
   "settings.title": "Ajustes de la cuenta",
   "settings.subtitle":

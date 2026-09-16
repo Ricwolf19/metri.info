@@ -88,8 +88,8 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
   privacy: {
     en: {
       title: "Privacy Policy",
-      lead: "We collect as little as possible. On the web the calculators work without an account; the mobile app asks for a free one. We never sell your data, and there is nothing to pay.",
-      updated: "Last updated: August 2026",
+      lead: "We collect as little as possible. The calculators work without an account, and the mobile app does too — its local mode keeps everything on your phone and we store nothing at all. An optional free account (for export/import, restore and Premium sync) stores only your email and name. We never sell your data, and there is nothing to pay.",
+      updated: "Last updated: September 2026",
       sections: [
         {
           heading: "Calculators run locally",
@@ -138,8 +138,8 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
     },
     es: {
       title: "Política de Privacidad",
-      lead: "Recopilamos lo mínimo posible. En la web las calculadoras funcionan sin cuenta; la app móvil pide una gratuita. Nunca vendemos tus datos y no hay nada que pagar.",
-      updated: "Última actualización: agosto de 2026",
+      lead: "Recopilamos lo mínimo posible. Las calculadoras funcionan sin cuenta, y la app móvil también — su modo local mantiene todo en tu teléfono y no guardamos absolutamente nada. Una cuenta gratuita opcional (para exportar/importar, restaurar y el sync Premium) guarda solo tu correo y tu nombre. Nunca vendemos tus datos y no hay nada que pagar.",
+      updated: "Última actualización: septiembre de 2026",
       sections: [
         {
           heading: "Las calculadoras funcionan localmente",

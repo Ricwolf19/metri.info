@@ -33,12 +33,13 @@ favorites and sync across devices. It's free and open source.
 | | Account | Cost |
 | --- | --- | --- |
 | Web (this repo) | Optional — calculators and guides are open | Free |
-| [Mobile app](https://github.com/Ricwolf19/metri) | **Required** (free sign-up) | Free |
+| [Mobile app](https://github.com/Ricwolf19/metri) | Optional — local mode runs the full app on-device; a free account adds export/import & restore | Free |
 | Premium (cloud sync, backup) | Same account, feature-flagged | Free while in beta |
 
-One account covers both: the mobile app authenticates against this backend, so you can
-register at **[metri.info/sign-up](https://metri.info/sign-up)**
-([español](https://metri.info/es/registrarse)) and sign straight in on your phone.
+One optional account covers both: the mobile app authenticates against this backend, so you
+can register at **[metri.info/sign-up](https://metri.info/sign-up)**
+([español](https://metri.info/es/registrarse)) and sign straight in on your phone — or skip it
+entirely and run the app in local mode; creating the account later keeps everything you logged.
 
 ## Features
 

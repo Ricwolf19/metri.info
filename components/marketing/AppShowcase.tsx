@@ -19,6 +19,7 @@ import { GradientText } from "@/components/shared/GradientText";
 import { Parallax } from "@/components/shared/Parallax";
 import { buttonVariants } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
+import { appDistribution } from "@/lib/site";
 import type { TranslationKey } from "@/lib/i18n/en";
 import { routePath } from "@/lib/i18n/routes";
 import { cn } from "@/lib/utils";
@@ -143,7 +144,9 @@ export const AppShowcase = () => {
         <AnimatedItem>
           <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 font-mono text-xs font-medium tracking-wide text-brand">
             <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-            {t("showcase.badge")}
+            {appDistribution.status === "beta"
+              ? t("showcase.badgeBeta")
+              : t("showcase.badge")}
           </span>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-balance text-ink-50 sm:text-4xl">
             {t("showcase.title")}{" "}

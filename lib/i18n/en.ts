@@ -125,10 +125,11 @@ export const en = {
   "hero.ctaTools": "Try the Calculators",
 
   "showcase.badge": "In development",
+  "showcase.badgeBeta": "Beta — install today",
   "showcase.title": "A native app is",
   "showcase.highlight": "in the works.",
   "showcase.subtitle":
-    "Everything on Metri is free on the web today. We're building native iOS and Android apps with the same formulas, full offline support and synced progress. Here's what's coming.",
+    "Everything on Metri is free — web and app. The Android app is in beta today with the same formulas and full offline support, no account required; iOS is next. Optional account adds export/import, Premium adds sync.",
   "showcase.feature1": "Instant calculators that run on every keystroke",
   "showcase.feature2": "Works 100% offline — your data stays on device",
   "showcase.feature3": "Progress photos, reminders and synced history",
@@ -534,14 +535,14 @@ export const en = {
 
   "download.title": "Get Metri on your phone",
   "download.subtitle":
-    "Free and offline-first. Needs a free account — no card, no payment.",
+    "Free, open source and offline-first. No account needed — an optional free one adds extras.",
   "download.ios": "Download on the App Store",
   "download.android": "Get it on Google Play",
   "download.scan": "Scan to download",
   "download.devBadge": "Mobile app in development",
   "download.devTitle": "A native app is on the way",
   "download.devBody":
-    "Metri is free and open source on the web — every calculator and guide, no account, forever. The native iOS and Android app is an optional extra and asks for a free account, so your training syncs across devices.",
+    "Metri is free and open source on the web — every calculator and guide, no account, forever. The native iOS and Android app is an optional extra that works fully without an account (local mode); a free account adds export/import and profile restore, and Premium adds automatic cloud sync.",
   "download.devCtaTools": "Explore the calculators",
   "download.devCtaGithub": "Follow progress on GitHub",
   "download.platformsTitle": "Coming to",
@@ -553,7 +554,7 @@ export const en = {
   "download.betaBadge": "Beta build — manual install",
   "download.betaTitle": "Try the Metri beta",
   "download.betaBody":
-    "The native Android app is available as a direct download while we prepare the store release. Grab the latest APK below — it self-updates over the air between builds. It asks for a free account on first launch: no card, no payment, just an email or Google / GitHub.",
+    "The native Android app is available as a direct download while we prepare the store release. Grab the latest APK below — it self-updates over the air between builds. Use it with no account at all (local mode, data stays on your phone), or create a free one — email or Google / GitHub, no card — for export/import and profile restore. Premium adds automatic cloud sync.",
   "download.androidDownload": "Download APK for Android",
   "download.iosBeta": "iOS beta — coming soon",
   "download.githubReleases": "See all releases & changelog",
@@ -589,8 +590,9 @@ export const en = {
   "account.tier.soon": "Coming soon",
   "account.tier.free": "Free account",
   "account.tier.freeDesc": "Calculators, history and favorites.",
-  "account.tier.pro": "Pro",
-  "account.tier.proDesc": "Cloud sync, historical data and the mobile app.",
+  "account.tier.pro": "Premium",
+  "account.tier.proDesc":
+    "Automatic cloud sync of your training, unlimited devices.",
   "account.historyTitle": "Calculation history",
   "account.historySubtitle": "Your most recent calculations.",
   "account.historyEmpty":
@@ -631,12 +633,12 @@ export const en = {
   "benefits.free.f2": "Pin favorite calculators & guides",
   "benefits.free.f3": "Link Google or GitHub",
   "benefits.free.f4": "Sync across the web app",
-  "benefits.soon.name": "Coming soon",
-  "benefits.soon.badge": "Coming soon",
-  "benefits.soon.tagline": "On the roadmap.",
-  "benefits.soon.f1": "Metri mobile app sync",
+  "benefits.soon.name": "Premium",
+  "benefits.soon.badge": "In beta",
+  "benefits.soon.tagline": "Free while in beta — Stripe checkout in progress.",
+  "benefits.soon.f1": "Automatic Metri mobile app sync",
   "benefits.soon.f2": "Cloud backup of your data",
-  "benefits.soon.f3": "Cross-device history",
+  "benefits.soon.f3": "Unlimited devices, cross-device history",
 
   "settings.title": "Account settings",
   "settings.subtitle":
