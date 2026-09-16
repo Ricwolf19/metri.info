@@ -29,6 +29,7 @@ bun run dev            # dev server (Turbopack)
 bun run verify         # bun run ci — format + lint + typecheck + test + circular + build (CI gate)
 bun run test           # vitest — unit + PGlite integration suites
 bun run db:generate    # author migrations locally, commit them; Vercel migrates on deploy
+bun run db:status      # applied vs pending migrations on the live DB (exits 1 on drift)
 bun run admin:bootstrap
 ```
 
@@ -97,5 +98,5 @@ content/docs/   MDX knowledge base (en/es)
 lib/            calculations (pure math) · calculators (registry/configs) · sync · auth · db ·
                 i18n · seo · analytics · entitlements
 drizzle/        committed migrations
-docs/           sync.md (protocol, authoritative) · seo/ (EN+ES playbooks: seo, analytics, glossary)
+docs/           sync.md (protocol, authoritative)
 ```

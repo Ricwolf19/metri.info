@@ -102,10 +102,12 @@ the contact form activate only when their keys are present.
 | ------------------------- | ---------------------------------------------------- |
 | `bun run dev`             | Dev server (Turbopack)                               |
 | `bun run build`           | Production build                                     |
-| `bun run verify`          | format + lint + typecheck + circular-deps + build (CI gate) |
+| `bun run verify`          | format + lint + typecheck + tests + circular-deps + build (CI gate) |
+| `bun run test`            | Vitest — unit + PGlite integration suites            |
 | `bun run knip`            | Dead-code / unused-dependency check                  |
 | `bun run db:generate`     | Generate Drizzle migrations from the schema (local)  |
 | `bun run db:migrate`      | Apply pending migrations                             |
+| `bun run db:status`       | Applied vs pending migrations on the live database   |
 | `bun run db:studio`       | Open Drizzle Studio                                  |
 | `bun run admin:bootstrap` | Create the first admin user                          |
 | `bun run gen:favicons`    | Regenerate favicons/PWA icons                        |
