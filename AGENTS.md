@@ -44,7 +44,8 @@ committed, `scripts/vercel-migrate.mjs` applies it on deploy.
 - **State**: no Zustand/Redux — Server Components fetch directly; client state is URL params +
   Context providers.
 - **SEO is server-first**: Metadata API, JSON-LD, file-based sitemap/robots/manifest, dynamic OG.
-  Before touching SEO/analytics/i18n routing, read the playbooks in `docs/seo/` (EN+ES, kept 1:1).
+  `app/sitemap.ts` must stay statically cached (`"use cache"` + `cacheLife("max")`) — a per-request
+  sitemap broke GSC ingestion. SEO/analytics playbooks live in the maintainer's private notes.
 - **Entitlements**: gate with `can(plan, feature)` (`lib/entitlements.ts`), never
   `plan === "premium"`. `subscription` is the billing source of truth; `user.plan` is a denormalized
   cache the client can never write (`input: false`).

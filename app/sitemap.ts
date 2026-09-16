@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { cacheLife } from "next/cache";
 
 import { CALC_IDS, ROUTES, type RouteId } from "@/lib/i18n/routes";
 import { getDoc, getDocSlugs } from "@/lib/docs";
@@ -31,7 +32,13 @@ const entry = (
   }));
 };
 
-const sitemap = (): MetadataRoute.Sitemap => {
+// Cached at build (cacheComponents' replacement for `force-static`): rendered
+// per request, the sitemap risked cold-start 5xx right when Google fetched it,
+// and a request-time `now` made every <lastmod> claim "modified this second".
+// See AGENTS.md → Invariants.
+const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
+  "use cache";
+  cacheLife("max");
   const now = new Date();
 
   const sections: RouteId[] = ["home", "tools", "docs", "download"];
