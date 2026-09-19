@@ -33,13 +33,26 @@ favorites and sync across devices. It's free and open source.
 | | Account | Cost |
 | --- | --- | --- |
 | Web (this repo) | Optional — calculators and guides are open | Free |
-| [Mobile app](https://github.com/Ricwolf19/metri) | Optional — local mode runs the full app on-device; a free account adds export/import & restore | Free |
+| [Mobile app](https://github.com/Ricwolf19/metri) | Optional — local mode runs the full app on-device, export/import included | Free |
 | Premium (cloud sync, backup) | Same account, feature-flagged | Free while in beta |
 
 One optional account covers both: the mobile app authenticates against this backend, so you
 can register at **[metri.info/sign-up](https://metri.info/sign-up)**
 ([español](https://metri.info/es/registrarse)) and sign straight in on your phone — or skip it
 entirely and run the app in local mode; creating the account later keeps everything you logged.
+
+### Your data
+
+The scope is deliberate and it binds this backend too:
+
+- **Export and import are never gated.** Any mobile user — account or not, Premium or not — can
+  pull their entire history out as one JSON file and load it back. No feature we ship may put a
+  user's own data behind a sign-up or a payment.
+- **This server never reads your training data.** Sync stores opaque rows: `lib/sync/store.ts`
+  persists `data` as an untouched JSONB blob keyed by `(userId, tableName, rowId)` and never
+  inspects the contents. Progress photos and reminders are never uploaded at all.
+- **We charge for sync and future add-ons, never for access.** Cloud sync today, a watch app and
+  similar later. Nothing that already worked becomes paid, and nothing makes leaving harder.
 
 ## Features
 
