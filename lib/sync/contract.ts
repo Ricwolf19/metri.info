@@ -23,6 +23,7 @@ export const SYNC_TABLES = [
   "set_logs",
   "training_days",
   "body_metrics",
+  "exercise_settings",
 ] as const;
 
 const TABLES = new Set<string>(SYNC_TABLES);
