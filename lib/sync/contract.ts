@@ -24,6 +24,7 @@ export const SYNC_TABLES = [
   "training_days",
   "body_metrics",
   "exercise_settings",
+  "warmup_routines",
 ] as const;
 
 const TABLES = new Set<string>(SYNC_TABLES);
