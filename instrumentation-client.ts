@@ -33,6 +33,12 @@ Sentry.init({
     /Failed to fetch/i,
     /Load failed/i,
     /NetworkError when attempting to fetch/i,
+    // Structured-data scanners injected by browser extensions: they read our
+    // JSON-LD and call a string method on a field they assumed was there.
+    // Nothing in this app reads `@context` at runtime, so such an error is
+    // always theirs — and Safari attributes an injected inline script to the
+    // page URL, which is why `denyUrls` below never matched it.
+    /\["@context"\]\.(toLowerCase|startsWith|indexOf|match|replace)/,
   ],
   // Errors thrown from an extension content script. The SDK's default
   // eventFilters already cover the well-known extension *messages*
