@@ -22,10 +22,11 @@ export {
   bmr,
   calorieDeficit,
   caloriesBurned,
-  macros,
+  macroTargets,
   proteinTarget,
   tdee,
 } from "./energy";
+export type { MacroTargets } from "./energy";
 
 export {
   bmi,

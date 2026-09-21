@@ -2,10 +2,13 @@ import {
   ACTIVITY_MULTIPLIERS,
   type ActivityLevel,
   type BmrFormula,
+  FAT_PER_KG,
   type Goal,
+  type MacroPhase,
   PROTEIN_PER_KG,
-  type Sex,
+  PROTEIN_PER_KG_LEAN,
   round,
+  type Sex,
 } from "./shared";
 
 export const bmr = (
@@ -42,14 +45,50 @@ export const bmr = (
 export const tdee = (bmrValue: number, activity: ActivityLevel): number =>
   round(bmrValue * ACTIVITY_MULTIPLIERS[activity], 0);
 
-export const macros = (calories: number, weightKg: number, goal: Goal) => {
-  const protein = round(PROTEIN_PER_KG[goal] * weightKg, 0);
-  const proteinKcal = protein * 4;
-  const fatKcal = calories * 0.25;
-  const fat = round(fatKcal / 9, 0);
-  const carbsKcal = Math.max(0, calories - proteinKcal - fatKcal);
-  const carbs = round(carbsKcal / 4, 0);
-  return { protein, fat, carbs };
+export type MacroTargets = {
+  kcal: number;
+  proteinG: number;
+  fatG: number;
+  carbsG: number;
+  basis: "lean" | "bodyweight";
+  /** Protein + fat alone already exceed the calories; carbs hit zero. */
+  carbsExhausted: boolean;
+};
+
+/**
+ * The macro model — mirrored 1:1 in the mobile app.
+ *
+ * Grams per kilo, not percentages: protein and fat are fixed first, carbs take
+ * whatever energy is left.
+ */
+export const macroTargets = ({
+  kcal,
+  weightKg,
+  bodyFatPct,
+  phase,
+}: {
+  kcal: number;
+  weightKg: number;
+  bodyFatPct?: number | null;
+  phase: MacroPhase;
+}): MacroTargets => {
+  const knowsLean = bodyFatPct != null && bodyFatPct > 0 && bodyFatPct < 60;
+  const proteinG = round(
+    knowsLean
+      ? PROTEIN_PER_KG_LEAN * weightKg * (1 - bodyFatPct / 100)
+      : PROTEIN_PER_KG[phase] * weightKg,
+    0,
+  );
+  const fatG = round(FAT_PER_KG[phase] * weightKg, 0);
+  const left = kcal - proteinG * 4 - fatG * 9;
+  return {
+    kcal,
+    proteinG,
+    fatG,
+    carbsG: Math.max(0, round(left / 4, 0)),
+    basis: knowsLean ? "lean" : "bodyweight",
+    carbsExhausted: left < 0,
+  };
 };
 
 const KCAL_PER_KG = 7700;

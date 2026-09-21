@@ -261,6 +261,11 @@ export const en = {
   "calc.metric": "Metric",
   "calc.imperial": "Imperial",
   "calc.profilePrefilled": "Prefilled from your profile — edit anything below.",
+  "calc.bodyFatOptional": "Body fat (optional)",
+  "calc.macrosLeanBasis":
+    "Protein is scaled to your lean mass (2.2 g/kg), not your bodyweight.",
+  "calc.macrosCarbsExhausted":
+    "Protein and fat alone already use up these calories — raise calories or lower the targets.",
   "calc.bodyFat": "Body fat",
   "calc.neck": "Neck",
   "calc.waist": "Waist",

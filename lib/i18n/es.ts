@@ -274,6 +274,11 @@ export const es: Record<TranslationKey, string> = {
   "calc.imperial": "Imperial",
   "calc.profilePrefilled":
     "Rellenado desde tu perfil — edita lo que quieras abajo.",
+  "calc.bodyFatOptional": "Grasa corporal (opcional)",
+  "calc.macrosLeanBasis":
+    "La proteína se calcula con tu masa magra (2.2 g/kg), no con tu peso.",
+  "calc.macrosCarbsExhausted":
+    "La proteína y la grasa ya agotan estas calorías — sube las calorías o baja los objetivos.",
   "calc.bodyFat": "Grasa corporal",
   "calc.neck": "Cuello",
   "calc.waist": "Cintura",
