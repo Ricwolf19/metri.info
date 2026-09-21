@@ -47,6 +47,12 @@ committed, `scripts/vercel-migrate.mjs` applies it on deploy.
 - **SEO is server-first**: Metadata API, JSON-LD, file-based sitemap/robots/manifest, dynamic OG.
   `app/sitemap.ts` must stay statically cached (`"use cache"` + `cacheLife("max")`) — a per-request
   sitemap broke GSC ingestion. SEO/analytics playbooks live in the maintainer's private notes.
+- **JSON-LD emits one `<script type="application/ld+json">` per node, never one array.** A bare
+  array makes `JSON.parse(el.textContent)["@context"]` undefined, which is how page-scanning
+  browser extensions crash on our pages (`components/seo/JsonLd.tsx` explains the escaping too).
+- **`lib/calculations` is mirrored 1:1 in the mobile app** (`src/features/calculators/math`).
+  Same rule as the sync contract: change one, change both, or the two apps quote different
+  numbers for the same body. Only `lib/calculations/energy.test.ts` guards this side.
 - **Entitlements**: gate with `can(plan, feature)` (`lib/entitlements.ts`), never
   `plan === "premium"`. `subscription` is the billing source of truth; `user.plan` is a denormalized
   cache the client can never write (`input: false`).
