@@ -131,7 +131,10 @@ All configuration is optional — see [`.env.example`](./.env.example) for the f
 list and inline docs. In short: `DATABASE_URL` + `BETTER_AUTH_SECRET` enable
 accounts, OAuth pairs enable social sign-in, `RESEND_API_KEY` powers contact +
 password-reset email, and the `*_POSTHOG_*` / `NEXT_PUBLIC_GA_ID` keys enable
-analytics. Copy the file to `.env` and fill in only what you need.
+analytics. `RELEASE_WEBHOOK_SECRET` turns on the mobile release webhook
+(`POST /api/releases/notify`, which stores the release and emails opted-in users
+from `AUTH_FROM_EMAIL`). Copy the file
+to `.env` and fill in only what you need.
 
 ## Documentation
 

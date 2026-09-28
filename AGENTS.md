@@ -82,6 +82,8 @@ Read `docs/sync.md` before touching `app/api/sync/*` or `lib/sync/*`. Load-beari
   `send-failed` / `send-skipped` events in Vercel logs). "User never got the email" almost always
   means the from-address is still Resend's restricted `onboarding@resend.dev` — verify a domain and
   set `AUTH_FROM_EMAIL`.
+- `AUTH_FROM_EMAIL` is the one sender for everything an account receives (verification, reset,
+  release notices) — no per-feature from-address.
 - Rate limits are hardcoded in `RATE_LIMITS` (`lib/auth/server.ts`) — edit + redeploy, don't turn
   them into env vars. `BETTER_AUTH_RATE_LIMIT_ENABLED=false` is the single env kill-switch.
 - Map new Better Auth error codes in `authErrorMessage()` (`lib/auth/errors.ts`); never surface
@@ -89,20 +91,41 @@ Read `docs/sync.md` before touching `app/api/sync/*` or `lib/sync/*`. Load-beari
 
 ## Mobile app distribution
 
-`appDistribution` in `lib/site.ts` drives the Download page (`development` | `beta` | `live`). The
-APK link `releases/download/apk-beta/metri.apk` is a contract with the mobile repo's release
-workflow — both the fixed tag and the asset name are load-bearing; deliberately NOT
-`releases/latest/…` (release-please's semver releases would break it). The pipeline itself lives in
-the mobile repo (`README.md` → "CI & Release Pipeline").
+`appDistribution` in `lib/site.ts` drives the Download page (`development` | `beta` | `live`).
+Contract with the mobile repo's release workflow (the pipeline itself lives there):
+
+- Every release-please release `metri-v<version>` carries `metri-<version>.apk`,
+  `metri-<version>.apk.sha256` and `release.json` =
+  `{ version, tag, runtimeVersion, apk, sha256, sizeBytes }`. Asset names and the tag shape are
+  load-bearing (`TAG_RE`/`buildRelease` in `lib/releases/github.ts` cross-check all of it).
+- CI then calls `POST /api/releases/notify` (`Bearer RELEASE_WEBHOOK_SECRET`, body `{ tag }`; 503
+  while the secret is unset). Only the tag is trusted — everything stored is re-read from GitHub.
+  It upserts `app_release`, expires the `app-release` cache tag, and emails verified users with
+  `user.release_emails` once. The audience is frozen to accounts created at or before
+  `published_at`, sent in id order; `notify_cursor` (last accepted user id) is saved after each
+  batch, so a replay resumes instead of re-mailing, and the key `release-<tag>-after-<cursor|start>`
+  dedupes a batch Resend accepted before the cursor was saved. Batches are paced 600 ms apart (one
+  retry on 429); the first failure stops the run. `notified_at` is stamped only when it finished.
+- `getLatestRelease()` (`use cache`, tagged) = newest row by `published_at`, else GitHub's newest
+  stable release with a `release.json`. It feeds `GET /api/latest-version` (public, CDN-cached)
+  and the Download page, which links the VERSIONED `apkUrl` — never replaced under a download.
+- The tagged release is the ONLY download source (the rolling `apk-beta` release is gone). With no
+  release known the page links the GitHub releases list. Never `releases/latest/…`: release-please
+  creates the release about an hour before CI attaches its APK.
+- Release emails: on by default, one-click opt-out. Unsubscribe tokens are HMACs keyed off
+  `BETTER_AUTH_SECRET` (`lib/releases/unsubscribe.ts`); rotating it dead-links old emails. A GET
+  never unsubscribes (link scanners) — only the page's form or the RFC 8058 POST does. The mobile
+  app reads/writes the flag as `releaseEmails` on `/api/profile`.
 
 ## Layout
 
 ```
-app/            App Router routes (EN at root, ES under /es) + SEO files + api/{auth,sync,cron}
+app/            App Router routes (EN at root, ES under /es) + SEO files +
+                api/{auth,sync,cron,profile,releases,latest-version}
 components/     ui, icons (barrel), layout, marketing, calculators, docs, account, admin, auth, …
 content/docs/   MDX knowledge base (en/es)
 lib/            calculations (pure math) · calculators (registry/configs) · sync · auth · db ·
-                i18n · seo · analytics · entitlements
+                i18n · seo · analytics · entitlements · releases (mobile release feed + emails)
 drizzle/        committed migrations
 docs/           sync.md (protocol, authoritative)
 ```
