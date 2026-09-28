@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 import { getSession } from "@/lib/auth/session";
 import { db } from "@/lib/db";
-import { userProfile } from "@/lib/db/schema";
+import { user, userProfile } from "@/lib/db/schema";
 
 /**
  * Account profile for the mobile app — what makes a reinstall feel like the
@@ -14,6 +14,11 @@ import { userProfile } from "@/lib/db/schema";
  *   PUT → full replace of the whitelisted fields: omitted or invalid fields
  *         are stored as null (units falls back to "kg"), unknown fields are
  *         ignored. The client always sends the complete profile.
+ *
+ * `releaseEmails` (new-release announcements) lives on `user`, not the profile
+ * row, and is the one field that is NOT full-replace: it is written only when
+ * the body carries a boolean, so builds that predate it never flip it. GET
+ * returns it inside `profile` (when a row exists) and at the top level.
  */
 
 const num = (v: unknown): number | null =>
@@ -27,13 +32,24 @@ export const GET = async () => {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
-  const [row] = await db
-    .select()
-    .from(userProfile)
-    .where(eq(userProfile.id, session.user.id))
-    .limit(1);
+  const [[row], [account]] = await Promise.all([
+    db
+      .select()
+      .from(userProfile)
+      .where(eq(userProfile.id, session.user.id))
+      .limit(1),
+    db
+      .select({ releaseEmails: user.releaseEmails })
+      .from(user)
+      .where(eq(user.id, session.user.id))
+      .limit(1),
+  ]);
+  const releaseEmails = account?.releaseEmails ?? true;
 
-  return NextResponse.json({ profile: row ?? null });
+  return NextResponse.json({
+    profile: row ? { ...row, releaseEmails } : null,
+    releaseEmails,
+  });
 };
 
 export const PUT = async (req: Request) => {
@@ -75,6 +91,13 @@ export const PUT = async (req: Request) => {
       target: userProfile.id,
       set: { ...values, updatedAt: new Date() },
     });
+
+  if (typeof body.releaseEmails === "boolean") {
+    await db
+      .update(user)
+      .set({ releaseEmails: body.releaseEmails, updatedAt: new Date() })
+      .where(eq(user.id, session.user.id));
+  }
 
   return NextResponse.json({ ok: true });
 };
