@@ -577,6 +577,15 @@ export const en = {
   "download.pwaHint":
     "In Chrome or Edge, open the browser menu and choose “Install Metri”.",
 
+  "download.releaseTitle": "Latest release",
+  "download.version": "Version {version}",
+  "download.releasedOn": "Released {date}",
+  "download.sizeMb": "{size} MB",
+  "download.checksum": "SHA-256",
+  "download.checksumHint":
+    "Compare it with the downloaded file to confirm the APK arrived intact.",
+  "download.releaseNotes": "Release notes",
+
   "releaseEmail.subject": "Metri {version} is out",
   "releaseEmail.preview": "What's new in Metri {version}",
   "releaseEmail.heading": "Metri {version} is out",

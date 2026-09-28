@@ -593,6 +593,15 @@ export const es: Record<TranslationKey, string> = {
   "download.pwaHint":
     "En Chrome o Edge, abre el menú del navegador y elige «Instalar Metri».",
 
+  "download.releaseTitle": "Última versión",
+  "download.version": "Versión {version}",
+  "download.releasedOn": "Publicada el {date}",
+  "download.sizeMb": "{size} MB",
+  "download.checksum": "SHA-256",
+  "download.checksumHint":
+    "Compáralo con el archivo descargado para confirmar que el APK llegó íntegro.",
+  "download.releaseNotes": "Notas de la versión",
+
   "releaseEmail.subject": "Ya salió Metri {version}",
   "releaseEmail.preview": "Novedades de Metri {version}",
   "releaseEmail.heading": "Ya salió Metri {version}",

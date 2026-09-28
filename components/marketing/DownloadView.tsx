@@ -8,25 +8,30 @@ import {
   SmartphoneIcon,
 } from "@/components/icons";
 import { DownloadButtons } from "@/components/marketing/DownloadButtons";
+import { ReleaseDetails } from "@/components/marketing/ReleaseDetails";
 import { InstallPwaCard } from "@/components/pwa/InstallPwaCard";
 import { Container } from "@/components/shared/Container";
 import { buttonVariants } from "@/components/ui/button";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
+import { getLatestRelease } from "@/lib/releases/store";
 import { appDistribution, mobileAppReleases, mobileAppRepo } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 /** Download page body — shared by /download (EN) and /es/descargar (ES).
- * While the app is in development it shows a "coming soon" state.
+ * While the app is in development it shows a "coming soon" state; in beta it
+ * links the newest release's versioned APK, or the GitHub releases list when
+ * none is known (@see AGENTS.md#mobile-app-distribution).
  *
  * Two-column layout: the pitch on the left, the "coming to" platforms in a side
  * panel on the right — uses the horizontal space instead of a tall, narrow
  * column, so the page stays compact and vertically balanced. */
-export const DownloadView = ({ locale }: { locale: Locale }) => {
+export const DownloadView = async ({ locale }: { locale: Locale }) => {
   const t = createT(locale);
   const isDev = appDistribution.status === "development";
   const isBeta = appDistribution.status === "beta";
-  const apk = appDistribution.android.apk;
+  const release = isBeta ? await getLatestRelease() : null;
+  const apk = release?.apkUrl ?? mobileAppReleases;
 
   const platforms = [
     { icon: AppleIcon, label: t("download.iosSoon") },
@@ -71,7 +76,10 @@ export const DownloadView = ({ locale }: { locale: Locale }) => {
           </p>
 
           {isBeta ? (
-            <DownloadButtons apk={apk} releasesUrl={mobileAppReleases} />
+            <>
+              <DownloadButtons apk={apk} releasesUrl={mobileAppReleases} />
+              {release && <ReleaseDetails release={release} locale={locale} />}
+            </>
           ) : (
             <div className="mt-8 flex flex-wrap gap-3">
               <Link

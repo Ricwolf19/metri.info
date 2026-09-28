@@ -6,7 +6,7 @@ import { metaAlternates } from "@/lib/i18n/routes";
 export const metadata: Metadata = {
   title: "Download the Metri app",
   description:
-    "Metri for iOS and Android is in development. Meanwhile, use every fitness calculator free on the web.",
+    "Download the Metri beta for Android — a free, open-source, offline-first workout tracker. Direct APK with version, release notes and SHA-256 checksum; iOS coming soon.",
   alternates: metaAlternates("download", "en"),
 };
 
