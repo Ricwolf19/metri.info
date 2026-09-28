@@ -17,6 +17,8 @@ export const tags = {
     /** GA4 Data API reports. */
     ga: "metrics:ga",
   },
+  /** `getLatestRelease` — expired by the release webhook. */
+  appRelease: "app-release",
   /** One user's pinned list. */
   favorites: (userId: string) => `favorites:${userId}`,
 } as const;
