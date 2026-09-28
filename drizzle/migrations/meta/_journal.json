@@ -50,6 +50,13 @@
       "when": 1785702268590,
       "tag": "0006_boring_victor_mancha",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1790633185105,
+      "tag": "0007_blue_tarantula",
+      "breakpoints": true
     }
   ]
 }

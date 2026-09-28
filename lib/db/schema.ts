@@ -1,4 +1,5 @@
 import {
+  bigint,
   boolean,
   index,
   integer,
@@ -22,6 +23,9 @@ export const user = pgTable("user", {
   // change so it rides on the Better Auth session (fast client read). The
   // client never writes it (additionalFields `input: false`).
   plan: text("plan").default("free").notNull(),
+  // Release announcement emails, on by default. Cleared by the email's
+  // unsubscribe link/header or `releaseEmails` on `/api/profile`.
+  releaseEmails: boolean("release_emails").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -173,3 +177,27 @@ export const syncRow = pgTable(
     index("sync_row_pull_idx").on(t.userId, t.serverUpdatedAt),
   ],
 );
+
+/**
+ * One row per mobile release, written by `POST /api/releases/notify` from the
+ * release's `release.json` on GitHub (never the webhook body). `notifiedAt` is
+ * stamped only after every batch went out — a replay then emails nobody;
+ * until then `notifyCursor` lets a replay resume where the last one stopped.
+ */
+export const appRelease = pgTable("app_release", {
+  id: text("id").primaryKey(),
+  version: text("version").notNull().unique(),
+  tag: text("tag").notNull().unique(),
+  runtimeVersion: text("runtime_version").notNull(),
+  apkUrl: text("apk_url").notNull(),
+  sha256: text("sha256").notNull(),
+  sizeBytes: bigint("size_bytes", { mode: "number" }).notNull(),
+  notes: text("notes").notNull().default(""), // release-please markdown, verbatim
+  releaseUrl: text("release_url").notNull(),
+  publishedAt: timestamp("published_at", { withTimezone: true }).notNull(),
+  notifiedAt: timestamp("notified_at", { withTimezone: true }),
+  notifyCursor: text("notify_cursor"), // last user id of an accepted batch
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
