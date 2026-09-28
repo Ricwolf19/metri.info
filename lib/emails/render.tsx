@@ -1,6 +1,7 @@
 import { render } from "@react-email/components";
 import { createElement } from "react";
 
+import { ReleaseEmail } from "./templates/ReleaseEmail";
 import { ResetPasswordEmail } from "./templates/ResetPasswordEmail";
 import { VerifyEmail } from "./templates/VerifyEmail";
 
@@ -26,3 +27,7 @@ export const renderResetPasswordEmail = (props: {
   url: string;
   expiresIn?: string;
 }): Promise<Rendered> => renderEmail(createElement(ResetPasswordEmail, props));
+
+export const renderReleaseEmail = (
+  props: React.ComponentProps<typeof ReleaseEmail>,
+): Promise<Rendered> => renderEmail(createElement(ReleaseEmail, props));

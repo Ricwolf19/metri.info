@@ -593,6 +593,32 @@ export const es: Record<TranslationKey, string> = {
   "download.pwaHint":
     "En Chrome o Edge, abre el menú del navegador y elige «Instalar Metri».",
 
+  "releaseEmail.subject": "Ya salió Metri {version}",
+  "releaseEmail.preview": "Novedades de Metri {version}",
+  "releaseEmail.heading": "Ya salió Metri {version}",
+  "releaseEmail.intro":
+    "Hay una nueva versión de la app de Metri para Android. Esto es lo que cambió:",
+  "releaseEmail.download": "Descargar para Android",
+  "releaseEmail.downloadPage": "Abrir la página de descarga",
+  "releaseEmail.tagline":
+    "Metri — fitness de código abierto, hecho para quienes entrenan.",
+  "releaseEmail.footer":
+    "Recibes este correo porque tu cuenta de Metri tiene activados los avisos de nuevas versiones.",
+  "releaseEmail.unsubscribe": "Dejar de recibir avisos de versiones",
+
+  "unsubscribe.metaTitle": "Avisos de versiones",
+  "unsubscribe.title": "¿Dejar de recibir avisos de versiones?",
+  "unsubscribe.body":
+    "Te escribimos cuando sale una nueva versión de la app de Metri. Confirma abajo y dejaremos de hacerlo — tu cuenta y tus datos quedan exactamente igual.",
+  "unsubscribe.confirm": "Cancelar suscripción",
+  "unsubscribe.doneTitle": "Suscripción cancelada",
+  "unsubscribe.doneBody":
+    "Ya no recibirás avisos de nuevas versiones. Puedes volver a activarlos desde los ajustes de tu perfil en la app de Metri.",
+  "unsubscribe.invalidTitle": "Este enlace no funciona",
+  "unsubscribe.invalidBody":
+    "El enlace para cancelar la suscripción no es válido o está incompleto. Ábrelo de nuevo desde el último correo de versión.",
+  "unsubscribe.home": "Volver a metri.info",
+
   "favorites.pin": "Añadir a favoritos",
   "favorites.unpin": "Quitar de favoritos",
 

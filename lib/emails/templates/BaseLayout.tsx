@@ -53,7 +53,16 @@ export const MetriLogoEmail = ({ size = 40 }: { size?: number }) => (
   </svg>
 );
 
-const Footer = () => (
+const DEFAULT_FOOTER_NOTE =
+  "You received this email because someone (hopefully you) used this address on metri.info. If it wasn't you, you can safely ignore it.";
+
+const Footer = ({
+  tagline,
+  note,
+}: {
+  tagline: string;
+  note: React.ReactNode;
+}) => (
   <Section style={{ marginTop: 32 }}>
     <Hr
       style={{
@@ -70,7 +79,7 @@ const Footer = () => (
         margin: 0,
       }}
     >
-      Metri — open-source fitness, built for lifters.
+      {tagline}
     </Text>
     <Text
       style={{
@@ -80,21 +89,27 @@ const Footer = () => (
         margin: "8px 0 0",
       }}
     >
-      You received this email because someone (hopefully you) used this address
-      on metri.info. If it wasn&apos;t you, you can safely ignore it.
+      {note}
     </Text>
   </Section>
 );
 
-/** Shared shell for transactional emails — logo, card, footer. */
+/** Shared shell for transactional emails — logo, card, footer. The footer
+ * defaults to the auth-mail copy; announcements pass their own opt-out note. */
 export const EmailShell = ({
   preview,
   children,
+  lang = "en",
+  tagline = "Metri — open-source fitness, built for lifters.",
+  footerNote = DEFAULT_FOOTER_NOTE,
 }: {
   preview: string;
   children: React.ReactNode;
+  lang?: string;
+  tagline?: string;
+  footerNote?: React.ReactNode;
 }) => (
-  <Html lang="en">
+  <Html lang={lang}>
     <Head />
     <Preview>{preview}</Preview>
     <Body
@@ -127,7 +142,7 @@ export const EmailShell = ({
         >
           {children}
         </Section>
-        <Footer />
+        <Footer tagline={tagline} note={footerNote} />
       </Container>
     </Body>
   </Html>

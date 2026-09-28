@@ -9,6 +9,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import {
+  renderReleaseEmail,
   renderResetPasswordEmail,
   renderVerifyEmail,
 } from "../lib/emails/render";
@@ -40,6 +41,29 @@ const cases = [
         expiresIn: "1 hour",
       }),
   },
+  ...(["en", "es"] as const).map((locale) => ({
+    file: `release-${locale}`,
+    run: () =>
+      renderReleaseEmail({
+        locale,
+        version: "1.12.0",
+        notes: [
+          "## [1.12.0](https://github.com/Ricwolf19/metri/compare/metri-v1.11.0...metri-v1.12.0) (2026-09-28)",
+          "",
+          "### Features",
+          "",
+          "* **training:** plate math in the set input ([abc1234](https://github.com/Ricwolf19/metri/commit/abc1234))",
+          "",
+          "### Bug Fixes",
+          "",
+          "* **onboarding:** convert body weight with `lbToKg`",
+        ].join("\n"),
+        apkUrl:
+          "https://github.com/Ricwolf19/metri/releases/download/metri-v1.12.0/metri-1.12.0.apk",
+        downloadPageUrl: "https://metri.info/download",
+        unsubscribeUrl: "https://metri.info/unsubscribe?token=DEMO",
+      }),
+  })),
 ] as const;
 
 const main = async () => {

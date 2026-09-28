@@ -577,6 +577,31 @@ export const en = {
   "download.pwaHint":
     "In Chrome or Edge, open the browser menu and choose “Install Metri”.",
 
+  "releaseEmail.subject": "Metri {version} is out",
+  "releaseEmail.preview": "What's new in Metri {version}",
+  "releaseEmail.heading": "Metri {version} is out",
+  "releaseEmail.intro":
+    "A new version of the Metri Android app is ready. Here's what changed:",
+  "releaseEmail.download": "Download for Android",
+  "releaseEmail.downloadPage": "Open the download page",
+  "releaseEmail.tagline": "Metri — open-source fitness, built for lifters.",
+  "releaseEmail.footer":
+    "You're getting this because your Metri account has release emails turned on.",
+  "releaseEmail.unsubscribe": "Unsubscribe from release emails",
+
+  "unsubscribe.metaTitle": "Release emails",
+  "unsubscribe.title": "Stop release emails?",
+  "unsubscribe.body":
+    "We email you when a new version of the Metri app ships. Confirm below and we'll stop — your account and data stay exactly as they are.",
+  "unsubscribe.confirm": "Unsubscribe",
+  "unsubscribe.doneTitle": "You're unsubscribed",
+  "unsubscribe.doneBody":
+    "You won't get release emails anymore. You can turn them back on from your profile settings in the Metri app.",
+  "unsubscribe.invalidTitle": "This link doesn't work",
+  "unsubscribe.invalidBody":
+    "The unsubscribe link is invalid or incomplete. Open it again from the latest release email.",
+  "unsubscribe.home": "Back to metri.info",
+
   "favorites.pin": "Add to favorites",
   "favorites.unpin": "Remove from favorites",
 

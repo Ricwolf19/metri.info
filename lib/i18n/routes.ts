@@ -23,6 +23,7 @@ export type RouteId =
   | "resetPassword"
   | "account"
   | "activity"
+  | "unsubscribe"
   | "ffmi"
   | "onerm"
   | "tdee"
@@ -64,6 +65,7 @@ export const ROUTES: Record<RouteId, RouteEntry> = {
   },
   account: { en: "/account", es: "/es/cuenta" },
   activity: { en: "/account/activity", es: "/es/cuenta/actividad" },
+  unsubscribe: { en: "/unsubscribe", es: "/es/cancelar-suscripcion" },
   ffmi: {
     en: "/tools/ffmi-calculator",
     es: "/es/herramientas/calculadora-ffmi",
