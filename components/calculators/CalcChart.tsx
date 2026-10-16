@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { useT } from "@/lib/i18n";
 import type { CalcChart as Chart } from "@/lib/calculators/types";
 import { cn } from "@/lib/utils";
@@ -47,6 +48,7 @@ const Gauge = ({
         strokeLinecap="round"
         strokeDasharray={`${ARC * C * frac} ${C}`}
         transform="rotate(135 60 60)"
+        className="chart-anim"
       />
     </svg>
   );
@@ -90,10 +92,13 @@ const Ring = ({
           strokeWidth="10"
           strokeLinecap="round"
           strokeDasharray={`${clamp(frac, 0, 1) * C} ${C}`}
+          className="chart-anim"
         />
       </svg>
-      <span className="absolute inset-0 flex flex-col items-center justify-center font-mono font-bold text-ink-50">
-        <span className={valueClass}>{value}</span>
+      <span className="absolute inset-0 flex flex-col items-center justify-center font-mono font-bold text-ink-50 tabular-nums">
+        <span className={valueClass}>
+          <AnimatedNumber value={value} />
+        </span>
         {unit && <span className="text-xs text-ink-400">{unit}</span>}
       </span>
     </div>
@@ -137,9 +142,9 @@ export const CalcChart = ({
             >
               {b.labelKey ? t(b.labelKey) : b.label}
             </span>
-            <div className="h-2.5 min-w-0 flex-1 overflow-hidden rounded-full bg-ink-700">
+            <div className="h-3 min-w-0 flex-1 overflow-hidden rounded-full bg-ink-700">
               <div
-                className="h-full rounded-full"
+                className="chart-anim h-full rounded-full"
                 style={{
                   width: `${clamp((b.value / (chart.max || 1)) * 100, 0, 100)}%`,
                   background: b.color,
@@ -149,11 +154,11 @@ export const CalcChart = ({
             </div>
             <span
               className={cn(
-                "shrink-0 truncate text-right font-mono text-xs text-ink-100",
+                "shrink-0 truncate text-right font-mono text-xs text-ink-100 tabular-nums",
                 valueW,
               )}
             >
-              {b.display}
+              <AnimatedNumber value={b.display} />
             </span>
           </div>
         ))}
@@ -198,7 +203,7 @@ export const CalcChart = ({
             <span
               key={i}
               title={`${p} kg`}
-              className="rounded-[2px] ring-1 ring-black/15"
+              className="chart-anim rounded-[2px] ring-1 ring-black/15"
               style={{
                 height: `${plateHeight(p)}px`,
                 width: "9px",
@@ -216,10 +221,11 @@ export const CalcChart = ({
     const total = chart.segments.reduce((s, x) => s + x.value, 0) || 1;
     return (
       <div className="mt-1 w-full">
-        <div className="flex h-3 w-full overflow-hidden rounded-full">
+        <div className="flex h-3.5 w-full gap-0.5 overflow-hidden rounded-full">
           {chart.segments.map((s) => (
             <div
               key={s.labelKey}
+              className="chart-anim first:rounded-l-full last:rounded-r-full"
               style={{
                 width: `${(s.value / total) * 100}%`,
                 background: s.color,
@@ -270,22 +276,22 @@ export const CalcChart = ({
         />
         <span
           className={cn(
-            "absolute inset-0 flex items-center justify-center font-mono font-bold text-ink-50",
+            "absolute inset-0 flex items-center justify-center font-mono font-bold text-ink-50 tabular-nums",
             valueClass,
           )}
         >
-          {value}
+          <AnimatedNumber value={String(value)} />
         </span>
       </div>
       <span
-        className="mt-1 rounded-md px-2 py-0.5 text-xs font-medium"
+        className="mt-1 rounded-md px-2 py-0.5 text-xs font-medium transition-colors duration-300"
         style={{ color: active.color }}
       >
         {t(active.labelKey)}
       </span>
 
       <div className="mt-3 w-full">
-        <div className="relative h-2 w-full overflow-hidden rounded-full">
+        <div className="relative h-2.5 w-full overflow-hidden rounded-full">
           <div className="flex h-full w-full">
             {segments.map((s, i) => {
               const prev = i === 0 ? min : segments[i - 1].upto;
@@ -301,7 +307,7 @@ export const CalcChart = ({
             })}
           </div>
           <span
-            className="absolute -top-1 h-4 w-0.5 -translate-x-1/2 bg-ink-50"
+            className="chart-anim absolute -top-1 h-4 w-1 -translate-x-1/2 rounded-full bg-ink-50 shadow-[0_0_0_2px_rgb(var(--ink-900))]"
             style={{ left: `${markerPct}%` }}
           />
         </div>

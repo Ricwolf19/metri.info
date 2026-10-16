@@ -25,7 +25,7 @@ export type ToolCard = {
 export const ToolsBrowser = ({ cards }: { cards: ToolCard[] }) => {
   const t = useT();
   const [query, setQuery] = useState("");
-  const pinned = useFavoriteIds("calculator");
+  const favorites = useFavoriteIds("calculator");
 
   const filtered = useMemo(
     () =>
@@ -71,10 +71,10 @@ export const ToolsBrowser = ({ cards }: { cards: ToolCard[] }) => {
                       </span>
                       {c.popular && (
                         <span
-                          className="inline-flex shrink-0 items-center gap-1 rounded-full bg-ink-950/10 px-1.5 py-0.5 text-[10px] font-semibold tracking-wide text-ink-950 dark:bg-lime-400/10 dark:text-lime-400"
+                          className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand/10 px-1.5 py-0.5 text-[10px] font-semibold tracking-wide text-brand"
                           aria-label={t("tools.popularAria")}
                         >
-                          <span className="h-1.5 w-1.5 rounded-full bg-ink-950 dark:bg-lime-400" />
+                          <span className="h-1.5 w-1.5 rounded-full bg-brand" />
                           {t("tools.popular")}
                         </span>
                       )}
@@ -104,7 +104,8 @@ export const ToolsBrowser = ({ cards }: { cards: ToolCard[] }) => {
                   <PinButton
                     itemType="calculator"
                     itemId={c.id}
-                    initialPinned={pinned.has(c.id)}
+                    initialPinned={favorites.ids.has(c.id)}
+                    loading={!favorites.ready}
                     className="-mt-1 -mr-1"
                   />
                 </GlowCard>

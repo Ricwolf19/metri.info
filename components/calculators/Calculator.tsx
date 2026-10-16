@@ -7,7 +7,9 @@ import { CalcChart } from "@/components/calculators/CalcChart";
 import { SaveCalcButton } from "@/components/calculators/SaveCalcButton";
 import { ShareDialog } from "@/components/calculators/ShareDialog";
 import { XIcon } from "@/components/icons";
+import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { Input } from "@/components/ui/input";
+import { Segmented } from "@/components/ui/segmented";
 import {
   Select,
   SelectContent,
@@ -15,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { track } from "@/lib/analytics/track";
 import { useI18n, useT } from "@/lib/i18n";
 import { applyProfileToValues } from "@/lib/calculators/prefill";
@@ -193,21 +196,18 @@ const FieldInputs = ({
               />
             </div>
             {hasRange && (
-              <input
-                type="range"
+              <Slider
                 min={dispMin}
                 max={dispMax}
-                step={dispStep}
-                value={dispVal}
-                onChange={(e) =>
-                  onChange(f.name, toMetric(Number(e.target.value), f.unit))
-                }
-                aria-label={t(f.labelKey)}
-                className="mt-2 w-full accent-ink-100"
+                step={step}
+                value={[Number.isFinite(dispVal) ? dispVal : dispMin]}
+                onValueChange={([v]) => onChange(f.name, toMetric(v, f.unit))}
+                thumbLabel={label}
+                className="mt-1"
               />
             )}
             {f.presets && f.presets.length > 0 && (
-              <div className="mt-2 flex flex-wrap gap-1.5">
+              <div className="mt-2 flex flex-wrap gap-2">
                 {f.presets.map((p) => {
                   const active = Number(values[f.name]) === p;
                   return (
@@ -217,11 +217,11 @@ const FieldInputs = ({
                       aria-pressed={active}
                       onClick={() => onChange(f.name, p)}
                       className={cn(
-                        "rounded-full border px-2.5 py-1 font-mono text-xs transition-colors",
+                        "h-9 rounded-full border px-3.5 font-mono text-sm transition-colors",
                         "focus-visible:border-brand/60 focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:outline-none",
                         active
-                          ? "border-brand/30 bg-brand/10 font-semibold text-brand"
-                          : "border-ink-600 bg-ink-800 text-ink-300 hover:bg-ink-700",
+                          ? "border-brand/40 bg-brand/10 font-semibold text-brand"
+                          : "border-ink-600 bg-ink-800 text-ink-300 hover:bg-ink-700 hover:text-ink-100",
                       )}
                     >
                       {toDisplay(p, f.unit)}
@@ -256,11 +256,11 @@ const ResultHeader = ({
       </p>
       <p
         className={cn(
-          "mt-1.5 font-mono font-bold text-brand",
+          "mt-1.5 font-mono font-bold text-brand tabular-nums",
           align === "center" ? "text-3xl" : "text-5xl",
         )}
       >
-        {result.primaryValue}
+        <AnimatedNumber value={result.primaryValue} />
         {result.primaryUnit && (
           <span className="ml-1 text-lg text-ink-300">
             {result.primaryUnit}
@@ -367,7 +367,9 @@ const ResultPanel = ({
                 <span className="text-ink-300">
                   {row.labelKey ? t(row.labelKey) : row.label}
                 </span>
-                <span className="font-mono text-ink-100">{row.value}</span>
+                <span className="font-mono text-ink-100 tabular-nums">
+                  <AnimatedNumber value={row.value} />
+                </span>
               </li>
             ))}
           </ul>
@@ -408,8 +410,8 @@ const ResultPanel = ({
               <p className="truncate text-xs text-ink-400">
                 {row.labelKey ? t(row.labelKey) : row.label}
               </p>
-              <p className="mt-0.5 font-mono text-sm font-medium text-ink-100">
-                {row.value}
+              <p className="mt-0.5 font-mono text-sm font-medium text-ink-100 tabular-nums">
+                <AnimatedNumber value={row.value} />
               </p>
             </li>
           ))}
@@ -441,12 +443,12 @@ const DeltaBar = ({
       </span>
       <span
         className={cn(
-          "font-mono text-lg font-bold",
-          delta === 0 ? "text-ink-300" : "text-accent",
+          "font-mono text-lg font-bold tabular-nums",
+          delta === 0 ? "text-ink-300" : "text-brand",
         )}
       >
         {delta > 0 ? "+" : ""}
-        {delta.toLocaleString("en-US")}
+        <AnimatedNumber value={delta.toLocaleString("en-US")} />
         {unit}
       </span>
     </div>
@@ -519,13 +521,12 @@ export const Calculator = ({ id }: { id: CalcId }) => {
       : readValues(config, (k) => searchParams.get(k));
   });
 
-  // Debounced copies drive the result panel + chart so they don't jump on every
-  // keystroke / slider tick (inputs themselves stay instant). 550ms is long
-  // enough that big charts (BMI gauge, macro donut) settle before re-rendering
-  // — so the chart doesn't shift under your cursor while you tap +/- — yet short
-  // enough that the value still feels live.
-  const aDebounced = useDebouncedValue(a, 550);
-  const bDebounced = useDebouncedValue(b, 550);
+  // Debounced copies drive the result panel + chart so they don't recompute on
+  // every keystroke / slider tick (inputs themselves stay instant). The charts
+  // and the rolling number tween between values, so a short settle time is
+  // enough for the result to feel live without thrashing.
+  const aDebounced = useDebouncedValue(a, 250);
+  const bDebounced = useDebouncedValue(b, 250);
 
   const search = buildSearch(config, a, b, compare);
   const canSave = useMemo(() => config.compute(a) !== null, [config, a]);
@@ -638,23 +639,16 @@ export const Calculator = ({ id }: { id: CalcId }) => {
         </div>
       )}
       {hasUnits && (
-        <div className="mb-6 inline-flex rounded-lg border border-ink-600 bg-ink-900 p-0.5 text-xs font-medium">
-          {(["metric", "imperial"] as const).map((u) => (
-            <button
-              key={u}
-              type="button"
-              onClick={() => setUnitsPersist(u)}
-              className={cn(
-                "rounded-md px-3 py-1.5 transition-colors",
-                units === u
-                  ? "bg-ink-700 text-ink-50"
-                  : "text-ink-400 hover:text-ink-100",
-              )}
-            >
-              {t(u === "metric" ? "calc.metric" : "calc.imperial")}
-            </button>
-          ))}
-        </div>
+        <Segmented
+          value={units}
+          onValueChange={setUnitsPersist}
+          options={[
+            { value: "metric", label: t("calc.metric") },
+            { value: "imperial", label: t("calc.imperial") },
+          ]}
+          aria-label={t("settings.units")}
+          className="mb-6 w-full max-w-xs"
+        />
       )}
 
       {compare ? (
@@ -685,11 +679,9 @@ export const Calculator = ({ id }: { id: CalcId }) => {
         </div>
       ) : (
         <div className="space-y-6">
-          {/* Result as a full-width band on top, sticky on desktop so the live
-              number stays in view while you scroll the inputs below it. */}
-          <div className="z-10 lg:sticky lg:top-24">
-            <ResultPanel config={config} values={aDebounced} />
-          </div>
+          {/* Result as a full-width band on top. Deliberately not sticky: a
+              pinned panel covered the inputs on short viewports. */}
+          <ResultPanel config={config} values={aDebounced} />
           <FieldInputs
             config={config}
             values={a}
@@ -708,14 +700,11 @@ export const Calculator = ({ id }: { id: CalcId }) => {
           onClick={toggleCompare}
           aria-pressed={compare}
           className={cn(
-            "inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
-            "focus-visible:ring-2 focus-visible:ring-lime-500/40 focus-visible:outline-none",
+            "inline-flex h-9 items-center gap-2 rounded-field border px-3.5 text-xs font-medium transition-colors",
+            "focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:outline-none",
             compare
-              ? "border-transparent bg-lime-400 text-ink-950 hover:opacity-90"
-              : cn(
-                  "border-lime-600 text-lime-700 hover:bg-lime-50",
-                  "dark:border-lime-400/40 dark:text-lime-400 dark:hover:bg-lime-400/10",
-                ),
+              ? "border-transparent bg-brand text-brand-contrast hover:bg-brand/90"
+              : "border-brand/40 text-brand hover:bg-brand/10",
           )}
         >
           {compare ? t("calc.compareExit") : t("calc.compare")}

@@ -22,11 +22,11 @@ import type { CalcId, CalcValues } from "@/lib/calculators/types";
 import { routePath } from "@/lib/i18n/routes";
 import { cn } from "@/lib/utils";
 
-type State = "idle" | "saving" | "saved" | "error";
+type State = "idle" | "saving" | "error";
 
 const baseBtn = cn(
-  "inline-flex items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
-  "focus-visible:ring-2 focus-visible:ring-ink-500/50 focus-visible:outline-none",
+  "inline-flex h-9 items-center justify-center gap-2 rounded-field border px-3.5 text-xs font-medium transition-colors",
+  "focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:outline-none",
 );
 
 /**
@@ -49,7 +49,12 @@ export const SaveCalcButton = ({
   const { data: session } = useSession();
   const { toast } = useToast();
   const [state, setState] = useState<State>("idle");
+  // Snapshot of the inputs at the last successful save. "Saved" is derived
+  // from it, so editing any input re-arms the button without an effect.
+  const [savedFor, setSavedFor] = useState<string | null>(null);
   const [promptOpen, setPromptOpen] = useState(false);
+  const signature = JSON.stringify(values);
+  const saved = savedFor === signature;
 
   const onClick = async () => {
     if (!canSave) return;
@@ -58,7 +63,7 @@ export const SaveCalcButton = ({
       setPromptOpen(true);
       return;
     }
-    if (state === "saving" || state === "saved") return;
+    if (state === "saving" || saved) return;
     setState("saving");
     const results = CALCULATORS[id].compute(values);
     const res = await saveCalculation({
@@ -67,7 +72,8 @@ export const SaveCalcButton = ({
       results,
     });
     if (res.ok) {
-      setState("saved");
+      setState("idle");
+      setSavedFor(signature);
       track("calculation_saved", { calculator: id });
       toast({ title: t("toast.calcSaved"), variant: "success" });
     } else {
@@ -85,30 +91,30 @@ export const SaveCalcButton = ({
           disabled={!canSave || state === "saving"}
           className={cn(
             baseBtn,
-            "border-lime-600 text-lime-700 hover:bg-lime-50",
-            "dark:border-lime-400/40 dark:text-lime-400 dark:hover:bg-lime-400/10",
+            saved
+              ? "border-brand/40 bg-brand/10 text-brand"
+              : "border-brand/40 text-brand hover:bg-brand/10",
             state === "saving" && "opacity-60",
-            !canSave &&
-              "cursor-not-allowed opacity-40 hover:bg-transparent dark:hover:bg-transparent",
+            !canSave && "cursor-not-allowed opacity-40 hover:bg-transparent",
           )}
         >
           {state === "saving" ? (
             <Spinner size="sm" />
-          ) : state === "saved" ? (
-            <CheckIcon size={14} />
+          ) : saved ? (
+            <CheckIcon size={14} className="animate-check-in" />
           ) : (
             <BookmarkIcon size={14} />
           )}
-          {state === "saved"
+          {saved
             ? t("calc.saved")
             : state === "saving"
               ? t("calc.saving")
               : t("calc.saveCta")}
         </button>
-        {state === "saved" && (
+        {saved && (
           <Link
-            href="/account"
-            className="text-xs font-medium text-accent underline-offset-2 hover:underline"
+            href={routePath("activity", locale)}
+            className="animate-rise text-xs font-medium text-accent underline-offset-2 hover:underline"
           >
             {t("calc.saveViewHistory")}
           </Link>

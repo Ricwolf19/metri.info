@@ -3,7 +3,7 @@ import {
   type ToolCard,
 } from "@/components/calculators/ToolsBrowser";
 import { Container } from "@/components/shared/Container";
-import { PageHeader } from "@/components/shared/Section";
+import { PageHero } from "@/components/shared/PageHero";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { CALC_IDS, routePath } from "@/lib/i18n/routes";
 import { CALC_CONTENT } from "@/lib/calculators/content";
@@ -27,14 +27,16 @@ export const ToolsIndex = ({ locale }: { locale: Locale }) => {
   });
 
   return (
-    <Container className="py-16 sm:py-20">
-      <PageHeader
+    <>
+      <PageHero
         eyebrow={t("nav.tools")}
         title={t("tools.title")}
         subtitle={t("tools.subtitle")}
-        className="mb-10"
+        compact
       />
-      <ToolsBrowser cards={cards} />
-    </Container>
+      <Container className="py-12 sm:py-16">
+        <ToolsBrowser cards={cards} />
+      </Container>
+    </>
   );
 };

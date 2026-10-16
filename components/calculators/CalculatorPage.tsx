@@ -10,6 +10,8 @@ import { createT, type Locale } from "@/lib/i18n/config";
 import { CALC_IDS, routePath, type CalcRouteId } from "@/lib/i18n/routes";
 import { CALC_CONTENT } from "@/lib/calculators/content";
 import { autoLinkTerms } from "@/components/docs/autoLinkTerms";
+import { TableOfContents } from "@/components/docs/TableOfContents";
+import type { TocItem } from "@/lib/docs";
 import { CALC_GUIDES } from "@/lib/calculators/guides";
 import { getDoc } from "@/lib/docs";
 import { isPopularCalc } from "@/lib/calculators/registry";
@@ -62,13 +64,19 @@ export const CalculatorPage = async ({
     day: "numeric",
   });
 
-  const toc: { id: string; label: string }[] = [
-    { id: SECTION.overview, label: t("calc.overviewTitle") },
-    { id: SECTION.how, label: t("calc.howTitle") },
-    { id: SECTION.interpret, label: t("calc.interpretTitle") },
-    { id: SECTION.faq, label: t("calc.faqTitle") },
+  const toc: TocItem[] = [
+    { depth: 2, id: SECTION.overview, text: t("calc.overviewTitle") },
+    { depth: 2, id: SECTION.how, text: t("calc.howTitle") },
+    { depth: 2, id: SECTION.interpret, text: t("calc.interpretTitle") },
+    { depth: 2, id: SECTION.faq, text: t("calc.faqTitle") },
     ...(sources.length > 0
-      ? [{ id: SECTION.sources, label: t("calc.sourcesTitle") }]
+      ? [
+          {
+            depth: 2 as const,
+            id: SECTION.sources,
+            text: t("calc.sourcesTitle"),
+          },
+        ]
       : []),
   ];
 
@@ -154,10 +162,10 @@ export const CalculatorPage = async ({
           </p>
           {isPopularCalc(id) && (
             <span
-              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-ink-950/10 px-2 py-0.5 text-xs font-semibold tracking-wide text-ink-950 dark:bg-lime-400/10 dark:text-lime-400"
+              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand/10 px-2 py-0.5 text-xs font-semibold tracking-wide text-brand"
               aria-label={t("tools.popularAria")}
             >
-              <span className="h-1.5 w-1.5 rounded-full bg-ink-950 dark:bg-lime-400" />
+              <span className="h-1.5 w-1.5 rounded-full bg-brand" />
               {t("tools.popular")}
             </span>
           )}
@@ -328,23 +336,7 @@ export const CalculatorPage = async ({
 
           <aside className="hidden lg:block">
             <div className="sticky top-24 space-y-8">
-              <nav aria-label={t("calc.onThisPage")}>
-                <p className="text-xs font-semibold tracking-wider text-ink-400 uppercase">
-                  {t("calc.onThisPage")}
-                </p>
-                <ul className="mt-3 space-y-2 border-l border-ink-600">
-                  {toc.map((item) => (
-                    <li key={item.id}>
-                      <a
-                        href={`#${item.id}`}
-                        className="-ml-px block border-l border-transparent py-1 pl-4 text-sm text-ink-400 transition-colors hover:border-accent hover:text-ink-100"
-                      >
-                        {item.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
+              <TableOfContents items={toc} />
 
               <div className="rounded-card border border-ink-600 bg-ink-800 p-5">
                 <p className="font-semibold text-ink-50">

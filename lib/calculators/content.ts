@@ -118,27 +118,27 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
       ],
     },
     es: {
-      seoTitle: "Calculadora de TDEE — Calorías diarias y TMB",
+      seoTitle: "Calculadora de TDEE — Calorías diarias y BMR",
       seoDescription:
-        "Calculadora de TDEE gratis. Estima tus calorías de mantenimiento y TMB con Mifflin-St Jeor, Harris-Benedict o Katch-McArdle, con objetivos de déficit y volumen.",
+        "Calculadora de TDEE gratis. Estima tus calorías de mantenimiento y BMR con Mifflin-St Jeor, Harris-Benedict o Katch-McArdle, con objetivos de déficit y volumen.",
       h1: "Calculadora de TDEE",
       tagline:
         "Encuentra tus calorías de mantenimiento — la base de cualquier plan.",
       about: [
-        "Tu TDEE (gasto energético diario total) es cuántas calorías quemas en un día. Es tu número de mantenimiento: come en él para mantenerte, por debajo para perder grasa, por encima para ganar. Parte de tu TMB (gasto en reposo) escalada por actividad.",
+        "Tu TDEE (gasto energético diario total) es cuántas calorías quemas en un día. Es tu número de mantenimiento: come en él para mantenerte, por debajo para perder grasa, por encima para ganar. Parte de tu BMR (gasto en reposo) escalada por actividad.",
       ],
       formula:
-        "Mifflin-St Jeor:\nTMB = 10×kg + 6.25×cm − 5×edad + (hombre +5 / mujer −161)\nTDEE = TMB × factor de actividad",
+        "Mifflin-St Jeor:\nBMR = 10×kg + 6.25×cm − 5×edad + (hombre +5 / mujer −161)\nTDEE = BMR × factor de actividad",
       how: [
-        "Introduce tus datos y nivel de actividad. Mifflin-St Jeor es la opción moderna por defecto; Harris-Benedict la clásica; Katch-McArdle usa tu % de grasa (la más precisa si lo conoces). Tu TMB se multiplica por un factor de 1.2 (sedentario) a 1.9 (muy activo).",
+        "Introduce tus datos y nivel de actividad. Mifflin-St Jeor es la opción moderna por defecto; Harris-Benedict la clásica; Katch-McArdle usa tu % de grasa (la más precisa si lo conoces). Tu BMR se multiplica por un factor de 1.2 (sedentario) a 1.9 (muy activo).",
       ],
       interpret: [
         "El mantenimiento es una estimación inicial, no una verdad fija — sigue tu peso 2–3 semanas y ajusta. El resultado también muestra un déficit de ~500 kcal (pérdida suave) y un superávit de ~300 kcal (ganancia limpia). Pasa tu objetivo a la calculadora de macros.",
       ],
       faq: [
         {
-          q: "TMB vs TDEE — ¿cuál es la diferencia?",
-          a: "La TMB es lo que quemas en reposo absoluto. El TDEE es la TMB más actividad, digestión y movimiento — tus calorías reales de mantenimiento.",
+          q: "BMR vs TDEE — ¿cuál es la diferencia?",
+          a: "La BMR es lo que quemas en reposo absoluto. El TDEE es la BMR más actividad, digestión y movimiento — tus calorías reales de mantenimiento.",
         },
         {
           q: "¿Qué fórmula elijo?",
