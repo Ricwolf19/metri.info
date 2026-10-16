@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import { DocsBrowser } from "@/components/docs/DocsBrowser";
 import { Container } from "@/components/shared/Container";
-import { PageHeader } from "@/components/shared/Section";
+import { PageHero } from "@/components/shared/PageHero";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
 import { CATEGORY_LABEL, DOC_CATEGORIES, getAllDocs } from "@/lib/docs";
@@ -17,23 +17,24 @@ export const DocsIndex = ({ locale }: { locale: Locale }) => {
   }));
 
   return (
-    <Container className="py-16 sm:py-20">
-      <PageHeader
+    <>
+      <PageHero
         eyebrow={t("nav.docs")}
         title={t("docs.title")}
         subtitle={t("docs.subtitle")}
-        className="mb-12"
+        compact
       />
-
-      {/* Suspense isolates `useSearchParams` (tag deep-links) so the page stays
-          statically prerendered. */}
-      <Suspense>
-        <DocsBrowser
-          docs={docs}
-          categories={categories}
-          basePath={routePath("docs", locale)}
-        />
-      </Suspense>
-    </Container>
+      <Container className="py-12 sm:py-16">
+        {/* Suspense isolates `useSearchParams` (tag deep-links) so the page
+            stays statically prerendered. */}
+        <Suspense>
+          <DocsBrowser
+            docs={docs}
+            categories={categories}
+            basePath={routePath("docs", locale)}
+          />
+        </Suspense>
+      </Container>
+    </>
   );
 };

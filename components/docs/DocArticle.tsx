@@ -10,6 +10,7 @@ import {
   ChevronRightIcon,
 } from "@/components/icons";
 import { getMdxComponents } from "@/components/docs/MdxComponents";
+import { DocsMobileNav } from "@/components/docs/DocsMobileNav";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
 import { GlossaryView } from "@/components/glossary/GlossaryView";
 import { TableOfContents } from "@/components/docs/TableOfContents";
@@ -117,6 +118,8 @@ export const DocArticle = async ({
     },
   ];
 
+  const categories = categoryInfo();
+
   return (
     <Container className="py-12">
       <JsonLd data={jsonLd} />
@@ -125,13 +128,18 @@ export const DocArticle = async ({
           <div className="sticky top-24">
             <DocsSidebar
               docs={allDocs}
-              categories={categoryInfo()}
+              categories={categories}
               basePath={basePath}
             />
           </div>
         </aside>
 
         <article className="min-w-0">
+          <DocsMobileNav
+            docs={allDocs}
+            categories={categories}
+            basePath={basePath}
+          />
           <nav className="flex items-center gap-1.5 text-sm text-ink-400">
             <Link href={basePath} className="hover:text-ink-200">
               {t("docs.title")}
