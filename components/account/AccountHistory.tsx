@@ -9,7 +9,7 @@ import { count, desc, eq } from "drizzle-orm";
 
 import { db } from "@/lib/db";
 import { calculationLog } from "@/lib/db/schema";
-import { createT, type Locale } from "@/lib/i18n/config";
+import { intlLocale, createT, type Locale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
 import { cn } from "@/lib/utils";
 
@@ -97,7 +97,7 @@ export const AccountHistory = async ({
     rows = [];
   }
 
-  const dateFmt = new Intl.DateTimeFormat(locale === "es" ? "es-ES" : "en-US", {
+  const dateFmt = new Intl.DateTimeFormat(intlLocale(locale), {
     dateStyle: "medium",
     timeStyle: "short",
   });

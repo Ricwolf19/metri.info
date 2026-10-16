@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 
 import { AccountView } from "@/components/account/AccountView";
-import { getUserProfile, getUserProviderIds } from "@/lib/account/settings";
+import {
+  getUserNotificationPrefs,
+  getUserProfile,
+  getUserProviderIds,
+} from "@/lib/account/settings";
 import { getAccountStats } from "@/lib/account/stats";
 import { requireUser } from "@/lib/auth/admin";
 
@@ -12,9 +16,10 @@ export const metadata: Metadata = {
 
 const CuentaPage = async () => {
   const user = await requireUser();
-  const [profile, providerIds, stats] = await Promise.all([
+  const [profile, providerIds, prefs, stats] = await Promise.all([
     getUserProfile(user.id),
     getUserProviderIds(user.id),
+    getUserNotificationPrefs(user.id),
     getAccountStats(user.id),
   ]);
 
@@ -23,6 +28,7 @@ const CuentaPage = async () => {
       user={user}
       profile={profile}
       providerIds={providerIds}
+      prefs={prefs}
       stats={stats}
       locale="es"
     />

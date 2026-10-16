@@ -15,7 +15,14 @@ const ActivityPage = async (props: {
   const { historyPage } = await props.searchParams;
   const page = Number(historyPage) || 1;
 
-  return <ActivityView userId={user.id} locale="en" page={page} />;
+  return (
+    <ActivityView
+      userId={user.id}
+      plan={(user as { plan?: string | null }).plan}
+      locale="en"
+      page={page}
+    />
+  );
 };
 
 export default ActivityPage;

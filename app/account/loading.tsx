@@ -1,3 +1,5 @@
-import { AccountLoadingSkeleton } from "@/components/account/AccountLoadingSkeleton";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
-export default AccountLoadingSkeleton;
+const AccountLoading = () => <LoadingScreen label="Loading your account…" />;
+
+export default AccountLoading;

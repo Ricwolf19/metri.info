@@ -1,12 +1,21 @@
-import { CheckIcon, LockIcon, StarIcon } from "@/components/icons";
+import Link from "next/link";
+
+import {
+  CheckIcon,
+  CloudSyncIcon,
+  LockIcon,
+  StarIcon,
+} from "@/components/icons";
 import type { AccountStats } from "@/lib/account/stats";
+import { can } from "@/lib/entitlements";
 import { createT, type Locale } from "@/lib/i18n/config";
+import { premiumRequestPath } from "@/lib/contact/types";
 import { cn } from "@/lib/utils";
 
 /**
  * Account identity header — avatar/initial, name, email, member-since, the
- * real plan state (Free = current; Pro = coming soon / paid mobile-sync tier)
- * and factual activity counts.
+ * real plan state (Free = current; Premium = cloud sync, granted on request
+ * during the beta) and factual activity counts.
  */
 export const AccountIdentity = ({
   name,
@@ -26,7 +35,7 @@ export const AccountIdentity = ({
   plan?: string | null;
 }) => {
   const t = createT(locale);
-  const isPremium = plan === "premium";
+  const isPremium = can(plan, "sync");
   const initial = (name || email || "?").trim().charAt(0).toUpperCase();
   const since = createdAt
     ? new Date(createdAt).toLocaleDateString(locale, {
@@ -121,7 +130,7 @@ export const AccountIdentity = ({
               )}
             >
               {isPremium ? (
-                <StarIcon size={16} className="shrink-0 text-brand" />
+                <CloudSyncIcon size={16} className="shrink-0 text-brand" />
               ) : (
                 <LockIcon size={16} className="shrink-0 text-ink-500" />
               )}
@@ -138,14 +147,18 @@ export const AccountIdentity = ({
                   {t("account.tier.proDesc")}
                 </p>
               </div>
-              <span
-                className={cn(
-                  "shrink-0 font-mono text-[10px] tracking-wide uppercase",
-                  isPremium ? "text-brand" : "text-ink-500",
-                )}
-              >
-                {isPremium ? t("account.tier.current") : t("account.tier.soon")}
-              </span>
+              {isPremium ? (
+                <span className="shrink-0 font-mono text-[10px] tracking-wide text-brand uppercase">
+                  {t("account.tier.current")}
+                </span>
+              ) : (
+                <Link
+                  href={premiumRequestPath(locale)}
+                  className="shrink-0 rounded-full border border-ink-600 px-2.5 py-1 font-mono text-[10px] tracking-wide text-ink-300 uppercase transition-colors hover:border-brand/40 hover:text-brand"
+                >
+                  {t("account.tier.request")}
+                </Link>
+              )}
             </div>
           </div>
         </div>

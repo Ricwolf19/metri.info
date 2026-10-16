@@ -10,7 +10,7 @@ import {
 import { AuthInput } from "@/components/auth/AuthInput";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/toast";
+import { Segmented } from "@/components/ui/segmented";
 import {
   Select,
   SelectContent,
@@ -18,28 +18,107 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/components/ui/toast";
 import { useT } from "@/lib/i18n";
+import type { TranslationKey } from "@/lib/i18n/en";
 import { type ProfileInput, saveProfile } from "@/app/account/settings/actions";
+import { ACTIVITY_LEVELS, BMR_FORMULAS, SEXES } from "@/lib/account/options";
 import type { AccountProfile } from "@/lib/account/settings";
 
-const SEX_OPTIONS = [
-  { value: "unset", key: "settings.sexUnset" },
-  { value: "male", key: "settings.sexMale" },
-  { value: "female", key: "settings.sexFemale" },
-] as const;
+const UNSET = "unset";
 
-const ACTIVITY_OPTIONS = [
-  { value: "unset", key: "settings.activityUnset" },
-  { value: "sedentary", key: "settings.activitySedentary" },
-  { value: "light", key: "settings.activityLight" },
-  { value: "moderate", key: "settings.activityModerate" },
-  { value: "active", key: "settings.activityActive" },
-  { value: "athlete", key: "settings.activityAthlete" },
-] as const;
+type Option = { value: string; key: TranslationKey };
+
+/** Labels per option value. `Record` over the shared sets keeps the form and
+ * the save action's whitelist in lockstep: add a level in `options.ts` and
+ * this fails to compile until it has a label. */
+const SEX_KEY: Record<(typeof SEXES)[number], TranslationKey> = {
+  male: "settings.sexMale",
+  female: "settings.sexFemale",
+};
+const ACTIVITY_KEY: Record<(typeof ACTIVITY_LEVELS)[number], TranslationKey> = {
+  sedentary: "settings.activitySedentary",
+  light: "settings.activityLight",
+  moderate: "settings.activityModerate",
+  active: "settings.activityActive",
+  very_active: "settings.activityVeryActive",
+};
+const FORMULA_KEY: Record<(typeof BMR_FORMULAS)[number], TranslationKey> = {
+  mifflin_st_jeor: "calc.formula.mifflin",
+  harris_benedict: "calc.formula.harris",
+  katch_mcardle: "calc.formula.katch",
+};
+
+const withUnset = <T extends string>(
+  unsetKey: TranslationKey,
+  values: readonly T[],
+  keys: Record<T, TranslationKey>,
+): Option[] => [
+  { value: UNSET, key: unsetKey },
+  ...values.map((value) => ({ value, key: keys[value] })),
+];
+
+const SEX_OPTIONS = withUnset("settings.sexUnset", SEXES, SEX_KEY);
+/** A legacy web-only "athlete" row is read as `very_active` so it keeps
+ * prefilling the calculators. */
+const ACTIVITY_OPTIONS = withUnset(
+  "settings.activityUnset",
+  ACTIVITY_LEVELS,
+  ACTIVITY_KEY,
+);
+const FORMULA_OPTIONS = withUnset(
+  "settings.formulaUnset",
+  BMR_FORMULAS,
+  FORMULA_KEY,
+);
 
 const numStr = (n: number | null | undefined) =>
   n === null || n === undefined ? "" : String(n);
 
+const Field = ({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) => (
+  <div>
+    <Label className="mb-1.5 block">{label}</Label>
+    {children}
+  </div>
+);
+
+const OptionSelect = <T extends string>({
+  value,
+  onChange,
+  options,
+}: {
+  value: T;
+  onChange: (v: T) => void;
+  options: readonly { value: T; key: TranslationKey }[];
+}) => {
+  const t = useT();
+  return (
+    <Select value={value} onValueChange={(v) => onChange(v as T)}>
+      <SelectTrigger>
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map((o) => (
+          <SelectItem key={o.value} value={o.value}>
+            {t(o.key)}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+};
+
+/**
+ * Profile panel — identity, the body metrics that prefill the calculators and
+ * the app preferences the mobile client restores after a reinstall. Every
+ * field here is one the app also reads or writes through `/api/profile`.
+ */
 export const ProfileSection = ({
   id,
   initialName,
@@ -55,11 +134,26 @@ export const ProfileSection = ({
   const [name, setName] = useState(initialName);
   const [displayName, setDisplayName] = useState(profile?.displayName ?? "");
   const [bio, setBio] = useState(profile?.bio ?? "");
-  const [units, setUnits] = useState(profile?.unitsPreference ?? "kg");
-  const [sex, setSex] = useState(profile?.sex ?? "unset");
-  const [activity, setActivity] = useState(profile?.activityLevel ?? "unset");
+  const [units, setUnits] = useState<"kg" | "lb">(
+    profile?.unitsPreference === "lb" ? "lb" : "kg",
+  );
+  const [sex, setSex] = useState(profile?.sex ?? UNSET);
+  const [age, setAge] = useState(numStr(profile?.age));
+  const [activity, setActivity] = useState(
+    profile?.activityLevel === "athlete"
+      ? "very_active"
+      : (profile?.activityLevel ?? UNSET),
+  );
   const [weight, setWeight] = useState(numStr(profile?.bodyWeightKg));
   const [height, setHeight] = useState(numStr(profile?.bodyHeightCm));
+  const [bodyFat, setBodyFat] = useState(numStr(profile?.bodyFatPct));
+  const [formula, setFormula] = useState(profile?.bmrFormula ?? UNSET);
+  const [clock, setClock] = useState<"24" | "12">(
+    profile?.clockFormat === "12" ? "12" : "24",
+  );
+  const [appLocale, setAppLocale] = useState<"en" | "es">(
+    profile?.locale === "es" ? "es" : "en",
+  );
 
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState<{
@@ -71,15 +165,21 @@ export const ProfileSection = ({
     e.preventDefault();
     setStatus(null);
     setPending(true);
+    const unsetToNull = (v: string) => (v === UNSET ? null : v);
     const input: ProfileInput = {
       name,
       displayName,
       bio,
       unitsPreference: units,
-      sex: sex === "unset" ? null : sex,
-      activityLevel: activity === "unset" ? null : activity,
+      sex: unsetToNull(sex),
+      age,
+      activityLevel: unsetToNull(activity),
       bodyWeightKg: weight,
       bodyHeightCm: height,
+      bodyFatPct: bodyFat,
+      bmrFormula: unsetToNull(formula),
+      clockFormat: clock,
+      locale: appLocale,
     };
     const res = await saveProfile(input);
     setPending(false);
@@ -95,6 +195,14 @@ export const ProfileSection = ({
       });
     }
   };
+
+  const energy =
+    profile?.latestTdee || profile?.latestBmr
+      ? {
+          tdee: profile.latestTdee,
+          bmr: profile.latestBmr,
+        }
+      : null;
 
   return (
     <form onSubmit={onSubmit}>
@@ -114,78 +222,59 @@ export const ProfileSection = ({
           </>
         }
       >
-        <div className="space-y-4">
-          <FieldGrid>
+        <div className="space-y-6">
+          <section className="space-y-4">
+            <FieldGrid>
+              <AuthInput
+                label={t("settings.name")}
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <AuthInput
+                label={t("settings.displayName")}
+                placeholder={t("settings.displayNamePlaceholder")}
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+              />
+            </FieldGrid>
             <AuthInput
-              label={t("settings.name")}
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              label={t("settings.bio")}
+              placeholder={t("settings.bioPlaceholder")}
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
             />
-            <AuthInput
-              label={t("settings.displayName")}
-              placeholder={t("settings.displayNamePlaceholder")}
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-            />
-          </FieldGrid>
+          </section>
 
-          <AuthInput
-            label={t("settings.bio")}
-            placeholder={t("settings.bioPlaceholder")}
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-          />
-
-          <FieldGrid>
+          <section className="space-y-4 border-t border-ink-700 pt-6">
             <div>
-              <Label className="mb-1.5 block">{t("settings.units")}</Label>
-              <Select value={units} onValueChange={setUnits}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="kg">{t("settings.unitsKg")}</SelectItem>
-                  <SelectItem value="lb">{t("settings.unitsLb")}</SelectItem>
-                </SelectContent>
-              </Select>
+              <h3 className="text-sm font-semibold text-ink-50">
+                {t("settings.bodyTitle")}
+              </h3>
+              <p className="mt-0.5 text-xs text-ink-400">
+                {t("settings.bodyDesc")}
+              </p>
             </div>
-            <div>
-              <Label className="mb-1.5 block">{t("settings.sex")}</Label>
-              <Select value={sex} onValueChange={setSex}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {SEX_OPTIONS.map((o) => (
-                    <SelectItem key={o.value} value={o.value}>
-                      {t(o.key)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </FieldGrid>
-
-          <FieldGrid>
-            <div>
-              <Label className="mb-1.5 block">
-                {t("settings.activityLevel")}
-              </Label>
-              <Select value={activity} onValueChange={setActivity}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {ACTIVITY_OPTIONS.map((o) => (
-                    <SelectItem key={o.value} value={o.value}>
-                      {t(o.key)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+            <FieldGrid>
+              <Field label={t("settings.sex")}>
+                <OptionSelect
+                  value={sex}
+                  onChange={setSex}
+                  options={SEX_OPTIONS}
+                />
+              </Field>
+              <AuthInput
+                label={t("settings.age")}
+                type="number"
+                inputMode="numeric"
+                min={10}
+                max={120}
+                step="1"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+              />
+            </FieldGrid>
+            <FieldGrid>
               <AuthInput
                 label={t("settings.bodyWeight")}
                 type="number"
@@ -204,8 +293,106 @@ export const ProfileSection = ({
                 value={height}
                 onChange={(e) => setHeight(e.target.value)}
               />
+            </FieldGrid>
+            <FieldGrid>
+              <AuthInput
+                label={t("settings.bodyFat")}
+                type="number"
+                inputMode="decimal"
+                min={2}
+                max={70}
+                step="0.1"
+                value={bodyFat}
+                onChange={(e) => setBodyFat(e.target.value)}
+              />
+              <Field label={t("settings.activityLevel")}>
+                <OptionSelect
+                  value={activity}
+                  onChange={setActivity}
+                  options={ACTIVITY_OPTIONS}
+                />
+              </Field>
+            </FieldGrid>
+            <Field label={t("settings.bmrFormula")}>
+              <OptionSelect
+                value={formula}
+                onChange={setFormula}
+                options={FORMULA_OPTIONS}
+              />
+            </Field>
+            {energy && (
+              <div className="flex flex-wrap gap-x-6 gap-y-1 rounded-field border border-ink-600/70 bg-ink-900/40 px-4 py-3 font-mono text-xs text-ink-300">
+                <span className="text-ink-400">
+                  {t("settings.energySnapshot")}
+                </span>
+                {energy.tdee ? (
+                  <span>
+                    TDEE{" "}
+                    <span className="text-ink-50">
+                      {Math.round(energy.tdee)}
+                    </span>{" "}
+                    kcal
+                  </span>
+                ) : null}
+                {energy.bmr ? (
+                  <span>
+                    BMR{" "}
+                    <span className="text-ink-50">
+                      {Math.round(energy.bmr)}
+                    </span>{" "}
+                    kcal
+                  </span>
+                ) : null}
+              </div>
+            )}
+          </section>
+
+          <section className="space-y-4 border-t border-ink-700 pt-6">
+            <div>
+              <h3 className="text-sm font-semibold text-ink-50">
+                {t("settings.prefsTitle")}
+              </h3>
+              <p className="mt-0.5 text-xs text-ink-400">
+                {t("settings.prefsDesc")}
+              </p>
             </div>
-          </FieldGrid>
+            <FieldGrid>
+              <Field label={t("settings.units")}>
+                <Segmented
+                  value={units}
+                  onValueChange={setUnits}
+                  options={[
+                    { value: "kg", label: t("settings.unitsKg") },
+                    { value: "lb", label: t("settings.unitsLb") },
+                  ]}
+                  aria-label={t("settings.units")}
+                />
+              </Field>
+              <Field label={t("settings.clockFormat")}>
+                <Segmented
+                  value={clock}
+                  onValueChange={setClock}
+                  options={[
+                    { value: "24", label: t("settings.clock24") },
+                    { value: "12", label: t("settings.clock12") },
+                  ]}
+                  aria-label={t("settings.clockFormat")}
+                />
+              </Field>
+            </FieldGrid>
+            <Field label={t("settings.appLanguage")}>
+              <Segmented
+                value={appLocale}
+                onValueChange={setAppLocale}
+                options={[
+                  { value: "en", label: t("lang.en") },
+                  { value: "es", label: t("lang.es") },
+                ]}
+                aria-label={t("settings.appLanguage")}
+                className="max-w-xs"
+              />
+            </Field>
+          </section>
         </div>
       </SettingsPanel>
     </form>

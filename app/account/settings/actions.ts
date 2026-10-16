@@ -5,10 +5,15 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth/server";
+import {
+  normalizeProfileFields,
+  profileRangeError,
+} from "@/lib/account/profile-input";
 import { getSession } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { user, userProfile } from "@/lib/db/schema";
 import { UnauthorizedError, ValidationError } from "@/lib/errors";
+import { event } from "@/lib/log/logger";
 import { type Result, safeAsync } from "@/lib/result";
 
 const requireSessionUser = async () => {
@@ -17,15 +22,11 @@ const requireSessionUser = async () => {
   return session.user;
 };
 
-const toNumberOrNull = (raw: unknown): number | null => {
-  if (raw === null || raw === undefined || raw === "") return null;
-  const n = Number(raw);
-  return Number.isFinite(n) ? n : null;
-};
-
-const optionalString = (raw: unknown): string | null => {
-  const s = typeof raw === "string" ? raw.trim() : "";
-  return s.length > 0 ? s : null;
+const revalidateAccount = () => {
+  // Bust the Router Cache for the whole account area (settings + activity +
+  // header user menu) so freshly-saved data never renders stale.
+  revalidatePath("/account", "layout");
+  revalidatePath("/es/cuenta", "layout");
 };
 
 export type ProfileInput = {
@@ -34,14 +35,21 @@ export type ProfileInput = {
   bio?: string | null;
   unitsPreference: string;
   sex?: string | null;
+  age?: number | string | null;
   activityLevel?: string | null;
   bodyWeightKg?: number | string | null;
   bodyHeightCm?: number | string | null;
+  bodyFatPct?: number | string | null;
+  bmrFormula?: string | null;
+  clockFormat?: string | null;
+  locale?: string | null;
 };
 
 /**
  * Save the profile: UPSERT the `user_profile` row (no row is auto-created) and
  * update the Better Auth display `name`. Units default to `kg` when unknown.
+ * `latestBmr`/`latestTdee` are left alone — only the app's calculators write
+ * those, from a computed result.
  */
 export const saveProfile = async (
   input: ProfileInput,
@@ -53,35 +61,53 @@ export const saveProfile = async (
     if (name.length < 1 || name.length > 100) {
       throw new ValidationError({ name: "required" });
     }
-    const units = input.unitsPreference === "lb" ? "lb" : "kg";
+    // The form surfaces an out-of-range number instead of dropping it.
+    const outOfRange = profileRangeError(input);
+    if (outOfRange) throw new ValidationError({ [outOfRange]: "range" });
 
+    const bio = typeof input.bio === "string" ? input.bio.trim() : "";
+    const now = new Date();
     const values = {
-      displayName: optionalString(input.displayName),
-      bio: optionalString(input.bio),
-      unitsPreference: units,
-      sex: optionalString(input.sex),
-      activityLevel: optionalString(input.activityLevel),
-      bodyWeightKg: toNumberOrNull(input.bodyWeightKg),
-      bodyHeightCm: toNumberOrNull(input.bodyHeightCm),
-      updatedAt: new Date(),
+      ...normalizeProfileFields(input),
+      bio: bio.length > 0 && bio.length <= 280 ? bio : null,
+      updatedAt: now,
     };
 
-    await db
-      .insert(userProfile)
-      .values({ id: sessionUser.id, ...values })
-      .onConflictDoUpdate({ target: userProfile.id, set: values });
+    await db.batch([
+      db
+        .insert(userProfile)
+        .values({ id: sessionUser.id, ...values })
+        .onConflictDoUpdate({ target: userProfile.id, set: values }),
+      db
+        .update(user)
+        .set({ name, updatedAt: now })
+        .where(eq(user.id, sessionUser.id)),
+    ]);
 
+    revalidateAccount();
+    return { saved: true as const };
+  });
+
+/**
+ * Release-email opt-in/out from the account page. The same flag the app's
+ * profile switch writes through `/api/profile` and the email's unsubscribe
+ * link clears — so turning it back on here re-subscribes.
+ */
+export const setReleaseEmails = async (
+  enabled: boolean,
+): Promise<Result<{ releaseEmails: boolean }>> =>
+  safeAsync(async () => {
+    const sessionUser = await requireSessionUser();
     await db
       .update(user)
-      .set({ name, updatedAt: new Date() })
+      .set({ releaseEmails: enabled, updatedAt: new Date() })
       .where(eq(user.id, sessionUser.id));
-
-    // Bust the Router Cache for the whole account area (settings + activity +
-    // header user menu) so freshly-saved profile data never renders stale.
-    revalidatePath("/account", "layout");
-    revalidatePath("/es/cuenta", "layout");
-
-    return { saved: true as const };
+    event.info(enabled ? "release.resubscribed" : "release.unsubscribed", {
+      userId: sessionUser.id,
+      via: "account",
+    });
+    revalidateAccount();
+    return { releaseEmails: enabled };
   });
 
 /**
@@ -106,8 +132,7 @@ export const setAccountPassword = async (
 
     if (typeof setPassword === "function") {
       await setPassword({ body: { newPassword }, headers: reqHeaders });
-      revalidatePath("/account", "layout");
-      revalidatePath("/es/cuenta", "layout");
+      revalidateAccount();
       return { method: "set" as const };
     }
 

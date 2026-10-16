@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import { getSession } from "@/lib/auth/session";
 import { db } from "@/lib/db";
+import { normalizeProfileFields } from "@/lib/account/profile-input";
 import { user, userProfile } from "@/lib/db/schema";
 
 /**
@@ -11,9 +12,11 @@ import { user, userProfile } from "@/lib/db/schema";
  * Session-gated only: this is account data, not premium training sync.
  *
  *   GET → the caller's profile row (or null when never written)
- *   PUT → full replace of the whitelisted fields: omitted or invalid fields
- *         are stored as null (units falls back to "kg"), unknown fields are
- *         ignored. The client always sends the complete profile.
+ *   PUT → full replace of the whitelisted fields: omitted, out-of-range or
+ *         unknown-option fields are stored as null (units falls back to "kg"),
+ *         unknown fields are ignored. The client always sends the complete
+ *         profile. The whitelist and ranges live in
+ *         `lib/account/profile-input.ts`, shared with the web settings form.
  *
  * `releaseEmails` (new-release announcements) lives on `user`, not the profile
  * row, and is the one field that is NOT full-replace: it is written only when
@@ -23,8 +26,6 @@ import { user, userProfile } from "@/lib/db/schema";
 
 const num = (v: unknown): number | null =>
   typeof v === "number" && Number.isFinite(v) ? v : null;
-const str = (v: unknown): string | null =>
-  typeof v === "string" && v.length > 0 && v.length <= 64 ? v : null;
 
 export const GET = async () => {
   const session = await getSession();
@@ -69,19 +70,21 @@ export const PUT = async (req: Request) => {
   // Whitelist per field — the client can never write another user's row (id
   // comes from the session) nor any column outside this set.
   const values = {
-    displayName: str(body.displayName),
-    sex: str(body.sex),
-    age: num(body.age),
-    bodyHeightCm: num(body.heightCm),
-    bodyWeightKg: num(body.weightKg),
-    bodyFatPct: num(body.bodyFatPct),
-    activityLevel: str(body.activityLevel),
+    ...normalizeProfileFields({
+      displayName: body.displayName,
+      sex: body.sex,
+      age: body.age,
+      bodyHeightCm: body.heightCm,
+      bodyWeightKg: body.weightKg,
+      bodyFatPct: body.bodyFatPct,
+      activityLevel: body.activityLevel,
+      bmrFormula: body.bmrFormula,
+      unitsPreference: body.units,
+      locale: body.locale,
+      clockFormat: body.clockFormat,
+    }),
     latestBmr: num(body.bmr),
     latestTdee: num(body.tdee),
-    bmrFormula: str(body.bmrFormula),
-    unitsPreference: str(body.units) ?? "kg",
-    locale: str(body.locale),
-    clockFormat: str(body.clockFormat),
   };
 
   await db
