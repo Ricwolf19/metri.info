@@ -82,9 +82,8 @@ export const ShareDialog = ({
       <DialogTrigger
         className={cn(
           "inline-flex items-center justify-center gap-2 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
-          "border-lime-600 text-lime-700 hover:bg-lime-50",
-          "dark:border-lime-400/40 dark:text-lime-400 dark:hover:bg-lime-400/10",
-          "focus-visible:ring-2 focus-visible:ring-lime-500/40 focus-visible:outline-none",
+          "border-brand/40 text-brand hover:bg-brand/10",
+          "focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:outline-none",
         )}
       >
         <ShareIcon size={14} />

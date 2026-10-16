@@ -32,7 +32,7 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
         {
           heading: "Free and open source",
           body: [
-            "Metri is MIT-licensed and developed in the open. There are no subscriptions, no locked features and no ads. You can read the code, file issues, suggest features or fork it entirely.",
+            "Metri is MIT-licensed and developed in the open. There are no ads and nothing to pay. The only account-gated feature is Premium cloud sync, which is free during the open beta. You can read the code, file issues, suggest features or fork it entirely.",
             "Keeping it open keeps it honest: the formulas behind every result are inspectable, so you can trust what the numbers mean.",
           ],
         },
@@ -65,7 +65,7 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
         {
           heading: "Gratis y de código abierto",
           body: [
-            "Metri tiene licencia MIT y se desarrolla de forma abierta. No hay suscripciones, ni funciones bloqueadas, ni anuncios. Puedes leer el código, reportar problemas, sugerir funciones o hacer un fork completo.",
+            "Metri tiene licencia MIT y se desarrolla de forma abierta. No hay anuncios ni nada que pagar. La única función ligada a la cuenta es el sync Premium en la nube, gratuito durante la beta abierta. Puedes leer el código, reportar problemas, sugerir funciones o hacer un fork completo.",
             "Mantenerlo abierto lo mantiene honesto: las fórmulas detrás de cada resultado son inspeccionables, así puedes confiar en lo que significan los números.",
           ],
         },
@@ -119,7 +119,7 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
         {
           heading: "Cookies",
           body: [
-            "We use only essential cookies: your theme and language preferences, and — if you sign in — your authentication session. No third-party advertising cookies are set.",
+            "We use only essential cookies: your language preference, and — if you sign in — your authentication session. No third-party advertising cookies are set.",
           ],
         },
         {
@@ -169,7 +169,7 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
         {
           heading: "Cookies",
           body: [
-            "Solo usamos cookies esenciales: tus preferencias de tema e idioma y, si inicias sesión, tu sesión de autenticación. No se establecen cookies publicitarias de terceros.",
+            "Solo usamos cookies esenciales: tu preferencia de idioma y, si inicias sesión, tu sesión de autenticación. No se establecen cookies publicitarias de terceros.",
           ],
         },
         {
@@ -191,8 +191,8 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
   terms: {
     en: {
       title: "Terms of Service",
-      lead: "The short version: Metri is free, provided as-is, and is not medical advice. Use your judgment.",
-      updated: "Last updated: June 2026",
+      lead: "The short version: Metri is free, provided as-is, and is not medical advice. Premium is cloud sync, granted on request during the beta, with nothing to pay. Use your judgment.",
+      updated: "Last updated: October 2026",
       sections: [
         {
           heading: "Acceptance",
@@ -219,6 +219,14 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
           ],
         },
         {
+          heading: "Plans and Premium",
+          body: [
+            "Metri has three ways to use it, and all of them are free today. Local mode needs no account: every feature works, your data lives only on your phone, and you can export or import it as a file at any time. A free account adds password recovery, profile restore after a reinstall, and your calculation history and favorites on metri.info. Premium adds automatic cloud sync and backup of your training, body and food data across unlimited devices.",
+            "There is no payment, no card and no trial for any of this. During the open beta, Premium is granted on request to accounts that ask for it by email or through the contact page, and it can be withdrawn when the beta ends or if the service is misused. If paid plans are introduced later, these terms will be updated first and nothing you already have will be charged retroactively.",
+            "Premium sync stores the data the app sends: exercises, programs, routines, workouts and set logs, training days, per-exercise defaults, custom warm-ups, weigh-ins, tape measurements, nutrition phases, food diary and custom foods. Progress photos, reminders and your password never leave the device. You can export everything from the app at any time, and when your account is deleted (ask from the contact page) the synced copy goes with it.",
+          ],
+        },
+        {
           heading: "Open-source license",
           body: [
             "The Metri source code is released under the MIT License. Your use of the code is governed by that license, which is available in the repository.",
@@ -234,8 +242,8 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
     },
     es: {
       title: "Términos del Servicio",
-      lead: "La versión corta: Metri es gratis, se ofrece tal cual y no es consejo médico. Usa tu criterio.",
-      updated: "Última actualización: junio de 2026",
+      lead: "La versión corta: Metri es gratis, se ofrece tal cual y no es consejo médico. Premium es el sync en la nube, concedido bajo petición durante la beta y sin nada que pagar. Usa tu criterio.",
+      updated: "Última actualización: octubre de 2026",
       sections: [
         {
           heading: "Aceptación",
@@ -259,6 +267,14 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
           heading: "Tu cuenta",
           body: [
             "Si creas una cuenta, eres responsable de mantener su acceso seguro y de la actividad que ocurra en ella. No uses Metri para infringir la ley ni para perjudicar el servicio a otros.",
+          ],
+        },
+        {
+          heading: "Planes y Premium",
+          body: [
+            "Metri se puede usar de tres formas y hoy todas son gratuitas. El modo local no necesita cuenta: todas las funciones están disponibles, tus datos viven solo en tu teléfono y puedes exportarlos o importarlos como archivo cuando quieras. Una cuenta gratuita añade recuperación de contraseña, restauración del perfil tras reinstalar y tu historial de cálculos y favoritos en metri.info. Premium añade sincronización automática y copia de seguridad en la nube de tus datos de entrenamiento, cuerpo y comida en dispositivos ilimitados.",
+            "No hay pago, tarjeta ni periodo de prueba para nada de esto. Durante la beta abierta, Premium se concede bajo petición a las cuentas que lo solicitan por correo o desde la página de contacto, y puede retirarse cuando termine la beta o si se hace un mal uso del servicio. Si en el futuro se introducen planes de pago, estos términos se actualizarán antes y nada de lo que ya tengas se cobrará de forma retroactiva.",
+            "El sync Premium guarda los datos que envía la app: ejercicios, programas, rutinas, sesiones y series, días de entrenamiento, ajustes por ejercicio, calentamientos propios, pesajes, medidas con cinta, fases de nutrición, diario de comida y alimentos propios. Las fotos de progreso, los recordatorios y tu contraseña nunca salen del dispositivo. Puedes exportar todo desde la app en cualquier momento, y cuando tu cuenta se elimina (pídelo desde la página de contacto) la copia sincronizada desaparece con ella.",
           ],
         },
         {

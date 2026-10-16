@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
-import { GeistMono } from "geist/font/mono";
+import { JetBrains_Mono } from "next/font/google";
 import { GeistSans } from "geist/font/sans";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -12,6 +12,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { CookieConsent } from "@/components/legal/CookieConsent";
 import { Providers } from "@/components/providers";
+import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
 import { getDocsIndex } from "@/lib/docs";
 import { siteUrl } from "@/lib/utils";
@@ -19,9 +20,16 @@ import { siteUrl } from "@/lib/utils";
 import "./globals.css";
 
 /**
- * Geist Sans (body + headings) and Geist Mono (nav, eyebrows, labels, numeric
- * values), self-hosted via the `geist` package — no Google Fonts round-trip.
+ * Geist Sans for everything meant to be read (headings, paragraphs, buttons)
+ * and JetBrains Mono for the machine voice (nav, kickers, labels, numbers,
+ * badges). Both are self-hosted: Geist via its package, JetBrains through
+ * `next/font`, which downloads it at build time — no runtime font request.
  */
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -82,16 +90,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0b0d12" },
-    { media: "(prefers-color-scheme: light)", color: "#f7f9fc" },
-  ],
-  colorScheme: "dark light",
+  themeColor: "#09090b",
+  colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
 };
-
-const NO_FLASH = `(function(){try{var m=document.cookie.match(/(?:^|; )metri_theme=([^;]+)/);var p=m?m[1]:'dark';var s=p==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):p;document.documentElement.setAttribute('data-theme',s);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
 
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
@@ -104,13 +107,8 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <html
       lang="en"
-      data-theme="dark"
-      className={`${GeistSans.variable} ${GeistMono.variable}`}
-      suppressHydrationWarning
+      className={`${GeistSans.variable} ${jetbrainsMono.variable}`}
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: NO_FLASH }} />
-      </head>
       <body className="min-h-dvh font-sans antialiased">
         <Providers>
           <div className="flex min-h-dvh flex-col">
@@ -132,6 +130,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
           <CommandLauncher />
           <CommandPaletteMount docsIndex={docsIndex} />
           <ServiceWorkerRegister />
+          <InstallPrompt />
         </Providers>
         <Analytics />
         <SpeedInsights />

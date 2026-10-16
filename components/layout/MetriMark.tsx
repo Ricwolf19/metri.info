@@ -1,13 +1,20 @@
 import { cn } from "@/lib/utils";
 
-/** Metri dumbbell mark as inline SVG using `currentColor`, so it can be lime on
- * dark surfaces and near-black on light surfaces (legible on both). */
-export const MetriMark = ({ className }: { className?: string }) => (
+/** Metri dumbbell mark as inline SVG using `currentColor` — brand lime by
+ * default, recolourable through `className` (e.g. `text-ink-950` on a lime fill). */
+export const MetriMark = ({
+  className,
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) => (
   <svg
+    style={style}
     viewBox="0 0 1024 1024"
     fill="currentColor"
     aria-hidden="true"
-    className={cn("text-ink-950 dark:text-lime-400", className)}
+    className={cn("text-brand", className)}
   >
     <g transform="translate(512 512) scale(4.2) translate(-512 -423)">
       <path d="M508.807 356.242c9.551-.178 22.716-1.285 23.606 12.61.504 7.861.157 16.342.23 24.277q.283 25.577.301 51.156.015 17.17-.222 34.337c-.146 15.519 3.533 29.756-16.398 30.562-12.602.171-23.216 1.473-23.828-14.818-.343-9.154-.325-18.281-.361-27.442l-.024-49.852.153-33.037c.103-14.814-2.786-27.249 16.543-27.793" />
