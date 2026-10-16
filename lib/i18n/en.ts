@@ -21,11 +21,6 @@ export const en = {
   "lang.en": "English",
   "lang.es": "Spanish",
 
-  "theme.title": "Appearance",
-  "theme.system": "System",
-  "theme.light": "Light",
-  "theme.dark": "Dark",
-
   "nav.home": "Home",
   "nav.docs": "Docs",
   "nav.tools": "Tools",
@@ -40,7 +35,6 @@ export const en = {
   "nav.github": "GitHub",
   "nav.contact": "Contact",
   "nav.changelog": "Changelog",
-  "nav.more": "More",
   "nav.menu": "Menu",
 
   "cmd.title": "Command menu",
@@ -116,48 +110,146 @@ export const en = {
   "auth.recaptchaNotice":
     "Protected by reCAPTCHA. The Google Privacy Policy and Terms of Service apply.",
 
-  "hero.badge": "Open-source fitness tracker",
+  "hero.kicker": "Open source · Offline-first · Free Android beta",
   "hero.title": "Track. Progress. Evolve.",
   "hero.subtitle":
-    "The open-source training companion for serious lifters — 17 calculators and an evidence-based knowledge base, free and private by design.",
+    "The open-source training companion: a free Android app for programs, sets, body check-ins and food, plus 17 calculators and an evidence-based knowledge base on the web.",
   "hero.ctaDownload": "Download App",
   "hero.ctaDocs": "Explore Docs",
   "hero.ctaTools": "Try the Calculators",
 
-  "showcase.badge": "In development",
-  "showcase.badgeBeta": "Beta — install today",
-  "showcase.title": "A native app is",
-  "showcase.highlight": "in the works.",
-  "showcase.subtitle":
-    "Everything on Metri is free — web and app. The Android app is in beta today with the same formulas and full offline support, no account required; iOS is next. Optional account adds export/import, Premium adds sync.",
-  "showcase.feature1": "Instant calculators that run on every keystroke",
-  "showcase.feature2": "Works 100% offline — your data stays on device",
-  "showcase.feature3": "Progress photos, reminders and synced history",
-  "showcase.feature4": "Free and open source, forever",
-  "showcase.cta": "See what's coming",
+  "tour.eyebrow": "The mobile app",
+  "tour.eyebrowBeta": "Android beta — install today",
+  "tour.title": "One app for the whole",
+  "tour.highlight": "training loop.",
+  "tour.subtitle":
+    "Five tabs cover the program you follow, every set you log, how your body responds, what you eat and what you learn. Fully offline, no account needed.",
+  "tour.tabsAria": "App sections",
+  "tour.tab.home": "Home",
+  "tour.tab.train": "Train",
+  "tour.tab.metrics": "Metrics",
+  "tour.tab.nutrition": "Nutrition",
+  "tour.tab.explore": "Explore",
+  "tour.home.title": "Your day, at a glance",
+  "tour.home.body":
+    "Home opens on today's energy target, the week's training strip and the next session. Pin the actions you use most and start a workout in one tap.",
+  "tour.home.p1": "Daily TDEE and nutrition phase on top",
+  "tour.home.p2": "Week strip with streaks and catch-up prompts",
+  "tour.home.p3": "Pinned quick actions and an Android home-screen widget",
+  "tour.train.title": "Follow a program, log every set",
+  "tour.train.body":
+    "Enrol in a built-in or custom program, see what's prescribed this week and log weight, reps and RIR against it. The rest timer runs as a system notification, so you can lock the phone.",
+  "tour.train.p1":
+    "Two built-in programs and 64 exercises with animated frames",
+  "tour.train.p2":
+    "Load sheet for bar and plates, machine stacks and dumbbells",
+  "tour.train.p3": "Rest timer in the notification shade with +30 s and skip",
+  "tour.metrics.title": "See what the work is doing",
+  "tour.metrics.body":
+    "Metrics turns your logs into streaks, weekly volume, a body map of what you've trained, estimated 1RM trends and your body-weight curve. Reorder or hide any section.",
+  "tour.metrics.p1": "Consistency calendar and training streak",
+  "tour.metrics.p2": "Volume balance, fatigue and recency per muscle",
+  "tour.metrics.p3": "e1RM trends, PRs and weigh-in averages",
+  "tour.nutrition.title": "Eat for the phase you're in",
+  "tour.nutrition.body":
+    "Pick cut, maintain, recomp or bulk and Metri sets calories and macros from your check-ins. Log meals from a bilingual USDA catalogue, your own foods or a quick calorie entry.",
+  "tour.nutrition.p1": "Weekly check-in adjusts calories automatically",
+  "tour.nutrition.p2": "146 catalogue foods, custom foods and recents",
+  "tour.nutrition.p3": "33 meal ideas and three ready-made day plans",
+  "tour.explore.title": "Learn as you go",
+  "tour.explore.body":
+    "Explore holds the 16 in-app calculators, 35 bilingual guides and a knowledge check that maps what you know across nutrition, training and body topics.",
+  "tour.explore.p1": "Same calculator math as the web, fully offline",
+  "tour.explore.p2": "Guides linked from the screen you're on",
+  "tour.explore.p3": "Knowledge quiz with a radar result",
+  "tour.ctaDownload": "Download for Android",
+  "tour.ctaNote": "Free, open source, no account required. iOS is next.",
 
-  "bento.eyebrow": "Why Metri",
-  "bento.title": "Everything a lifter needs,",
-  "bento.highlight": "free on the web.",
-  "bento.subtitle":
-    "No paywalls, no sign-up, no fluff — open-source tools you can actually trust. The app is just an optional extra.",
-  "bento.calc.title": "17 instant calculators",
-  "bento.calc.desc":
-    "1RM, TDEE, macros, body fat, BMI, FFMI, ideal weight, protein, heart-rate zones, Wilks/DOTS and more — each with a visual chart and a shareable link.",
-  "bento.calc.cta": "Open the calculators",
-  "bento.oss.title": "Open source forever",
-  "bento.oss.desc":
-    "MIT-licensed and built in the open. Read the formulas, fork it, contribute.",
-  "bento.offline.title": "Works offline",
-  "bento.offline.desc":
-    "The optional native app runs every tool with zero connection — your data stays on device.",
-  "bento.docs.title": "Evidence-based guides",
-  "bento.docs.desc":
-    "A growing knowledge base on nutrition, training and recovery — written for lifters, not clicks.",
-  "bento.docs.cta": "Browse the docs",
-  "bento.privacy.title": "Private by design",
-  "bento.privacy.desc":
-    "Calculators run in your browser. An account is optional and only syncs what you choose to save.",
+  "tour.mock.greeting": "Morning, Ric",
+  "tour.mock.energy": "Today's energy",
+  "tour.mock.phase": "Maintain phase · week 3 of 12",
+  "tour.mock.thisWeek": "This week",
+  "tour.mock.streak": "{days}-day streak",
+  "tour.mock.weekdays": "M,T,W,T,F,S,S",
+  "tour.mock.nextSession": "Upper A · Metri Progression",
+  "tour.mock.nextSessionMeta": "Today 18:30 · 5 exercises",
+  "tour.mock.start": "Start",
+  "tour.mock.quickActions": "Quick actions",
+  "tour.mock.weighIn": "Weigh in",
+  "tour.mock.logFood": "Log food",
+  "tour.mock.calculators": "Calculators",
+  "tour.mock.sessionTitle": "Upper A",
+  "tour.mock.sessionMeta": "Week 3 · Metri Progression",
+  "tour.mock.bench": "Bench Press",
+  "tour.mock.reps": "reps",
+  "tour.mock.lastTime": "Last time",
+  "tour.mock.rest": "Rest",
+  "tour.mock.ohp": "Overhead Press",
+  "tour.mock.row": "Barbell Row",
+  "tour.mock.streakLabel": "Streak",
+  "tour.mock.sessions": "Sessions",
+  "tour.mock.weeklyVolume": "Weekly volume",
+  "tour.mock.vsLastWeek": "vs last week",
+  "tour.mock.bodyWeight": "Body weight",
+  "tour.mock.weeklyAvg": "weekly average",
+  "tour.mock.threeMonths": "Last 3 months",
+  "tour.mock.breakfast": "Breakfast",
+  "tour.mock.lunch": "Lunch",
+  "tour.mock.dinner": "Dinner",
+  "tour.mock.snack": "Snack",
+  "tour.mock.add": "Add",
+  "tour.mock.sevenDay": "7-day average",
+  "tour.mock.avg": "avg",
+  "tour.mock.topics": "Training,Nutrition,Body,Cardio,Basics",
+  "tour.mock.search": "Search calculators and guides",
+  "tour.mock.guides": "Guides",
+  "tour.mock.guide1": "How to pick your training level",
+  "tour.mock.guide2": "Reading your weekly check-in",
+  "tour.mock.quiz": "Knowledge check",
+  "tour.mock.quizMeta": "4 areas · radar result",
+
+  "web.eyebrow": "On the web",
+  "web.title": "The app tracks it.",
+  "web.highlight": "The web explains it.",
+  "web.subtitle":
+    "Seventeen calculators and a bilingual knowledge base, free and open, built on the same formulas as the app.",
+  "plans.own1": "Works fully offline",
+  "plans.own2": "JSON export and import",
+  "plans.own3": "MIT licence · no ads, no tracking",
+  "plans.repo": "Read the source on GitHub",
+  "plans.eyebrow": "Plans",
+  "plans.title": "Free is the plan.",
+  "plans.highlight": "Premium is sync.",
+  "plans.subtitle":
+    "Use Metri with no account, with a free one, or with Premium cloud sync. Nothing in the product is paid today.",
+  "plans.local.name": "Local",
+  "plans.local.price": "Free",
+  "plans.local.tagline": "No account. Everything stays on your phone.",
+  "plans.local.f1": "Every feature and every update",
+  "plans.local.f2": "Export and import your data any time",
+  "plans.local.f3": "Data lives only in this phone (SQLite)",
+  "plans.local.f4": "No recovery if the phone is lost",
+  "plans.free.name": "Free account",
+  "plans.free.badge": "Recommended",
+  "plans.free.price": "Free",
+  "plans.free.tagline": "Email or Google / GitHub, no card.",
+  "plans.free.f1": "Password and recovery managed by the server",
+  "plans.free.f2": "Profile restore after a reinstall",
+  "plans.free.f3": "History and favorites on metri.info",
+  "plans.free.f4": "Release emails you can turn off",
+  "plans.premium.name": "Premium",
+  "plans.premium.badge": "Open beta",
+  "plans.premium.price": "Free in beta",
+  "plans.premium.tagline": "Cloud sync and backup, on request.",
+  "plans.premium.f1": "Automatic sync of training, body and food data",
+  "plans.premium.f2": "Unlimited devices, always in sync",
+  "plans.premium.f3": "Synced activity views on the web",
+  "plans.premium.f4": "Future apps included (watch in progress)",
+  "plans.note":
+    "Premium needs a free account first. During the open beta it is granted on request by email — there is no payment, card or trial. Details in the",
+  "plans.noteLink": "Terms.",
+  "plans.ctaCreate": "Create a free account",
+  "plans.ctaPremium": "Request Premium access",
 
   "tools.title": "Calculators & Tools",
   "tools.subtitle":
@@ -175,46 +267,22 @@ export const en = {
     "Example: maintenance calories, with cut / maintain / bulk targets.",
   "tools.popularAria": "Popular calculator",
   "tools.bmr.title": "BMR & TDEE",
-  "tools.bmr.desc":
-    "Estimate daily energy expenditure (Harris-Benedict, Mifflin-St Jeor, Katch-McArdle).",
   "tools.macros.title": "Macro Splitter",
-  "tools.macros.desc":
-    "Protein, carbs and fat targets from your calories and goal.",
   "tools.onerm.title": "1RM Calculator",
-  "tools.onerm.desc":
-    "Estimate your one-rep max (Epley, Brzycki) from any set.",
   "tools.bodyfat.title": "Body Fat",
-  "tools.bodyfat.desc":
-    "U.S. Navy circumference method for body-fat percentage.",
   "tools.ideal.title": "Healthy Weight & BMI",
-  "tools.ideal.desc": "Your BMI and the WHO healthy-weight range.",
   "tools.ffmi.title": "FFMI",
-  "tools.ffmi.desc": "Fat-free mass index — how much muscle you carry.",
   "tools.water.title": "Hydration",
-  "tools.water.desc": "Daily water target from body weight and activity.",
   "tools.plates.title": "Plate Calculator",
-  "tools.plates.desc": "Which plates to load on the bar for any target weight.",
   "tools.idealweight.title": "Ideal Weight",
-  "tools.idealweight.desc":
-    "A healthy target weight for your height (Devine, Robinson, BMI range).",
   "tools.deficit.title": "Calorie Deficit",
-  "tools.deficit.desc":
-    "Turn a goal weight into a daily deficit and a realistic timeline.",
   "tools.protein.title": "Protein Intake",
-  "tools.protein.desc": "Your daily protein target from bodyweight and goal.",
   "tools.leanmass.title": "Lean Body Mass",
-  "tools.leanmass.desc": "Estimate your fat-free mass and total fat mass.",
   "tools.heartrate.title": "Heart-Rate Zones",
-  "tools.heartrate.desc": "Max heart rate and five training zones in bpm.",
   "tools.whtr.title": "Waist-to-Height",
-  "tools.whtr.desc": "A simple, accurate central-fat screen — better than BMI.",
   "tools.wilks.title": "Wilks / DOTS",
-  "tools.wilks.desc": "Score your powerlifting total relative to bodyweight.",
   "tools.calsburned.title": "Calories Burned",
-  "tools.calsburned.desc":
-    "Calories an activity burns for your weight and time.",
   "tools.lbkg.title": "lb ↔ kg Converter",
-  "tools.lbkg.desc": "Convert pounds to kilograms and back, exactly.",
 
   "calc.weight": "Weight",
   "calc.reps": "Reps",
@@ -372,7 +440,6 @@ export const en = {
   "calc.met.soccer": "Soccer",
   "calc.eyebrow": "Free calculator",
   "calc.overviewTitle": "Overview",
-  "calc.onThisPage": "On this page",
   "calc.howTitle": "How it's calculated",
   "calc.interpretTitle": "How to read your result",
   "calc.faqTitle": "Frequently asked questions",
@@ -460,24 +527,9 @@ export const en = {
   "docs.category.supplements": "Supplements",
   "docs.category.progress": "Progress",
   "docs.category.glossary": "Glossary",
-  "docs.topics.gettingStarted": "Welcome to Metri and how to use it.",
-  "docs.topics.calculators":
-    "Guides to TDEE, macros, body fat, FFMI, 1RM and hydration.",
-  "docs.topics.nutrition":
-    "Macros, calories, meal timing and personalizing your diet.",
-  "docs.topics.training":
-    "Progressive overload, volume, frequency, intensity and technique.",
-  "docs.topics.recovery": "Sleep, deloads and managing fatigue.",
-  "docs.topics.supplements": "What's worth taking — and what isn't.",
-  "docs.topics.progress": "Measuring and tracking real progress over time.",
-  "docs.topics.glossary": "Plain-English definitions of every key term.",
 
   "home.toolsCta": "See all 17 calculators",
   "home.docsCta": "Browse the knowledge base",
-  "home.toolsLead":
-    "17 free calculators that run instantly in your browser — the most-used ones first, with the full set a click away.",
-  "home.docsLead":
-    "An evidence-based, bilingual knowledge base — eight sections covering nutrition, training, recovery and more, written for lifters.",
   "stats.calculators": "Free calculators",
   "stats.guides": "Evidence-based guides",
   "stats.private": "Runs in your browser",
@@ -488,15 +540,10 @@ export const en = {
   "soon.body": "This section is being built and lands in an upcoming release.",
   "soon.backHome": "Back to home",
 
-  "oss.title": "Built in the open.",
-  "oss.subtitle":
-    "Metri is MIT-licensed and free forever. Star it, fork it, or contribute on GitHub.",
-  "oss.cta": "View on GitHub",
-
   "footer.tagline": "Open-source fitness, built for lifters.",
   "footer.product": "Product",
   "footer.resources": "Resources",
-  "footer.company": "Company",
+  "footer.company": "Project",
   "footer.calculators": "Calculators",
   "footer.tagline2":
     "Free, open-source fitness calculators and guides — no account, no paywall, built for lifters.",
@@ -550,11 +597,6 @@ export const en = {
     "Metri is free and open source on the web — every calculator and guide, no account, forever. The native iOS and Android app is an optional extra that works fully without an account (local mode); a free account adds export/import and profile restore, and Premium adds automatic cloud sync.",
   "download.devCtaTools": "Explore the calculators",
   "download.devCtaGithub": "Follow progress on GitHub",
-  "download.platformsTitle": "Coming to",
-  "download.iosSoon": "App Store — coming soon",
-  "download.androidSoon": "Google Play — coming soon",
-  "download.notifyNote":
-    "Star the repo to get notified when the first build drops.",
 
   "download.betaBadge": "Beta build — manual install",
   "download.betaTitle": "Try the Metri beta",
@@ -567,24 +609,73 @@ export const en = {
   "download.disclaimer":
     "Metri isn’t on the App Store or Google Play yet. This is an early beta you install at your own risk. Your browser and phone will likely warn you about installing an app from outside the store — that’s normal for sideloaded apps and doesn’t mean it’s unsafe. The app is under active development, so features may change or break between builds.",
 
-  "download.pwaTitle": "Install the web app",
-  "download.pwaBody":
-    "Add Metri to your device for an app-like, offline-ready experience — no store needed. Works on desktop and mobile.",
-  "download.pwaInstall": "Install web app",
-  "download.pwaInstalled": "Already installed on this device",
-  "download.pwaIosHint":
-    "On iPhone or iPad: tap the Share button, then “Add to Home Screen”.",
-  "download.pwaHint":
-    "In Chrome or Edge, open the browser menu and choose “Install Metri”.",
-
   "download.releaseTitle": "Latest release",
   "download.version": "Version {version}",
   "download.releasedOn": "Released {date}",
   "download.sizeMb": "{size} MB",
-  "download.checksum": "SHA-256",
   "download.checksumHint":
     "Compare it with the downloaded file to confirm the APK arrived intact.",
   "download.releaseNotes": "Release notes",
+
+  "download.installTitle": "Install in three steps",
+  "download.step1Title": "Download the APK",
+  "download.step1Body":
+    "Tap the button above on your phone, or scan the code to open the same link.",
+  "download.step2Title": "Allow the install",
+  "download.step2Body":
+    "Android asks once to allow installs from your browser. Accept, then open the downloaded file.",
+  "download.step3Title": "Pick how you want to use it",
+  "download.step3Body":
+    "Start in local mode with no account, or sign in to restore your profile. You can switch later.",
+  "download.verifyTitle": "Verify the file",
+  "download.verifyBody":
+    "Every release ships with its SHA-256. Compare it before installing if you downloaded on a computer.",
+  "download.copy": "Copy",
+  "download.noReleaseYet":
+    "No release has been published yet — the button links to the GitHub releases page.",
+  "download.reqAndroid": "Android 7.0 or newer",
+  "download.reqSize": "About {size} MB",
+  "download.reqSizeUnknown": "Small download",
+  "download.reqOffline": "Works fully offline",
+  "download.reqOta": "Updates over the air",
+  "download.modesTitle": "Three ways to use it",
+  "download.modeLocal":
+    "Local mode: no account, everything stays on your phone, export any time.",
+  "download.modeFree":
+    "Free account: password recovery, profile restore, history and favorites on the web.",
+  "download.modePremium":
+    "Premium: automatic cloud sync and backup — free during the beta, on request.",
+  "download.iosNote":
+    "iOS is next. Until then the web app installs on iPhone from Safari's share menu.",
+  "download.faqTitle": "Common questions",
+  "download.faq1Q": "Why isn't it on Google Play yet?",
+  "download.faq1A":
+    "The app is in open beta and changes weekly. Shipping the APK directly keeps releases fast while the store listing is prepared; the same build will land there.",
+  "download.faq2Q": "Is a sideloaded APK safe?",
+  "download.faq2A":
+    "The APK is built by a public GitHub Actions workflow from the open-source repository, and every release publishes its SHA-256 so you can check the file you got is the file that was built.",
+  "download.faq3Q": "Do I need an account?",
+  "download.faq3A":
+    "No. Local mode has every feature. An account is only for recovery, restore and the website, and Premium only adds cloud sync.",
+  "download.faq4Q": "Can I move to a new phone?",
+  "download.faq4A":
+    "Yes. Export your data as a JSON file from the Plan screen and import it on the new phone. Premium syncs it automatically.",
+
+  "contact.topicLabel": "Topic",
+  "contact.topicFeedback": "Feedback or idea",
+  "contact.topicBug": "Bug report",
+  "contact.topicPremium": "Request Premium access",
+  "contact.topicPartnership": "Partnership",
+  "contact.topicOther": "Something else",
+  "contact.premiumHint":
+    "Premium is free during the open beta. Use the email of your Metri account so sync can be turned on for it.",
+  "contact.successTitle": "Message sent",
+  "contact.issuesLabel": "Bugs & features",
+  "contact.issuesValue": "Open an issue on GitHub",
+  "contact.responseNote":
+    "Messages land in the maintainer's inbox and usually get a reply within a few days. For bugs, the GitHub tracker keeps everything in the open.",
+
+  "account.tier.request": "Request access",
 
   "releaseEmail.subject": "Metri {version} is out",
   "releaseEmail.preview": "What's new in Metri {version}",
@@ -605,7 +696,7 @@ export const en = {
   "unsubscribe.confirm": "Unsubscribe",
   "unsubscribe.doneTitle": "You're unsubscribed",
   "unsubscribe.doneBody":
-    "You won't get release emails anymore. You can turn them back on from your profile settings in the Metri app.",
+    "You won't get release emails anymore. You can turn them back on any time from Notifications in your account on metri.info, or from your profile in the Metri app.",
   "unsubscribe.invalidTitle": "This link doesn't work",
   "unsubscribe.invalidBody":
     "The unsubscribe link is invalid or incomplete. Open it again from the latest release email.",
@@ -626,12 +717,11 @@ export const en = {
   "account.statsFavs": "favorites",
   "account.tier.title": "Your plan",
   "account.tier.current": "Current",
-  "account.tier.soon": "Coming soon",
   "account.tier.free": "Free account",
   "account.tier.freeDesc": "Calculators, history and favorites.",
   "account.tier.pro": "Premium",
   "account.tier.proDesc":
-    "Automatic cloud sync of your training, unlimited devices.",
+    "Automatic cloud sync of the app's training, body and food data. Free during the beta, on request.",
   "account.historyTitle": "Calculation history",
   "account.historySubtitle": "Your most recent calculations.",
   "account.historyEmpty":
@@ -653,31 +743,6 @@ export const en = {
   "account.settingsSubtitle": "Manage your profile, password and connections.",
   "account.settingsLink": "Account settings",
   "account.backToAccount": "Back to account",
-
-  "benefits.eyebrow": "Free account",
-  "benefits.title": "Why create an account",
-  "benefits.subtitle":
-    "Calculators are free for everyone — an account just remembers your work.",
-  "benefits.ctaCreate": "Create a free account",
-  "benefits.ctaSignIn": "Sign in",
-  "benefits.guest.name": "Guest",
-  "benefits.guest.tagline": "No sign-up needed.",
-  "benefits.guest.f1": "Every calculator, instantly",
-  "benefits.guest.f2": "No account required",
-  "benefits.guest.f3": "Nothing saved between visits",
-  "benefits.free.name": "Free account",
-  "benefits.free.badge": "Recommended",
-  "benefits.free.tagline": "Free forever — no card.",
-  "benefits.free.f1": "Save your calculation history",
-  "benefits.free.f2": "Pin favorite calculators & guides",
-  "benefits.free.f3": "Link Google or GitHub",
-  "benefits.free.f4": "Sync across the web app",
-  "benefits.soon.name": "Premium",
-  "benefits.soon.badge": "In beta",
-  "benefits.soon.tagline": "Free while in beta — Stripe checkout in progress.",
-  "benefits.soon.f1": "Automatic Metri mobile app sync",
-  "benefits.soon.f2": "Cloud backup of your data",
-  "benefits.soon.f3": "Unlimited devices, cross-device history",
 
   "settings.title": "Account settings",
   "settings.subtitle":
@@ -715,11 +780,65 @@ export const en = {
   "settings.activitySedentary": "Sedentary",
   "settings.activityLight": "Lightly active",
   "settings.activityModerate": "Moderately active",
-  "settings.activityActive": "Very active",
-  "settings.activityAthlete": "Athlete",
+  "settings.activityActive": "Active",
   "settings.bodyWeight": "Body weight (kg)",
   "settings.bodyHeight": "Height (cm)",
   "settings.profileSaved": "Profile updated.",
+
+  "settings.navNotifications": "Notifications",
+  "settings.navNotificationsDesc": "Release emails",
+  "settings.bodyTitle": "Body metrics",
+  "settings.bodyDesc":
+    "Prefill the calculators and restore on the app after a reinstall. The app's own check-ins update these too.",
+  "settings.age": "Age",
+  "settings.bodyFat": "Body fat (%)",
+  "settings.activityVeryActive": "Very active",
+  "settings.bmrFormula": "BMR formula",
+  "settings.formulaUnset": "App default (Mifflin-St Jeor)",
+  "settings.energySnapshot": "Last computed in the app:",
+  "settings.prefsTitle": "App preferences",
+  "settings.prefsDesc": "Synced to the mobile app the next time it signs in.",
+  "settings.clockFormat": "Time format",
+  "settings.clock24": "24-hour",
+  "settings.clock12": "12-hour",
+  "settings.appLanguage": "App language",
+
+  "notifications.title": "Notifications",
+  "notifications.desc": "What Metri is allowed to send to this account.",
+  "notifications.releaseTitle": "New-version emails",
+  "notifications.releaseDesc":
+    "One email when a new build of the Android app ships, with what changed and the download link. Nothing else — no marketing.",
+  "notifications.pushNote":
+    "Workout reminders, the rest timer and tips are notifications on your phone. They are configured in the app under Notifications and never leave the device.",
+  "notifications.savedAutomatically": "Changes are saved as you flip them.",
+  "notifications.releaseOnToast": "Release emails on",
+  "notifications.releaseOffToast": "Release emails off",
+
+  "activity.sync.title": "From the app",
+  "activity.sync.subtitle":
+    "A read-only view of what the Metri app has synced to your account.",
+  "activity.sync.upsellTitle": "Premium sync shows your training here",
+  "activity.sync.upsellBody":
+    "With Premium, the app backs up your weigh-ins, sessions, food diary and nutrition phase to your account and this page shows them. Free during the open beta, on request.",
+  "activity.sync.empty":
+    "Nothing synced yet. Sign in to the app with this account and your data will show up here after the first sync.",
+  "activity.sync.weight": "Body weight",
+  "activity.sync.noWeighIns": "No weigh-ins synced yet.",
+  "activity.sync.weekOverWeek": "7-day avg vs previous",
+  "activity.sync.weighInsCount": "weigh-ins",
+  "activity.sync.sessions": "Recent sessions",
+  "activity.sync.noSessions": "No completed sessions synced yet.",
+  "activity.sync.session": "Session",
+  "activity.sync.week": "week {n}",
+  "activity.sync.nutrition": "Last 7 logged days",
+  "activity.sync.noFood": "No food diary entries synced yet.",
+  "activity.sync.target": "Target",
+  "activity.sync.phase": "Nutrition phase",
+  "activity.sync.phaseRecomp": "Recomp",
+  "activity.sync.noPhase": "No active nutrition phase.",
+  "activity.sync.since": "Since",
+  "activity.sync.phaseNote":
+    "Phases, check-ins and calorie adjustments are managed in the app; this page only mirrors them.",
 
   "settings.securityTitle": "Password",
   "settings.securityDesc": "Used to sign in with your email. Keep it private.",

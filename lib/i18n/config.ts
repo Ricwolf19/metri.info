@@ -40,5 +40,9 @@ export const createT =
   (key, vars) =>
     translate(locale, key, vars);
 
+/** BCP-47 tag for `Intl` formatters: Mexican Spanish is the house dialect. */
+export const intlLocale = (locale: Locale): string =>
+  locale === "es" ? "es-MX" : "en-US";
+
 export const isLocale = (value: unknown): value is Locale =>
   value === "en" || value === "es";

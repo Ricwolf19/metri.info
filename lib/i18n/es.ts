@@ -24,11 +24,6 @@ export const es: Record<TranslationKey, string> = {
   "lang.en": "Inglés",
   "lang.es": "Español",
 
-  "theme.title": "Apariencia",
-  "theme.system": "Sistema",
-  "theme.light": "Claro",
-  "theme.dark": "Oscuro",
-
   "nav.home": "Inicio",
   "nav.docs": "Docs",
   "nav.tools": "Herramientas",
@@ -42,11 +37,10 @@ export const es: Record<TranslationKey, string> = {
   "nav.activity": "Mi actividad",
   "nav.github": "GitHub",
   "nav.contact": "Contacto",
-  "nav.changelog": "Cambios",
-  "nav.more": "Más",
+  "nav.changelog": "Changelog",
   "nav.menu": "Menú",
 
-  "cmd.title": "Menú de comandos",
+  "cmd.title": "Paleta de comandos",
   "cmd.open": "Buscar",
   "cmd.hide": "Ocultar",
   "cmd.placeholder": "Busca calculadoras, guías, páginas…",
@@ -103,13 +97,13 @@ export const es: Record<TranslationKey, string> = {
   "auth.errorPasswordLong":
     "La contraseña no puede tener más de 128 caracteres.",
   "auth.errorUserExists":
-    "Ya existe una cuenta con ese correo. Probá iniciando sesión.",
-  "auth.errorEmailInvalid": "Ingresá un correo electrónico válido.",
+    "Ya existe una cuenta con ese correo. Prueba iniciar sesión.",
+  "auth.errorEmailInvalid": "Escribe un correo electrónico válido.",
   "auth.errorInvalidCredentials": "Correo o contraseña incorrectos.",
   "auth.errorRateLimit":
-    "Demasiados intentos. Esperá unos minutos y probá de nuevo.",
+    "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
   "auth.errorNetwork":
-    "No se pudo contactar al servidor. Revisá tu conexión e intentá de nuevo.",
+    "No se pudo contactar al servidor. Revisa tu conexión e inténtalo de nuevo.",
   "auth.errorInvalidToken": "Este enlace no es válido o ha caducado.",
   "auth.signUpCheckEmail":
     "Revisa tu bandeja — te enviamos un enlace de confirmación para terminar de crear tu cuenta.",
@@ -123,50 +117,152 @@ export const es: Record<TranslationKey, string> = {
   "auth.recaptchaNotice":
     "Protegido por reCAPTCHA. Aplican la Política de Privacidad y los Términos de Servicio de Google.",
 
-  "hero.badge": "Tracker de fitness de código abierto",
+  "hero.kicker": "Open source · Offline-first · Beta gratis para Android",
   "hero.title": "Mide. Progresa. Evoluciona.",
   "hero.subtitle":
-    "El compañero de entrenamiento de código abierto para lifters serios: 17 calculadoras y una base de conocimiento basada en evidencia, gratis y privado por diseño.",
+    "El compañero de entrenamiento de código abierto: una app gratuita para Android con programas, series, check-ins corporales y comida, más 17 calculadoras y una base de conocimiento basada en evidencia en la web.",
   "hero.ctaDownload": "Descargar app",
   "hero.ctaDocs": "Ver documentación",
   "hero.ctaTools": "Probar las calculadoras",
 
-  "showcase.badge": "En desarrollo",
-  "showcase.badgeBeta": "Beta — instálala hoy",
-  "showcase.title": "Una app nativa está",
-  "showcase.highlight": "en camino.",
-  "showcase.subtitle":
-    "Todo en Metri es gratis — web y app. La app de Android ya está en beta con las mismas fórmulas y soporte total sin conexión, sin requerir cuenta; iOS sigue. La cuenta opcional añade exportar/importar y Premium añade sync.",
-  "showcase.feature1": "Calculadoras instantáneas que responden a cada tecla",
-  "showcase.feature2":
-    "Funciona 100% sin conexión — tus datos se quedan contigo",
-  "showcase.feature3":
-    "Fotos de progreso, recordatorios e historial sincronizado",
-  "showcase.feature4": "Gratis y de código abierto, para siempre",
-  "showcase.cta": "Ver lo que viene",
+  "tour.eyebrow": "La app móvil",
+  "tour.eyebrowBeta": "Beta para Android — instálala hoy",
+  "tour.title": "Una app para todo el",
+  "tour.highlight": "ciclo de entrenamiento.",
+  "tour.subtitle":
+    "Cinco pestañas cubren el programa que sigues, cada serie que registras, cómo responde tu cuerpo, qué comes y qué aprendes. Totalmente sin conexión y sin cuenta.",
+  "tour.tabsAria": "Secciones de la app",
+  "tour.tab.home": "Inicio",
+  "tour.tab.train": "Entrenar",
+  "tour.tab.metrics": "Métricas",
+  "tour.tab.nutrition": "Nutrición",
+  "tour.tab.explore": "Explorar",
+  "tour.home.title": "Tu día, de un vistazo",
+  "tour.home.body":
+    "Inicio abre con tu objetivo energético de hoy, la tira semanal de entrenamiento y la próxima sesión. Fija las acciones que más usas y empieza a entrenar con un toque.",
+  "tour.home.p1": "TDEE diario y fase de nutrición arriba",
+  "tour.home.p2": "Tira semanal con rachas y avisos para ponerte al día",
+  "tour.home.p3":
+    "Acciones rápidas fijadas y widget para la pantalla de inicio de Android",
+  "tour.train.title": "Sigue un programa, registra cada serie",
+  "tour.train.body":
+    "Inscríbete en un programa integrado o propio, mira lo prescrito para la semana y registra peso, repeticiones y RIR contra ello. El temporizador de descanso corre como notificación del sistema, así puedes bloquear el teléfono.",
+  "tour.train.p1":
+    "Dos programas integrados y 64 ejercicios con fotogramas animados",
+  "tour.train.p2":
+    "Hoja de carga para barra y discos, máquinas de placas y mancuernas",
+  "tour.train.p3":
+    "Temporizador de descanso en las notificaciones, con +30 s y Saltar",
+  "tour.metrics.title": "Mira el efecto del trabajo",
+  "tour.metrics.body":
+    "Métricas convierte tus registros en rachas, volumen semanal, un mapa corporal de lo entrenado, tendencias de 1RM estimado y tu curva de peso. Reordena u oculta cualquier sección.",
+  "tour.metrics.p1": "Calendario de constancia y racha de entrenamiento",
+  "tour.metrics.p2": "Volumen, fatiga y último entreno por músculo",
+  "tour.metrics.p3": "Tendencias de e1RM, PRs y promedios de pesaje",
+  "tour.nutrition.title": "Come para la fase en la que estás",
+  "tour.nutrition.body":
+    "Elige definición, mantenimiento, recomposición o volumen y Metri fija calorías y macros a partir de tus check-ins. Registra comidas desde un catálogo USDA bilingüe, tus propios alimentos o una entrada rápida de calorías.",
+  "tour.nutrition.p1":
+    "El check-in semanal ajusta las calorías automáticamente",
+  "tour.nutrition.p2":
+    "146 alimentos de catálogo, alimentos propios y recientes",
+  "tour.nutrition.p3": "33 ideas de comidas y tres planes diarios listos",
+  "tour.explore.title": "Aprende sobre la marcha",
+  "tour.explore.body":
+    "Explorar reúne las 16 calculadoras de la app, 35 guías bilingües y un test de conocimientos que muestra lo que sabes de nutrición, entrenamiento y cuerpo.",
+  "tour.explore.p1": "Las mismas fórmulas que la web, sin conexión",
+  "tour.explore.p2": "Guías enlazadas desde la pantalla en la que estás",
+  "tour.explore.p3": "Test de conocimientos con resultado en radar",
+  "tour.ctaDownload": "Descargar para Android",
+  "tour.ctaNote":
+    "Gratis, de código abierto y sin cuenta. iOS es lo siguiente.",
 
-  "bento.eyebrow": "Por qué Metri",
-  "bento.title": "Todo lo que un atleta necesita,",
-  "bento.highlight": "gratis en la web.",
-  "bento.subtitle":
-    "Sin muros de pago, sin registro, sin relleno: herramientas de código abierto en las que puedes confiar de verdad. La app es solo un extra opcional.",
-  "bento.calc.title": "17 calculadoras al instante",
-  "bento.calc.desc":
-    "1RM, TDEE, macros, grasa corporal, IMC, FFMI, peso ideal, proteína, zonas de frecuencia cardíaca, Wilks/DOTS y más — cada una con su gráfica visual y un enlace para compartir.",
-  "bento.calc.cta": "Abrir las calculadoras",
-  "bento.oss.title": "Código abierto para siempre",
-  "bento.oss.desc":
-    "Licencia MIT y desarrollo abierto. Lee las fórmulas, haz un fork, contribuye.",
-  "bento.offline.title": "Funciona sin conexión",
-  "bento.offline.desc":
-    "La app nativa opcional ejecuta cada herramienta sin conexión — tus datos se quedan en el dispositivo.",
-  "bento.docs.title": "Guías basadas en evidencia",
-  "bento.docs.desc":
-    "Una base de conocimiento en crecimiento sobre nutrición, entrenamiento y recuperación — escrita para atletas, no para clics.",
-  "bento.docs.cta": "Explorar la documentación",
-  "bento.privacy.title": "Privado por diseño",
-  "bento.privacy.desc":
-    "Las calculadoras funcionan en tu navegador. La cuenta es opcional y solo sincroniza lo que decidas guardar.",
+  "tour.mock.greeting": "Buenos días, Ric",
+  "tour.mock.energy": "Energía de hoy",
+  "tour.mock.phase": "Fase de mantenimiento · semana 3 de 12",
+  "tour.mock.thisWeek": "Esta semana",
+  "tour.mock.streak": "racha de {days} días",
+  "tour.mock.weekdays": "L,M,M,J,V,S,D",
+  "tour.mock.nextSession": "Torso A · Metri Progression",
+  "tour.mock.nextSessionMeta": "Hoy 18:30 · 5 ejercicios",
+  "tour.mock.start": "Empezar",
+  "tour.mock.quickActions": "Acciones rápidas",
+  "tour.mock.weighIn": "Pesarme",
+  "tour.mock.logFood": "Registrar comida",
+  "tour.mock.calculators": "Calculadoras",
+  "tour.mock.sessionTitle": "Torso A",
+  "tour.mock.sessionMeta": "Semana 3 · Metri Progression",
+  "tour.mock.bench": "Press de banca",
+  "tour.mock.reps": "reps",
+  "tour.mock.lastTime": "La última vez",
+  "tour.mock.rest": "Descanso",
+  "tour.mock.ohp": "Press militar",
+  "tour.mock.row": "Remo con barra",
+  "tour.mock.streakLabel": "Racha",
+  "tour.mock.sessions": "Sesiones",
+  "tour.mock.weeklyVolume": "Volumen semanal",
+  "tour.mock.vsLastWeek": "vs la semana pasada",
+  "tour.mock.bodyWeight": "Peso corporal",
+  "tour.mock.weeklyAvg": "promedio semanal",
+  "tour.mock.threeMonths": "Últimos 3 meses",
+  "tour.mock.breakfast": "Desayuno",
+  "tour.mock.lunch": "Comida",
+  "tour.mock.dinner": "Cena",
+  "tour.mock.snack": "Snack",
+  "tour.mock.add": "Añadir",
+  "tour.mock.sevenDay": "Promedio de 7 días",
+  "tour.mock.avg": "prom.",
+  "tour.mock.topics": "Entrenamiento,Nutrición,Cuerpo,Cardio,Básicos",
+  "tour.mock.search": "Buscar calculadoras y guías",
+  "tour.mock.guides": "Guías",
+  "tour.mock.guide1": "Cómo elegir tu nivel de entrenamiento",
+  "tour.mock.guide2": "Cómo leer tu check-in semanal",
+  "tour.mock.quiz": "Test de conocimientos",
+  "tour.mock.quizMeta": "4 áreas · resultado en radar",
+
+  "web.eyebrow": "En la web",
+  "web.title": "La app lo registra.",
+  "web.highlight": "La web lo explica.",
+  "web.subtitle":
+    "Diecisiete calculadoras y una base de conocimiento bilingüe, gratis y abiertas, con las mismas fórmulas que la app.",
+  "plans.own1": "Funciona sin conexión",
+  "plans.own2": "Exporta e importa en JSON",
+  "plans.own3": "Licencia MIT · sin anuncios ni rastreo",
+  "plans.repo": "Lee el código en GitHub",
+  "plans.eyebrow": "Planes",
+  "plans.title": "Gratis es el plan.",
+  "plans.highlight": "Premium es sync.",
+  "plans.subtitle":
+    "Usa Metri sin cuenta, con una gratuita o con sync Premium en la nube. Hoy nada en el producto es de pago.",
+  "plans.local.name": "Local",
+  "plans.local.price": "Gratis",
+  "plans.local.tagline": "Sin cuenta. Todo se queda en tu teléfono.",
+  "plans.local.f1": "Todas las funciones y todas las actualizaciones",
+  "plans.local.f2": "Exporta e importa tus datos cuando quieras",
+  "plans.local.f3": "Los datos viven solo en este teléfono (SQLite)",
+  "plans.local.f4": "Sin recuperación si pierdes el teléfono",
+  "plans.free.name": "Cuenta gratis",
+  "plans.free.badge": "Recomendado",
+  "plans.free.price": "Gratis",
+  "plans.free.tagline": "Correo o Google / GitHub, sin tarjeta.",
+  "plans.free.f1": "Contraseña y recuperación gestionadas por el servidor",
+  "plans.free.f2": "Restaura tu perfil tras reinstalar",
+  "plans.free.f3": "Historial y favoritos en metri.info",
+  "plans.free.f4": "Avisos de nuevas versiones que puedes apagar",
+  "plans.premium.name": "Premium",
+  "plans.premium.badge": "Beta abierta",
+  "plans.premium.price": "Gratis en beta",
+  "plans.premium.tagline":
+    "Sync y copia de seguridad en la nube, bajo petición.",
+  "plans.premium.f1": "Sync automático de entrenamiento, cuerpo y comida",
+  "plans.premium.f2": "Dispositivos ilimitados, siempre sincronizados",
+  "plans.premium.f3": "Vistas de actividad sincronizada en la web",
+  "plans.premium.f4": "Apps futuras incluidas (versión para reloj en progreso)",
+  "plans.note":
+    "Premium requiere primero una cuenta gratuita. Durante la beta abierta se concede bajo petición por correo — no hay pago, tarjeta ni prueba. Detalles en los",
+  "plans.noteLink": "Términos.",
+  "plans.ctaCreate": "Crear una cuenta gratis",
+  "plans.ctaPremium": "Solicitar acceso Premium",
 
   "tools.title": "Calculadoras y herramientas",
   "tools.subtitle":
@@ -183,50 +279,23 @@ export const es: Record<TranslationKey, string> = {
   "tools.example.caption":
     "Ejemplo: calorías de mantenimiento, con objetivos de definición / mantenimiento / volumen.",
   "tools.popularAria": "Calculadora popular",
-  "tools.bmr.title": "TMB y GET",
-  "tools.bmr.desc":
-    "Estima tu gasto energético diario (Harris-Benedict, Mifflin-St Jeor, Katch-McArdle).",
+  "tools.bmr.title": "BMR y TDEE",
   "tools.macros.title": "Reparto de macros",
-  "tools.macros.desc":
-    "Objetivos de proteína, carbohidratos y grasa según tus calorías y meta.",
   "tools.onerm.title": "Calculadora de 1RM",
-  "tools.onerm.desc":
-    "Estima tu repetición máxima (Epley, Brzycki) desde cualquier serie.",
   "tools.bodyfat.title": "Grasa corporal",
-  "tools.bodyfat.desc":
-    "Método de circunferencias de la Marina de EE. UU. para el % de grasa.",
   "tools.ideal.title": "Peso saludable e IMC",
-  "tools.ideal.desc": "Tu IMC y el rango de peso saludable de la OMS.",
   "tools.ffmi.title": "FFMI",
-  "tools.ffmi.desc": "Índice de masa libre de grasa — cuánto músculo llevas.",
   "tools.water.title": "Hidratación",
-  "tools.water.desc": "Objetivo diario de agua según peso y actividad.",
   "tools.plates.title": "Calculadora de discos",
-  "tools.plates.desc":
-    "Qué discos cargar en la barra para cualquier peso objetivo.",
   "tools.idealweight.title": "Peso ideal",
-  "tools.idealweight.desc":
-    "Un peso objetivo saludable para tu altura (Devine, Robinson, rango de IMC).",
   "tools.deficit.title": "Déficit calórico",
-  "tools.deficit.desc":
-    "Convierte un peso objetivo en un déficit diario y un plazo realista.",
   "tools.protein.title": "Proteína",
-  "tools.protein.desc": "Tu objetivo diario de proteína según peso y meta.",
   "tools.leanmass.title": "Masa magra",
-  "tools.leanmass.desc": "Estima tu masa libre de grasa y tu masa grasa total.",
-  "tools.heartrate.title": "Zonas de frecuencia",
-  "tools.heartrate.desc":
-    "Frecuencia cardíaca máxima y cinco zonas de entreno en ppm.",
-  "tools.whtr.title": "Cintura-altura",
-  "tools.whtr.desc":
-    "Un cribado simple y preciso de grasa central — mejor que el IMC.",
+  "tools.heartrate.title": "Zonas de frecuencia cardíaca",
+  "tools.whtr.title": "Ratio cintura-altura",
   "tools.wilks.title": "Wilks / DOTS",
-  "tools.wilks.desc": "Puntúa tu total de powerlifting según tu peso corporal.",
   "tools.calsburned.title": "Calorías quemadas",
-  "tools.calsburned.desc":
-    "Calorías que quema una actividad según tu peso y tiempo.",
   "tools.lbkg.title": "Conversor lb ↔ kg",
-  "tools.lbkg.desc": "Convierte libras a kilos y al revés, con exactitud.",
 
   "calc.weight": "Peso",
   "calc.reps": "Reps",
@@ -312,7 +381,7 @@ export const es: Record<TranslationKey, string> = {
   "calc.formula.katch": "Katch-McArdle",
   "calc.result.oneRm": "1RM estimado",
   "calc.result.tdee": "Mantenimiento (TDEE)",
-  "calc.result.bmr": "TMB",
+  "calc.result.bmr": "BMR",
   "calc.result.cut": "Déficit suave (−500)",
   "calc.result.bulk": "Volumen limpio (+300)",
   "calc.result.protein": "Proteína",
@@ -339,7 +408,7 @@ export const es: Record<TranslationKey, string> = {
   "calc.result.proteinKcal": "De la proteína",
   "calc.result.perMeal": "Por comida (×4)",
   "calc.result.leanMass": "Masa magra (Boer)",
-  "calc.result.lbmFromBf": "MLG desde % grasa",
+  "calc.result.lbmFromBf": "Masa magra desde % de grasa",
   "calc.result.fatMass": "Masa grasa",
   "calc.result.maxHr": "Frecuencia cardíaca máxima",
   "calc.result.whtr": "Ratio cintura-altura",
@@ -356,7 +425,7 @@ export const es: Record<TranslationKey, string> = {
   "calc.bf.essential": "Grasa esencial",
   "calc.bf.athlete": "Atlético",
   "calc.bf.fitness": "Fitness",
-  "calc.bf.average": "Medio",
+  "calc.bf.average": "Promedio",
   "calc.bf.high": "Alto",
   "calc.ffmi.below": "Bajo la media",
   "calc.ffmi.average": "Media",
@@ -385,7 +454,6 @@ export const es: Record<TranslationKey, string> = {
   "calc.met.soccer": "Fútbol",
   "calc.eyebrow": "Calculadora gratis",
   "calc.overviewTitle": "Resumen",
-  "calc.onThisPage": "En esta página",
   "calc.howTitle": "Cómo se calcula",
   "calc.interpretTitle": "Cómo leer tu resultado",
   "calc.faqTitle": "Preguntas frecuentes",
@@ -413,9 +481,9 @@ export const es: Record<TranslationKey, string> = {
   "muscle.biceps": "Bíceps",
   "muscle.forearms": "Antebrazos",
   "muscle.quads": "Cuádriceps",
-  "muscle.hamstrings": "Femorales",
+  "muscle.hamstrings": "Isquiotibiales",
   "muscle.glutes": "Glúteos",
-  "muscle.calves": "Gemelos",
+  "muscle.calves": "Pantorrillas",
   "muscle.abs": "Abdominales",
   "muscle.obliques": "Oblicuos",
   "muscle.core": "Core",
@@ -449,7 +517,7 @@ export const es: Record<TranslationKey, string> = {
   "about.features.account.title": "Tu cuenta",
   "about.features.account.desc":
     "Guarda historial de cálculos y favoritos, y sigue el nivel de tu cuenta.",
-  "about.features.offline.title": "Instalable y sin conexión",
+  "about.features.offline.title": "Instalable y offline",
   "about.features.offline.desc":
     "Añade Metri a tu dispositivo y usa cada calculadora sin conexión.",
   "about.features.cmd.title": "Paleta de comandos (⌘K)",
@@ -473,24 +541,9 @@ export const es: Record<TranslationKey, string> = {
   "docs.category.supplements": "Suplementos",
   "docs.category.progress": "Progreso",
   "docs.category.glossary": "Glosario",
-  "docs.topics.gettingStarted": "Bienvenida a Metri y cómo usarlo.",
-  "docs.topics.calculators":
-    "Guías de TDEE, macros, grasa corporal, FFMI, 1RM e hidratación.",
-  "docs.topics.nutrition":
-    "Macros, calorías, timing de comidas y personalizar tu dieta.",
-  "docs.topics.training":
-    "Sobrecarga progresiva, volumen, frecuencia, intensidad y técnica.",
-  "docs.topics.recovery": "Sueño, descargas y gestión de la fatiga.",
-  "docs.topics.supplements": "Qué vale la pena tomar — y qué no.",
-  "docs.topics.progress": "Medir y seguir el progreso real en el tiempo.",
-  "docs.topics.glossary": "Definiciones claras de cada término clave.",
 
   "home.toolsCta": "Ver las 17 calculadoras",
   "home.docsCta": "Explorar la base de conocimiento",
-  "home.toolsLead":
-    "17 calculadoras gratis que corren al instante en tu navegador — primero las más usadas, con el set completo a un clic.",
-  "home.docsLead":
-    "Una base de conocimiento bilingüe basada en evidencia — ocho secciones sobre nutrición, entrenamiento, recuperación y más, escritas para lifters.",
   "stats.calculators": "Calculadoras gratis",
   "stats.guides": "Guías basadas en evidencia",
   "stats.private": "Corre en tu navegador",
@@ -502,15 +555,10 @@ export const es: Record<TranslationKey, string> = {
     "Esta sección se está construyendo y llegará en una próxima versión.",
   "soon.backHome": "Volver al inicio",
 
-  "oss.title": "Construido en abierto.",
-  "oss.subtitle":
-    "Metri tiene licencia MIT y es gratis para siempre. Dale una estrella, haz un fork o contribuye en GitHub.",
-  "oss.cta": "Ver en GitHub",
-
   "footer.tagline": "Fitness de código abierto, hecho para lifters.",
   "footer.product": "Producto",
   "footer.resources": "Recursos",
-  "footer.company": "Empresa",
+  "footer.company": "Proyecto",
   "footer.calculators": "Calculadoras",
   "footer.tagline2":
     "Calculadoras y guías de fitness gratis y de código abierto — sin cuenta, sin muros de pago, hechas para lifters.",
@@ -556,7 +604,7 @@ export const es: Record<TranslationKey, string> = {
 
   "download.title": "Lleva Metri en tu teléfono",
   "download.subtitle":
-    "Gratis, open source y sin conexión primero. No requiere cuenta — una gratuita opcional añade extras.",
+    "Gratis, open source y offline-first. No requiere cuenta — una cuenta gratuita opcional añade extras.",
   "download.ios": "Descargar en el App Store",
   "download.android": "Disponible en Google Play",
   "download.scan": "Escanea para descargar",
@@ -566,41 +614,85 @@ export const es: Record<TranslationKey, string> = {
     "Metri es gratis y de código abierto en la web — todas las calculadoras y guías, sin cuenta, para siempre. La app nativa de iOS y Android es un extra opcional que funciona por completo sin cuenta (modo local); una cuenta gratuita añade exportar/importar y restauración del perfil, y Premium añade sync automático en la nube.",
   "download.devCtaTools": "Explorar las calculadoras",
   "download.devCtaGithub": "Sigue el avance en GitHub",
-  "download.platformsTitle": "Llegará a",
-  "download.iosSoon": "App Store — próximamente",
-  "download.androidSoon": "Google Play — próximamente",
-  "download.notifyNote":
-    "Dale una estrella al repo para enterarte cuando salga la primera versión.",
 
   "download.betaBadge": "Versión beta — instalación manual",
   "download.betaTitle": "Prueba la beta de Metri",
   "download.betaBody":
-    "La app nativa de Android está disponible como descarga directa mientras preparamos el lanzamiento en tienda. Descarga el APK más reciente abajo — se actualiza por aire entre versiones. Úsala sin cuenta (modo local, tus datos se quedan en tu teléfono) o crea una gratuita — correo o Google / GitHub, sin tarjeta — para exportar/importar y restaurar tu perfil. Premium añade sync automático en la nube.",
+    "La app nativa de Android está disponible como descarga directa mientras preparamos el lanzamiento en tienda. Descarga el APK más reciente abajo — recibe actualizaciones OTA entre versiones. Úsala sin cuenta (modo local, tus datos se quedan en tu teléfono) o crea una gratuita — correo o Google / GitHub, sin tarjeta — para exportar/importar y restaurar tu perfil. Premium añade sync automático en la nube.",
   "download.androidDownload": "Descargar APK para Android",
   "download.iosBeta": "Beta de iOS — próximamente",
   "download.githubReleases": "Ver todos los releases y changelog",
   "download.disclaimerTitle": "Antes de instalar",
   "download.disclaimer":
-    "Metri todavía no está en el App Store ni en Google Play. Esta es una beta temprana que instalas bajo tu propio riesgo. Tu navegador y tu teléfono probablemente te mostrarán advertencias al instalar una app fuera de la tienda — es normal en apps sidecargadas y no significa que sea insegura. La app está en desarrollo activo, así que las funciones pueden cambiar o fallar entre versiones.",
-
-  "download.pwaTitle": "Instala la app web",
-  "download.pwaBody":
-    "Añade Metri a tu dispositivo para una experiencia tipo app, lista sin conexión — sin tiendas. Funciona en escritorio y móvil.",
-  "download.pwaInstall": "Instalar app web",
-  "download.pwaInstalled": "Ya está instalada en este dispositivo",
-  "download.pwaIosHint":
-    "En iPhone o iPad: toca el botón Compartir y luego «Añadir a inicio».",
-  "download.pwaHint":
-    "En Chrome o Edge, abre el menú del navegador y elige «Instalar Metri».",
+    "Metri todavía no está en el App Store ni en Google Play. Esta es una beta temprana que instalas bajo tu propio riesgo. Tu navegador y tu teléfono probablemente te mostrarán advertencias al instalar una app fuera de la tienda — es normal al instalar fuera de la tienda (sideload) y no significa que sea insegura. La app está en desarrollo activo, así que las funciones pueden cambiar o fallar entre versiones.",
 
   "download.releaseTitle": "Última versión",
   "download.version": "Versión {version}",
   "download.releasedOn": "Publicada el {date}",
   "download.sizeMb": "{size} MB",
-  "download.checksum": "SHA-256",
   "download.checksumHint":
     "Compáralo con el archivo descargado para confirmar que el APK llegó íntegro.",
   "download.releaseNotes": "Notas de la versión",
+
+  "download.installTitle": "Instálala en tres pasos",
+  "download.step1Title": "Descarga el APK",
+  "download.step1Body":
+    "Toca el botón de arriba desde tu teléfono o escanea el código para abrir el mismo enlace.",
+  "download.step2Title": "Permite la instalación",
+  "download.step2Body":
+    "Android pide una vez permiso para instalar desde tu navegador. Acepta y abre el archivo descargado.",
+  "download.step3Title": "Elige cómo usarla",
+  "download.step3Body":
+    "Empieza en modo local sin cuenta o inicia sesión para restaurar tu perfil. Puedes cambiar después.",
+  "download.verifyTitle": "Verifica el archivo",
+  "download.verifyBody":
+    "Cada versión publica su SHA-256. Compáralo antes de instalar si descargaste desde una computadora.",
+  "download.copy": "Copiar",
+  "download.noReleaseYet":
+    "Todavía no hay una versión publicada — el botón lleva a la página de releases en GitHub.",
+  "download.reqAndroid": "Android 7.0 o más reciente",
+  "download.reqSize": "Unos {size} MB",
+  "download.reqSizeUnknown": "Descarga ligera",
+  "download.reqOffline": "Funciona totalmente sin conexión",
+  "download.reqOta": "Actualizaciones OTA automáticas",
+  "download.modesTitle": "Tres formas de usarla",
+  "download.modeLocal":
+    "Modo local: sin cuenta, todo se queda en tu teléfono, exporta cuando quieras.",
+  "download.modeFree":
+    "Cuenta gratis: recuperación de contraseña, restauración del perfil, historial y favoritos en la web.",
+  "download.modePremium":
+    "Premium: sync y copia de seguridad automáticos en la nube — gratis durante la beta, bajo petición.",
+  "download.iosNote":
+    "iOS es lo siguiente. Mientras tanto, la app web se instala en iPhone desde el menú de compartir de Safari.",
+  "download.faqTitle": "Preguntas frecuentes",
+  "download.faq1Q": "¿Por qué todavía no está en Google Play?",
+  "download.faq1A":
+    "La app está en beta abierta y cambia cada semana. Publicar el APK directamente mantiene las versiones rápidas mientras se prepara la ficha de la tienda; la misma compilación llegará ahí.",
+  "download.faq2Q": "¿Es seguro instalar un APK fuera de la tienda?",
+  "download.faq2A":
+    "El APK lo compila un workflow público de GitHub Actions a partir del repositorio de código abierto, y cada versión publica su SHA-256 para que compruebes que el archivo que recibiste es el que se compiló.",
+  "download.faq3Q": "¿Necesito una cuenta?",
+  "download.faq3A":
+    "No. El modo local tiene todas las funciones. La cuenta solo sirve para recuperación, restauración y el sitio web, y Premium solo añade el sync en la nube.",
+  "download.faq4Q": "¿Puedo pasar a un teléfono nuevo?",
+  "download.faq4A":
+    "Sí. Exporta tus datos como archivo JSON desde la pantalla Plan e impórtalos en el teléfono nuevo. Premium los sincroniza automáticamente.",
+
+  "contact.topicLabel": "Tema",
+  "contact.topicFeedback": "Comentario o idea",
+  "contact.topicBug": "Reporte de error",
+  "contact.topicPremium": "Solicitar acceso Premium",
+  "contact.topicPartnership": "Colaboración",
+  "contact.topicOther": "Otra cosa",
+  "contact.premiumHint":
+    "Premium es gratis durante la beta abierta. Usa el correo de tu cuenta de Metri para que el sync se active en ella.",
+  "contact.successTitle": "Mensaje enviado",
+  "contact.issuesLabel": "Errores y funciones",
+  "contact.issuesValue": "Abre un issue en GitHub",
+  "contact.responseNote":
+    "Los mensajes llegan a la bandeja del mantenedor y suelen responderse en pocos días. Para errores, los issues de GitHub mantienen todo a la vista.",
+
+  "account.tier.request": "Solicitar acceso",
 
   "releaseEmail.subject": "Ya salió Metri {version}",
   "releaseEmail.preview": "Novedades de Metri {version}",
@@ -622,7 +714,7 @@ export const es: Record<TranslationKey, string> = {
   "unsubscribe.confirm": "Cancelar suscripción",
   "unsubscribe.doneTitle": "Suscripción cancelada",
   "unsubscribe.doneBody":
-    "Ya no recibirás avisos de nuevas versiones. Puedes volver a activarlos desde los ajustes de tu perfil en la app de Metri.",
+    "Ya no recibirás avisos de nuevas versiones. Puedes volver a activarlos cuando quieras desde Notificaciones en tu cuenta en metri.info o desde tu perfil en la app de Metri.",
   "unsubscribe.invalidTitle": "Este enlace no funciona",
   "unsubscribe.invalidBody":
     "El enlace para cancelar la suscripción no es válido o está incompleto. Ábrelo de nuevo desde el último correo de versión.",
@@ -643,12 +735,11 @@ export const es: Record<TranslationKey, string> = {
   "account.statsFavs": "favoritos",
   "account.tier.title": "Tu plan",
   "account.tier.current": "Actual",
-  "account.tier.soon": "Próximamente",
   "account.tier.free": "Cuenta gratis",
   "account.tier.freeDesc": "Calculadoras, historial y favoritos.",
   "account.tier.pro": "Premium",
   "account.tier.proDesc":
-    "Sync automático de tu entrenamiento, dispositivos ilimitados.",
+    "Sync automático en la nube de los datos de entrenamiento, cuerpo y comida de la app. Gratis durante la beta, bajo petición.",
   "account.historyTitle": "Historial de cálculos",
   "account.historySubtitle": "Tus cálculos más recientes.",
   "account.historyEmpty":
@@ -670,32 +761,6 @@ export const es: Record<TranslationKey, string> = {
   "account.settingsSubtitle": "Gestiona tu perfil, contraseña y conexiones.",
   "account.settingsLink": "Ajustes de la cuenta",
   "account.backToAccount": "Volver a la cuenta",
-
-  "benefits.eyebrow": "Cuenta gratis",
-  "benefits.title": "Por qué crear una cuenta",
-  "benefits.subtitle":
-    "Las calculadoras son gratis para todos — una cuenta solo recuerda tu trabajo.",
-  "benefits.ctaCreate": "Crear una cuenta gratis",
-  "benefits.ctaSignIn": "Iniciar sesión",
-  "benefits.guest.name": "Invitado",
-  "benefits.guest.tagline": "Sin registro.",
-  "benefits.guest.f1": "Todas las calculadoras, al instante",
-  "benefits.guest.f2": "No requiere cuenta",
-  "benefits.guest.f3": "No se guarda nada entre visitas",
-  "benefits.free.name": "Cuenta gratis",
-  "benefits.free.badge": "Recomendado",
-  "benefits.free.tagline": "Gratis para siempre — sin tarjeta.",
-  "benefits.free.f1": "Guarda tu historial de cálculos",
-  "benefits.free.f2": "Fija calculadoras y guías favoritas",
-  "benefits.free.f3": "Vincula Google o GitHub",
-  "benefits.free.f4": "Sincroniza en toda la app web",
-  "benefits.soon.name": "Premium",
-  "benefits.soon.badge": "En beta",
-  "benefits.soon.tagline":
-    "Gratis durante la beta — pago con Stripe en progreso.",
-  "benefits.soon.f1": "Sync automático con la app móvil Metri",
-  "benefits.soon.f2": "Copia de seguridad en la nube",
-  "benefits.soon.f3": "Dispositivos ilimitados, historial entre dispositivos",
 
   "settings.title": "Ajustes de la cuenta",
   "settings.subtitle":
@@ -734,11 +799,67 @@ export const es: Record<TranslationKey, string> = {
   "settings.activitySedentary": "Sedentario",
   "settings.activityLight": "Actividad ligera",
   "settings.activityModerate": "Actividad moderada",
-  "settings.activityActive": "Muy activo",
-  "settings.activityAthlete": "Atleta",
+  "settings.activityActive": "Activo",
   "settings.bodyWeight": "Peso corporal (kg)",
   "settings.bodyHeight": "Estatura (cm)",
   "settings.profileSaved": "Perfil actualizado.",
+
+  "settings.navNotifications": "Notificaciones",
+  "settings.navNotificationsDesc": "Avisos de versiones",
+  "settings.bodyTitle": "Métricas corporales",
+  "settings.bodyDesc":
+    "Prellenan las calculadoras y se restauran en la app tras reinstalar. Los check-ins de la app también las actualizan.",
+  "settings.age": "Edad",
+  "settings.bodyFat": "Grasa corporal (%)",
+  "settings.activityVeryActive": "Muy activo",
+  "settings.bmrFormula": "Fórmula de BMR",
+  "settings.formulaUnset": "Predeterminada de la app (Mifflin-St Jeor)",
+  "settings.energySnapshot": "Último cálculo en la app:",
+  "settings.prefsTitle": "Preferencias de la app",
+  "settings.prefsDesc":
+    "Se sincronizan con la app móvil la próxima vez que inicie sesión.",
+  "settings.clockFormat": "Formato de hora",
+  "settings.clock24": "24 horas",
+  "settings.clock12": "12 horas",
+  "settings.appLanguage": "Idioma de la app",
+
+  "notifications.title": "Notificaciones",
+  "notifications.desc": "Lo que Metri puede enviar a esta cuenta.",
+  "notifications.releaseTitle": "Correos de nueva versión",
+  "notifications.releaseDesc":
+    "Un correo cuando sale una nueva compilación de la app de Android, con los cambios y el enlace de descarga. Nada más — sin marketing.",
+  "notifications.pushNote":
+    "Los recordatorios de entrenamiento, el temporizador de descanso y los tips son notificaciones en tu teléfono. Se configuran en la app, en Notificaciones, y nunca salen del dispositivo.",
+  "notifications.savedAutomatically": "Los cambios se guardan al activarlos.",
+  "notifications.releaseOnToast": "Avisos de versiones activados",
+  "notifications.releaseOffToast": "Avisos de versiones desactivados",
+
+  "activity.sync.title": "Desde la app",
+  "activity.sync.subtitle":
+    "Una vista de solo lectura de lo que la app de Metri ha sincronizado con tu cuenta.",
+  "activity.sync.upsellTitle": "El sync Premium muestra tu entrenamiento aquí",
+  "activity.sync.upsellBody":
+    "Con Premium, la app respalda tus pesajes, sesiones, diario de comida y fase de nutrición en tu cuenta y esta página los muestra. Gratis durante la beta abierta, bajo petición.",
+  "activity.sync.empty":
+    "Todavía no hay nada sincronizado. Inicia sesión en la app con esta cuenta y tus datos aparecerán aquí tras el primer sync.",
+  "activity.sync.weight": "Peso corporal",
+  "activity.sync.noWeighIns": "Aún no hay pesajes sincronizados.",
+  "activity.sync.weekOverWeek": "prom. 7 días vs anterior",
+  "activity.sync.weighInsCount": "pesajes",
+  "activity.sync.sessions": "Sesiones recientes",
+  "activity.sync.noSessions": "Aún no hay sesiones completadas sincronizadas.",
+  "activity.sync.session": "Sesión",
+  "activity.sync.week": "semana {n}",
+  "activity.sync.nutrition": "Últimos 7 días registrados",
+  "activity.sync.noFood":
+    "Aún no hay entradas del diario de comida sincronizadas.",
+  "activity.sync.target": "Objetivo",
+  "activity.sync.phase": "Fase de nutrición",
+  "activity.sync.phaseRecomp": "Recomposición",
+  "activity.sync.noPhase": "No hay una fase de nutrición activa.",
+  "activity.sync.since": "Desde",
+  "activity.sync.phaseNote":
+    "Las fases, check-ins y ajustes de calorías se gestionan en la app; esta página solo los refleja.",
 
   "settings.securityTitle": "Contraseña",
   "settings.securityDesc":
@@ -762,7 +883,7 @@ export const es: Record<TranslationKey, string> = {
 
   "settings.connectionsTitle": "Cuentas vinculadas",
   "settings.connectionsDesc":
-    "Conecta Google o GitHub para iniciar sesión más rápido. El correo y contraseña aparece cuando lo configuras.",
+    "Conecta Google o GitHub para iniciar sesión más rápido. La opción de correo y contraseña aparece cuando la configuras.",
   "settings.providerCredential": "Correo y contraseña",
   "settings.providerGoogle": "Google",
   "settings.providerGithub": "GitHub",
