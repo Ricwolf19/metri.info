@@ -28,11 +28,17 @@ type ToastOptions = {
   variant?: ToastVariant;
 };
 
-type Toast = ToastOptions & { id: number; variant: ToastVariant };
+type Toast = ToastOptions & {
+  id: number;
+  variant: ToastVariant;
+  /** Playing its exit animation; removed once it ends. */
+  closing?: boolean;
+};
 
 type ToastContextValue = { toast: (options: ToastOptions) => void };
 
 const AUTO_DISMISS_MS = 4000;
+const EXIT_MS = 180;
 
 const ToastContext = createContext<ToastContextValue | null>(null);
 
@@ -81,7 +87,10 @@ const ToastCard = ({
   return (
     <div
       className={cn(
-        "pointer-events-auto flex w-full [animation:metri-toast-in_0.22s_cubic-bezier(0.22,1,0.36,1)] items-start gap-3 rounded-card border px-4 py-3 shadow-2xl",
+        "pointer-events-auto flex w-full items-start gap-3 rounded-card border px-4 py-3 shadow-2xl",
+        toast.closing
+          ? "[animation:metri-toast-out_0.18s_ease-in_forwards]"
+          : "[animation:metri-toast-in_0.26s_cubic-bezier(0.22,1,0.36,1)]",
         container,
       )}
     >
@@ -124,13 +133,22 @@ export const ToastProvider = ({
   const timers = useRef(new Map<number, ReturnType<typeof setTimeout>>());
   const nextId = useRef(0);
 
+  // Two-step dismiss: flag the toast as closing so it plays its exit
+  // animation, then drop it. The exit timer reuses the per-id slot so a
+  // manual close during the auto-dismiss window can't double-remove.
   const dismiss = useCallback((id: number) => {
     const timer = timers.current.get(id);
-    if (timer) {
-      clearTimeout(timer);
-      timers.current.delete(id);
-    }
-    setToasts((prev) => prev.filter((t) => t.id !== id));
+    if (timer) clearTimeout(timer);
+    setToasts((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, closing: true } : t)),
+    );
+    timers.current.set(
+      id,
+      setTimeout(() => {
+        timers.current.delete(id);
+        setToasts((prev) => prev.filter((t) => t.id !== id));
+      }, EXIT_MS),
+    );
   }, []);
 
   const toast = useCallback(

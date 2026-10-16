@@ -1,18 +1,14 @@
 @import "tailwindcss";
 
 /*
- * Metri Web design system — ported 1:1 from the mobile app.
+ * Metri Web design system — ported 1:1 from the mobile app's dark scheme.
  * Tokens are space-separated RGB channels so Tailwind's opacity modifiers work
- * (e.g. `bg-ink-800/60`). `:root` holds the dark scheme (dark-first, like
- * mobile); `[data-theme="light"]` overrides per scheme. The ThemeProvider sets
- * `data-theme` on <html>.
+ * (e.g. `bg-ink-800/60`). The site is dark-only: there is no light scheme and
+ * no theme toggle — `:root` is the palette.
  *
  * `ink-950` is intentionally constant (near-black): only ever dark text ON the
- * lime accent (buttons, result cards), which must stay dark in both modes.
+ * lime accent (buttons, result cards).
  */
-
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
-@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
 
 @theme inline {
   /* Brand accent — the dumbbell lime from the logo. */
@@ -27,7 +23,7 @@
   --color-lime-800: #4d7c0f;
   --color-lime-900: #3f6212;
 
-  /* Cool neutrals — swap per theme via the channel vars below. */
+  /* Cool neutrals, read from the channel vars below. */
   --color-ink-950: #08090d;
   --color-ink-900: rgb(var(--ink-900));
   --color-ink-850: rgb(var(--ink-850));
@@ -46,8 +42,7 @@
   --color-accent: rgb(var(--accent));
   --color-accent-fill: rgb(var(--accent-fill));
 
-  /* Brand green — the dumbbell lime, theme-aware (bright on dark, deeper on
-   * light) for legibility. Used for focus rings, active nav, key CTAs. */
+  /* Brand green — the dumbbell lime. Focus rings, active nav, key CTAs. */
   --color-brand: rgb(var(--brand));
   --color-brand-contrast: rgb(var(--brand-contrast));
 
@@ -55,8 +50,10 @@
   --color-flame: #ff6b35;
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  /* JetBrains Mono carries the "machine" voice: nav, kickers, labels,
+   * numbers, badges. Geist Sans carries everything meant to be read. */
   --font-mono:
-    var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+    var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Radius scale — sharper, more "direct" than before (Better Auth / Zed feel).
    * `rounded-field` drives buttons/inputs/selects from one token. */
@@ -64,9 +61,8 @@
   --radius-card: 0.625rem;
 }
 
-/* Dark scheme (default, dark-first) — neutral zinc grays, not blue-tinted */
-:root,
-[data-theme="dark"] {
+/* The palette — neutral zinc grays, not blue-tinted. */
+:root {
   color-scheme: dark;
   --ink-900: 9 9 11; /* app background */
   --ink-850: 13 13 16;
@@ -80,30 +76,10 @@
   --ink-200: 212 212 216;
   --ink-100: 228 228 231;
   --ink-50: 245 245 247; /* primary text */
-  --accent: 212 212 216; /* silver — accent text on dark (green stays on logo) */
-  --accent-fill: 244 244 245; /* near-white — mono button fills on dark */
-  --brand: 190 248 43; /* lime-400 — bright brand green on dark */
+  --accent: 212 212 216; /* silver — accent text (green stays on logo) */
+  --accent-fill: 244 244 245; /* near-white — mono button fills */
+  --brand: 190 248 43; /* lime-400 */
   --brand-contrast: 8 9 13; /* ink-950 — dark text on brand fills */
-}
-
-[data-theme="light"] {
-  color-scheme: light;
-  --ink-900: 250 250 250; /* app background (soft off-white) */
-  --ink-850: 245 245 246;
-  --ink-800: 255 255 255; /* cards (white) */
-  --ink-750: 244 244 245;
-  --ink-700: 235 235 238; /* raised surfaces */
-  --ink-600: 214 214 219; /* borders (soft) */
-  --ink-500: 161 161 170;
-  --ink-400: 113 113 122; /* muted text */
-  --ink-300: 82 82 91; /* secondary text */
-  --ink-200: 52 52 56;
-  --ink-100: 39 39 42;
-  --ink-50: 24 24 27; /* primary text (near-black) */
-  --accent: 63 63 70; /* zinc-700 — legible neutral accent text on white */
-  --accent-fill: 24 24 27; /* near-black — mono button fills on light */
-  --brand: 77 124 15; /* lime-800 — deeper green stays legible on white */
-  --brand-contrast: 247 254 231; /* lime-50 — light text on brand fills */
 }
 
 * {
@@ -112,6 +88,11 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  /* No overflow rule here on purpose. With a non-visible overflow on <html>,
+   * the `overflow: hidden` that Radix scroll-lock puts on <body> (selects,
+   * menus, dialogs) stops propagating to the viewport: the body becomes the
+   * scroll container, every `position: sticky` (the header) re-anchors to it
+   * and scrolls away the moment a popup opens. */
 }
 
 body {
@@ -120,10 +101,10 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  /* Kill stray horizontal scroll (decorative glows, in-view x-offsets) without
-   * creating a scroll container — `clip` keeps `position: sticky` working,
-   * unlike `hidden`. overflow-y stays visible (clip is exempt from the
-   * "visible becomes auto" rule). */
+  /* Kill stray horizontal overflow (decorative glows, in-view x-offsets).
+   * This propagates to the viewport as `hidden` (html is `visible`), which is
+   * what blocks sideways scrolling; nothing wide may live outside a scroll
+   * container (the marquee is one). */
   overflow-x: clip;
 }
 
@@ -164,15 +145,8 @@ summary {
 /*
  * Ambient glow — replaces expensive `blur-[120px]` filter orbs (which are slow
  * to paint on mobile GPUs and delayed our LCP). A radial-gradient paints in a
- * single cheap pass. `.glow-brand` adds a faint lime tint for hero/CTA depth.
+ * single cheap pass, with a faint lime tint for hero/CTA depth.
  */
-.glow-ambient {
-  background: radial-gradient(
-    60% 60% at 50% 0%,
-    rgb(var(--ink-700) / 0.55),
-    transparent 70%
-  );
-}
 .glow-brand {
   background:
     radial-gradient(
@@ -188,318 +162,33 @@ summary {
 }
 
 /*
- * Hero backdrop — a plot, because the product is metrics.
- *
- * Deliberately gradients + inline SVG, never a canvas. This was
- * react-three-fiber, then a WebGL shader; both broke under React's `<Activity>`,
- * which Next wraps around every route once `cacheComponents` is on. Hiding a
- * route tears the effects down and the canvas came back dead, painting over the
- * whole section. None of what follows has a context to lose, costs any JS, or
- * can fail — which matters most here, since this section is the first thing
- * anyone sees.
- *
- * `hero-grid` below is the plot area everything sits on: minor value lines,
- * major every fourth, and a sparser vertical time axis. The widgets that stand
- * on it (trend, bars, gauge, dumbbells) live in `HeroBackdrop.tsx`; what
- * follows is only their paint, since SVG presentation attributes can't read
- * `var()` and `--rig` is what keeps every layer on one accent.
- *
- * `--rig` lives on the section (below) so all of them inherit it.
+ * Hero backdrop — `HeroField.tsx` paints a pointer-reactive dot field on a 2D
+ * canvas. The canvas is decorative only: the copy is server HTML with
+ * `animate-rise`, so LCP never waits on it, and it fades in once it has drawn
+ * its first frame. (An earlier WebGL version died under React's `<Activity>`
+ * when a route was hidden; the 2D field keeps no GPU context and restarts its
+ * loop from its effect, so a re-shown route paints again.)
  */
-.hero-grid {
-  --grid-minor: rgb(var(--rig) / 0.055);
-  --grid-major: rgb(var(--rig) / 0.11);
-  --grid-axis: rgb(var(--rig) / 0.07);
-  --grid-step: 3.25rem;
-}
-
-.hero-grid::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    /* major value lines — every fourth, the ones a reader actually tracks */
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0 calc(var(--grid-step) * 4 - 1px),
-      var(--grid-major) calc(var(--grid-step) * 4 - 1px)
-        calc(var(--grid-step) * 4)
-    ),
-    /* minor value lines */
-    repeating-linear-gradient(
-        to bottom,
-        transparent 0 calc(var(--grid-step) - 1px),
-        var(--grid-minor) calc(var(--grid-step) - 1px) var(--grid-step)
-      ),
-    /* time axis — sparser, so the grid reads as landscape not graph paper */
-    repeating-linear-gradient(
-        to right,
-        transparent 0 calc(var(--grid-step) * 2.5 - 1px),
-        var(--grid-axis) calc(var(--grid-step) * 2.5 - 1px)
-          calc(var(--grid-step) * 2.5)
-      );
-  /* Composited: the radial keeps the grid off the headline, the linear
-   * dissolves it before the section ends so there is no hard seam. */
-  mask-image:
-    radial-gradient(125% 95% at 50% 45%, transparent 20%, #000 72%),
-    linear-gradient(to bottom, #000 58%, transparent 95%);
-  mask-composite: intersect;
-  -webkit-mask-composite: source-in;
-}
-
-/* --- The trend series ---------------------------------------------------- */
-
-/* Both slots fade toward the copy, so a widget that runs long at some viewport
- * dissolves instead of colliding with the headline. On mobile the trend is a
- * full-width band, so there it fades upward instead of sideways. */
-.hero-trend-slot {
-  mask-image: linear-gradient(to top, #000 52%, transparent 100%);
-}
-/* On desktop the fade only has to soften the inner edge, not hide half the
- * series: the widgets sit low and the copy sits mid-height, so vertical
- * separation already does most of the work. */
-@media (min-width: 1024px) {
-  .hero-trend-slot {
-    mask-image: linear-gradient(to left, #000 72%, transparent 100%);
-  }
-}
-.hero-bars-slot {
-  mask-image: linear-gradient(to right, #000 74%, transparent 100%);
-}
-
-.hero-chart-line {
-  stroke: rgb(var(--rig) / 0.72);
-}
-.hero-chart-dot {
-  fill: rgb(var(--rig) / 0.85);
-}
-.hero-chart-halo {
-  fill: rgb(var(--rig) / 0.16);
-}
-/* Drop-line from the newest point to the axis — the marker a real dashboard
- * puts under the value you're meant to read. */
-.hero-chart-drop {
-  stroke: rgb(var(--rig) / 0.3);
-  stroke-dasharray: 3 7;
-}
-.hero-chart-stop-top {
-  stop-color: rgb(var(--rig));
-  stop-opacity: 0.22;
-}
-.hero-chart-stop-bottom {
-  stop-color: rgb(var(--rig));
-  stop-opacity: 0;
-}
-
-/*
- * The series plots itself left-to-right: a mask rect scaled on X, so the area
- * fill, the line and the vertices all arrive together as the chart draws. A
- * mask rather than `stroke-dashoffset` because that only draws the stroke and
- * would leave the fill to appear on its own. `transform-box: fill-box` makes
- * `transform-origin` resolve against the rect instead of the SVG viewport.
- */
-.hero-chart-wipe {
-  transform-box: fill-box;
-  transform-origin: left center;
-  animation: metri-chart-wipe 1.4s cubic-bezier(0.65, 0, 0.35, 1) both;
-}
-@keyframes metri-chart-wipe {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
-/* --- Secondary widgets --------------------------------------------------- */
-
-/* Bar series (bottom-left). Each bar grows from the axis on a stagger, so the
- * chart populates rather than appearing whole. */
-.hero-bar {
-  fill: rgb(var(--rig) / 0.3);
-  transform-box: fill-box;
-  transform-origin: bottom center;
-  animation: metri-bar-grow 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-/* The newest bar, brighter — same job as the trend's halo. */
-.hero-bar-current {
-  fill: rgb(var(--rig) / 0.6);
-}
-@keyframes metri-bar-grow {
-  from {
-    transform: scaleY(0);
-    opacity: 0;
-  }
-  to {
-    transform: scaleY(1);
-    opacity: 1;
-  }
-}
-.hero-axis {
-  stroke: rgb(var(--rig) / 0.28);
-}
-
-/*
- * Concentric ring loader (top-left). Four arcs over their own faint tracks,
- * each spinning at its own speed and alternating direction, so the ring never
- * repeats a pose and reads as live rather than looping.
- *
- * `pathLength="100"` lets each arc's `stroke-dasharray` be a plain percentage
- * regardless of radius — otherwise every ring needs its own circumference
- * arithmetic. Duration and direction come in as inline style (they're per-ring
- * data, not styling); everything shared lives here.
- *
- * `transform-box: fill-box` is what makes `transform-origin: center` resolve
- * against the circle instead of the SVG viewport — without it every ring
- * orbits the top-left corner.
- */
-.hero-ring-track {
-  stroke: rgb(var(--rig) / 0.09);
-}
-.hero-ring {
-  stroke: rgb(var(--rig) / 0.7);
-  transform-box: fill-box;
-  transform-origin: center;
-  animation-name: metri-ring-spin;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-@keyframes metri-ring-spin {
-  to {
-    transform: rotate(1turn);
-  }
-}
-
-/* Shared entrance for the standalone widgets. `to` deliberately omits
- * `transform` so the element settles on whatever transform its own classes
- * set, instead of being pinned to `none`. */
-.hero-widget-in {
-  animation: metri-widget-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-@keyframes metri-widget-in {
-  from {
-    opacity: 0;
-    transform: scale(0.88);
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Tablet and below: the grid loosens and the trend gets out of the copy's way
- * (positioning lives on the element in Hero.tsx). */
-@media (max-width: 1024px) {
-  .hero-grid {
-    --grid-step: 2.75rem;
-  }
-  .hero-grid::before {
-    mask-image:
-      radial-gradient(135% 90% at 50% 42%, transparent 26%, #000 80%),
-      linear-gradient(to bottom, #000 55%, transparent 94%);
-    mask-composite: intersect;
-    -webkit-mask-composite: source-in;
-  }
-}
-
-@media (max-width: 640px) {
-  .hero-grid {
-    --grid-step: 2.25rem;
-  }
-}
-
-/*
- * Hero surface tweaks — the dark theme uses near-black surface tokens for
- * badge/pill backgrounds; the same tokens translate to near-white in light mode
- * and the hero washes out. Per-theme overrides lift contrast (subtle grey
- * backgrounds, visible borders) so the hero reads cleanly in both schemes.
- * `glow-brand` is the dark-mode lime aura at the top of the section; in light
- * mode it floats a dim grey blob that competes with the typography, so we
- * hide it there and let the beams back-layer carry the depth on their own.
- */
-.hero-badge {
-  background-color: rgb(var(--ink-800) / 0.8);
-  border-color: rgb(var(--ink-600));
-  color: rgb(var(--ink-300));
-}
-[data-theme="light"] .hero-badge {
-  background-color: rgb(var(--ink-700) / 0.7);
-  border-color: rgb(var(--ink-500) / 0.55);
-  color: rgb(var(--ink-200));
-}
-.hero-stat-pill {
-  background-color: rgb(var(--ink-900) / 0.7);
-  border-color: rgb(var(--ink-600) / 0.7);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-}
-[data-theme="light"] .hero-stat-pill {
-  background-color: rgb(var(--ink-800) / 0.92);
-  border-color: rgb(var(--ink-500) / 0.55);
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
-}
-[data-theme="light"] .glow-brand {
+.hero-field {
   opacity: 0;
+  transition: opacity 0.9s ease-out;
+}
+.hero-field[data-ready="true"] {
+  opacity: 1;
 }
 
-/*
- * Hero secondary button (the "Download" CTA). The hero always sits on the black
- * hero backdrop, so it must read as dark-mode in BOTH schemes. The shared
- * `secondary` button variant carries `light:` overrides (dark text on a light
- * fill) that, under the hero's re-scoped dark `--ink-*`, paint dark-on-dark and
- * become invisible. This class pins it to the dark palette; declared after the
- * Tailwind layer so it wins the cascade over those low-specificity `:where()`
- * `light:` utilities. Reads `--ink-*` so it tracks `.hero-dark-treat`.
- */
-.hero-btn-secondary {
-  background-color: rgb(var(--ink-800));
-  border-color: rgb(var(--ink-600));
-  color: rgb(var(--ink-50));
-}
-.hero-btn-secondary:hover {
-  background-color: rgb(var(--ink-700));
-  border-color: rgb(var(--ink-500));
-}
-
-/*
- * `hero-dark-treat` — opt the `<section>` out of the global theme's surface
- * palette. The hero is designed against a near-black backdrop (it paints its
- * own here, and `<HeroBackdrop>` plots on top of it), so if we let the
- * section inherit the global light-mode tokens the result is unreadable —
- * white text on the white pill/border, dark buttons on a dark backdrop.
- * Re-scoping `--ink-*` makes every descendant `bg-ink-*` / `text-ink-*`
- * utility render as if we were in dark mode — without affecting the rest of
- * the page, which keeps its real light/dark behaviour below the fold.
- *
- * Tailwind v4's `@theme inline` keeps the `rgb(var(--ink-X))` chain dynamic,
- * so redefining the channel vars here propagates into every utility that
- * reads them, no matter how deep.
- */
-.hero-dark-treat {
-  --ink-900: 9 9 11;
-  --ink-850: 13 13 16;
-  --ink-800: 18 18 21;
-  --ink-750: 24 24 27;
-  --ink-700: 32 32 36;
-  --ink-600: 42 42 47;
-  --ink-500: 63 63 70;
-  --ink-400: 113 113 122;
-  --ink-300: 161 161 170;
-  --ink-200: 212 212 216;
-  --ink-100: 228 228 231;
-  --ink-50: 245 245 247;
-  background-color: rgb(var(--ink-900));
-  color: rgb(var(--ink-50));
-
-  /* One accent for every backdrop layer (grid, trend, bars, rings), in BOTH
-   * schemes — this section keeps its near-black backdrop in light mode, so
-   * there is nothing for a light-mode accent to adapt to.
-   *
-   * Pinned channels rather than `var(--brand)` for that same reason: light
-   * mode's brand is the deeper lime-800, which is tuned for white surfaces and
-   * all but vanishes on near-black. */
-  --rig: 190 248 43;
+/* Soft brand orb — an ellipse that fades out on EVERY side, for glows that
+ * sit behind a centred object (the tour phone). Unlike `.glow-brand`, which is
+ * anchored to the top edge of its box and so shows a hard line wherever that
+ * edge is, the orb can be oversized freely without a visible boundary. */
+.glow-orb {
+  background: radial-gradient(
+    ellipse closest-side at 50% 50%,
+    rgb(var(--brand) / 0.16),
+    rgb(var(--brand) / 0.06) 40%,
+    rgb(var(--ink-700) / 0.25) 62%,
+    transparent 100%
+  );
 }
 
 /*
@@ -619,7 +308,155 @@ summary {
   }
 }
 
-/* Respect reduced motion for all Framer Motion / CSS animations. */
+/* Exit counterparts so Radix overlays, sheets and popovers leave as
+ * deliberately as they arrive (Radix keeps the node mounted until the
+ * `data-state=closed` animation ends). */
+@keyframes metri-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes metri-sheet-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes metri-sheet-out-right {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes metri-sheet-out-left {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes metri-pop-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.97) translateY(-4px);
+  }
+}
+@keyframes metri-toast-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+/* The app's loader: the mark breathing (AppLoader on mobile, 950 ms each way). */
+@keyframes metri-breathe {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(0.94);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+.animate-breathe {
+  animation: metri-breathe 1.9s ease-in-out infinite;
+}
+
+/* Favorite star: a quick overshoot when it flips, so the toggle is felt. */
+@keyframes metri-pin-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35) rotate(-8deg);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.pin-pop {
+  animation: metri-pin-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Success check: draws itself in once. */
+@keyframes metri-check-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  60% {
+    transform: scale(1.12);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-check-in {
+  animation: metri-check-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* The strip is a real scroll container (Marquee.tsx drives `scrollLeft`), so
+ * it never widens the document; this only fades its ends. */
+.marquee {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 10%,
+    #000 90%,
+    transparent
+  );
+}
+
+/* Section-page backdrop: the hero's plot grid, quieter and brand-tinted, so
+ * every section page opens on the same surface as the landing. */
+.page-grid {
+  --pg-line: rgb(var(--brand) / 0.07);
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 calc(3rem - 1px),
+      var(--pg-line) calc(3rem - 1px) 3rem
+    ),
+    repeating-linear-gradient(
+      to right,
+      transparent 0 calc(3rem - 1px),
+      var(--pg-line) calc(3rem - 1px) 3rem
+    );
+  mask-image: radial-gradient(70% 80% at 50% 0%, #000 20%, transparent 100%);
+}
+
+/* Chart marks ease between values instead of jumping. */
+.chart-anim {
+  transition:
+    width 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    left 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    stroke-dasharray 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    stroke 0.3s ease,
+    background-color 0.3s ease,
+    opacity 0.3s ease;
+}
+
+/* Respect reduced motion for all CSS and Motion animations. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

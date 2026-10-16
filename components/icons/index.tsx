@@ -12,11 +12,15 @@ import {
   Apple,
   ArrowLeft,
   ArrowRight,
+  Bell,
+  BellOff,
   Book,
   Bookmark,
   Calculator,
   Check,
+  CloudSync,
   Code,
+  Compass,
   Copy,
   Download,
   Droplet,
@@ -31,13 +35,17 @@ import {
   Heart,
   Home,
   InfoCircle,
+  Leaf,
   Link as LinkIcoit,
   Lock,
   LogOut,
   Mail,
+  Medal,
   Menu,
+  Plus,
   ProfileCircle,
   NavArrowRight,
+  Refresh,
   Ruler,
   Search,
   Settings,
@@ -46,7 +54,8 @@ import {
   SmartphoneDevice,
   Star,
   StarSolid,
-  SunLight,
+  Timer,
+  Trash,
   Trophy,
   WarningTriangle,
   Weight,
@@ -86,7 +95,6 @@ export const CheckIcon = sized(Check, "CheckIcon");
 export const XIcon = sized(Xmark, "XIcon");
 export const TrophyIcon = sized(Trophy, "TrophyIcon");
 export const MenuIcon = sized(Menu, "MenuIcon");
-export const SunIcon = sized(SunLight, "SunIcon");
 export const MoonIcon = sized(HalfMoon, "MoonIcon");
 export const SearchIcon = sized(Search, "SearchIcon");
 export const ArrowRightIcon = sized(ArrowRight, "ArrowRightIcon");
@@ -116,3 +124,13 @@ export const ProfileIcon = sized(ProfileCircle, "ProfileIcon");
 export const UsersIcon = sized(Group, "UsersIcon");
 export const AlertTriangleIcon = sized(WarningTriangle, "AlertTriangleIcon");
 export const InfoIcon = sized(InfoCircle, "InfoIcon");
+export const BellIcon = sized(Bell, "BellIcon");
+export const BellOffIcon = sized(BellOff, "BellOffIcon");
+export const CloudSyncIcon = sized(CloudSync, "CloudSyncIcon");
+export const CompassIcon = sized(Compass, "CompassIcon");
+export const LeafIcon = sized(Leaf, "LeafIcon");
+export const MedalIcon = sized(Medal, "MedalIcon");
+export const PlusIcon = sized(Plus, "PlusIcon");
+export const RefreshIcon = sized(Refresh, "RefreshIcon");
+export const TimerIcon = sized(Timer, "TimerIcon");
+export const TrashIcon = sized(Trash, "TrashIcon");
