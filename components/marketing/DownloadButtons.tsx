@@ -10,29 +10,36 @@ import { cn } from "@/lib/utils";
 export const DownloadButtons = ({
   apk,
   releasesUrl,
+  version,
 }: {
-  apk: string | null;
+  apk: string;
   releasesUrl: string;
+  version?: string;
 }) => {
   const t = useT();
   return (
     <>
       <div className="mt-8 flex flex-wrap gap-3">
-        {apk && (
+        {
           <a
             href={apk}
             onClick={() =>
               track("apk_download_clicked", { platform: "android" })
             }
             className={cn(
-              buttonVariants({ size: "lg" }),
+              buttonVariants({ variant: "brand", size: "lg" }),
               "transition-transform hover:scale-[1.02]",
             )}
           >
             <DownloadIcon size={18} />
             {t("download.androidDownload")}
+            {version && (
+              <span className="rounded-full bg-brand-contrast/15 px-2 py-0.5 font-mono text-xs">
+                v{version}
+              </span>
+            )}
           </a>
-        )}
+        }
         <span
           aria-disabled="true"
           className={cn(
