@@ -1,64 +1,115 @@
-import { MailIcon } from "@/components/icons";
+import { Suspense } from "react";
+
 import { ContactForm } from "@/components/contact/ContactForm";
+import {
+  GithubIcon,
+  MailIcon,
+  ProfileIcon,
+  type IconProps,
+} from "@/components/icons";
 import { Container } from "@/components/shared/Container";
-import { PageHeader } from "@/components/shared/Section";
+import { PageHero } from "@/components/shared/PageHero";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { createT, type Locale } from "@/lib/i18n/config";
+import { contactEmail, developerUrl, mobileAppRepo } from "@/lib/site";
 
-const CONTACT_EMAIL = "rhtc19@gmail.com";
-const DEVELOPER_URL = "https://www.ricardotapia.dev";
+const Channel = ({
+  icon: Icon,
+  label,
+  value,
+  href,
+  external,
+}: {
+  icon: React.ComponentType<IconProps>;
+  label: string;
+  value: string;
+  href: string;
+  external?: boolean;
+}) => (
+  <a
+    href={href}
+    target={external ? "_blank" : undefined}
+    rel={external ? "noreferrer noopener" : undefined}
+    className="group flex items-center gap-3 rounded-card border border-ink-600 bg-ink-800 p-4 transition-colors hover:border-brand/40"
+  >
+    <span className="flex size-10 shrink-0 items-center justify-center rounded-field border border-ink-600 bg-ink-850 text-brand">
+      <Icon size={18} />
+    </span>
+    <span className="flex min-w-0 flex-col">
+      <span className="font-mono text-[11px] tracking-widest text-ink-400 uppercase">
+        {label}
+      </span>
+      <span className="truncate text-sm font-medium text-ink-100 transition-colors group-hover:text-accent">
+        {value}
+      </span>
+    </span>
+  </a>
+);
 
-/** Contact page — shared by the EN (/contact) and ES (/es/contacto) routes. */
+const FormSkeleton = () => (
+  <div className="space-y-5">
+    <div className="grid gap-5 sm:grid-cols-2">
+      <Skeleton className="h-11" />
+      <Skeleton className="h-11" />
+    </div>
+    <Skeleton className="h-11" />
+    <Skeleton className="h-36" />
+    <Skeleton className="h-11" />
+  </div>
+);
+
+/** Contact page — shared by the EN (/contact) and ES (/es/contacto) routes.
+ * The form reads `?topic=` so it sits in a Suspense boundary and the page
+ * itself stays static. */
 export const ContactView = ({ locale }: { locale: Locale }) => {
   const t = createT(locale);
 
   return (
-    <Container className="py-16 sm:py-20">
-      <div className="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-2 lg:gap-16">
-        <div className="max-w-md">
-          <PageHeader
-            align="left"
-            eyebrow={t("nav.contact")}
-            title={t("contact.title")}
-            subtitle={t("contact.subtitle")}
-          />
-
-          <div className="mt-8 rounded-card border border-ink-600 bg-ink-850/60 p-5">
-            <a
-              href={`mailto:${CONTACT_EMAIL}`}
-              className="group flex items-center gap-3"
-            >
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-ink-600 bg-ink-800 text-accent transition-colors group-hover:border-accent/40">
-                <MailIcon size={18} />
-              </span>
-              <span className="flex min-w-0 flex-col">
-                <span className="text-xs text-ink-400">{t("auth.email")}</span>
-                <span className="truncate text-sm font-medium text-ink-100 transition-colors group-hover:text-accent">
-                  {CONTACT_EMAIL}
-                </span>
-              </span>
-            </a>
-
-            <p className="mt-4 border-t border-ink-700 pt-4 text-sm text-ink-400">
-              {t("contact.developer")}{" "}
-              <a
-                href={DEVELOPER_URL}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="font-medium text-ink-200 transition-colors hover:text-accent"
-              >
-                ricardotapia.dev
-              </a>
+    <>
+      <PageHero
+        eyebrow={t("nav.contact")}
+        title={t("contact.title")}
+        subtitle={t("contact.subtitle")}
+        compact
+      />
+      <Container className="py-12 sm:py-16">
+        <div className="mx-auto grid max-w-5xl items-start gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
+          <div className="space-y-3">
+            <Channel
+              icon={MailIcon}
+              label={t("auth.email")}
+              value={contactEmail}
+              href={`mailto:${contactEmail}`}
+            />
+            <Channel
+              icon={GithubIcon}
+              label={t("contact.issuesLabel")}
+              value={t("contact.issuesValue")}
+              href={`${mobileAppRepo}/issues`}
+              external
+            />
+            <Channel
+              icon={ProfileIcon}
+              label={t("contact.developer")}
+              value="ricardotapia.dev"
+              href={developerUrl}
+              external
+            />
+            <p className="px-1 pt-2 text-sm leading-relaxed text-ink-400">
+              {t("contact.responseNote")}
             </p>
           </div>
-        </div>
 
-        <Card>
-          <CardContent className="p-6 sm:p-8">
-            <ContactForm />
-          </CardContent>
-        </Card>
-      </div>
-    </Container>
+          <Card>
+            <CardContent className="p-6 sm:p-8">
+              <Suspense fallback={<FormSkeleton />}>
+                <ContactForm />
+              </Suspense>
+            </CardContent>
+          </Card>
+        </div>
+      </Container>
+    </>
   );
 };

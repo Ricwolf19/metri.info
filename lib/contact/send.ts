@@ -1,6 +1,7 @@
 "use server";
 
 import { Resend } from "resend";
+import { contactEmail } from "@/lib/site";
 
 import { captchaErrorMessage } from "@/lib/captcha/messages";
 import { verifyRecaptcha } from "@/lib/captcha/verify";
@@ -9,9 +10,9 @@ import { createT, type Locale } from "@/lib/i18n/config";
 import { type Result, safeAsync } from "@/lib/result";
 import { asString, EMAIL_RE, ensureValid } from "@/lib/validation";
 
-import type { ContactInput } from "./types";
+import { type ContactInput, isContactTopic, MESSAGE_MAX } from "./types";
 
-const DEFAULT_TO = "rhtc19@gmail.com";
+const DEFAULT_TO = contactEmail;
 // Resend's shared sender (test mode) works without domain verification; swap to a verified sender via CONTACT_FROM_EMAIL in production.
 const DEFAULT_FROM = "Metri Contact <onboarding@resend.dev>";
 
@@ -30,6 +31,7 @@ export const sendContactMessage = async (
     const name = asString(input.name);
     const email = asString(input.email);
     const message = asString(input.message);
+    const topic = isContactTopic(input.topic) ? input.topic : "other";
 
     ensureValid({
       name: [
@@ -43,7 +45,7 @@ export const sendContactMessage = async (
       message: [
         { valid: message.length >= 10, message: t("contact.errorMessage") },
         {
-          valid: message.length <= 5000,
+          valid: message.length <= MESSAGE_MAX,
           message: t("contact.errorMessageLong"),
         },
       ],
@@ -65,8 +67,8 @@ export const sendContactMessage = async (
       from: process.env.CONTACT_FROM_EMAIL ?? DEFAULT_FROM,
       to: process.env.CONTACT_TO_EMAIL ?? DEFAULT_TO,
       replyTo: email,
-      subject: `[metri.info] New message from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\nLocale: ${locale}\n\n${message}`,
+      subject: `[metri.info] [${topic}] ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\nTopic: ${topic}\nLocale: ${locale}\n\n${message}`,
     });
     if (error) {
       throw new ExternalServiceError(t("contact.errorGeneric"), error.message);
