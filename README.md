@@ -86,7 +86,7 @@ The scope is deliberate and it binds this backend too:
 | Framework                 | Next.js 16 (App Router, React 19, Server Components) |
 | Language                  | TypeScript (strict)                                 |
 | Styling                   | Tailwind CSS v4 (CSS-first `@theme`)                |
-| Animation                 | Framer Motion                                       |
+| Animation                 | `motion` (LazyMotion + `m`, scoped to `MotionProvider` surfaces) + CSS keyframes; `@number-flow/react` for rolling numbers |
 | Icons                     | Iconoir (`@/components/icons` barrel)               |
 | Content                   | MDX (`next-mdx-remote`)                              |
 | Database                  | Drizzle ORM + Neon (Postgres) — _accounts only_     |

@@ -16,8 +16,10 @@ premium sync API the mobile app consumes. Overview, quick start, env vars and de
 
 - **Next.js 16** (App Router, React 19, Server Components) — `cookies()`/`headers()`/route `params`
   are async, always `await` them. **Bun** for installs/scripts (Vercel builds on Node).
-- TypeScript strict · Tailwind v4 (CSS-first `@theme`) · Framer Motion · Iconoir via the
-  `@/components/icons` barrel (never import `iconoir-react` directly).
+- TypeScript strict · Tailwind v4 (CSS-first `@theme`) · `motion` (LazyMotion + `m`, loaded only
+  inside `MotionProvider` surfaces: landing, download, account) + CSS keyframes ·
+  `@number-flow/react` for rolling numbers · Iconoir via the `@/components/icons` barrel (never
+  import `iconoir-react` directly).
 - Drizzle + Neon (Postgres) + Better Auth power the optional account layer; bundled content
   (calculators, docs) renders without a DB.
 - Analytics (PostHog, GA4, Vercel) and PWA are env-gated — off when keys are absent.
@@ -40,8 +42,27 @@ committed, `scripts/vercel-migrate.mjs` applies it on deploy.
 
 - **Arrow functions everywhere** (ESLint-enforced). **Design tokens, never hex** (`ink-*`,
   `accent`, `lime-*`; `ink-950` stays constant). Tokens mirror the mobile app 1:1.
+- **Dark only.** There is no light scheme, no theme toggle and no `data-theme` attribute —
+  `:root` in `globals.css` is the palette; never add `dark:`/`light:` variants.
+- **Animation**: hero copy and anything above the fold stay CSS-only (`animate-rise`); the hero's
+  only script is the decorative `HeroField` canvas (2D, self-contained in one effect so it restarts
+  after React `<Activity>` hides a route — never WebGL). Below-the-fold reveals use
+  `Reveal` from `components/motion` inside a `MotionProvider`; never import `motion`
+  (the full component) — `LazyMotion` is `strict`. One side navigation: `components/ui/SideNav.tsx`
+  (admin, docs, account). Section pages open with `components/shared/PageHero.tsx`. Glows behind
+  centred objects use `.glow-orb` (fades on every side); `.glow-brand` is top-anchored and shows a
+  hard edge if its box starts inside the viewport. Loading states are `LoadingScreen` (the mobile
+  `AppLoader` port: the mark breathing) for whole routes and important sections; `Skeleton` rows
+  only for tables.
+- **Type**: Geist Sans for everything meant to be read — headings, paragraphs, buttons, form
+  labels. JetBrains Mono (`font-mono`) is the machine voice — nav links, kickers/eyebrows, section
+  numbers, numeric values, badges, tab labels, hashes. Never set a paragraph or a button in mono.
+- **Landing** (`components/marketing/Home.tsx`) is five beats and no more: hero, the two link strips
+  (`Marquees`), the app tour, the web half (`WebPreview`, calculators + docs in one section) and
+  plans with the ownership strip. Don't add a section; extend one.
 - **i18n**: flat dotted keys in `lib/i18n/{en,es}.ts`; `es.ts` must cover every `en.ts` key.
-  `useT()` in client components, `getT()`/`getLocale()` from `lib/i18n/server` in Server Components.
+  `useT()` in client components; Server Components receive `locale` from the page and use
+  `createT(locale)` from `lib/i18n/config`.
 - **State**: no Zustand/Redux — Server Components fetch directly; client state is URL params +
   Context providers.
 - **SEO is server-first**: Metadata API, JSON-LD, file-based sitemap/robots/manifest, dynamic OG.
