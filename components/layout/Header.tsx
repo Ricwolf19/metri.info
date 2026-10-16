@@ -5,26 +5,17 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import {
-  BookmarkIcon,
   GearIcon,
   GithubIcon,
-  InfoIcon,
   LogOutIcon,
   MenuIcon,
   ShieldIcon,
   StarIcon,
 } from "@/components/icons";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { mobileAppReleases, webAppRepo } from "@/lib/site";
 import { Spinner } from "@/components/ui/Spinner";
 import { Logo } from "@/components/layout/Logo";
 import { LocaleToggle } from "@/components/layout/LocaleToggle";
-import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { UserMenu } from "@/components/layout/UserMenu";
 import { Container } from "@/components/shared/Container";
 import { buttonVariants } from "@/components/ui/button";
@@ -45,8 +36,11 @@ const NAV: { id: RouteId; key: TranslationKey }[] = [
   { id: "tools", key: "nav.tools" },
   { id: "docs", key: "nav.docs" },
   { id: "download", key: "nav.download" },
+  { id: "about", key: "footer.about" },
   { id: "contact", key: "nav.contact" },
 ];
+
+const iconButtonClass = buttonVariants({ variant: "secondary", size: "icon" });
 
 export const Header = () => {
   const { t, locale } = useI18n();
@@ -98,40 +92,16 @@ export const Header = () => {
 
         <div className="flex items-center gap-2 md:justify-self-end">
           <LocaleToggle />
-          <ThemeToggle />
 
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              aria-label={t("nav.more")}
-              className="hidden h-9 w-9 items-center justify-center rounded-lg border border-ink-600 bg-ink-800 text-ink-300 transition-colors hover:bg-ink-700 hover:text-ink-50 focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:outline-none sm:inline-flex"
-            >
-              <span className="flex items-center gap-[3px]">
-                <span className="h-1 w-1 rounded-full bg-current" />
-                <span className="h-1 w-1 rounded-full bg-current" />
-                <span className="h-1 w-1 rounded-full bg-current" />
-              </span>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem asChild>
-                <a href={mobileAppReleases} target="_blank" rel="noreferrer">
-                  <BookmarkIcon size={15} />
-                  {t("nav.changelog")}
-                </a>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href={routePath("about", locale)}>
-                  <InfoIcon size={15} />
-                  {t("footer.about")}
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <a href={webAppRepo} target="_blank" rel="noreferrer noopener">
-                  <GithubIcon size={15} />
-                  {t("nav.github")}
-                </a>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <a
+            href={webAppRepo}
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label={t("nav.github")}
+            className={cn(iconButtonClass, "hidden sm:inline-flex")}
+          >
+            <GithubIcon size={17} />
+          </a>
           {session ? (
             <UserMenu className="hidden sm:inline-flex" />
           ) : (
@@ -149,7 +119,7 @@ export const Header = () => {
           <Sheet>
             <SheetTrigger
               aria-label={t("nav.menu")}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-ink-600 bg-ink-800 text-ink-200 transition-colors hover:bg-ink-700 hover:text-ink-50 focus-visible:ring-2 focus-visible:ring-ink-500/50 focus-visible:outline-none md:hidden"
+              className={cn(iconButtonClass, "md:hidden")}
             >
               <MenuIcon size={18} />
             </SheetTrigger>
@@ -175,6 +145,17 @@ export const Header = () => {
                     className="rounded-lg px-3 py-3 text-base font-medium text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50"
                   >
                     {t("nav.changelog")}
+                  </a>
+                </SheetClose>
+                <SheetClose asChild>
+                  <a
+                    href={webAppRepo}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="flex items-center gap-2.5 rounded-lg px-3 py-3 text-base font-medium text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50"
+                  >
+                    <GithubIcon size={18} />
+                    {t("nav.github")}
                   </a>
                 </SheetClose>
               </nav>

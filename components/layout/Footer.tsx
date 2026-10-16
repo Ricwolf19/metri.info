@@ -6,13 +6,16 @@ import { usePathname } from "next/navigation";
 import { GithubIcon, MailIcon } from "@/components/icons";
 import { Logo } from "@/components/layout/Logo";
 import { Container } from "@/components/shared/Container";
+import { buttonVariants } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
 import { isChromelessPath, type RouteId, routePath } from "@/lib/i18n/routes";
-import { webAppRepo } from "@/lib/site";
-
-const CONTACT_EMAIL = "rhtc19@gmail.com";
-const DEVELOPER_URL = "https://www.ricardotapia.dev";
+import {
+  contactEmail,
+  developerUrl,
+  mobileAppReleases,
+  webAppRepo,
+} from "@/lib/site";
 
 type Column = {
   heading: TranslationKey;
@@ -50,8 +53,7 @@ const COLUMNS: Column[] = [
 ];
 
 const linkClass = "text-sm text-ink-300 transition-colors hover:text-ink-50";
-const iconLinkClass =
-  "inline-flex h-9 w-9 items-center justify-center rounded-lg border border-ink-600 bg-ink-800 text-ink-300 transition-colors hover:bg-ink-700 hover:text-ink-50";
+const iconLinkClass = buttonVariants({ variant: "secondary", size: "icon" });
 
 /** Resolved once at module load (build time), not per render — reading the
  * clock during render is runtime data and PPR can't prerender it without a
@@ -83,7 +85,7 @@ export const Footer = () => {
               <GithubIcon size={18} />
             </a>
             <a
-              href={`mailto:${CONTACT_EMAIL}`}
+              href={`mailto:${contactEmail}`}
               aria-label={t("nav.contact")}
               className={iconLinkClass}
             >
@@ -120,6 +122,18 @@ export const Footer = () => {
                   </Link>
                 </li>
               ))}
+              {col.heading === "footer.product" && (
+                <li>
+                  <a
+                    href={mobileAppReleases}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className={linkClass}
+                  >
+                    {t("nav.changelog")}
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
         ))}
@@ -136,7 +150,7 @@ export const Footer = () => {
             <span>
               {t("footer.builtBy")}{" "}
               <a
-                href={DEVELOPER_URL}
+                href={developerUrl}
                 target="_blank"
                 rel="noreferrer noopener"
                 className="font-medium text-ink-300 transition-colors hover:text-accent"
