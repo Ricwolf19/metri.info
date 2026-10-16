@@ -33,3 +33,7 @@ export const appDistribution = {
 } as const;
 
 export const mobileAppReleases = `${repos.app}/releases`;
+
+/** Where contact mail lands and who maintains the project (footer, contact page, email sender). */
+export const contactEmail = "rhtc19@gmail.com";
+export const developerUrl = "https://www.ricardotapia.dev";

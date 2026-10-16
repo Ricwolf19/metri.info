@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const HomePage = () => (
   <>
     <JsonLd data={[organizationSchema(), websiteSchema()]} />
-    <Home />
+    <Home locale="en" />
   </>
 );
 

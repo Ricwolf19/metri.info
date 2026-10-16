@@ -8,35 +8,16 @@ import matter from "gray-matter";
 import { cacheLife } from "next/cache";
 import readingTime from "reading-time";
 
+import { type DocCategory, DOC_CATEGORIES } from "@/lib/docs/categories";
 import type { Locale } from "@/lib/i18n/config";
-import type { TranslationKey } from "@/lib/i18n/en";
 
 const DOCS_DIR = path.join(process.cwd(), "content/docs");
 
-/** Categories in sidebar order, with their i18n label keys. */
-export const DOC_CATEGORIES = [
-  "getting-started",
-  "calculators",
-  "nutrition",
-  "training",
-  "recovery",
-  "supplements",
-  "progress",
-  "glossary",
-] as const;
-
-export type DocCategory = (typeof DOC_CATEGORIES)[number];
-
-export const CATEGORY_LABEL: Record<DocCategory, TranslationKey> = {
-  "getting-started": "docs.category.gettingStarted",
-  calculators: "docs.category.calculators",
-  nutrition: "docs.category.nutrition",
-  training: "docs.category.training",
-  recovery: "docs.category.recovery",
-  supplements: "docs.category.supplements",
-  progress: "docs.category.progress",
-  glossary: "docs.category.glossary",
-};
+export {
+  CATEGORY_LABEL,
+  DOC_CATEGORIES,
+  type DocCategory,
+} from "@/lib/docs/categories";
 
 type DocFrontmatter = {
   title: string;

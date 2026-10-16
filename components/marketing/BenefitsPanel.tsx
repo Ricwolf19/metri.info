@@ -1,69 +1,112 @@
 "use client";
 
-import { CheckIcon } from "@/components/icons";
+import {
+  CheckIcon,
+  CloudSyncIcon,
+  SmartphoneIcon,
+  ProfileIcon,
+  type IconProps,
+} from "@/components/icons";
 import { useT } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
 import { cn } from "@/lib/utils";
 
 type Tier = {
+  id: "local" | "free" | "premium";
+  icon: React.ComponentType<IconProps>;
   nameKey: TranslationKey;
+  priceKey: TranslationKey;
   taglineKey: TranslationKey;
   featureKeys: TranslationKey[];
   highlight?: boolean;
   badgeKey?: TranslationKey;
 };
 
+/** Mirrors the mobile app's Plan screen (`src/app/plan.tsx`): Local, Free
+ * account, Premium. Premium is sync only and is granted by hand during the
+ * beta — there is no price, card or trial anywhere in the product. */
 const TIERS: Tier[] = [
   {
-    nameKey: "benefits.guest.name",
-    taglineKey: "benefits.guest.tagline",
+    id: "local",
+    icon: SmartphoneIcon,
+    nameKey: "plans.local.name",
+    priceKey: "plans.local.price",
+    taglineKey: "plans.local.tagline",
     featureKeys: [
-      "benefits.guest.f1",
-      "benefits.guest.f2",
-      "benefits.guest.f3",
+      "plans.local.f1",
+      "plans.local.f2",
+      "plans.local.f3",
+      "plans.local.f4",
     ],
   },
   {
-    nameKey: "benefits.free.name",
-    taglineKey: "benefits.free.tagline",
+    id: "free",
+    icon: ProfileIcon,
+    nameKey: "plans.free.name",
+    priceKey: "plans.free.price",
+    taglineKey: "plans.free.tagline",
     highlight: true,
-    badgeKey: "benefits.free.badge",
+    badgeKey: "plans.free.badge",
     featureKeys: [
-      "benefits.free.f1",
-      "benefits.free.f2",
-      "benefits.free.f3",
-      "benefits.free.f4",
+      "plans.free.f1",
+      "plans.free.f2",
+      "plans.free.f3",
+      "plans.free.f4",
     ],
   },
   {
-    nameKey: "benefits.soon.name",
-    taglineKey: "benefits.soon.tagline",
-    badgeKey: "benefits.soon.badge",
-    featureKeys: ["benefits.soon.f1", "benefits.soon.f2", "benefits.soon.f3"],
+    id: "premium",
+    icon: CloudSyncIcon,
+    nameKey: "plans.premium.name",
+    priceKey: "plans.premium.price",
+    taglineKey: "plans.premium.tagline",
+    badgeKey: "plans.premium.badge",
+    featureKeys: [
+      "plans.premium.f1",
+      "plans.premium.f2",
+      "plans.premium.f3",
+      "plans.premium.f4",
+    ],
   },
 ];
 
 const TierCard = ({ tier, compact }: { tier: Tier; compact: boolean }) => {
   const t = useT();
+  const Icon = tier.icon;
   return (
     <div
       className={cn(
-        "flex h-full flex-col rounded-card border bg-ink-850",
-        compact ? "p-4" : "p-5",
+        "relative flex h-full flex-col overflow-hidden rounded-card border bg-ink-850",
+        compact ? "p-4" : "p-6",
         tier.highlight
-          ? "border-accent/60 bg-ink-800 ring-1 ring-accent/30"
+          ? "border-brand/50 bg-ink-800 ring-1 ring-brand/20"
           : "border-ink-600",
       )}
     >
-      <div
-        className={cn("flex min-h-5 items-start", compact ? "mb-2" : "mb-2.5")}
-      >
+      {tier.highlight && (
+        <div
+          aria-hidden
+          className="glow-brand pointer-events-none absolute inset-x-0 top-0 h-24"
+        />
+      )}
+      <div className="relative flex items-start justify-between gap-2">
+        <span
+          className={cn(
+            "flex items-center justify-center rounded-field",
+            compact ? "h-9 w-9" : "h-11 w-11",
+            tier.highlight
+              ? "border border-brand/30 bg-brand/10 text-brand"
+              : "bg-ink-700 text-accent",
+          )}
+        >
+          <Icon size={compact ? 16 : 20} />
+        </span>
         {tier.badgeKey && (
           <span
             className={cn(
-              "inline-flex shrink-0 items-center rounded-md px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase",
+              "inline-flex shrink-0 items-center rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold tracking-wide uppercase",
               tier.highlight
-                ? "bg-accent-fill text-ink-900"
+                ? "bg-brand text-brand-contrast"
                 : "border border-ink-500 bg-ink-700 text-ink-300",
             )}
           >
@@ -72,21 +115,26 @@ const TierCard = ({ tier, compact }: { tier: Tier; compact: boolean }) => {
         )}
       </div>
 
-      <div className={cn("flex items-start", compact ? "min-h-9" : "min-h-12")}>
-        <h3
-          className={cn(
-            "font-semibold text-ink-50",
-            compact ? "text-sm" : "text-base",
-          )}
-        >
-          {t(tier.nameKey)}
-        </h3>
-      </div>
-
+      <h3
+        className={cn(
+          "relative mt-4 font-semibold text-ink-50",
+          compact ? "text-sm" : "text-lg",
+        )}
+      >
+        {t(tier.nameKey)}
+      </h3>
       <p
         className={cn(
-          "text-ink-400",
-          compact ? "min-h-8 text-xs leading-snug" : "min-h-10 text-sm",
+          "relative font-mono font-bold text-ink-50",
+          compact ? "text-lg" : "mt-1 text-3xl",
+        )}
+      >
+        {t(tier.priceKey)}
+      </p>
+      <p
+        className={cn(
+          "relative text-ink-400",
+          compact ? "min-h-8 text-xs leading-snug" : "mt-1.5 min-h-10 text-sm",
         )}
       >
         {t(tier.taglineKey)}
@@ -95,18 +143,18 @@ const TierCard = ({ tier, compact }: { tier: Tier; compact: boolean }) => {
       <div
         className={cn(
           "border-t border-ink-700",
-          compact ? "mt-3 pt-3" : "mt-4 pt-4",
+          compact ? "mt-3 pt-3" : "mt-5 pt-5",
         )}
       />
 
-      <ul className="flex flex-1 flex-col gap-2">
+      <ul className="relative flex flex-1 flex-col gap-2.5">
         {tier.featureKeys.map((key) => (
           <li key={key} className="flex items-start gap-2 text-ink-200">
             <CheckIcon
               size={16}
               className={cn(
                 "mt-0.5 shrink-0",
-                tier.highlight ? "text-accent" : "text-ink-400",
+                tier.highlight ? "text-brand" : "text-ink-400",
               )}
             />
             <span className={compact ? "text-xs leading-snug" : "text-sm"}>
@@ -120,16 +168,10 @@ const TierCard = ({ tier, compact }: { tier: Tier; compact: boolean }) => {
 };
 
 /**
- * Neon-pricing-style benefits/value panel (NOT billing — no prices). A
- * three-column comparison of Guest vs Free account vs Coming soon, communicating
- * why an account is worth it. `compact` renders a slim variant for embedding in
- * the save-prompt modal; the full variant stands alone for marketing/SEO.
- *
- * Columns are structurally uniform regardless of content: every card is the same
- * height (`items-stretch` + `h-full`) and shares aligned zones — a reserved badge
- * row, a min-height title zone (so a 1-line and a 2-line title still align the
- * divider below them), a reserved tagline row, a divider, then the feature list
- * which `flex-1`-grows so every card bottom lines up.
+ * The three ways to use Metri, as the app's own Plan screen states them. Not
+ * billing: every tier reads "free" because nothing in the product is paid yet.
+ * `compact` fits the save-prompt modal; the full variant is the landing page's
+ * plans section.
  */
 export const BenefitsPanel = ({ compact = false }: { compact?: boolean }) => (
   <div
@@ -139,7 +181,7 @@ export const BenefitsPanel = ({ compact = false }: { compact?: boolean }) => (
     )}
   >
     {TIERS.map((tier) => (
-      <TierCard key={tier.nameKey} tier={tier} compact={compact} />
+      <TierCard key={tier.id} tier={tier} compact={compact} />
     ))}
   </div>
 );

@@ -1,21 +1,23 @@
-import { AppShowcase } from "@/components/marketing/AppShowcase";
-import { BenefitsSection } from "@/components/marketing/BenefitsSection";
-import { Bento } from "@/components/marketing/Bento";
-import { DocsPreview } from "@/components/marketing/DocsPreview";
+import { AppTour } from "@/components/marketing/AppTour";
 import { Hero } from "@/components/marketing/Hero";
-import { OpenSourceCTA } from "@/components/marketing/OpenSourceCTA";
-import { ToolsPreview } from "@/components/marketing/ToolsPreview";
+import { Marquees } from "@/components/marketing/Marquees";
+import { PlansSection } from "@/components/marketing/PlansSection";
+import { WebPreview } from "@/components/marketing/WebPreview";
+import { MotionProvider } from "@/components/motion/MotionProvider";
+import type { Locale } from "@/lib/i18n/config";
 
-/** Homepage composition — shared by EN (/) and ES (/es); sections localize via
- * the i18n provider (locale from the URL). */
-export const Home = () => (
+/** Homepage composition — shared by EN (/) and ES (/es). Five beats: the hero,
+ * the two link strips, the app tour, the web half, and the plans with the
+ * ownership promise. The hero stays outside the motion runtime on purpose: it
+ * animates with CSS so it paints before hydration. */
+export const Home = ({ locale }: { locale: Locale }) => (
   <>
     <Hero />
-    <Bento />
-    <ToolsPreview />
-    <DocsPreview />
-    <BenefitsSection />
-    <AppShowcase />
-    <OpenSourceCTA />
+    <Marquees locale={locale} />
+    <MotionProvider>
+      <AppTour />
+      <WebPreview />
+      <PlansSection />
+    </MotionProvider>
   </>
 );
