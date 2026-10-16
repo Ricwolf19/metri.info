@@ -4,9 +4,9 @@ import { Suspense } from "react";
 import { AdminSignOut } from "@/app/admin/AdminSignOut";
 import { AdminBackToSite } from "@/components/admin/AdminBackToSite";
 import { AdminMobileBar } from "@/components/admin/AdminMobileBar";
-import { AdminNav } from "@/components/admin/AdminNav";
-import { AdminShellSkeleton } from "@/components/admin/AdminSkeleton";
+import { AdminSideNav } from "@/components/admin/AdminSideNav";
 import { MetriMark } from "@/components/layout/MetriMark";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { requireAdmin } from "@/lib/auth/admin";
 
 export const metadata: Metadata = {
@@ -39,7 +39,7 @@ const AdminShell = async ({ children }: { children: React.ReactNode }) => {
         </div>
 
         <div className="flex-1 overflow-y-auto p-3">
-          <AdminNav />
+          <AdminSideNav />
         </div>
 
         <div className="space-y-2 border-t border-ink-600/60 p-4">
@@ -61,7 +61,7 @@ const AdminShell = async ({ children }: { children: React.ReactNode }) => {
 };
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => (
-  <Suspense fallback={<AdminShellSkeleton />}>
+  <Suspense fallback={<LoadingScreen fullScreen label="Loading admin…" />}>
     <AdminShell>{children}</AdminShell>
   </Suspense>
 );

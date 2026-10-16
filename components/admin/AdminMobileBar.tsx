@@ -3,15 +3,17 @@
 import { useState } from "react";
 
 import { AdminBackToSite } from "@/components/admin/AdminBackToSite";
-import { AdminNav } from "@/components/admin/AdminNav";
+import { ADMIN_NAV_GROUPS } from "@/components/admin/nav";
 import { MenuIcon } from "@/components/icons";
 import { MetriMark } from "@/components/layout/MetriMark";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { SideNav } from "@/components/ui/SideNav";
 
 /** Mobile-only top bar: brand + a hamburger that opens the nav in a left sheet.
  * The sheet closes on selection. `signOut` is passed in from the layout (a
@@ -34,7 +36,7 @@ export const AdminMobileBar = ({ signOut }: { signOut: React.ReactNode }) => {
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger
           aria-label="Open admin menu"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-ink-600 bg-ink-800 text-ink-200 transition-colors hover:bg-ink-700 hover:text-ink-50"
+          className={buttonVariants({ variant: "secondary", size: "icon" })}
         >
           <MenuIcon size={18} />
         </SheetTrigger>
@@ -46,7 +48,12 @@ export const AdminMobileBar = ({ signOut }: { signOut: React.ReactNode }) => {
               Admin
             </span>
           </SheetTitle>
-          <AdminNav onNavigate={() => setOpen(false)} />
+          <SideNav
+            groups={ADMIN_NAV_GROUPS}
+            layout="vertical"
+            ariaLabel="Admin sections"
+            onNavigate={() => setOpen(false)}
+          />
           <div className="mt-auto space-y-2 pt-6">
             <AdminBackToSite />
             {signOut}

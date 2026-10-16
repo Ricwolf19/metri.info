@@ -1,3 +1,7 @@
+import {
+  DeleteUserButton,
+  REASON_MESSAGE,
+} from "@/components/admin/DeleteUserButton";
 import { PremiumToggle } from "@/components/admin/PremiumToggle";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -9,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getAdminUsers } from "@/lib/admin/queries";
+import { getSession } from "@/lib/auth/session";
 
 const fmtDate = (d: Date) =>
   new Date(d).toLocaleDateString("en-US", {
@@ -17,9 +22,14 @@ const fmtDate = (d: Date) =>
     day: "numeric",
   });
 
-/** Read-only table of the 100 newest users with a total count. */
-export const UsersTable = async () => {
-  const data = await getAdminUsers();
+/** Users table (100 newest, optionally filtered) with the per-row actions:
+ * plan toggle and hard delete. Self and other admins can't be deleted. */
+export const UsersTable = async ({ query }: { query?: string }) => {
+  const [data, session] = await Promise.all([
+    getAdminUsers(query),
+    getSession(),
+  ]);
+  const currentUserId = session?.user.id;
 
   if (!data) {
     return <p className="text-sm text-ink-400">Database not configured.</p>;
@@ -28,8 +38,8 @@ export const UsersTable = async () => {
   return (
     <div>
       <p className="text-sm text-ink-400">
-        Showing {data.rows.length} of {data.total.toLocaleString("en-US")} users
-        · newest first
+        Showing {data.rows.length} of {data.total.toLocaleString("en-US")}{" "}
+        {query ? "matching users" : "users"} · newest first
       </p>
       <Table>
         <TableHeader>
@@ -37,38 +47,60 @@ export const UsersTable = async () => {
             <TableHead>Name</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Role</TableHead>
-            <TableHead>Plan</TableHead>
             <TableHead>Verified</TableHead>
             <TableHead>Joined</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.rows.map((u) => (
-            <TableRow key={u.id}>
-              <TableCell className="font-medium text-ink-100">
-                {u.name || "—"}
-              </TableCell>
-              <TableCell>{u.email}</TableCell>
-              <TableCell>
-                <Badge variant={u.role === "admin" ? "default" : "outline"}>
-                  {u.role}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <PremiumToggle userId={u.id} plan={u.plan} />
-              </TableCell>
-              <TableCell>
-                {u.emailVerified ? (
-                  <span className="text-accent">Yes</span>
-                ) : (
-                  <span className="text-ink-400">No</span>
-                )}
-              </TableCell>
-              <TableCell className="whitespace-nowrap text-ink-300">
-                {fmtDate(u.createdAt)}
+          {data.rows.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={6} className="py-10 text-center text-ink-400">
+                {query ? `No users match “${query}”.` : "No users yet."}
               </TableCell>
             </TableRow>
-          ))}
+          )}
+          {data.rows.map((u) => {
+            const disabledReason =
+              u.id === currentUserId
+                ? REASON_MESSAGE.self
+                : u.role === "admin"
+                  ? REASON_MESSAGE.admin_protected
+                  : undefined;
+            return (
+              <TableRow key={u.id}>
+                <TableCell className="font-medium text-ink-100">
+                  {u.name || "—"}
+                </TableCell>
+                <TableCell>{u.email}</TableCell>
+                <TableCell>
+                  <Badge variant={u.role === "admin" ? "default" : "outline"}>
+                    {u.role}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  {u.emailVerified ? (
+                    <span className="text-accent">Yes</span>
+                  ) : (
+                    <span className="text-ink-400">No</span>
+                  )}
+                </TableCell>
+                <TableCell className="whitespace-nowrap text-ink-300">
+                  {fmtDate(u.createdAt)}
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center justify-end gap-2">
+                    <PremiumToggle userId={u.id} plan={u.plan} />
+                    <DeleteUserButton
+                      userId={u.id}
+                      email={u.email}
+                      disabledReason={disabledReason}
+                    />
+                  </div>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>
