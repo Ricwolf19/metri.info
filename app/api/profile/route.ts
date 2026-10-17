@@ -3,7 +3,11 @@ import { NextResponse } from "next/server";
 
 import { getSession } from "@/lib/auth/session";
 import { db } from "@/lib/db";
-import { normalizeProfileFields } from "@/lib/account/profile-input";
+import {
+  normalizeProfileFields,
+  profileRangeError,
+} from "@/lib/account/profile-input";
+import { event } from "@/lib/log/logger";
 import { user, userProfile } from "@/lib/db/schema";
 
 /**
@@ -69,20 +73,30 @@ export const PUT = async (req: Request) => {
 
   // Whitelist per field — the client can never write another user's row (id
   // comes from the session) nor any column outside this set.
+  const fields = {
+    displayName: body.displayName,
+    sex: body.sex,
+    age: body.age,
+    bodyHeightCm: body.heightCm,
+    bodyWeightKg: body.weightKg,
+    bodyFatPct: body.bodyFatPct,
+    activityLevel: body.activityLevel,
+    bmrFormula: body.bmrFormula,
+    unitsPreference: body.units,
+    locale: body.locale,
+    clockFormat: body.clockFormat,
+  };
+  // The app does not range-check before pushing; a dropped value is stored as
+  // null, and this is the only trace of it.
+  const dropped = profileRangeError(fields);
+  if (dropped)
+    event.info("profile.dropped-out-of-range", {
+      userId: session.user.id,
+      field: dropped,
+    });
+
   const values = {
-    ...normalizeProfileFields({
-      displayName: body.displayName,
-      sex: body.sex,
-      age: body.age,
-      bodyHeightCm: body.heightCm,
-      bodyWeightKg: body.weightKg,
-      bodyFatPct: body.bodyFatPct,
-      activityLevel: body.activityLevel,
-      bmrFormula: body.bmrFormula,
-      unitsPreference: body.units,
-      locale: body.locale,
-      clockFormat: body.clockFormat,
-    }),
+    ...normalizeProfileFields(fields),
     latestBmr: num(body.bmr),
     latestTdee: num(body.tdee),
   };
