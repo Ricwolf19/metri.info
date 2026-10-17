@@ -81,7 +81,7 @@ const renderFor = async (release: AppRelease, locale: Locale) => {
     locale,
     version: release.version,
     notes: release.notes,
-    apkUrl: release.apkUrl,
+    apkUrl: absoluteUrl("/download/apk"),
     downloadPageUrl: absoluteUrl(routePath("download", locale)),
     unsubscribeUrl: UNSUBSCRIBE_PLACEHOLDER,
   });

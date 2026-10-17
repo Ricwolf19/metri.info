@@ -242,7 +242,9 @@ describe("POST /api/releases/notify — store + announce", () => {
     expect(byTo["es@x.dev"].subject).toBe("Ya salió Metri 1.12.0");
 
     const en = byTo["en@x.dev"];
-    expect(en.html).toContain(`${DOWNLOAD}/${TAG}/metri-1.12.0.apk`);
+    // The button goes through our APK endpoint (served with the Android package
+    // type), never the raw GitHub asset; the stored row keeps the GitHub URL.
+    expect(en.html).toContain("/download/apk");
     expect(en.html).not.toContain("__METRI_UNSUBSCRIBE_URL__");
     expect(en.headers["List-Unsubscribe-Post"]).toBe(
       "List-Unsubscribe=One-Click",

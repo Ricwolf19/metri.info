@@ -19,7 +19,13 @@ export const DownloadButtons = ({
   const t = useT();
   return (
     <>
-      <div className="mt-8 flex flex-wrap gap-3">
+      {version && (
+        <p className="mt-8 inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 font-mono text-xs font-semibold tracking-wide text-brand">
+          <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-brand" />v
+          {version}
+        </p>
+      )}
+      <div className={cn("flex flex-wrap gap-3", version ? "mt-3" : "mt-8")}>
         {
           <a
             href={apk}
@@ -33,11 +39,6 @@ export const DownloadButtons = ({
           >
             <DownloadIcon size={18} />
             {t("download.androidDownload")}
-            {version && (
-              <span className="rounded-full bg-brand-contrast/15 px-2 py-0.5 font-mono text-xs">
-                v{version}
-              </span>
-            )}
           </a>
         }
         <span

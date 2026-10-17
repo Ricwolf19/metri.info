@@ -34,7 +34,9 @@ import { routePath } from "@/lib/i18n/routes";
 import { getLatestRelease } from "@/lib/releases/store";
 import type { AppRelease } from "@/lib/releases/types";
 import { appDistribution, mobileAppReleases, mobileAppRepo } from "@/lib/site";
-import { cn } from "@/lib/utils";
+import { cn, siteUrl } from "@/lib/utils";
+
+const APK_PATH = "/download/apk";
 
 const formatDate = (iso: string, locale: Locale): string =>
   new Intl.DateTimeFormat(intlLocale(locale), {
@@ -125,12 +127,16 @@ export const DownloadView = async ({ locale }: { locale: Locale }) => {
   const isDev = appDistribution.status === "development";
   const isBeta = appDistribution.status === "beta";
   const release = isBeta ? await getLatestRelease() : null;
-  const apk = release?.apkUrl ?? mobileAppReleases;
+  // Served from our origin with the APK media type (see app/download/apk):
+  // phones finish and install; the versioned GitHub URL stays the checksum
+  // reference.
+  const apk = release ? APK_PATH : mobileAppReleases;
   const homeStep = TOUR_STEPS[0];
 
   return (
     <>
       <PageHero
+        share
         eyebrow={isBeta ? t("download.betaBadge") : t("download.devBadge")}
         title={
           isBeta
@@ -265,7 +271,10 @@ export const DownloadView = async ({ locale }: { locale: Locale }) => {
                 </ol>
                 {release && (
                   <div className="mt-6 border-t border-ink-700 pt-5">
-                    <ApkQr url={release.apkUrl} label={t("download.scan")} />
+                    <ApkQr
+                      url={`${siteUrl}${APK_PATH}`}
+                      label={t("download.scan")}
+                    />
                   </div>
                 )}
               </Panel>
