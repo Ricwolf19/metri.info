@@ -1,5 +1,6 @@
 "use client";
 
+import { invalidateListCache } from "listkit";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -40,6 +41,7 @@ export const UserMenu = ({ className }: { className?: string }) => {
     e.preventDefault();
     if (signingOut) return;
     setSigningOut(true);
+    invalidateListCache();
     signOut().finally(() => router.refresh());
   };
 

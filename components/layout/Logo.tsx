@@ -15,12 +15,12 @@ export const Logo = ({
   className?: string;
   withWordmark?: boolean;
 }) => {
-  const { locale } = useI18n();
+  const { t, locale } = useI18n();
 
   return (
     <Link
       href={routePath("home", locale)}
-      aria-label="Metri home"
+      aria-label={`Metri · ${t("nav.home")}`}
       className={cn("flex items-center gap-2", className)}
     >
       <MetriMark className="h-7 w-7" />

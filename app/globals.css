@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "listkit/tailwind.css";
 
 /*
  * Metri Web design system — ported 1:1 from the mobile app's dark scheme.
@@ -341,6 +342,22 @@ summary {
   }
   to {
     transform: translateX(-100%);
+  }
+}
+@keyframes metri-sheet-in-top {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes metri-sheet-out-top {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateY(-100%);
   }
 }
 @keyframes metri-pop-out {

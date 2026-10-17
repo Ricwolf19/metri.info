@@ -6,9 +6,9 @@ import {
 } from "@/components/icons";
 import type { SideNavGroup, SideNavItem } from "@/components/ui/SideNav";
 
-/** Admin sidebar sections, in display order. Single source of truth shared by
- * the desktop sidebar and the mobile sheet (both render `SideNav`). `/admin`
- * matches exactly so it isn't active on every subroute. */
+/** Admin sections, in display order; the site header renders them on admin
+ * paths (desktop bar and phone drawer). `/admin` matches exactly so it isn't
+ * active on every subroute. */
 const ADMIN_NAV: SideNavItem[] = [
   {
     id: "overview",
