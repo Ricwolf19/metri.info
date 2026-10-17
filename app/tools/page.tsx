@@ -1,14 +1,9 @@
 import type { Metadata } from "next";
 
 import { ToolsIndex } from "@/components/calculators/ToolsIndex";
-import { metaAlternates } from "@/lib/i18n/routes";
+import { sectionMetadata } from "@/lib/seo/pages";
 
-export const metadata: Metadata = {
-  title: "Free Fitness Calculators",
-  description:
-    "Free fitness calculators — 1RM, TDEE, macros, body fat, BMI, FFMI, hydration and barbell plates. The same formulas as the Metri app, instantly in your browser.",
-  alternates: metaAlternates("tools", "en"),
-};
+export const metadata: Metadata = sectionMetadata("tools", "en");
 
 const ToolsPage = () => <ToolsIndex locale="en" />;
 

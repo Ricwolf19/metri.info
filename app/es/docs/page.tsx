@@ -1,14 +1,9 @@
 import type { Metadata } from "next";
 
 import { DocsIndex } from "@/components/docs/DocsIndex";
-import { metaAlternates } from "@/lib/i18n/routes";
+import { sectionMetadata } from "@/lib/seo/pages";
 
-export const metadata: Metadata = {
-  title: "Base de conocimiento",
-  description:
-    "Guías basadas en evidencia sobre nutrición, entrenamiento y recuperación — escritas para lifters, no clickbait.",
-  alternates: metaAlternates("docs", "es"),
-};
+export const metadata: Metadata = sectionMetadata("docs", "es");
 
 const DocsPageEs = () => <DocsIndex locale="es" />;
 

@@ -17,6 +17,7 @@ export type RouteId =
   | "privacy"
   | "terms"
   | "contact"
+  | "quiz"
   | "signIn"
   | "signUp"
   | "forgotPassword"
@@ -53,6 +54,7 @@ export const ROUTES: Record<RouteId, RouteEntry> = {
   privacy: { en: "/privacy", es: "/es/privacidad" },
   terms: { en: "/terms", es: "/es/terminos" },
   contact: { en: "/contact", es: "/es/contacto" },
+  quiz: { en: "/quiz", es: "/es/test" },
   signIn: { en: "/sign-in", es: "/es/iniciar-sesion" },
   signUp: { en: "/sign-up", es: "/es/registrarse" },
   forgotPassword: {
@@ -173,7 +175,7 @@ export const routePath = (id: RouteId, locale: Locale): string =>
   ROUTES[id][locale];
 
 /** Whether a pathname is a full-screen auth page (no site header/footer). */
-const isAuthPath = (pathname: string): boolean =>
+export const isAuthPath = (pathname: string): boolean =>
   [
     ROUTES.signIn.en,
     ROUTES.signIn.es,
@@ -186,10 +188,13 @@ const isAuthPath = (pathname: string): boolean =>
   ].includes(pathname);
 
 /** Pages that render their own shell — no marketing header/footer (auth, admin). */
+export const isAdminPath = (pathname: string): boolean =>
+  pathname === "/admin" || pathname.startsWith("/admin/");
+
+/** Pages that render without the public footer and launcher: auth screens
+ * and the admin area (the header stays, switching to the admin sections). */
 export const isChromelessPath = (pathname: string): boolean =>
-  isAuthPath(pathname) ||
-  pathname === "/admin" ||
-  pathname.startsWith("/admin/");
+  isAuthPath(pathname) || isAdminPath(pathname);
 
 /** Metadata `alternates` (canonical + hreflang languages + x-default). */
 export const metaAlternates = (
