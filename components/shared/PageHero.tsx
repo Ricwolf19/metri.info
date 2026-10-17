@@ -1,5 +1,6 @@
 import { Container } from "@/components/shared/Container";
 import { PageHeader } from "@/components/shared/Section";
+import { ShareButton } from "@/components/shared/ShareButton";
 import { cn } from "@/lib/utils";
 
 /**
@@ -18,6 +19,7 @@ export const PageHero = ({
   children,
   className,
   compact = false,
+  share = false,
 }: {
   eyebrow?: string;
   title: string;
@@ -28,6 +30,8 @@ export const PageHero = ({
   children?: React.ReactNode;
   className?: string;
   compact?: boolean;
+  /** Show a share / copy-link chip under the header. */
+  share?: boolean;
 }) => {
   const alignment = align ?? (aside ? "left" : "center");
   return (
@@ -56,6 +60,7 @@ export const PageHero = ({
               align={alignment}
             >
               {children}
+              {share && <ShareButton className="mt-6" />}
             </PageHeader>
             <div className="min-w-0">{aside}</div>
           </div>
@@ -68,6 +73,7 @@ export const PageHero = ({
             align={alignment}
           >
             {children}
+            {share && <ShareButton className="mt-6" />}
           </PageHeader>
         )}
       </Container>

@@ -16,6 +16,7 @@ import { GlossaryView } from "@/components/glossary/GlossaryView";
 import { TableOfContents } from "@/components/docs/TableOfContents";
 import { Container } from "@/components/shared/Container";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { ShareButton } from "@/components/shared/ShareButton";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
 import {
@@ -154,9 +155,12 @@ export const DocArticle = async ({
             {doc.meta.title}
           </h1>
           <p className="mt-3 text-lg text-ink-300">{doc.meta.description}</p>
-          <p className="mt-2 font-mono text-xs text-ink-400">
-            {t("docs.readingTime", { minutes: doc.meta.readingMinutes })}
-          </p>
+          <div className="mt-2 flex items-center justify-between gap-3">
+            <p className="font-mono text-xs text-ink-400">
+              {t("docs.readingTime", { minutes: doc.meta.readingMinutes })}
+            </p>
+            <ShareButton variant="icon" title={doc.meta.title} />
+          </div>
           <p className="mt-3 text-sm text-ink-400">
             {t("docs.reviewedBy")}{" "}
             <a

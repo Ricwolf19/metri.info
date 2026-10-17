@@ -5,6 +5,8 @@ import { Calculator } from "@/components/calculators/Calculator";
 import { CALC_ICONS } from "@/components/calculators/calcIcons";
 import { ArrowRightIcon, BookIcon, ChevronRightIcon } from "@/components/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { ShareButton } from "@/components/shared/ShareButton";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { Container } from "@/components/shared/Container";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { CALC_IDS, routePath, type CalcRouteId } from "@/lib/i18n/routes";
@@ -157,6 +159,11 @@ export const CalculatorPage = async ({
         </nav>
 
         <div className="mt-6 flex items-center gap-3">
+          <ShareButton
+            variant="icon"
+            title={c.h1}
+            className="order-last ml-auto"
+          />
           <p className="text-sm font-semibold tracking-wide text-accent uppercase">
             {t("calc.eyebrow")}
           </p>
@@ -194,9 +201,7 @@ export const CalculatorPage = async ({
 
         <div className="mt-8">
           <Suspense
-            fallback={
-              <div className="h-64 rounded-card border border-ink-600 bg-ink-800" />
-            }
+            fallback={<LoadingScreen className="min-h-64 rounded-card" />}
           >
             <Calculator id={id} />
           </Suspense>
