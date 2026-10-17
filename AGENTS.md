@@ -49,11 +49,11 @@ committed, `scripts/vercel-migrate.mjs` applies it on deploy.
   after React `<Activity>` hides a route — never WebGL). Below-the-fold reveals use
   `Reveal` from `components/motion` inside a `MotionProvider`; never import `motion`
   (the full component) — `LazyMotion` is `strict`. One side navigation: `components/ui/SideNav.tsx`
-  (admin, docs, account). Section pages open with `components/shared/PageHero.tsx`. Glows behind
+  (docs, account). Section pages open with `components/shared/PageHero.tsx`. Glows behind
   centred objects use `.glow-orb` (fades on every side); `.glow-brand` is top-anchored and shows a
-  hard edge if its box starts inside the viewport. Loading states are `LoadingScreen` (the mobile
-  `AppLoader` port: the mark breathing) for whole routes and important sections; `Skeleton` rows
-  only for tables.
+  hard edge if its box starts inside the viewport. Every loading state is `LoadingScreen` (the mobile
+  `AppLoader` port: the mark breathing inside a lime arc, always centred); there are no grey
+  skeleton blocks anywhere.
 - **Type**: Geist Sans for everything meant to be read — headings, paragraphs, buttons, form
   labels. JetBrains Mono (`font-mono`) is the machine voice — nav links, kickers/eyebrows, section
   numbers, numeric values, badges, tab labels, hashes. Never set a paragraph or a button in mono.
@@ -74,12 +74,27 @@ committed, `scripts/vercel-migrate.mjs` applies it on deploy.
 - **`lib/calculations` is mirrored 1:1 in the mobile app** (`src/features/calculators/math`).
   Same rule as the sync contract: change one, change both, or the two apps quote different
   numbers for the same body. Only `lib/calculations/energy.test.ts` guards this side.
+- **Knowledge check** (`lib/quiz`): `areas.ts` and the first sixteen questions of `content.ts` are the
+  mobile app's `src/features/quiz` verbatim (area ids and `REVEAL_MS` are shared contracts); the web
+  adds more questions per (area, level) and the engine picks one per cell per attempt. Results keep
+  the app's `Record<QuizArea, 0..4>` shape: the browser's localStorage for everyone, `quiz_attempt`
+  for any signed-in account (`can(plan, "history")` is the one switch if that ever narrows). It
+  recommends guides, it never locks one.
 - **Entitlements**: gate with `can(plan, feature)` (`lib/entitlements.ts`), never
   `plan === "premium"`. `subscription` is the billing source of truth; `user.plan` is a denormalized
   cache the client can never write (`input: false`).
 - **`saveCalculation` requires a session** — no anonymous rows in `calculation_log`; aggregate usage
   goes to PostHog, not the DB.
-- **Admin** (`/admin`) is EN-only, chromeless, gated by `requireAdmin`.
+- **Admin** (`/admin`) is EN-only and gated by `requireAdmin`. It has no sidebar: the site header
+  swaps its sections for `ADMIN_NAV_GROUPS` on admin paths (`isAdminPath`), and the footer and
+  launcher stay off (`isChromelessPath`).
+- **Lists** (admin users, admin calculations, account history) are `listkit`: a config built with
+  `defineListConfig` from `listkit/server` in `lib/lists/*`, a `"use server"` fetcher that runs
+  `executeSqlList` (`listkit/sql`) on `lib/lists/pool.ts` with a filter-id → column whitelist, a
+  page that seeds the first query with `loadInitialList`, and a client `NextListView`. Filter ids in
+  the config ARE the keys of the SQL whitelist. Brand theme/tones live in `lib/lists/theme.ts`;
+  `<html class="dark">` is what switches listkit to its dark variants. Never pass Drizzle objects
+  to listkit; it speaks text SQL with `$n` params through the pool.
 
 ## Premium sync (serves the mobile app)
 
@@ -133,6 +148,14 @@ Contract with the mobile repo's release workflow (the pipeline itself lives ther
 - The tagged release is the ONLY download source (the rolling `apk-beta` release is gone). With no
   release known the page links the GitHub releases list. Never `releases/latest/…`: release-please
   creates the release about an hour before CI attaches its APK.
+- The Download button and QR point at `/download/apk` (`app/download/apk/route.ts`), which streams
+  the versioned GitHub asset with `Content-Type: application/vnd.android.package-archive`, a
+  filename and Range passthrough. GitHub serves `application/octet-stream`, and Android's download
+  manager stalls at 100% / never offers to install on that type. Never link the GitHub asset URL
+  directly from a phone-facing control; keep it as the checksum reference only.
+- `proxy.ts` (locale detection) only ever redirects a `GET` document navigation: Server Action
+  POSTs, RSC fetches and prefetches pass through untouched, or the client receives HTML where it
+  expects a Flight payload ("An unexpected response was received from the server").
 - Release emails: on by default, one-click opt-out. Unsubscribe tokens are HMACs keyed off
   `BETTER_AUTH_SECRET` (`lib/releases/unsubscribe.ts`); rotating it dead-links old emails. A GET
   never unsubscribes (link scanners) — only the page's form or the RFC 8058 POST does. The mobile
