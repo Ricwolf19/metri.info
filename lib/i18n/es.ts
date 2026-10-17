@@ -39,6 +39,9 @@ export const es: Record<TranslationKey, string> = {
   "nav.contact": "Contacto",
   "nav.changelog": "Changelog",
   "nav.menu": "Menú",
+  "nav.sections": "Secciones",
+  "nav.links": "Enlaces",
+  "nav.currentPage": "Página actual",
 
   "cmd.title": "Paleta de comandos",
   "cmd.open": "Buscar",
@@ -74,7 +77,7 @@ export const es: Record<TranslationKey, string> = {
   "auth.brandTitle": "Entrena con cabeza,",
   "auth.brandHighlight": "mide todo.",
   "auth.brandSubtitle":
-    "Calculadoras y guías de fitness gratis — tu cuenta mantiene tus resultados sincronizados.",
+    "Calculadoras y guías de fitness gratis. Tu cuenta mantiene tus resultados sincronizados.",
   "auth.forgotPassword": "¿Olvidaste tu contraseña?",
   "auth.newPassword": "Nueva contraseña",
   "auth.confirmPassword": "Confirmar contraseña",
@@ -106,10 +109,10 @@ export const es: Record<TranslationKey, string> = {
     "No se pudo contactar al servidor. Revisa tu conexión e inténtalo de nuevo.",
   "auth.errorInvalidToken": "Este enlace no es válido o ha caducado.",
   "auth.signUpCheckEmail":
-    "Revisa tu bandeja — te enviamos un enlace de confirmación para terminar de crear tu cuenta.",
+    "Revisa tu bandeja: te enviamos un enlace de confirmación para terminar de crear tu cuenta.",
   "auth.openInbox": "Abrir Gmail",
   "auth.checkSpam":
-    "¿No lo ves? Revisa la carpeta de spam o espera un minuto — algunos proveedores tardan en entregar.",
+    "¿No lo ves? Revisa la carpeta de spam o espera un minuto; algunos proveedores tardan en entregar.",
   "auth.errorEmailNotVerified":
     "Primero confirma tu correo. Revisa tu bandeja (o la carpeta de spam) para encontrar el enlace que te enviamos.",
   "auth.errorBot":
@@ -117,16 +120,16 @@ export const es: Record<TranslationKey, string> = {
   "auth.recaptchaNotice":
     "Protegido por reCAPTCHA. Aplican la Política de Privacidad y los Términos de Servicio de Google.",
 
-  "hero.kicker": "Open source · Offline-first · Beta gratis para Android",
+  "hero.kicker":
+    "Open source · App offline-first · Herramientas y guías web gratis",
   "hero.title": "Mide. Progresa. Evoluciona.",
   "hero.subtitle":
-    "El compañero de entrenamiento de código abierto: una app gratuita para Android con programas, series, check-ins corporales y comida, más 17 calculadoras y una base de conocimiento basada en evidencia en la web.",
+    "Un sistema de entrenamiento open source en dos lugares que se complementan: una app gratuita y offline-first para Android con programas, series, check-ins corporales y comida, y este sitio, con 17 calculadoras, una base de conocimiento basada en evidencia y un test de conocimientos que corren en cualquier navegador.",
   "hero.ctaDownload": "Descargar app",
-  "hero.ctaDocs": "Ver documentación",
   "hero.ctaTools": "Probar las calculadoras",
 
   "tour.eyebrow": "La app móvil",
-  "tour.eyebrowBeta": "Beta para Android — instálala hoy",
+  "tour.eyebrowBeta": "Beta para Android · instálala hoy",
   "tour.title": "Una app para todo el",
   "tour.highlight": "ciclo de entrenamiento.",
   "tour.subtitle":
@@ -259,21 +262,96 @@ export const es: Record<TranslationKey, string> = {
   "plans.premium.f3": "Vistas de actividad sincronizada en la web",
   "plans.premium.f4": "Apps futuras incluidas (versión para reloj en progreso)",
   "plans.note":
-    "Premium requiere primero una cuenta gratuita. Durante la beta abierta se concede bajo petición por correo — no hay pago, tarjeta ni prueba. Detalles en los",
+    "Premium requiere primero una cuenta gratuita. Durante la beta abierta se concede bajo petición por correo; no hay pago, tarjeta ni prueba. Detalles en los",
   "plans.noteLink": "Términos.",
   "plans.ctaCreate": "Crear una cuenta gratis",
   "plans.ctaPremium": "Solicitar acceso Premium",
 
+  "quiz.title": "Test de conocimientos",
+  "quiz.eyebrow": "Gratis · De 4 a 16 preguntas · unos 5 minutos",
+  "quiz.seoDescription":
+    "Un test de conocimientos gratuito y adaptativo sobre nutrición, entrenamiento, composición corporal y fundamentos. Empieza fácil, se detiene en tu nivel y te dice qué estudiar después.",
+  "quiz.introTitle": "Comprueba lo que sabes",
+  "quiz.introBody":
+    "Una pregunta a la vez en cuatro áreas. Cada acierto sube esa área un nivel, de básico a pro; el primer fallo la cierra. Cada respuesta viene explicada, así que aprendes de cualquier forma.",
+  "quiz.start": "Empezar",
+  "quiz.retake": "Hacerlo de nuevo",
+  "quiz.resultTitle": "Tu mapa de conocimientos",
+  "quiz.resultBody":
+    "El nivel más alto que superaste en cada área. Las guías de abajo cubren todos los niveles.",
+  "quiz.questionN": "Pregunta {n}",
+  "quiz.dontKnow": "No lo sé",
+  "quiz.next": "Siguiente pregunta",
+  "quiz.seeResult": "Ver mi mapa",
+  "quiz.correct": "Correcto.",
+  "quiz.incorrect": "No exactamente.",
+  "quiz.answerWas": "La respuesta: {answer}",
+  "quiz.why": "Por qué",
+  "quiz.autoNext": "La siguiente pregunta llega sola. Páusala con el botón.",
+  "quiz.cardTitle": "Test de conocimientos",
+  "quiz.cardBody":
+    "Descubre tu nivel en nutrición, entrenamiento, composición corporal y fundamentos.",
+  "quiz.cardCta": "Hacer el test",
+  "quiz.heroCta": "Hacer el test de conocimientos",
+  "quiz.area.nutrition": "Nutrición",
+  "quiz.area.training": "Entrenamiento",
+  "quiz.area.body": "Composición corporal",
+  "quiz.area.fundamentals": "Fundamentos",
+  "quiz.areaShort.nutrition": "Nutr",
+  "quiz.areaShort.training": "Entr",
+  "quiz.areaShort.body": "Cuerpo",
+  "quiz.areaShort.fundamentals": "Fund",
+  "quiz.level0": "Empezando",
+  "quiz.level1": "Básico",
+  "quiz.level2": "Intermedio",
+  "quiz.level3": "Avanzado",
+  "quiz.level4": "Pro",
+  "quiz.levelOf": "{level} · {n}/4",
+  "quiz.studyTitle": "Qué estudiar después",
+  "quiz.studyAllClear":
+    "Superaste todas las áreas. Mantén la ventaja con las guías más recientes.",
+  "quiz.studyGuides": "Abrir las guías de {area}",
+  "quiz.lastResult": "Tu último resultado",
+  "quiz.lastTaken": "Hecho el {date}",
+  "quiz.saved": "Guardado en tu actividad",
+  "quiz.saveFailed":
+    "No se pudo guardar este intento. Tu resultado se conserva en este dispositivo.",
+  "quiz.keepHint":
+    "Los resultados se quedan en este dispositivo. Inicia sesión o crea una cuenta gratis para guardar tu historial en tu página de actividad.",
+  "quiz.keptLocally": "Guardado en este dispositivo",
+  "quiz.historyTitle": "Test de conocimientos",
+  "quiz.historySubtitle":
+    "Tus intentos, del más reciente al más antiguo, y qué leer después.",
+  "quiz.historyEmpty":
+    "Aún no hay intentos. Haz el test y tu mapa aparecerá aquí.",
+  "quiz.remaining": "hasta {n} más",
+  "quiz.pause": "Pausar la cuenta atrás",
+  "quiz.resume": "Reanudar la cuenta atrás",
+  "quiz.review": "Repasa esto",
+  "quiz.reviewHint":
+    "Las preguntas que fallaste, con la explicación y dónde leer más.",
+  "quiz.shareCta": "Compartir mi mapa",
+  "quiz.shareTitle": "Comparte tu mapa de conocimientos",
+  "quiz.shareDesc":
+    "El enlace abre tu mapa; la imagen está lista para chats y publicaciones.",
+  "quiz.sharedTitle": "Un mapa de conocimientos compartido",
+  "quiz.sharedBody":
+    "Alguien te envió su resultado. Haz el test para obtener el tuyo.",
+  "quiz.signUpCta": "Crea una cuenta gratis para guardar este resultado",
+  "quiz.signInCta": "Iniciar sesión",
+  "quiz.attemptMeta": "{n} preguntas",
+  "quiz.progress": "{area} · {level}",
+
   "tools.title": "Calculadoras y herramientas",
   "tools.subtitle":
-    "Las mismas fórmulas que la app — al instante en tu navegador. Comparte resultados con un enlace.",
+    "Las mismas fórmulas que la app, al instante en tu navegador. Comparte resultados con un enlace.",
   "tools.searchPlaceholder": "Buscar calculadoras…",
   "tools.noResults": "Ninguna calculadora coincide con tu búsqueda.",
   "tools.popular": "Popular",
   "tools.example.title": "Lo ves en cuanto escribes.",
   "tools.example.body":
-    "Cada dato recalcula al instante — sin botón de enviar. Los resultados van codificados por color según rangos saludables y se comparten con un toque.",
-  "tools.example.p1": "Instantáneo — responde a cada tecla",
+    "Cada dato recalcula al instante, sin botón de enviar. Los resultados van codificados por color según rangos saludables y se comparten con un toque.",
+  "tools.example.p1": "Instantáneo: responde a cada tecla",
   "tools.example.p2": "Rangos y objetivos codificados por color",
   "tools.example.p3": "Comparte o guarda cualquier resultado",
   "tools.example.caption":
@@ -312,7 +390,7 @@ export const es: Record<TranslationKey, string> = {
   "calc.shareCta": "Compartir resultado",
   "calc.shareTitle": "Comparte este resultado",
   "calc.shareDesc":
-    "Cualquiera con el enlace ve los mismos datos y resultado — sin cuenta.",
+    "Cualquiera con el enlace ve los mismos datos y resultado, sin cuenta.",
   "calc.shareQrHint": "Escanea para abrirlo en tu teléfono",
   "calc.shareNative": "Compartir…",
   "calc.cardTitle": "Tarjeta de resultado",
@@ -336,18 +414,26 @@ export const es: Record<TranslationKey, string> = {
   "calc.savePromptPrivacyLink": "Política de Privacidad",
   "calc.savePromptCreate": "Crear cuenta gratis",
   "calc.savePromptSignIn": "Iniciar sesión",
+  "share.action": "Compartir",
+  "share.copyLink": "Copiar enlace",
+  "share.copied": "Enlace copiado",
+  "share.copyFailed": "No se pudo copiar el enlace. Aquí está:",
+  "share.copyImage": "Copiar imagen",
+  "share.imageCopied": "Imagen copiada al portapapeles",
+  "share.copyImageFailed":
+    "Este navegador no puede copiar imágenes. Descárgala en su lugar.",
   "share.open": "Abrir la calculadora",
   "share.note":
-    "Se calcula al instante en tu navegador — ábrela para cambiar los datos.",
+    "Se calcula al instante en tu navegador. Ábrela para cambiar los datos.",
   "calc.metric": "Métrico",
   "calc.imperial": "Imperial",
   "calc.profilePrefilled":
-    "Rellenado desde tu perfil — edita lo que quieras abajo.",
+    "Rellenado desde tu perfil. Edita lo que quieras abajo.",
   "calc.bodyFatOptional": "Grasa corporal (opcional)",
   "calc.macrosLeanBasis":
     "La proteína se calcula con tu masa magra (2.2 g/kg), no con tu peso.",
   "calc.macrosCarbsExhausted":
-    "La proteína y la grasa ya agotan estas calorías — sube las calorías o baja los objetivos.",
+    "La proteína y la grasa ya agotan estas calorías. Sube las calorías o baja los objetivos.",
   "calc.bodyFat": "Grasa corporal",
   "calc.neck": "Cuello",
   "calc.waist": "Cintura",
@@ -467,7 +553,7 @@ export const es: Record<TranslationKey, string> = {
   "calc.relatedGuides": "Aprende los conceptos",
   "calc.trustTitle": "Gratis y de código abierto",
   "calc.trustBody":
-    "Cada calculadora de Metri corre en tu navegador — sin cuenta, sin muros de pago, sin rastreo.",
+    "Cada calculadora de Metri corre en tu navegador: sin cuenta, sin muros de pago, sin rastreo.",
   "calc.trustCta": "Ver todas las calculadoras",
 
   "muscle.chest": "Pecho",
@@ -490,16 +576,16 @@ export const es: Record<TranslationKey, string> = {
 
   "docs.title": "Base de conocimiento",
   "docs.subtitle":
-    "Guías basadas en evidencia sobre nutrición, entrenamiento y recuperación — escritas para lifters, no clickbait.",
+    "Guías basadas en evidencia sobre nutrición, entrenamiento y recuperación, escritas para lifters, no clickbait.",
   "docs.searchPlaceholder": "Buscar en la documentación…",
   "docs.example.title": "En lenguaje claro y con evidencia.",
   "docs.example.body":
-    "Cada guía explica el porqué — fórmulas, rangos y compensaciones — con fuentes que puedes verificar.",
+    "Cada guía explica el porqué (fórmulas, rangos y compensaciones) con fuentes que puedes verificar.",
   "docs.example.p1": "Escrito para personas, no para libros de texto",
   "docs.example.p2": "Citado, revisado y al día",
   "docs.example.snippetTitle": "Cómo leer tu IMC",
   "docs.example.snippetBody":
-    "El IMC es una herramienta de cribado, no un diagnóstico — no distingue músculo de grasa, por eso muchos atletas marcan «sobrepeso».",
+    "El IMC es una herramienta de cribado, no un diagnóstico: no distingue músculo de grasa, por eso muchos atletas marcan «sobrepeso».",
   "glossary.search": "Buscar términos…",
   "glossary.empty": "Ningún término coincide.",
   "glossary.relatedLabel": "Guías",
@@ -507,10 +593,10 @@ export const es: Record<TranslationKey, string> = {
   "about.features.eyebrow": "Funciones",
   "about.features.title": "Qué puedes hacer con Metri",
   "about.features.lead":
-    "Herramientas y guías gratis para quienes entrenan en serio — sin cuenta para empezar.",
+    "Herramientas y guías gratis para quienes entrenan en serio. Sin cuenta para empezar.",
   "about.features.calc.title": "17 calculadoras instantáneas",
   "about.features.calc.desc":
-    "1RM, TDEE, macros, grasa corporal y más — los resultados se actualizan mientras escribes, y puedes compartir o guardar cualquiera.",
+    "1RM, TDEE, macros, grasa corporal y más. Los resultados se actualizan mientras escribes, y puedes compartir o guardar cualquiera.",
   "about.features.docs.title": "Guías basadas en evidencia",
   "about.features.docs.desc":
     "Una base de conocimientos sobre nutrición, entrenamiento y recuperación, con fuentes que puedes verificar.",
@@ -524,7 +610,7 @@ export const es: Record<TranslationKey, string> = {
   "about.features.cmd.desc":
     "Salta a cualquier calculadora, guía o página con una tecla.",
   "about.features.glossaryHint":
-    "¿Ves un término resaltado? Tócalo para una definición clara — como",
+    "¿Ves un término resaltado? Tócalo para una definición clara, como",
   "docs.noResults": "Sin resultados.",
   "docs.readingTime": "{minutes} min de lectura",
   "docs.onThisPage": "En esta página",
@@ -532,7 +618,7 @@ export const es: Record<TranslationKey, string> = {
   "docs.reviewedBy": "Escrito y revisado por",
   "docs.lastUpdated": "Última actualización",
   "docs.disclaimer":
-    "Contenido educativo. No es consejo médico — consulta a un profesional para tu caso.",
+    "Contenido educativo. No es consejo médico; consulta a un profesional para tu caso.",
   "docs.category.gettingStarted": "Primeros pasos",
   "docs.category.calculators": "Calculadoras",
   "docs.category.nutrition": "Nutrición",
@@ -561,7 +647,7 @@ export const es: Record<TranslationKey, string> = {
   "footer.company": "Proyecto",
   "footer.calculators": "Calculadoras",
   "footer.tagline2":
-    "Calculadoras y guías de fitness gratis y de código abierto — sin cuenta, sin muros de pago, hechas para lifters.",
+    "Calculadoras y guías de fitness gratis y de código abierto: sin cuenta, sin muros de pago, hechas para lifters.",
   "footer.about": "Acerca de",
   "footer.privacy": "Privacidad",
   "footer.terms": "Términos",
@@ -573,7 +659,7 @@ export const es: Record<TranslationKey, string> = {
 
   "contact.title": "Hablemos",
   "contact.subtitle":
-    "Dudas, comentarios, un error o una colaboración — envía un mensaje y llegará directo a mi bandeja de entrada.",
+    "Dudas, comentarios, un error o una colaboración: envía un mensaje y llegará directo a mi bandeja de entrada.",
   "contact.nameLabel": "Nombre",
   "contact.emailLabel": "Correo",
   "contact.messageLabel": "Mensaje",
@@ -582,8 +668,7 @@ export const es: Record<TranslationKey, string> = {
   "contact.messagePlaceholder": "¿En qué puedo ayudarte?",
   "contact.submit": "Enviar mensaje",
   "contact.sending": "Enviando…",
-  "contact.success":
-    "¡Gracias! Tu mensaje va en camino — te responderé pronto.",
+  "contact.success": "¡Gracias! Tu mensaje va en camino. Te responderé pronto.",
   "contact.sendAnother": "Enviar otro mensaje",
   "contact.developer": "Desarrollado y mantenido por",
   "contact.errorRequired": "Este campo es obligatorio.",
@@ -604,27 +689,27 @@ export const es: Record<TranslationKey, string> = {
 
   "download.title": "Lleva Metri en tu teléfono",
   "download.subtitle":
-    "Gratis, open source y offline-first. No requiere cuenta — una cuenta gratuita opcional añade extras.",
+    "Gratis, open source y offline-first. No requiere cuenta; una cuenta gratuita opcional añade extras.",
   "download.ios": "Descargar en el App Store",
   "download.android": "Disponible en Google Play",
   "download.scan": "Escanea para descargar",
   "download.devBadge": "App móvil en desarrollo",
   "download.devTitle": "Una app nativa está en camino",
   "download.devBody":
-    "Metri es gratis y de código abierto en la web — todas las calculadoras y guías, sin cuenta, para siempre. La app nativa de iOS y Android es un extra opcional que funciona por completo sin cuenta (modo local); una cuenta gratuita añade exportar/importar y restauración del perfil, y Premium añade sync automático en la nube.",
+    "Metri es gratis y de código abierto en la web: todas las calculadoras y guías, sin cuenta, para siempre. La app nativa de iOS y Android es un extra opcional que funciona por completo sin cuenta (modo local); una cuenta gratuita añade exportar/importar y restauración del perfil, y Premium añade sync automático en la nube.",
   "download.devCtaTools": "Explorar las calculadoras",
   "download.devCtaGithub": "Sigue el avance en GitHub",
 
-  "download.betaBadge": "Versión beta — instalación manual",
+  "download.betaBadge": "Versión beta · instalación manual",
   "download.betaTitle": "Prueba la beta de Metri",
   "download.betaBody":
-    "La app nativa de Android está disponible como descarga directa mientras preparamos el lanzamiento en tienda. Descarga el APK más reciente abajo — recibe actualizaciones OTA entre versiones. Úsala sin cuenta (modo local, tus datos se quedan en tu teléfono) o crea una gratuita — correo o Google / GitHub, sin tarjeta — para exportar/importar y restaurar tu perfil. Premium añade sync automático en la nube.",
+    "La app nativa de Android está disponible como descarga directa mientras preparamos el lanzamiento en tienda. Descarga el APK más reciente abajo; recibe actualizaciones OTA entre versiones. Úsala sin cuenta (modo local, tus datos se quedan en tu teléfono) o crea una gratuita (correo o Google / GitHub, sin tarjeta) para exportar/importar y restaurar tu perfil. Premium añade sync automático en la nube.",
   "download.androidDownload": "Descargar APK para Android",
-  "download.iosBeta": "Beta de iOS — próximamente",
+  "download.iosBeta": "Beta de iOS · próximamente",
   "download.githubReleases": "Ver todos los releases y changelog",
   "download.disclaimerTitle": "Antes de instalar",
   "download.disclaimer":
-    "Metri todavía no está en el App Store ni en Google Play. Esta es una beta temprana que instalas bajo tu propio riesgo. Tu navegador y tu teléfono probablemente te mostrarán advertencias al instalar una app fuera de la tienda — es normal al instalar fuera de la tienda (sideload) y no significa que sea insegura. La app está en desarrollo activo, así que las funciones pueden cambiar o fallar entre versiones.",
+    "Metri todavía no está en el App Store ni en Google Play. Esta es una beta temprana que instalas bajo tu propio riesgo. Tu navegador y tu teléfono probablemente te mostrarán advertencias al instalar una app fuera de la tienda; es normal al instalar fuera de la tienda (sideload) y no significa que sea insegura. La app está en desarrollo activo, así que las funciones pueden cambiar o fallar entre versiones.",
 
   "download.releaseTitle": "Última versión",
   "download.version": "Versión {version}",
@@ -649,7 +734,7 @@ export const es: Record<TranslationKey, string> = {
     "Cada versión publica su SHA-256. Compáralo antes de instalar si descargaste desde una computadora.",
   "download.copy": "Copiar",
   "download.noReleaseYet":
-    "Todavía no hay una versión publicada — el botón lleva a la página de releases en GitHub.",
+    "Todavía no hay una versión publicada; el botón lleva a la página de releases en GitHub.",
   "download.reqAndroid": "Android 7.0 o más reciente",
   "download.reqSize": "Unos {size} MB",
   "download.reqSizeUnknown": "Descarga ligera",
@@ -661,7 +746,7 @@ export const es: Record<TranslationKey, string> = {
   "download.modeFree":
     "Cuenta gratis: recuperación de contraseña, restauración del perfil, historial y favoritos en la web.",
   "download.modePremium":
-    "Premium: sync y copia de seguridad automáticos en la nube — gratis durante la beta, bajo petición.",
+    "Premium: sync y copia de seguridad automáticos en la nube, gratis durante la beta, bajo petición.",
   "download.iosNote":
     "iOS es lo siguiente. Mientras tanto, la app web se instala en iPhone desde el menú de compartir de Safari.",
   "download.faqTitle": "Preguntas frecuentes",
@@ -694,6 +779,15 @@ export const es: Record<TranslationKey, string> = {
 
   "account.tier.request": "Solicitar acceso",
 
+  "releaseEmail.badge": "Nueva versión",
+  "releaseEmail.whatsNew": "Qué cambió",
+  "releaseEmail.installTitle": "Instálala en tres pasos",
+  "releaseEmail.step1":
+    "Abre este correo en tu teléfono Android y toca el botón de arriba.",
+  "releaseEmail.step2":
+    "Permite la instalación cuando Android lo pida; la app se actualiza sin borrar tus datos.",
+  "releaseEmail.step3":
+    "Abre Metri. Las siguientes versiones se actualizan solas.",
   "releaseEmail.subject": "Ya salió Metri {version}",
   "releaseEmail.preview": "Novedades de Metri {version}",
   "releaseEmail.heading": "Ya salió Metri {version}",
@@ -702,7 +796,7 @@ export const es: Record<TranslationKey, string> = {
   "releaseEmail.download": "Descargar para Android",
   "releaseEmail.downloadPage": "Abrir la página de descarga",
   "releaseEmail.tagline":
-    "Metri — fitness de código abierto, hecho para quienes entrenan.",
+    "Metri · fitness de código abierto, hecho para quienes entrenan.",
   "releaseEmail.footer":
     "Recibes este correo porque tu cuenta de Metri tiene activados los avisos de nuevas versiones.",
   "releaseEmail.unsubscribe": "Dejar de recibir avisos de versiones",
@@ -710,7 +804,7 @@ export const es: Record<TranslationKey, string> = {
   "unsubscribe.metaTitle": "Avisos de versiones",
   "unsubscribe.title": "¿Dejar de recibir avisos de versiones?",
   "unsubscribe.body":
-    "Te escribimos cuando sale una nueva versión de la app de Metri. Confirma abajo y dejaremos de hacerlo — tu cuenta y tus datos quedan exactamente igual.",
+    "Te escribimos cuando sale una nueva versión de la app de Metri. Confirma abajo y dejaremos de hacerlo; tu cuenta y tus datos quedan exactamente igual.",
   "unsubscribe.confirm": "Cancelar suscripción",
   "unsubscribe.doneTitle": "Suscripción cancelada",
   "unsubscribe.doneBody":
@@ -723,6 +817,16 @@ export const es: Record<TranslationKey, string> = {
   "favorites.pin": "Añadir a favoritos",
   "favorites.unpin": "Quitar de favoritos",
 
+  "history.search": "Busca en tu historial…",
+  "history.filtersTitle": "Filtrar historial",
+  "history.filterCalculator": "Calculadora",
+  "history.filterDate": "Guardado",
+  "history.colCalculator": "Calculadora",
+  "history.colResult": "Resultado",
+  "history.colSaved": "Guardado",
+  "history.emptyTitle": "Ningún cálculo guardado coincide",
+  "history.emptyHint":
+    "Guarda un resultado desde cualquier calculadora y aparecerá aquí.",
   "account.title": "Mi cuenta",
   "account.subtitle": "Tu historial de cálculos y favoritos, en un solo lugar.",
   "account.memberSince": "Miembro desde",
@@ -742,8 +846,6 @@ export const es: Record<TranslationKey, string> = {
     "Sync automático en la nube de los datos de entrenamiento, cuerpo y comida de la app. Gratis durante la beta, bajo petición.",
   "account.historyTitle": "Historial de cálculos",
   "account.historySubtitle": "Tus cálculos más recientes.",
-  "account.historyEmpty":
-    "Aún no hay cálculos. Prueba una de las calculadoras para ver tu historial aquí.",
   "account.favoritesTitle": "Favoritos",
   "account.favoritesSubtitle": "Calculadoras y guías que has fijado.",
   "account.favoritesEmpty":
@@ -751,11 +853,6 @@ export const es: Record<TranslationKey, string> = {
   "account.favoriteCalculators": "Calculadoras",
   "account.favoriteDocs": "Guías",
   "account.openCalculator": "Abrir calculadora",
-  "account.viewAllHistory": "Mostrando tus {count} cálculos más recientes.",
-  "account.historyCount": "{count} guardados",
-  "account.historyPageInfo": "Página {page} de {total}",
-  "account.historyPrev": "Anterior",
-  "account.historyNext": "Siguiente",
   "account.loggedAt": "Registrado",
   "account.settingsTitle": "Ajustes",
   "account.settingsSubtitle": "Gestiona tu perfil, contraseña y conexiones.",
@@ -827,7 +924,7 @@ export const es: Record<TranslationKey, string> = {
   "notifications.desc": "Lo que Metri puede enviar a esta cuenta.",
   "notifications.releaseTitle": "Correos de nueva versión",
   "notifications.releaseDesc":
-    "Un correo cuando sale una nueva compilación de la app de Android, con los cambios y el enlace de descarga. Nada más — sin marketing.",
+    "Un correo cuando sale una nueva compilación de la app de Android, con los cambios y el enlace de descarga. Nada más, sin marketing.",
   "notifications.pushNote":
     "Los recordatorios de entrenamiento, el temporizador de descanso y los tips son notificaciones en tu teléfono. Se configuran en la app, en Notificaciones, y nunca salen del dispositivo.",
   "notifications.savedAutomatically": "Los cambios se guardan al activarlos.",
@@ -879,7 +976,7 @@ export const es: Record<TranslationKey, string> = {
   "settings.errorPasswordMatch": "Las contraseñas no coinciden.",
   "settings.errorCurrentPassword": "Tu contraseña actual es incorrecta.",
   "settings.setPasswordEmailFallback":
-    "Te enviamos un enlace por correo para crear tu contraseña — revisa tu bandeja.",
+    "Te enviamos un enlace por correo para crear tu contraseña. Revisa tu bandeja.",
 
   "settings.connectionsTitle": "Cuentas vinculadas",
   "settings.connectionsDesc":

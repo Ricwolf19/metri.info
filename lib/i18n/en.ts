@@ -15,7 +15,7 @@ export const en = {
   "pwa.dismiss": "Dismiss",
   "pwa.offlineTitle": "You're offline",
   "pwa.offlineBody":
-    "We couldn't reach the network. Calculators you've already opened still work offline — everything is computed on your device.",
+    "We couldn't reach the network. Calculators you've already opened still work offline: everything is computed on your device.",
   "pwa.offlineHome": "Back to home",
 
   "lang.en": "English",
@@ -36,6 +36,9 @@ export const en = {
   "nav.contact": "Contact",
   "nav.changelog": "Changelog",
   "nav.menu": "Menu",
+  "nav.sections": "Sections",
+  "nav.links": "Links",
+  "nav.currentPage": "Current page",
 
   "cmd.title": "Command menu",
   "cmd.open": "Search",
@@ -69,7 +72,7 @@ export const en = {
   "auth.brandTitle": "Train smarter,",
   "auth.brandHighlight": "track everything.",
   "auth.brandSubtitle":
-    "Free fitness calculators and guides — your account keeps your results in sync.",
+    "Free fitness calculators and guides. Your account keeps your results in sync.",
   "auth.forgotPassword": "Forgot password?",
   "auth.newPassword": "New password",
   "auth.confirmPassword": "Confirm password",
@@ -99,10 +102,10 @@ export const en = {
     "Couldn't reach the server. Check your connection and try again.",
   "auth.errorInvalidToken": "This link is invalid or has expired.",
   "auth.signUpCheckEmail":
-    "Check your inbox — we sent a confirmation link to finish setting up your account.",
+    "Check your inbox: we sent a confirmation link to finish setting up your account.",
   "auth.openInbox": "Open Gmail",
   "auth.checkSpam":
-    "Didn't see it? Check your spam folder, or wait a minute — some providers take a moment to deliver.",
+    "Didn't see it? Check your spam folder, or wait a minute; some providers take a moment to deliver.",
   "auth.errorEmailNotVerified":
     "Please confirm your email first. Check your inbox (or spam folder) for the link we sent.",
   "auth.errorBot":
@@ -110,16 +113,15 @@ export const en = {
   "auth.recaptchaNotice":
     "Protected by reCAPTCHA. The Google Privacy Policy and Terms of Service apply.",
 
-  "hero.kicker": "Open source · Offline-first · Free Android beta",
+  "hero.kicker": "Open source · Offline-first app · Free web tools and guides",
   "hero.title": "Track. Progress. Evolve.",
   "hero.subtitle":
-    "The open-source training companion: a free Android app for programs, sets, body check-ins and food, plus 17 calculators and an evidence-based knowledge base on the web.",
+    "One open-source training system, in two places that work together: a free, offline-first Android app for programs, sets, body check-ins and food, and this site, with 17 calculators, an evidence-based knowledge base and a knowledge check that run in any browser.",
   "hero.ctaDownload": "Download App",
-  "hero.ctaDocs": "Explore Docs",
   "hero.ctaTools": "Try the Calculators",
 
   "tour.eyebrow": "The mobile app",
-  "tour.eyebrowBeta": "Android beta — install today",
+  "tour.eyebrowBeta": "Android beta · install today",
   "tour.title": "One app for the whole",
   "tour.highlight": "training loop.",
   "tour.subtitle":
@@ -246,21 +248,97 @@ export const en = {
   "plans.premium.f3": "Synced activity views on the web",
   "plans.premium.f4": "Future apps included (watch in progress)",
   "plans.note":
-    "Premium needs a free account first. During the open beta it is granted on request by email — there is no payment, card or trial. Details in the",
+    "Premium needs a free account first. During the open beta it is granted on request by email; there is no payment, card or trial. Details in the",
   "plans.noteLink": "Terms.",
   "plans.ctaCreate": "Create a free account",
   "plans.ctaPremium": "Request Premium access",
 
+  "quiz.title": "Knowledge check",
+  "quiz.eyebrow": "Free · 4 to 16 questions · about 5 minutes",
+  "quiz.seoDescription":
+    "A free, adaptive knowledge check across nutrition, training, body composition and the fundamentals. It starts easy, stops at your level, and tells you what to study next.",
+  "quiz.introTitle": "Check what you know",
+  "quiz.introBody":
+    "One question at a time across four areas. Each correct answer moves that area up a level, from basic to pro; the first miss closes it. Every answer is explained, so you learn either way.",
+  "quiz.start": "Start",
+  "quiz.retake": "Take it again",
+  "quiz.resultTitle": "Your knowledge map",
+  "quiz.resultBody":
+    "The highest level you cleared in each area. The guides below cover every level.",
+  "quiz.questionN": "Question {n}",
+  "quiz.dontKnow": "I don't know",
+  "quiz.next": "Next question",
+  "quiz.seeResult": "See my map",
+  "quiz.correct": "Correct.",
+  "quiz.incorrect": "Not quite.",
+  "quiz.answerWas": "The answer: {answer}",
+  "quiz.why": "Why",
+  "quiz.autoNext":
+    "The next question comes on its own. Pause it with the button.",
+  "quiz.cardTitle": "Knowledge check",
+  "quiz.cardBody":
+    "Find your level in nutrition, training, body composition and the fundamentals.",
+  "quiz.cardCta": "Take the test",
+  "quiz.heroCta": "Take the knowledge check",
+  "quiz.area.nutrition": "Nutrition",
+  "quiz.area.training": "Training",
+  "quiz.area.body": "Body composition",
+  "quiz.area.fundamentals": "Fundamentals",
+  "quiz.areaShort.nutrition": "Nutr",
+  "quiz.areaShort.training": "Train",
+  "quiz.areaShort.body": "Body",
+  "quiz.areaShort.fundamentals": "Fund",
+  "quiz.level0": "Starting out",
+  "quiz.level1": "Basic",
+  "quiz.level2": "Intermediate",
+  "quiz.level3": "Advanced",
+  "quiz.level4": "Pro",
+  "quiz.levelOf": "{level} · {n}/4",
+  "quiz.studyTitle": "What to study next",
+  "quiz.studyAllClear":
+    "You cleared every area. Keep the edge with the latest guides.",
+  "quiz.studyGuides": "Open the {area} guides",
+  "quiz.lastResult": "Your last result",
+  "quiz.lastTaken": "Taken {date}",
+  "quiz.saved": "Saved to your activity",
+  "quiz.saveFailed":
+    "Couldn't save this attempt. Your result is kept on this device.",
+  "quiz.keepHint":
+    "Results stay on this device. Sign in or create a free account to keep your history on your activity page.",
+  "quiz.keptLocally": "Kept on this device",
+  "quiz.historyTitle": "Knowledge check",
+  "quiz.historySubtitle":
+    "Your attempts, newest first, and where to read next.",
+  "quiz.historyEmpty":
+    "No attempts yet. Take the check and your map appears here.",
+  "quiz.remaining": "up to {n} more",
+  "quiz.pause": "Pause the countdown",
+  "quiz.resume": "Resume the countdown",
+  "quiz.review": "Review these",
+  "quiz.reviewHint":
+    "The questions you missed, with the explanation and where to read more.",
+  "quiz.shareCta": "Share my map",
+  "quiz.shareTitle": "Share your knowledge map",
+  "quiz.shareDesc":
+    "The link opens your map; the image is ready for chats and posts.",
+  "quiz.sharedTitle": "A shared knowledge map",
+  "quiz.sharedBody":
+    "Someone sent you their result. Take the check to get your own.",
+  "quiz.signUpCta": "Create a free account to keep this result",
+  "quiz.signInCta": "Sign in",
+  "quiz.attemptMeta": "{n} questions",
+  "quiz.progress": "{area} · {level}",
+
   "tools.title": "Calculators & Tools",
   "tools.subtitle":
-    "The same formulas as the app — run instantly in your browser. Share results with a link.",
+    "The same formulas as the app, run instantly in your browser. Share results with a link.",
   "tools.searchPlaceholder": "Search calculators…",
   "tools.noResults": "No calculators match your search.",
   "tools.popular": "Popular",
   "tools.example.title": "See it the moment you type.",
   "tools.example.body":
-    "Every input recalculates instantly — no submit button. Results are colour-coded against healthy ranges and shareable in one tap.",
-  "tools.example.p1": "Instant — runs on every keystroke",
+    "Every input recalculates instantly, no submit button. Results are colour-coded against healthy ranges and shareable in one tap.",
+  "tools.example.p1": "Instant: runs on every keystroke",
   "tools.example.p2": "Colour-coded ranges and goals",
   "tools.example.p3": "Share or save any result",
   "tools.example.caption":
@@ -299,7 +377,7 @@ export const en = {
   "calc.shareCta": "Share result",
   "calc.shareTitle": "Share this result",
   "calc.shareDesc":
-    "Anyone with the link sees the same inputs and result — no account needed.",
+    "Anyone with the link sees the same inputs and result, no account needed.",
   "calc.shareQrHint": "Scan to open on your phone",
   "calc.shareNative": "Share…",
   "calc.cardTitle": "Result card",
@@ -323,17 +401,25 @@ export const en = {
   "calc.savePromptPrivacyLink": "Privacy Policy",
   "calc.savePromptCreate": "Create free account",
   "calc.savePromptSignIn": "Sign in",
+  "share.action": "Share",
+  "share.copyLink": "Copy link",
+  "share.copied": "Link copied",
+  "share.copyFailed": "Couldn't copy the link. Here it is:",
+  "share.copyImage": "Copy image",
+  "share.imageCopied": "Image copied to the clipboard",
+  "share.copyImageFailed":
+    "This browser can't copy images. Download it instead.",
   "share.open": "Open the calculator",
   "share.note":
-    "Computed instantly in your browser — open it to change the inputs.",
+    "Computed instantly in your browser. Open it to change the inputs.",
   "calc.metric": "Metric",
   "calc.imperial": "Imperial",
-  "calc.profilePrefilled": "Prefilled from your profile — edit anything below.",
+  "calc.profilePrefilled": "Prefilled from your profile. Edit anything below.",
   "calc.bodyFatOptional": "Body fat (optional)",
   "calc.macrosLeanBasis":
     "Protein is scaled to your lean mass (2.2 g/kg), not your bodyweight.",
   "calc.macrosCarbsExhausted":
-    "Protein and fat alone already use up these calories — raise calories or lower the targets.",
+    "Protein and fat alone already use up these calories. Raise calories or lower the targets.",
   "calc.bodyFat": "Body fat",
   "calc.neck": "Neck",
   "calc.waist": "Waist",
@@ -453,7 +539,7 @@ export const en = {
   "calc.relatedGuides": "Learn the concepts",
   "calc.trustTitle": "Free & open source",
   "calc.trustBody":
-    "Every Metri calculator runs in your browser — no account, no paywall, no tracking.",
+    "Every Metri calculator runs in your browser: no account, no paywall, no tracking.",
   "calc.trustCta": "Browse all calculators",
 
   "muscle.chest": "Chest",
@@ -476,16 +562,16 @@ export const en = {
 
   "docs.title": "Knowledge Base",
   "docs.subtitle":
-    "Evidence-based guides on nutrition, training and recovery — written for lifters, not clickbait.",
+    "Evidence-based guides on nutrition, training and recovery, written for lifters, not clickbait.",
   "docs.searchPlaceholder": "Search the docs…",
   "docs.example.title": "Plain-English, evidence-based.",
   "docs.example.body":
-    "Every guide explains the why — formulas, ranges and trade-offs — with sources you can check.",
+    "Every guide explains the why (formulas, ranges and trade-offs) with sources you can check.",
   "docs.example.p1": "Written for humans, not textbooks",
   "docs.example.p2": "Cited, reviewed and kept current",
   "docs.example.snippetTitle": "How to read your BMI",
   "docs.example.snippetBody":
-    "BMI is a screening tool, not a diagnosis — it can't tell muscle from fat, which is why many athletes read as “overweight”.",
+    "BMI is a screening tool, not a diagnosis: it can't tell muscle from fat, which is why many athletes read as “overweight”.",
   "glossary.search": "Search terms…",
   "glossary.empty": "No terms match.",
   "glossary.relatedLabel": "Guides",
@@ -493,10 +579,10 @@ export const en = {
   "about.features.eyebrow": "Features",
   "about.features.title": "What you can do with Metri",
   "about.features.lead":
-    "Free tools and guides for serious lifters — no account needed to start.",
+    "Free tools and guides for serious lifters. No account needed to start.",
   "about.features.calc.title": "17 instant calculators",
   "about.features.calc.desc":
-    "1RM, TDEE, macros, body fat and more — results update as you type, and you can share or save any of them.",
+    "1RM, TDEE, macros, body fat and more. Results update as you type, and you can share or save any of them.",
   "about.features.docs.title": "Evidence-based guides",
   "about.features.docs.desc":
     "A knowledge base on nutrition, training and recovery, with sources you can check.",
@@ -510,7 +596,7 @@ export const en = {
   "about.features.cmd.desc":
     "Jump to any calculator, guide or page in a keystroke.",
   "about.features.glossaryHint":
-    "See a highlighted term anywhere? Tap it for a plain-English definition — like",
+    "See a highlighted term anywhere? Tap it for a plain-English definition, like",
   "docs.noResults": "No results found.",
   "docs.readingTime": "{minutes} min read",
   "docs.onThisPage": "On this page",
@@ -518,7 +604,7 @@ export const en = {
   "docs.reviewedBy": "Written & reviewed by",
   "docs.lastUpdated": "Last updated",
   "docs.disclaimer":
-    "Educational content only. Not medical advice — consult a professional for your situation.",
+    "Educational content only. Not medical advice; consult a professional for your situation.",
   "docs.category.gettingStarted": "Getting started",
   "docs.category.calculators": "Calculators",
   "docs.category.nutrition": "Nutrition",
@@ -546,7 +632,7 @@ export const en = {
   "footer.company": "Project",
   "footer.calculators": "Calculators",
   "footer.tagline2":
-    "Free, open-source fitness calculators and guides — no account, no paywall, built for lifters.",
+    "Free, open-source fitness calculators and guides: no account, no paywall, built for lifters.",
   "footer.about": "About",
   "footer.privacy": "Privacy",
   "footer.terms": "Terms",
@@ -558,7 +644,7 @@ export const en = {
 
   "contact.title": "Get in touch",
   "contact.subtitle":
-    "Questions, feedback, a bug report, or a partnership — send a message and it lands straight in my inbox.",
+    "Questions, feedback, a bug report, or a partnership: send a message and it lands straight in my inbox.",
   "contact.nameLabel": "Name",
   "contact.emailLabel": "Email",
   "contact.messageLabel": "Message",
@@ -567,7 +653,7 @@ export const en = {
   "contact.messagePlaceholder": "How can I help?",
   "contact.submit": "Send message",
   "contact.sending": "Sending…",
-  "contact.success": "Thanks! Your message is on its way — I'll reply soon.",
+  "contact.success": "Thanks! Your message is on its way. I'll reply soon.",
   "contact.sendAnother": "Send another message",
   "contact.developer": "Built and maintained by",
   "contact.errorRequired": "This field is required.",
@@ -587,27 +673,27 @@ export const en = {
 
   "download.title": "Get Metri on your phone",
   "download.subtitle":
-    "Free, open source and offline-first. No account needed — an optional free one adds extras.",
+    "Free, open source and offline-first. No account needed; an optional free one adds extras.",
   "download.ios": "Download on the App Store",
   "download.android": "Get it on Google Play",
   "download.scan": "Scan to download",
   "download.devBadge": "Mobile app in development",
   "download.devTitle": "A native app is on the way",
   "download.devBody":
-    "Metri is free and open source on the web — every calculator and guide, no account, forever. The native iOS and Android app is an optional extra that works fully without an account (local mode); a free account adds export/import and profile restore, and Premium adds automatic cloud sync.",
+    "Metri is free and open source on the web: every calculator and guide, no account, forever. The native iOS and Android app is an optional extra that works fully without an account (local mode); a free account adds export/import and profile restore, and Premium adds automatic cloud sync.",
   "download.devCtaTools": "Explore the calculators",
   "download.devCtaGithub": "Follow progress on GitHub",
 
-  "download.betaBadge": "Beta build — manual install",
+  "download.betaBadge": "Beta build · manual install",
   "download.betaTitle": "Try the Metri beta",
   "download.betaBody":
-    "The native Android app is available as a direct download while we prepare the store release. Grab the latest APK below — it self-updates over the air between builds. Use it with no account at all (local mode, data stays on your phone), or create a free one — email or Google / GitHub, no card — for export/import and profile restore. Premium adds automatic cloud sync.",
+    "The native Android app is available as a direct download while we prepare the store release. Grab the latest APK below; it self-updates over the air between builds. Use it with no account at all (local mode, data stays on your phone), or create a free one (email or Google / GitHub, no card) for export/import and profile restore. Premium adds automatic cloud sync.",
   "download.androidDownload": "Download APK for Android",
-  "download.iosBeta": "iOS beta — coming soon",
+  "download.iosBeta": "iOS beta · coming soon",
   "download.githubReleases": "See all releases & changelog",
   "download.disclaimerTitle": "Before you install",
   "download.disclaimer":
-    "Metri isn’t on the App Store or Google Play yet. This is an early beta you install at your own risk. Your browser and phone will likely warn you about installing an app from outside the store — that’s normal for sideloaded apps and doesn’t mean it’s unsafe. The app is under active development, so features may change or break between builds.",
+    "Metri isn’t on the App Store or Google Play yet. This is an early beta you install at your own risk. Your browser and phone will likely warn you about installing an app from outside the store; that’s normal for sideloaded apps and doesn’t mean it’s unsafe. The app is under active development, so features may change or break between builds.",
 
   "download.releaseTitle": "Latest release",
   "download.version": "Version {version}",
@@ -632,7 +718,7 @@ export const en = {
     "Every release ships with its SHA-256. Compare it before installing if you downloaded on a computer.",
   "download.copy": "Copy",
   "download.noReleaseYet":
-    "No release has been published yet — the button links to the GitHub releases page.",
+    "No release has been published yet; the button links to the GitHub releases page.",
   "download.reqAndroid": "Android 7.0 or newer",
   "download.reqSize": "About {size} MB",
   "download.reqSizeUnknown": "Small download",
@@ -644,7 +730,7 @@ export const en = {
   "download.modeFree":
     "Free account: password recovery, profile restore, history and favorites on the web.",
   "download.modePremium":
-    "Premium: automatic cloud sync and backup — free during the beta, on request.",
+    "Premium: automatic cloud sync and backup, free during the beta, on request.",
   "download.iosNote":
     "iOS is next. Until then the web app installs on iPhone from Safari's share menu.",
   "download.faqTitle": "Common questions",
@@ -677,6 +763,14 @@ export const en = {
 
   "account.tier.request": "Request access",
 
+  "releaseEmail.badge": "New release",
+  "releaseEmail.whatsNew": "What changed",
+  "releaseEmail.installTitle": "Install in three steps",
+  "releaseEmail.step1":
+    "Open this email on your Android phone and tap the button above.",
+  "releaseEmail.step2":
+    "Allow the install when Android asks; the app updates in place and keeps your data.",
+  "releaseEmail.step3": "Open Metri. Later versions arrive over the air.",
   "releaseEmail.subject": "Metri {version} is out",
   "releaseEmail.preview": "What's new in Metri {version}",
   "releaseEmail.heading": "Metri {version} is out",
@@ -684,7 +778,7 @@ export const en = {
     "A new version of the Metri Android app is ready. Here's what changed:",
   "releaseEmail.download": "Download for Android",
   "releaseEmail.downloadPage": "Open the download page",
-  "releaseEmail.tagline": "Metri — open-source fitness, built for lifters.",
+  "releaseEmail.tagline": "Metri · open-source fitness, built for lifters.",
   "releaseEmail.footer":
     "You're getting this because your Metri account has release emails turned on.",
   "releaseEmail.unsubscribe": "Unsubscribe from release emails",
@@ -692,7 +786,7 @@ export const en = {
   "unsubscribe.metaTitle": "Release emails",
   "unsubscribe.title": "Stop release emails?",
   "unsubscribe.body":
-    "We email you when a new version of the Metri app ships. Confirm below and we'll stop — your account and data stay exactly as they are.",
+    "We email you when a new version of the Metri app ships. Confirm below and we'll stop; your account and data stay exactly as they are.",
   "unsubscribe.confirm": "Unsubscribe",
   "unsubscribe.doneTitle": "You're unsubscribed",
   "unsubscribe.doneBody":
@@ -705,6 +799,16 @@ export const en = {
   "favorites.pin": "Add to favorites",
   "favorites.unpin": "Remove from favorites",
 
+  "history.search": "Search your history…",
+  "history.filtersTitle": "Filter history",
+  "history.filterCalculator": "Calculator",
+  "history.filterDate": "Saved",
+  "history.colCalculator": "Calculator",
+  "history.colResult": "Result",
+  "history.colSaved": "Saved",
+  "history.emptyTitle": "No saved calculations match",
+  "history.emptyHint":
+    "Save a result from any calculator and it shows up here.",
   "account.title": "My account",
   "account.subtitle": "Your calculation history and favorites, in one place.",
   "account.memberSince": "Member since",
@@ -724,8 +828,6 @@ export const en = {
     "Automatic cloud sync of the app's training, body and food data. Free during the beta, on request.",
   "account.historyTitle": "Calculation history",
   "account.historySubtitle": "Your most recent calculations.",
-  "account.historyEmpty":
-    "No calculations yet. Try one of the calculators to see your history here.",
   "account.favoritesTitle": "Favorites",
   "account.favoritesSubtitle": "Calculators and guides you've pinned.",
   "account.favoritesEmpty":
@@ -733,11 +835,6 @@ export const en = {
   "account.favoriteCalculators": "Calculators",
   "account.favoriteDocs": "Guides",
   "account.openCalculator": "Open calculator",
-  "account.viewAllHistory": "Showing your {count} most recent calculations.",
-  "account.historyCount": "{count} saved",
-  "account.historyPageInfo": "Page {page} of {total}",
-  "account.historyPrev": "Previous",
-  "account.historyNext": "Next",
   "account.loggedAt": "Logged",
   "account.settingsTitle": "Settings",
   "account.settingsSubtitle": "Manage your profile, password and connections.",
@@ -807,7 +904,7 @@ export const en = {
   "notifications.desc": "What Metri is allowed to send to this account.",
   "notifications.releaseTitle": "New-version emails",
   "notifications.releaseDesc":
-    "One email when a new build of the Android app ships, with what changed and the download link. Nothing else — no marketing.",
+    "One email when a new build of the Android app ships, with what changed and the download link. Nothing else, no marketing.",
   "notifications.pushNote":
     "Workout reminders, the rest timer and tips are notifications on your phone. They are configured in the app under Notifications and never leave the device.",
   "notifications.savedAutomatically": "Changes are saved as you flip them.",
@@ -855,7 +952,7 @@ export const en = {
   "settings.errorPasswordMatch": "Passwords don't match.",
   "settings.errorCurrentPassword": "Your current password is incorrect.",
   "settings.setPasswordEmailFallback":
-    "We've emailed you a link to set your password — check your inbox.",
+    "We've emailed you a link to set your password. Check your inbox.",
 
   "settings.connectionsTitle": "Linked accounts",
   "settings.connectionsDesc":
@@ -870,7 +967,7 @@ export const en = {
   "settings.connectionsNoPasswordNotice":
     "You don't have a password yet. Set one under Password so you can still sign in if you disconnect a provider.",
   "settings.lastMethodNotice":
-    "This is your only way to sign in — add another sign-in method before disconnecting it.",
+    "This is your only way to sign in; add another sign-in method before disconnecting it.",
   "settings.disconnected": "Disconnected.",
   "settings.connectError": "Couldn't connect that account. Please try again.",
 
