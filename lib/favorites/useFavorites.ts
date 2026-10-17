@@ -44,15 +44,22 @@ export const useFavoriteIds = (
         active = false;
       };
     }
-    void listFavorites().then((rows) => {
-      if (!active) return;
-      setState({
-        ids: new Set(
-          rows.filter((r) => r.itemType === itemType).map((r) => r.itemId),
-        ),
-        ready: true,
+    void listFavorites()
+      .then((rows) => {
+        if (!active) return;
+        setState({
+          ids: new Set(
+            rows.filter((r) => r.itemType === itemType).map((r) => r.itemId),
+          ),
+          ready: true,
+        });
+      })
+      .catch(() => {
+        // A stale client after a deploy (action id rotated) or a flaky
+        // network must not surface as an unhandled rejection: keep whatever
+        // the server seeded and let the stars become interactive.
+        if (active) setState((prev) => ({ ids: prev.ids, ready: true }));
       });
-    });
     return () => {
       active = false;
     };

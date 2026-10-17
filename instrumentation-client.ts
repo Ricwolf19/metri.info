@@ -45,6 +45,29 @@ Sentry.init({
   // ("Script error.", googletag, solana, _AutofillCallbackHandler); this adds
   // the protocol-level catch. Deliberately not `allowUrls`, which would also
   // drop real errors whose stack came back truncated or unsymbolicated.
+  // Page translators (Chrome/Edge "Translate this page", extensions) replace
+  // React-owned text nodes in place; the next commit then fails to remove or
+  // reorder a node React no longer owns. Dropped only when the page shows the
+  // translator's own markers, so a real DOM bug of ours still reports.
+  beforeSend: (event, hint) => {
+    const message = String(
+      (hint.originalException as { message?: unknown } | undefined)?.message ??
+        event.message ??
+        "",
+    );
+    const domReorder =
+      /Failed to execute '(removeChild|insertBefore)' on 'Node'/.test(message);
+    if (domReorder && typeof document !== "undefined") {
+      const root = document.documentElement;
+      const translated =
+        root.classList.contains("translated-ltr") ||
+        root.classList.contains("translated-rtl") ||
+        document.querySelector("font[style*='vertical-align: inherit']") !==
+          null;
+      if (translated) return null;
+    }
+    return event;
+  },
   denyUrls: [
     /^chrome-extension:\/\//i,
     /^moz-extension:\/\//i,

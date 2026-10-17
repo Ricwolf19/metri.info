@@ -26,16 +26,21 @@ export const AnimatedNumber = ({
   if (!Number.isFinite(n)) return <span className={className}>{value}</span>;
 
   const fraction = trimmed.split(".")[1]?.length ?? 0;
+  // `translate="no"`: page translators rewrite text nodes in place, and a
+  // digit column that React re-renders a moment later is exactly the node
+  // they break ("removeChild … not a child of this node"). Numbers need no
+  // translation anyway.
   return (
-    <NumberFlow
-      value={n}
-      locales="en-US"
-      format={{
-        minimumFractionDigits: fraction,
-        maximumFractionDigits: fraction,
-        useGrouping: trimmed.includes(","),
-      }}
-      className={className}
-    />
+    <span translate="no" className={className}>
+      <NumberFlow
+        value={n}
+        locales="en-US"
+        format={{
+          minimumFractionDigits: fraction,
+          maximumFractionDigits: fraction,
+          useGrouping: trimmed.includes(","),
+        }}
+      />
+    </span>
   );
 };

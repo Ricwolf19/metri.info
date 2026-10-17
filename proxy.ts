@@ -46,7 +46,23 @@ const prefersSpanish = (header: string | null): boolean => {
 const localeForPath = (pathname: string): Locale =>
   pathname === "/es" || pathname.startsWith("/es/") ? "es" : "en";
 
+/**
+ * Only a real page navigation may be redirected. A Server Action is a POST to
+ * the page's own pathname; redirecting it hands the client an HTML page where
+ * it expects a Flight response ("An unexpected response was received from the
+ * server"). The method is the reliable signal: Next strips the `rsc` /
+ * `next-action` / prefetch headers before the proxy runs, and it already
+ * turns a redirect on an RSC GET into a client-side navigation. `sec-fetch-mode`
+ * additionally lets same-origin `fetch()` GETs through untouched.
+ */
+const isDocumentNavigation = (request: NextRequest): boolean => {
+  if (request.method !== "GET") return false;
+  const mode = request.headers.get("sec-fetch-mode");
+  return mode === null || mode === "navigate";
+};
+
 export const proxy = (request: NextRequest): NextResponse => {
+  if (!isDocumentNavigation(request)) return NextResponse.next();
   const { pathname } = request.nextUrl;
   const hasCookie = request.cookies.has(LOCALE_COOKIE);
   const locale = localeForPath(pathname);
@@ -83,6 +99,6 @@ export const config = {
    * favicons), so the proxy never redirects those.
    */
   matcher: [
-    "/((?!_next/|api/|ingest/|monitoring|og/|sitemap.xml|robots.txt|manifest.webmanifest|sw.js|offline|.*\\.).*)",
+    "/((?!_next/|api/|relay/|monitoring|og/|download/apk|sitemap.xml|robots.txt|manifest.webmanifest|sw.js|offline|.*\\.).*)",
   ],
 };
