@@ -5,7 +5,7 @@ import { randomUUID } from "crypto";
 import { eq } from "drizzle-orm";
 import { revalidatePath, updateTag } from "next/cache";
 
-import { getSession } from "@/lib/auth/session";
+import { requireAdminActor } from "@/lib/admin/actor";
 import { tags } from "@/lib/cache/tags";
 import { db } from "@/lib/db";
 import { subscription, user } from "@/lib/db/schema";
@@ -26,28 +26,6 @@ export type AdminFailReason =
 export type AdminActionResult =
   | { ok: true }
   | { ok: false; reason: AdminFailReason };
-
-type Actor =
-  | { ok: true; adminId: string }
-  | { ok: false; reason: AdminFailReason };
-
-/**
- * Who is calling, re-checked against the DB (never the session token) —
- * mirrors `requireAdmin`, but returns a Result instead of redirecting since
- * these run behind client controls.
- */
-const requireAdminActor = async (): Promise<Actor> => {
-  const session = await getSession();
-  if (!session) return { ok: false, reason: "unauthenticated" };
-
-  const [me] = await db
-    .select({ role: user.role })
-    .from(user)
-    .where(eq(user.id, session.user.id))
-    .limit(1);
-  if (me?.role !== "admin") return { ok: false, reason: "forbidden" };
-  return { ok: true, adminId: session.user.id };
-};
 
 /**
  * Admin-only: grant or revoke premium for a user. Writes the billing

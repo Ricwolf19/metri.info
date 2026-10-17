@@ -1,5 +1,6 @@
 "use client";
 
+import { useListRefresh } from "listkit";
 import { useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -18,13 +19,18 @@ export const PremiumToggle = ({
   const { toast } = useToast();
   const [isPremium, setIsPremium] = useState(plan === "premium");
   const [pending, startTransition] = useTransition();
+  const refreshList = useListRefresh();
 
   const toggle = () => {
     const next = !isPremium;
     setIsPremium(next);
     startTransition(async () => {
       const res = await setUserPremium(userId, next);
-      if (!res.ok) {
+      if (res.ok) {
+        // listkit caches pages for 30 s; without this the row remounts with
+        // the old plan after a filter change or a back navigation.
+        refreshList();
+      } else {
         setIsPremium(!next);
         toast({
           title: "Couldn't update the plan",

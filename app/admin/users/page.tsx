@@ -1,31 +1,36 @@
+import { loadInitialList, type SearchParamsLike } from "listkit/server";
 import { Suspense } from "react";
 
-import { AdminTableSkeleton } from "@/components/admin/AdminSkeleton";
+import { listAdminUsers } from "@/app/admin/users/actions";
 import { PageHeader } from "@/components/admin/ui";
-import { UsersSearch } from "@/components/admin/UsersSearch";
-import { UsersTable } from "@/components/admin/UsersTable";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { UsersList } from "@/components/admin/UsersList";
+import { usersListConfig } from "@/lib/lists/users";
 
-// The table is the only async part — keeping it in its own boundary lets the
-// header and search paint immediately; keying it by the query swaps the
-// skeleton in while a new search streams.
-const UsersPage = async ({
-  searchParams,
-}: {
-  searchParams: Promise<{ q?: string }>;
-}) => {
-  const { q = "" } = await searchParams;
-  return (
-    <>
-      <PageHeader
-        title="Users"
-        description="Registered accounts, newest first. Grant or revoke Premium per user, or delete an account permanently (cascades to everything it owns)."
-      />
-      <UsersSearch initialQuery={q} />
-      <Suspense key={q} fallback={<AdminTableSkeleton />}>
-        <UsersTable query={q} />
-      </Suspense>
-    </>
+type SearchParams = Promise<SearchParamsLike>;
+
+// The list is the only async part. Its first page is computed from the URL on
+// the server (same query the client derives), so the table is in the HTML and
+// the client skips its first fetch.
+const UsersData = async ({ searchParams }: { searchParams: SearchParams }) => {
+  const { initialData, initialQuery } = await loadInitialList(
+    usersListConfig,
+    await searchParams,
+    listAdminUsers,
   );
+  return <UsersList initialData={initialData} initialQuery={initialQuery} />;
 };
+
+const UsersPage = ({ searchParams }: { searchParams: SearchParams }) => (
+  <>
+    <PageHeader
+      title="Users"
+      description="Registered accounts. Search, filter by plan, role, verification or join date, grant or revoke Premium per user, or delete an account permanently (cascades to everything it owns)."
+    />
+    <Suspense fallback={<LoadingScreen label="Loading users…" />}>
+      <UsersData searchParams={searchParams} />
+    </Suspense>
+  </>
+);
 
 export default UsersPage;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useListRefresh } from "listkit";
 import { useState, useTransition } from "react";
 
 import { TrashIcon } from "@/components/icons";
@@ -51,7 +51,7 @@ export const DeleteUserButton = ({
   /** Why the control is unavailable (self / other admin); omitted = enabled. */
   disabledReason?: string;
 }) => {
-  const router = useRouter();
+  const refreshList = useListRefresh();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [typed, setTyped] = useState("");
@@ -64,7 +64,7 @@ export const DeleteUserButton = ({
       if (res.ok) {
         setOpen(false);
         toast({ title: `Deleted ${email}`, variant: "success" });
-        router.refresh();
+        refreshList();
         return;
       }
       toast({
