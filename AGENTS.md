@@ -152,7 +152,8 @@ Contract with the mobile repo's release workflow (the pipeline itself lives ther
   the versioned GitHub asset with `Content-Type: application/vnd.android.package-archive`, a
   filename and Range passthrough. GitHub serves `application/octet-stream`, and Android's download
   manager stalls at 100% / never offers to install on that type. Never link the GitHub asset URL
-  directly from a phone-facing control; keep it as the checksum reference only.
+  directly from a phone-facing control; keep it as the checksum reference only. The release email
+  renders the notes with `links: false` for the same reason: no GitHub link anywhere in it.
 - `proxy.ts` (locale detection) only ever redirects a `GET` document navigation: Server Action
   POSTs, RSC fetches and prefetches pass through untouched, or the client receives HTML where it
   expects a Flight payload ("An unexpected response was received from the server").

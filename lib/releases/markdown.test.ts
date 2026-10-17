@@ -24,6 +24,23 @@ describe("renderReleaseNotes", () => {
     );
   });
 
+  it("drops links and commit references when links are off (email)", () => {
+    const html = renderReleaseNotes(
+      [
+        "## [1.12.0](https://github.com/Ricwolf19/metri/compare/a...b) (2026-09-28)",
+        "",
+        "* **training:** plate math ([abc1234](https://github.com/Ricwolf19/metri/commit/abc1234))",
+        "* see [the guide](https://metri.info/docs/plates) `v2`",
+      ].join("\n"),
+      {},
+      { links: false },
+    );
+    expect(html).toBe(
+      "<h2>1.12.0 (2026-09-28)</h2>\n<ul><li><strong>training:</strong> plate math</li><li>see the guide <code>v2</code></li></ul>",
+    );
+    expect(html).not.toContain("href");
+  });
+
   it("escapes raw HTML instead of rendering it", () => {
     const html = renderReleaseNotes(
       '<script>alert("x")</script>\n* <img src=x onerror=alert(1)>',

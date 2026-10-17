@@ -245,6 +245,9 @@ describe("POST /api/releases/notify — store + announce", () => {
     // The button goes through our APK endpoint (served with the Android package
     // type), never the raw GitHub asset; the stored row keeps the GitHub URL.
     expect(en.html).toContain("/download/apk");
+    // The notes carry no links either: a tap anywhere in the message that
+    // leads to GitHub is "the old download" to a phone user.
+    expect(en.html).not.toContain("github.com");
     expect(en.html).not.toContain("__METRI_UNSUBSCRIBE_URL__");
     expect(en.headers["List-Unsubscribe-Post"]).toBe(
       "List-Unsubscribe=One-Click",

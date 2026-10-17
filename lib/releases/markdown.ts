@@ -8,6 +8,12 @@
  * Safety: the whole source is HTML-escaped BEFORE any markup is added, so raw
  * HTML in the changelog renders as text; links are only produced for http(s)
  * URLs, which the escaping has already made attribute-safe.
+ *
+ * `links: false` keeps the link text and drops the URL, and removes the
+ * trailing `([sha](commit))` reference release-please appends to each bullet.
+ * The email uses it: on a phone the compare link in the heading and a commit
+ * link per line are the largest tappable things in the message, and every one
+ * of them leads to GitHub instead of our download.
  */
 
 type Styles = Partial<
@@ -25,15 +31,18 @@ const escapeHtml = (value: string): string =>
 const attr = (style: string | undefined): string =>
   style ? ` style="${style}"` : "";
 
-const inline = (text: string, styles: Styles): string =>
-  escapeHtml(text)
+type Options = { links?: boolean };
+
+// `([abc1234](https://…/commit/abc1234))` at the end of a bullet.
+const COMMIT_REF_RE = /\s*\(\[[0-9a-f]{7,40}\]\(https?:\/\/[^\s)]+\)\)\s*$/;
+// The URL excludes `<`, `*` and backticks so the code/bold passes can never
+// splice markup into an href.
+const LINK_RE = /\[([^\]]+)\]\((https?:\/\/[^\s)<*`]+)\)/g;
+
+const inline = (text: string, styles: Styles, { links = true }: Options) =>
+  escapeHtml(links ? text : text.replace(COMMIT_REF_RE, ""))
     .replace(/`([^`]+)`/g, `<code${attr(styles.code)}>$1</code>`)
-    .replace(
-      // The URL excludes `<`, `*` and backticks so the code/bold passes can
-      // never splice markup into an href.
-      /\[([^\]]+)\]\((https?:\/\/[^\s)<*`]+)\)/g,
-      `<a href="$2"${attr(styles.a)}>$1</a>`,
-    )
+    .replace(LINK_RE, links ? `<a href="$2"${attr(styles.a)}>$1</a>` : "$1")
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
 
 const HEADING_RE = /^(#{1,6})\s+(.*)$/;
@@ -42,6 +51,7 @@ const ITEM_RE = /^\s*[*-]\s+(.*)$/;
 export const renderReleaseNotes = (
   markdown: string,
   styles: Styles = {},
+  options: Options = {},
 ): string => {
   const out: string[] = [];
   let list: string[] = [];
@@ -68,17 +78,17 @@ export const renderReleaseNotes = (
       // h1–h2 → h2 and h3+ → h3: the email already owns the page title.
       const level = heading[1].length <= 2 ? "h2" : "h3";
       out.push(
-        `<${level}${attr(styles[level])}>${inline(heading[2], styles)}</${level}>`,
+        `<${level}${attr(styles[level])}>${inline(heading[2], styles, options)}</${level}>`,
       );
     } else if (item) {
       flushParagraph();
-      list.push(inline(item[1], styles));
+      list.push(inline(item[1], styles, options));
     } else if (line.trim() === "") {
       flushList();
       flushParagraph();
     } else {
       flushList();
-      paragraph.push(inline(line.trim(), styles));
+      paragraph.push(inline(line.trim(), styles, options));
     }
   }
   flushList();

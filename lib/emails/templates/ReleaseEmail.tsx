@@ -69,7 +69,8 @@ export const ReleaseEmail = ({
   unsubscribeUrl,
 }: ReleaseEmailProps) => {
   const t = createT(locale);
-  const notesHtml = renderReleaseNotes(notes, noteStyles);
+  // No links inside the notes: the one way to the APK is the button below.
+  const notesHtml = renderReleaseNotes(notes, noteStyles, { links: false });
   return (
     <EmailShell
       lang={locale}
