@@ -1,3 +1,7 @@
-import { ShareSkeleton } from "@/components/calculators/ShareSkeleton";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
-export default ShareSkeleton;
+const ShareLoading = () => (
+  <LoadingScreen variant="route" label="Loading result…" />
+);
+
+export default ShareLoading;

@@ -1,21 +1,7 @@
-import {
-  AdminCardSkeleton,
-  AdminHeaderSkeleton,
-  AdminStatGridSkeleton,
-} from "@/components/admin/AdminSkeleton";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
-const AdminLoading = () => (
-  <>
-    <AdminHeaderSkeleton />
-    <div className="space-y-4">
-      <AdminStatGridSkeleton />
-      <div className="grid gap-4 lg:grid-cols-2">
-        <AdminCardSkeleton height="h-48" />
-        <AdminCardSkeleton height="h-48" />
-      </div>
-      <AdminCardSkeleton height="h-48" />
-    </div>
-  </>
+const AdminSectionLoading = () => (
+  <LoadingScreen variant="route" label="Loading…" />
 );
 
-export default AdminLoading;
+export default AdminSectionLoading;

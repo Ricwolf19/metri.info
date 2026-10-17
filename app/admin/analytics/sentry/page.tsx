@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 
-import { AdminPanelSkeleton } from "@/components/admin/AdminSkeleton";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { SentryPanel } from "@/components/admin/SentryPanel";
 
 const AnalyticsSentryPage = () => (
-  <Suspense fallback={<AdminPanelSkeleton />}>
+  <Suspense fallback={<LoadingScreen label="Loading analytics…" />}>
     <SentryPanel />
   </Suspense>
 );

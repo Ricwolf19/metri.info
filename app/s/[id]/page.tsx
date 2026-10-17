@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import { ShareSkeleton } from "@/components/calculators/ShareSkeleton";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { ArrowRightIcon } from "@/components/icons";
 import { Container } from "@/components/shared/Container";
 import { CALC_CONTENT } from "@/lib/calculators/content";
@@ -66,7 +66,7 @@ export const generateMetadata = async ({
   const summary = data.result
     ? `${t(data.result.primaryLabelKey)}: ${data.result.primaryValue}${data.result.primaryUnit ? ` ${data.result.primaryUnit}` : ""}`
     : data.content.tagline;
-  const title = `${data.content.h1} — ${summary}`;
+  const title = `${data.content.h1} · ${summary}`;
   return {
     title,
     description: data.content.tagline,
@@ -147,7 +147,7 @@ const SharePage = ({
   params: Params;
   searchParams: Search;
 }) => (
-  <Suspense fallback={<ShareSkeleton />}>
+  <Suspense fallback={<LoadingScreen />}>
     <ShareContent params={params} searchParams={searchParams} />
   </Suspense>
 );

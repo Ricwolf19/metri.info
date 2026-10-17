@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 
-import { AdminPanelSkeleton } from "@/components/admin/AdminSkeleton";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { AnalyticsPanel } from "@/components/admin/AnalyticsPanel";
 
 const AnalyticsPostHogPage = () => (
-  <Suspense fallback={<AdminPanelSkeleton />}>
+  <Suspense fallback={<LoadingScreen label="Loading analytics…" />}>
     <AnalyticsPanel />
   </Suspense>
 );

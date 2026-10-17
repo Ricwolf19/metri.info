@@ -10,7 +10,7 @@ import {
 import { Container } from "@/components/shared/Container";
 import { PageHero } from "@/components/shared/PageHero";
 import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { contactEmail, developerUrl, mobileAppRepo } from "@/lib/site";
 
@@ -45,18 +45,6 @@ const Channel = ({
       </span>
     </span>
   </a>
-);
-
-const FormSkeleton = () => (
-  <div className="space-y-5">
-    <div className="grid gap-5 sm:grid-cols-2">
-      <Skeleton className="h-11" />
-      <Skeleton className="h-11" />
-    </div>
-    <Skeleton className="h-11" />
-    <Skeleton className="h-36" />
-    <Skeleton className="h-11" />
-  </div>
 );
 
 /** Contact page — shared by the EN (/contact) and ES (/es/contacto) routes.
@@ -103,7 +91,7 @@ export const ContactView = ({ locale }: { locale: Locale }) => {
 
           <Card>
             <CardContent className="p-6 sm:p-8">
-              <Suspense fallback={<FormSkeleton />}>
+              <Suspense fallback={<LoadingScreen />}>
                 <ContactForm />
               </Suspense>
             </CardContent>
