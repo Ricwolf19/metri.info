@@ -4,6 +4,7 @@ import { cacheLife } from "next/cache";
 import { CALC_IDS, ROUTES, type RouteId } from "@/lib/i18n/routes";
 import { getDoc, getDocSlugs } from "@/lib/docs";
 import { DOC_LAST_REVIEWED } from "@/lib/docs/sources";
+import { CALC_LAST_REVIEWED } from "@/lib/calculators/sources";
 import { absoluteUrl } from "@/lib/utils";
 
 type Entry = MetadataRoute.Sitemap[number];
@@ -41,7 +42,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   cacheLife("max");
   const now = new Date();
 
-  const sections: RouteId[] = ["home", "tools", "docs", "download"];
+  const sections: RouteId[] = ["home", "tools", "docs", "download", "quiz"];
   const staticEntries = sections.flatMap((id) =>
     entry(ROUTES[id].en, ROUTES[id].es, id === "home" ? 1 : 0.7, "weekly", now),
   );
@@ -51,8 +52,12 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
     entry(ROUTES[id].en, ROUTES[id].es, 0.3, "yearly", now),
   );
 
+  // Calculators carry their last content review, not the deploy time: a
+  // sitemap where every <lastmod> equals the build minute is a signal Google
+  // learns to ignore.
+  const calcReviewed = new Date(CALC_LAST_REVIEWED);
   const calcEntries = CALC_IDS.flatMap((id) =>
-    entry(ROUTES[id].en, ROUTES[id].es, 0.9, "monthly", now),
+    entry(ROUTES[id].en, ROUTES[id].es, 0.9, "monthly", calcReviewed),
   );
 
   // Docs carry a real `<lastmod>`: the article's own `updatedAt` frontmatter when

@@ -201,3 +201,27 @@ export const appRelease = pgTable("app_release", {
     .defaultNow()
     .notNull(),
 });
+
+/**
+ * Knowledge-check attempts (any signed-in account keeps history; visitors
+ * keep the last result in the browser, like the app keeps it on the phone). `scores` is
+ * the app's shape, `Record<QuizArea, 0..4>`; `asked` is how many questions the
+ * adaptive run took (4..16+).
+ */
+export const quizAttempt = pgTable(
+  "quiz_attempt",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    scores: jsonb("scores").notNull(),
+    /** Missed cells `{ area, level, variant }[]`, advisory. */
+    misses: jsonb("misses"),
+    asked: integer("asked").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [index("quiz_attempt_user_idx").on(t.userId, t.createdAt)],
+);

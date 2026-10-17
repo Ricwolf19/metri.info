@@ -2,14 +2,15 @@
  * Feature entitlements derived from a plan — the single place that maps a plan
  * to what it unlocks. App code checks `can(plan, feature)`, never `plan ===
  * "premium"`, so adding tiers/features later needs no refactor. Mirrored on the
- * mobile app (metri/src/features/auth/entitlements.ts).
+ * mobile app (metri/src/features/auth/entitlements.ts); `history` (saved
+ * knowledge-check attempts, any account) is web-side today and should be added there too.
  */
 export type Plan = "free" | "premium";
-export type Feature = "sync";
+export type Feature = "sync" | "history";
 
 const ENTITLEMENTS: Record<Plan, Record<Feature, boolean>> = {
-  free: { sync: false },
-  premium: { sync: true },
+  free: { sync: false, history: true },
+  premium: { sync: true, history: true },
 };
 
 const normalize = (plan: string | null | undefined): Plan =>

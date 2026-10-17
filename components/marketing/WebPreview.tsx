@@ -12,6 +12,7 @@ import {
 } from "@/components/icons";
 import { CalcExample } from "@/components/marketing/CalcExample";
 import { Reveal } from "@/components/motion/Reveal";
+import { QuizPromo } from "@/components/quiz/QuizPromo";
 import { GlowCard } from "@/components/shared/GlowCard";
 import { Section, SectionHeading } from "@/components/shared/Section";
 import { CALC_CONTENT } from "@/lib/calculators/content";
@@ -188,6 +189,7 @@ export const WebPreview = () => {
                 );
               })}
             </ul>
+            <QuizPromo compact className="mt-5" />
             <CtaLink href={docsHref} label={t("home.docsCta")} />
           </GlowCard>
         </Reveal>

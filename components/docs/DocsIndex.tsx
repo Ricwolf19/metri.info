@@ -2,6 +2,7 @@ import { Suspense } from "react";
 
 import { DocsBrowser } from "@/components/docs/DocsBrowser";
 import { Container } from "@/components/shared/Container";
+import { QuizPromo } from "@/components/quiz/QuizPromo";
 import { PageHero } from "@/components/shared/PageHero";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
@@ -23,8 +24,10 @@ export const DocsIndex = ({ locale }: { locale: Locale }) => {
         title={t("docs.title")}
         subtitle={t("docs.subtitle")}
         compact
+        share
       />
       <Container className="py-12 sm:py-16">
+        <QuizPromo className="mb-10" />
         {/* Suspense isolates `useSearchParams` (tag deep-links) so the page
             stays statically prerendered. */}
         <Suspense>

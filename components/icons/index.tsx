@@ -42,6 +42,8 @@ import {
   Mail,
   Medal,
   Menu,
+  Pause,
+  Play,
   Plus,
   ProfileCircle,
   NavArrowRight,
@@ -130,6 +132,8 @@ export const CloudSyncIcon = sized(CloudSync, "CloudSyncIcon");
 export const CompassIcon = sized(Compass, "CompassIcon");
 export const LeafIcon = sized(Leaf, "LeafIcon");
 export const MedalIcon = sized(Medal, "MedalIcon");
+export const PauseIcon = sized(Pause, "PauseIcon");
+export const PlayIcon = sized(Play, "PlayIcon");
 export const PlusIcon = sized(Plus, "PlusIcon");
 export const RefreshIcon = sized(Refresh, "RefreshIcon");
 export const TimerIcon = sized(Timer, "TimerIcon");

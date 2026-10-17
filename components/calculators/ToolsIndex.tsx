@@ -3,6 +3,7 @@ import {
   type ToolCard,
 } from "@/components/calculators/ToolsBrowser";
 import { Container } from "@/components/shared/Container";
+import { QuizPromo } from "@/components/quiz/QuizPromo";
 import { PageHero } from "@/components/shared/PageHero";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { CALC_IDS, routePath } from "@/lib/i18n/routes";
@@ -33,8 +34,10 @@ export const ToolsIndex = ({ locale }: { locale: Locale }) => {
         title={t("tools.title")}
         subtitle={t("tools.subtitle")}
         compact
+        share
       />
       <Container className="py-12 sm:py-16">
+        <QuizPromo className="mb-10" />
         <ToolsBrowser cards={cards} />
       </Container>
     </>

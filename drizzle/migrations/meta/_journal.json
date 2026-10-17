@@ -57,6 +57,13 @@
       "when": 1790633185105,
       "tag": "0007_blue_tarantula",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792258501893,
+      "tag": "0008_quiz_attempt",
+      "breakpoints": true
     }
   ]
 }

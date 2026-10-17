@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { ArrowRightIcon, BookIcon, DownloadIcon } from "@/components/icons";
+import { ArrowRightIcon, DownloadIcon, MedalIcon } from "@/components/icons";
 import { HeroField } from "@/components/marketing/HeroField";
 import { Container } from "@/components/shared/Container";
 import { buttonVariants } from "@/components/ui/button";
@@ -96,18 +96,18 @@ export const Hero = () => {
               {t("hero.ctaDownload")}
             </Link>
             <Link
+              href={routePath("quiz", locale)}
+              className={buttonVariants({ variant: "secondary", size: "md" })}
+            >
+              <MedalIcon size={18} />
+              {t("quiz.heroCta")}
+            </Link>
+            <Link
               href={routePath("tools", locale)}
-              className={buttonVariants({ variant: "secondary", size: "lg" })}
+              className={buttonVariants({ variant: "outline", size: "md" })}
             >
               {t("hero.ctaTools")}
               <ArrowRightIcon size={18} />
-            </Link>
-            <Link
-              href={routePath("docs", locale)}
-              className={buttonVariants({ variant: "outline", size: "lg" })}
-            >
-              <BookIcon size={18} />
-              {t("hero.ctaDocs")}
             </Link>
           </div>
 
