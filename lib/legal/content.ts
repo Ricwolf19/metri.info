@@ -19,14 +19,14 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
   about: {
     en: {
       title: "About Metri",
-      lead: "Metri is a free, open-source toolkit for people who take training seriously — accurate calculators and evidence-based guides, with no paywalls and no clutter.",
+      lead: "Metri is a free, open-source toolkit for people who take training seriously: accurate calculators and evidence-based guides, with no paywalls and no clutter.",
       updated: "",
       sections: [
         {
           heading: "What Metri is",
           body: [
-            "Metri is web-first. Every calculator — 1RM, TDEE, macros, body fat, BMI, FFMI, hydration and plate loading — runs instantly in your browser, free, forever. Alongside them is a growing knowledge base of practical, no-nonsense guides on nutrition, training and recovery.",
-            "A native iOS and Android app is in development as an optional extra: the same tools, fully offline, with progress tracking and reminders. You never need it to use Metri — the web is the product.",
+            "Metri is web-first. Every calculator (1RM, TDEE, macros, body fat, BMI, FFMI, hydration and plate loading) runs instantly in your browser, free, forever. Alongside them is a growing knowledge base of practical, no-nonsense guides on nutrition, training and recovery.",
+            "A native iOS and Android app is in development as an optional extra: the same tools, fully offline, with progress tracking and reminders. You never need it to use Metri; the web is the product.",
           ],
         },
         {
@@ -39,13 +39,13 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
         {
           heading: "Private by design",
           body: [
-            "The calculators do their math locally — your numbers stay in your browser. An account is optional and only exists to sync saved results across devices and with the app.",
+            "The calculators do their math locally; your numbers stay in your browser. An account is optional and only exists to sync saved results across devices and with the app.",
           ],
         },
         {
           heading: "Who builds it",
           body: [
-            "Metri is built and maintained independently. Contributions are welcome — the best place to get involved is the GitHub repository.",
+            "Metri is built and maintained independently. Contributions are welcome; the best place to get involved is the GitHub repository.",
           ],
         },
       ],
@@ -58,7 +58,7 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
         {
           heading: "Qué es Metri",
           body: [
-            "Metri es, ante todo, web. Todas las calculadoras —1RM, TDEE, macros, grasa corporal, IMC, FFMI, hidratación y carga de discos— funcionan al instante en tu navegador, gratis y para siempre. Junto a ellas hay una base de conocimiento en crecimiento con guías prácticas y directas sobre nutrición, entrenamiento y recuperación.",
+            "Metri es, ante todo, web. Todas las calculadoras (1RM, TDEE, macros, grasa corporal, IMC, FFMI, hidratación y carga de discos) funcionan al instante en tu navegador, gratis y para siempre. Junto a ellas hay una base de conocimiento en crecimiento con guías prácticas y directas sobre nutrición, entrenamiento y recuperación.",
             "Una app nativa para iOS y Android está en desarrollo como un extra opcional: las mismas herramientas, totalmente sin conexión, con seguimiento de progreso y recordatorios. Nunca la necesitas para usar Metri: la web es el producto.",
           ],
         },
@@ -88,19 +88,19 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
   privacy: {
     en: {
       title: "Privacy Policy",
-      lead: "We collect as little as possible. The calculators work without an account, and the mobile app does too — its local mode keeps everything on your phone and we store nothing at all. An optional free account (for export/import, restore and Premium sync) stores only your email and name. We never sell your data, and there is nothing to pay.",
+      lead: "We collect as little as possible. The calculators work without an account, and the mobile app does too: its local mode keeps everything on your phone and we store nothing at all. An optional free account (for export/import, restore and Premium sync) stores only your email and name. We never sell your data, and there is nothing to pay.",
       updated: "Last updated: September 2026",
       sections: [
         {
           heading: "Calculators run locally",
           body: [
-            "All calculator inputs and results are processed in your browser. They are not sent to or stored on our servers. The values appear in the page URL only so you can copy and share a result link — nothing more.",
+            "All calculator inputs and results are processed in your browser. They are not sent to or stored on our servers. The values appear in the page URL only so you can copy and share a result link, nothing more.",
           ],
         },
         {
           heading: "Accounts (optional)",
           body: [
-            "If you create an account, we store the minimum needed to provide it: your email address, an optional display name, and the results you choose to save. Authentication is handled by Better Auth. If you sign in with Google or GitHub, we receive your basic profile (email and name) from that provider — never your password.",
+            "If you create an account, we store the minimum needed to provide it: your email address, an optional display name, and the results you choose to save. Authentication is handled by Better Auth. If you sign in with Google or GitHub, we receive your basic profile (email and name) from that provider, never your password.",
             "You can delete your account at any time, which removes your saved data.",
           ],
         },
@@ -113,13 +113,13 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
         {
           heading: "Error reports",
           body: [
-            "When the website or the mobile app crashes or hits an unexpected error, a technical report is sent to our error-tracking provider (Sentry) so we can find and fix the bug. A report contains the error itself, your browser or device model and OS version, the app version and — if you are signed in — your account id. It never contains your email, your name, form contents, or any of your training data. Error reporting is disabled in development.",
+            "When the website or the mobile app crashes or hits an unexpected error, a technical report is sent to our error-tracking provider (Sentry) so we can find and fix the bug. A report contains the error itself, your browser or device model and OS version, the app version and, if you are signed in, your account id. It never contains your email, your name, form contents, or any of your training data. Error reporting is disabled in development.",
           ],
         },
         {
           heading: "Cookies",
           body: [
-            "We use only essential cookies: your language preference, and — if you sign in — your authentication session. No third-party advertising cookies are set.",
+            "We use only essential cookies: your language preference and, if you sign in, your authentication session. No third-party advertising cookies are set.",
           ],
         },
         {
@@ -138,7 +138,7 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
     },
     es: {
       title: "Política de Privacidad",
-      lead: "Recopilamos lo mínimo posible. Las calculadoras funcionan sin cuenta, y la app móvil también — su modo local mantiene todo en tu teléfono y no guardamos absolutamente nada. Una cuenta gratuita opcional (para exportar/importar, restaurar y el sync Premium) guarda solo tu correo y tu nombre. Nunca vendemos tus datos y no hay nada que pagar.",
+      lead: "Recopilamos lo mínimo posible. Las calculadoras funcionan sin cuenta, y la app móvil también: su modo local mantiene todo en tu teléfono y no guardamos absolutamente nada. Una cuenta gratuita opcional (para exportar/importar, restaurar y el sync Premium) guarda solo tu correo y tu nombre. Nunca vendemos tus datos y no hay nada que pagar.",
       updated: "Última actualización: septiembre de 2026",
       sections: [
         {
@@ -163,7 +163,7 @@ export const LEGAL_CONTENT: Record<LegalDoc, Record<Locale, LegalContent>> = {
         {
           heading: "Reportes de errores",
           body: [
-            "Cuando el sitio web o la app móvil fallan o encuentran un error inesperado, se envía un reporte técnico a nuestro proveedor de monitoreo de errores (Sentry) para poder encontrar y corregir el bug. Un reporte contiene el error, tu navegador o modelo de dispositivo y versión del sistema, la versión de la app y — si iniciaste sesión — el id de tu cuenta. Nunca contiene tu correo, tu nombre, el contenido de formularios ni tus datos de entrenamiento. El reporte de errores está desactivado en desarrollo.",
+            "Cuando el sitio web o la app móvil fallan o encuentran un error inesperado, se envía un reporte técnico a nuestro proveedor de monitoreo de errores (Sentry) para poder encontrar y corregir el bug. Un reporte contiene el error, tu navegador o modelo de dispositivo y versión del sistema, la versión de la app y, si iniciaste sesión, el id de tu cuenta. Nunca contiene tu correo, tu nombre, el contenido de formularios ni tus datos de entrenamiento. El reporte de errores está desactivado en desarrollo.",
           ],
         },
         {

@@ -16,12 +16,12 @@ export type CalcContent = {
 export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
   onerm: {
     en: {
-      seoTitle: "1RM Calculator — Estimate Your One-Rep Max",
+      seoTitle: "1RM Calculator · Estimate Your One-Rep Max",
       seoDescription:
         "Free 1RM calculator. Estimate your one-rep max from any weight and rep count using the Epley or Brzycki formula, with a full training-percentage table.",
       h1: "1RM Calculator",
       tagline:
-        "Estimate your one-rep max from any set — no max-out attempt needed.",
+        "Estimate your one-rep max from any set, no max-out attempt needed.",
       about: [
         "Your one-rep max (1RM) is the heaviest weight you can lift for a single rep. It's the reference point for programming intensity, but testing it directly is risky and fatiguing. This calculator estimates it from a set you've already done.",
       ],
@@ -31,7 +31,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         "Enter the weight you lifted and the reps you completed, then pick a formula. Epley tends to read slightly higher at high reps; Brzycki is conservative and best under ~10 reps. The percentage table shows training loads derived from your estimate.",
       ],
       interpret: [
-        "Use the estimate to set working weights — e.g. hypertrophy work often sits at 67–80% (8–12 reps), strength work at 85%+ (1–5 reps). Estimates get less accurate above ~10 reps, so base 1RM off sets of 5 or fewer when you can.",
+        "Use the estimate to set working weights, e.g. hypertrophy work often sits at 67–80% (8–12 reps), strength work at 85%+ (1–5 reps). Estimates get less accurate above ~10 reps, so base 1RM off sets of 5 or fewer when you can.",
       ],
       faq: [
         {
@@ -44,17 +44,17 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "Is it safe to skip maxing out?",
-          a: "Yes — estimating from a submaximal set avoids the injury and fatigue risk of a true 1RM attempt, which is why most programs use estimated maxes.",
+          a: "Yes. Estimating from a submaximal set avoids the injury and fatigue risk of a true 1RM attempt, which is why most programs use estimated maxes.",
         },
       ],
     },
     es: {
-      seoTitle: "Calculadora de 1RM — Estima tu repetición máxima",
+      seoTitle: "Calculadora de 1RM · Estima tu repetición máxima",
       seoDescription:
         "Calculadora de 1RM gratis. Estima tu repetición máxima desde cualquier peso y número de reps con las fórmulas de Epley o Brzycki, con tabla de porcentajes.",
       h1: "Calculadora de 1RM",
       tagline:
-        "Estima tu repetición máxima desde cualquier serie — sin intentar un máximo real.",
+        "Estima tu repetición máxima desde cualquier serie, sin intentar un máximo real.",
       about: [
         "Tu repetición máxima (1RM) es el peso más alto que puedes levantar una sola vez. Es la referencia para programar la intensidad, pero medirla directamente es arriesgado y fatigante. Esta calculadora la estima desde una serie que ya hiciste.",
       ],
@@ -64,7 +64,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         "Introduce el peso que levantaste y las reps que completaste, y elige una fórmula. Epley tiende a dar algo más alto en reps altas; Brzycki es conservadora y mejor por debajo de ~10 reps. La tabla de porcentajes muestra cargas de entrenamiento derivadas de tu estimación.",
       ],
       interpret: [
-        "Usa la estimación para fijar pesos de trabajo — la hipertrofia suele estar en 67–80% (8–12 reps) y la fuerza en 85%+ (1–5 reps). La precisión baja por encima de ~10 reps, así que estima el 1RM con series de 5 o menos cuando puedas.",
+        "Usa la estimación para fijar pesos de trabajo: la hipertrofia suele estar en 67–80% (8–12 reps) y la fuerza en 85%+ (1–5 reps). La precisión baja por encima de ~10 reps, así que estima el 1RM con series de 5 o menos cuando puedas.",
       ],
       faq: [
         {
@@ -77,7 +77,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "¿Es seguro no hacer el máximo real?",
-          a: "Sí — estimar desde una serie submáxima evita el riesgo de lesión y fatiga de un 1RM real, por eso la mayoría de programas usan máximos estimados.",
+          a: "Sí. Estimar desde una serie submáxima evita el riesgo de lesión y fatiga de un 1RM real, por eso la mayoría de programas usan máximos estimados.",
         },
       ],
     },
@@ -85,12 +85,12 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
 
   tdee: {
     en: {
-      seoTitle: "TDEE Calculator — Daily Calories & BMR",
+      seoTitle: "TDEE Calculator · Daily Calories & BMR",
       seoDescription:
         "Free TDEE calculator. Estimate your maintenance calories and BMR with the Mifflin-St Jeor, Harris-Benedict or Katch-McArdle formula, plus cut and bulk targets.",
       h1: "TDEE Calculator",
       tagline:
-        "Find your maintenance calories — the foundation of any nutrition plan.",
+        "Find your maintenance calories, the foundation of any nutrition plan.",
       about: [
         "Your TDEE (total daily energy expenditure) is how many calories you burn in a day. It's your maintenance number: eat at it to stay the same, below it to lose fat, above it to gain. It starts from your BMR (resting burn) scaled by activity.",
       ],
@@ -100,12 +100,12 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         "Enter your stats and activity level. Mifflin-St Jeor is the modern default; Harris-Benedict is the classic; Katch-McArdle uses your body-fat % (most accurate if you know it). Your BMR is multiplied by an activity factor from 1.2 (sedentary) to 1.9 (very active).",
       ],
       interpret: [
-        "Maintenance is a starting estimate, not a fixed truth — track weight for 2–3 weeks and adjust. The result also shows a ~500 kcal deficit (mild fat loss) and a ~300 kcal surplus (lean gain). Feed your target into the macro calculator to split it.",
+        "Maintenance is a starting estimate, not a fixed truth: track weight for 2–3 weeks and adjust. The result also shows a ~500 kcal deficit (mild fat loss) and a ~300 kcal surplus (lean gain). Feed your target into the macro calculator to split it.",
       ],
       faq: [
         {
-          q: "BMR vs TDEE — what's the difference?",
-          a: "BMR is what you burn at complete rest. TDEE is BMR plus activity, digestion and movement — your real daily maintenance calories.",
+          q: "BMR vs TDEE: what's the difference?",
+          a: "BMR is what you burn at complete rest. TDEE is BMR plus activity, digestion and movement: your real daily maintenance calories.",
         },
         {
           q: "Which formula should I pick?",
@@ -118,12 +118,12 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
       ],
     },
     es: {
-      seoTitle: "Calculadora de TDEE — Calorías diarias y BMR",
+      seoTitle: "Calculadora de TDEE · Calorías diarias y BMR",
       seoDescription:
         "Calculadora de TDEE gratis. Estima tus calorías de mantenimiento y BMR con Mifflin-St Jeor, Harris-Benedict o Katch-McArdle, con objetivos de déficit y volumen.",
       h1: "Calculadora de TDEE",
       tagline:
-        "Encuentra tus calorías de mantenimiento — la base de cualquier plan.",
+        "Encuentra tus calorías de mantenimiento, la base de cualquier plan.",
       about: [
         "Tu TDEE (gasto energético diario total) es cuántas calorías quemas en un día. Es tu número de mantenimiento: come en él para mantenerte, por debajo para perder grasa, por encima para ganar. Parte de tu BMR (gasto en reposo) escalada por actividad.",
       ],
@@ -133,12 +133,12 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         "Introduce tus datos y nivel de actividad. Mifflin-St Jeor es la opción moderna por defecto; Harris-Benedict la clásica; Katch-McArdle usa tu % de grasa (la más precisa si lo conoces). Tu BMR se multiplica por un factor de 1.2 (sedentario) a 1.9 (muy activo).",
       ],
       interpret: [
-        "El mantenimiento es una estimación inicial, no una verdad fija — sigue tu peso 2–3 semanas y ajusta. El resultado también muestra un déficit de ~500 kcal (pérdida suave) y un superávit de ~300 kcal (ganancia limpia). Pasa tu objetivo a la calculadora de macros.",
+        "El mantenimiento es una estimación inicial, no una verdad fija: sigue tu peso 2–3 semanas y ajusta. El resultado también muestra un déficit de ~500 kcal (pérdida suave) y un superávit de ~300 kcal (ganancia limpia). Pasa tu objetivo a la calculadora de macros.",
       ],
       faq: [
         {
-          q: "BMR vs TDEE — ¿cuál es la diferencia?",
-          a: "La BMR es lo que quemas en reposo absoluto. El TDEE es la BMR más actividad, digestión y movimiento — tus calorías reales de mantenimiento.",
+          q: "BMR vs TDEE: ¿cuál es la diferencia?",
+          a: "La BMR es lo que quemas en reposo absoluto. El TDEE es la BMR más actividad, digestión y movimiento: tus calorías reales de mantenimiento.",
         },
         {
           q: "¿Qué fórmula elijo?",
@@ -154,22 +154,22 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
 
   macros: {
     en: {
-      seoTitle: "Macro Calculator — Protein, Carbs & Fat",
+      seoTitle: "Macro Calculator · Protein, Carbs & Fat",
       seoDescription:
         "Free macro calculator. Turn your daily calories into protein, carb and fat targets based on your goal and bodyweight, with the math explained.",
       h1: "Macro Calculator",
       tagline:
         "Split your calories into protein, carbs and fat that fit your goal.",
       about: [
-        "Macros are where your calories come from. This calculator sets protein from your lean mass (or bodyweight) and goal, fat per kilo of bodyweight for hormones, and fills the rest with carbs — your main training fuel.",
+        "Macros are where your calories come from. This calculator sets protein from your lean mass (or bodyweight) and goal, fat per kilo of bodyweight for hormones, and fills the rest with carbs, your main training fuel.",
       ],
       formula:
         "protein = 2.2 g × kg of lean mass (or g/kg × bodyweight)\nfat = 0.7–0.9 g × kg of bodyweight, never under 0.5\ncarbs = (calories − protein×4 − fat×9) ÷ 4",
       how: [
-        "Enter your daily calories (from the TDEE calculator), your bodyweight and your goal. Add your body fat % and protein is set from lean mass (2.2 g/kg); without it, from bodyweight — 2.2 g/kg cutting, 2.0 maintaining, 1.8 bulking. Fat is set per kilo (0.7 cutting, 0.8 maintaining, 0.9 bulking) and never drops under 0.5 g/kg, and carbs take the remainder.",
+        "Enter your daily calories (from the TDEE calculator), your bodyweight and your goal. Add your body fat % and protein is set from lean mass (2.2 g/kg); without it, from bodyweight: 2.2 g/kg cutting, 2.0 maintaining, 1.8 bulking. Fat is set per kilo (0.7 cutting, 0.8 maintaining, 0.9 bulking) and never drops under 0.5 g/kg, and carbs take the remainder.",
       ],
       interpret: [
-        "Hit protein most reliably; carbs and fat have more flexibility. You don't need to nail grams exactly — land within ~5–10 g of protein and keep calories in range, and body composition will follow.",
+        "Hit protein most reliably; carbs and fat have more flexibility. You don't need to nail grams exactly; land within ~5–10 g of protein and keep calories in range, and body composition will follow.",
       ],
       faq: [
         {
@@ -178,7 +178,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "Do carbs make you fat?",
-          a: "No — total calories drive fat gain. Carbs are the main fuel for hard training; cutting them only matters via the calories they remove.",
+          a: "No. Total calories drive fat gain. Carbs are the main fuel for hard training; cutting them only matters via the calories they remove.",
         },
         {
           q: "Where do I get my calorie number?",
@@ -187,22 +187,22 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
       ],
     },
     es: {
-      seoTitle: "Calculadora de Macros — Proteína, carbohidratos y grasa",
+      seoTitle: "Calculadora de Macros · Proteína, carbohidratos y grasa",
       seoDescription:
         "Calculadora de macros gratis. Convierte tus calorías diarias en objetivos de proteína, carbohidratos y grasa según tu meta y peso, con la matemática explicada.",
       h1: "Calculadora de Macros",
       tagline:
         "Reparte tus calorías en proteína, carbohidratos y grasa según tu meta.",
       about: [
-        "Los macros son de donde salen tus calorías. Esta calculadora fija la proteína según tu masa magra (o tu peso) y tu meta, la grasa por kilo de peso para las hormonas, y rellena el resto con carbohidratos — tu principal combustible de entrenamiento.",
+        "Los macros son de donde salen tus calorías. Esta calculadora fija la proteína según tu masa magra (o tu peso) y tu meta, la grasa por kilo de peso para las hormonas, y rellena el resto con carbohidratos, tu principal combustible de entrenamiento.",
       ],
       formula:
         "proteína = 2.2 g × kg de masa magra (o g/kg × peso)\ngrasa = 0.7–0.9 g × kg de peso, nunca menos de 0.5\ncarbos = (calorías − proteína×4 − grasa×9) ÷ 4",
       how: [
-        "Introduce tus calorías diarias (de la calculadora de TDEE), tu peso y tu meta. Agrega tu % de grasa y la proteína se fija con tu masa magra (2.2 g/kg); sin él, con tu peso — 2.2 g/kg en déficit, 2.0 en mantenimiento, 1.8 en volumen. La grasa se fija por kilo (0.7 en déficit, 0.8 en mantenimiento, 0.9 en volumen) y nunca baja de 0.5 g/kg, y los carbohidratos toman el resto.",
+        "Introduce tus calorías diarias (de la calculadora de TDEE), tu peso y tu meta. Agrega tu % de grasa y la proteína se fija con tu masa magra (2.2 g/kg); sin él, con tu peso: 2.2 g/kg en déficit, 2.0 en mantenimiento, 1.8 en volumen. La grasa se fija por kilo (0.7 en déficit, 0.8 en mantenimiento, 0.9 en volumen) y nunca baja de 0.5 g/kg, y los carbohidratos toman el resto.",
       ],
       interpret: [
-        "Cumple la proteína de forma fiable; carbohidratos y grasa tienen más margen. No necesitas clavar los gramos — quédate a ~5–10 g de proteína y mantén las calorías en rango, y la composición corporal acompañará.",
+        "Cumple la proteína de forma fiable; carbohidratos y grasa tienen más margen. No necesitas clavar los gramos; quédate a ~5–10 g de proteína y mantén las calorías en rango, y la composición corporal acompañará.",
       ],
       faq: [
         {
@@ -211,7 +211,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "¿Los carbohidratos engordan?",
-          a: "No — las calorías totales determinan la ganancia de grasa. Los carbohidratos son el combustible del entrenamiento duro; recortarlos solo cuenta por las calorías que quitan.",
+          a: "No. Las calorías totales determinan la ganancia de grasa. Los carbohidratos son el combustible del entrenamiento duro; recortarlos solo cuenta por las calorías que quitan.",
         },
         {
           q: "¿De dónde saco mi número de calorías?",
@@ -223,19 +223,19 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
 
   bodyfat: {
     en: {
-      seoTitle: "Body Fat Calculator — U.S. Navy Method",
+      seoTitle: "Body Fat Calculator · U.S. Navy Method",
       seoDescription:
-        "Free body fat calculator using the U.S. Navy circumference method. Estimate your body-fat percentage from a few tape measurements — no calipers needed.",
+        "Free body fat calculator using the U.S. Navy circumference method. Estimate your body-fat percentage from a few tape measurements, no calipers needed.",
       h1: "Body Fat Calculator",
       tagline:
-        "Estimate body-fat percentage with a tape measure — the U.S. Navy method.",
+        "Estimate body-fat percentage with a tape measure: the U.S. Navy method.",
       about: [
         "The U.S. Navy method estimates body-fat percentage from circumference measurements. It needs only a tape measure and gives a repeatable number that's great for tracking change over time.",
       ],
       formula:
         "Men: 495 / (1.0324 − 0.19077·log10(waist−neck) + 0.15456·log10(height)) − 450",
       how: [
-        "Measure your neck, waist (and hips for women) in centimetres, relaxed, without compressing the skin. Enter them with your height and sex. Consistency matters more than perfection — measure the same way each time.",
+        "Measure your neck, waist (and hips for women) in centimetres, relaxed, without compressing the skin. Enter them with your height and sex. Consistency matters more than perfection: measure the same way each time.",
       ],
       interpret: [
         "Treat the result as an estimate (±3–4%). What matters is the trend: a falling number on consistent measurements means you're losing fat. Categories range from essential fat through athletic, fitness, average and high.",
@@ -256,19 +256,19 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
       ],
     },
     es: {
-      seoTitle: "Calculadora de Grasa Corporal — Método Marina de EE. UU.",
+      seoTitle: "Calculadora de Grasa Corporal · Método Marina de EE. UU.",
       seoDescription:
-        "Calculadora de grasa corporal gratis con el método de circunferencias de la Marina de EE. UU. Estima tu % de grasa con unas medidas de cinta — sin plicómetro.",
+        "Calculadora de grasa corporal gratis con el método de circunferencias de la Marina de EE. UU. Estima tu % de grasa con unas medidas de cinta, sin plicómetro.",
       h1: "Calculadora de Grasa Corporal",
       tagline:
-        "Estima el % de grasa con una cinta métrica — el método de la Marina de EE. UU.",
+        "Estima el % de grasa con una cinta métrica: el método de la Marina de EE. UU.",
       about: [
         "El método de la Marina de EE. UU. estima el porcentaje de grasa a partir de medidas de circunferencia. Solo necesita una cinta métrica y da un número repetible, ideal para seguir el cambio en el tiempo.",
       ],
       formula:
         "Hombres: 495 / (1.0324 − 0.19077·log10(cintura−cuello) + 0.15456·log10(altura)) − 450",
       how: [
-        "Mide cuello, cintura (y cadera en mujeres) en centímetros, relajado y sin comprimir la piel. Introdúcelas con tu altura y sexo. La constancia importa más que la perfección — mide igual cada vez.",
+        "Mide cuello, cintura (y cadera en mujeres) en centímetros, relajado y sin comprimir la piel. Introdúcelas con tu altura y sexo. La constancia importa más que la perfección: mide igual cada vez.",
       ],
       interpret: [
         "Toma el resultado como estimación (±3–4%). Lo que importa es la tendencia: un número que baja con medidas consistentes significa que pierdes grasa. Las categorías van de grasa esencial a atlética, fitness, media y alta.",
@@ -292,7 +292,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
 
   bmi: {
     en: {
-      seoTitle: "BMI Calculator — Body Mass Index & Healthy Weight",
+      seoTitle: "BMI Calculator · Body Mass Index & Healthy Weight",
       seoDescription:
         "Free BMI calculator. Get your body mass index, your WHO weight category and your healthy-weight range from height and weight.",
       h1: "BMI Calculator",
@@ -303,7 +303,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
       ],
       formula: "BMI = weight(kg) / height(m)²",
       how: [
-        "Enter your height and weight. The result places you in a WHO category — underweight (<18.5), normal (18.5–24.9), overweight (25–29.9) or obese (≥30) — and shows the weight range that keeps you in the healthy band.",
+        "Enter your height and weight. The result places you in a WHO category: underweight (<18.5), normal (18.5–24.9), overweight (25–29.9) or obese (≥30). It also shows the weight range that keeps you in the healthy band.",
       ],
       interpret: [
         "BMI doesn't distinguish muscle from fat, so muscular lifters can read 'overweight' while lean. Use it as a rough guide alongside body-fat percentage and waist measurements, not as a verdict.",
@@ -311,7 +311,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
       faq: [
         {
           q: "Is BMI accurate for athletes?",
-          a: "Not reliably — muscle is dense, so trained lifters often score 'overweight' despite being lean. Pair BMI with body-fat % for a fuller picture.",
+          a: "Not reliably: muscle is dense, so trained lifters often score 'overweight' despite being lean. Pair BMI with body-fat % for a fuller picture.",
         },
         {
           q: "What's a healthy BMI?",
@@ -324,7 +324,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
       ],
     },
     es: {
-      seoTitle: "Calculadora de IMC — Índice de masa corporal y peso saludable",
+      seoTitle: "Calculadora de IMC · Índice de masa corporal y peso saludable",
       seoDescription:
         "Calculadora de IMC gratis. Obtén tu índice de masa corporal, tu categoría de peso de la OMS y tu rango de peso saludable a partir de altura y peso.",
       h1: "Calculadora de IMC",
@@ -335,7 +335,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
       ],
       formula: "IMC = peso(kg) / altura(m)²",
       how: [
-        "Introduce tu altura y peso. El resultado te sitúa en una categoría de la OMS — bajo peso (<18.5), normal (18.5–24.9), sobrepeso (25–29.9) u obesidad (≥30) — y muestra el rango de peso que te mantiene en la banda saludable.",
+        "Introduce tu altura y peso. El resultado te sitúa en una categoría de la OMS: bajo peso (<18.5), normal (18.5–24.9), sobrepeso (25–29.9) u obesidad (≥30). También muestra el rango de peso que te mantiene en la banda saludable.",
       ],
       interpret: [
         "El IMC no distingue músculo de grasa, así que un lifter musculado puede marcar 'sobrepeso' estando definido. Úsalo como guía aproximada junto al % de grasa y la cintura, no como un veredicto.",
@@ -343,7 +343,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
       faq: [
         {
           q: "¿Es preciso el IMC para atletas?",
-          a: "No de forma fiable — el músculo es denso, así que los lifters entrenados marcan 'sobrepeso' a menudo estando definidos. Combina el IMC con el % de grasa.",
+          a: "No de forma fiable: el músculo es denso, así que los lifters entrenados marcan 'sobrepeso' a menudo estando definidos. Combina el IMC con el % de grasa.",
         },
         {
           q: "¿Qué IMC es saludable?",
@@ -359,12 +359,12 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
 
   ffmi: {
     en: {
-      seoTitle: "FFMI Calculator — Fat-Free Mass Index",
+      seoTitle: "FFMI Calculator · Fat-Free Mass Index",
       seoDescription:
-        "Free FFMI calculator. Estimate your fat-free mass index and see how much muscle you carry relative to your height — the lean alternative to BMI.",
+        "Free FFMI calculator. Estimate your fat-free mass index and see how much muscle you carry relative to your height, the lean alternative to BMI.",
       h1: "FFMI Calculator",
       tagline:
-        "How much muscle you carry for your height — the lean version of BMI.",
+        "How much muscle you carry for your height, the lean version of BMI.",
       about: [
         "Fat-Free Mass Index (FFMI) is like BMI but for lean mass only. It tells you how much muscle you carry relative to height, and is popular for gauging muscular development and natural-physique potential.",
       ],
@@ -387,17 +387,17 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "Do I need an accurate body-fat number?",
-          a: "Yes — FFMI is sensitive to body-fat input. Use a consistent method (e.g. the Navy estimate) so your trend is meaningful.",
+          a: "Yes. FFMI is sensitive to body-fat input. Use a consistent method (e.g. the Navy estimate) so your trend is meaningful.",
         },
       ],
     },
     es: {
-      seoTitle: "Calculadora de FFMI — Índice de masa libre de grasa",
+      seoTitle: "Calculadora de FFMI · Índice de masa libre de grasa",
       seoDescription:
-        "Calculadora de FFMI gratis. Estima tu índice de masa libre de grasa y cuánto músculo llevas en relación a tu altura — la alternativa magra al IMC.",
+        "Calculadora de FFMI gratis. Estima tu índice de masa libre de grasa y cuánto músculo llevas en relación a tu altura, la alternativa magra al IMC.",
       h1: "Calculadora de FFMI",
       tagline:
-        "Cuánto músculo llevas para tu altura — la versión magra del IMC.",
+        "Cuánto músculo llevas para tu altura, la versión magra del IMC.",
       about: [
         "El Índice de Masa Libre de Grasa (FFMI) es como el IMC pero solo con masa magra. Indica cuánto músculo llevas en relación a la altura y es popular para valorar el desarrollo muscular y el potencial natural.",
       ],
@@ -420,7 +420,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "¿Necesito un % de grasa preciso?",
-          a: "Sí — el FFMI es sensible a ese dato. Usa un método consistente (p. ej. la estimación Navy) para que tu tendencia tenga sentido.",
+          a: "Sí. El FFMI es sensible a ese dato. Usa un método consistente (p. ej. la estimación Navy) para que tu tendencia tenga sentido.",
         },
       ],
     },
@@ -428,7 +428,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
 
   water: {
     en: {
-      seoTitle: "Water Intake Calculator — Daily Hydration",
+      seoTitle: "Water Intake Calculator · Daily Hydration",
       seoDescription:
         "Free water intake calculator. Estimate how much water to drink per day from your bodyweight and activity level, in litres, millilitres and cups.",
       h1: "Water Intake Calculator",
@@ -442,12 +442,12 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         "Enter your weight and activity level. The base is ~35 ml per kg of bodyweight, plus 0–1000 ml depending on activity. The result is shown in litres, millilitres and roughly-240 ml cups.",
       ],
       interpret: [
-        "This is a baseline, not a hard rule — heat, sweat rate and diet all shift your needs. A simple field check: pale-straw urine usually means you're well hydrated.",
+        "This is a baseline, not a hard rule: heat, sweat rate and diet all shift your needs. A simple field check: pale-straw urine usually means you're well hydrated.",
       ],
       faq: [
         {
           q: "Does coffee or tea count?",
-          a: "Yes — fluids from drinks and water-rich foods all contribute. The target is total daily fluid, not plain water only.",
+          a: "Yes. Fluids from drinks and water-rich foods all contribute. The target is total daily fluid, not plain water only.",
         },
         {
           q: "Can you drink too much water?",
@@ -455,12 +455,12 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "Should I drink more on training days?",
-          a: "Yes — that's what the activity bonus accounts for. Add extra to replace heavy sweat losses in hot sessions.",
+          a: "Yes. That's what the activity bonus accounts for. Add extra to replace heavy sweat losses in hot sessions.",
         },
       ],
     },
     es: {
-      seoTitle: "Calculadora de Agua — Hidratación diaria",
+      seoTitle: "Calculadora de Agua · Hidratación diaria",
       seoDescription:
         "Calculadora de agua gratis. Estima cuánta agua beber al día según tu peso y nivel de actividad, en litros, mililitros y vasos.",
       h1: "Calculadora de Agua",
@@ -473,12 +473,12 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         "Introduce tu peso y nivel de actividad. La base es ~35 ml por kg de peso, más 0–1000 ml según la actividad. El resultado se muestra en litros, mililitros y vasos de ~240 ml.",
       ],
       interpret: [
-        "Es una base, no una regla rígida — el calor, la sudoración y la dieta cambian tus necesidades. Una comprobación simple: una orina de color pajizo claro suele indicar buena hidratación.",
+        "Es una base, no una regla rígida: el calor, la sudoración y la dieta cambian tus necesidades. Una comprobación simple: una orina de color pajizo claro suele indicar buena hidratación.",
       ],
       faq: [
         {
           q: "¿Cuenta el café o el té?",
-          a: "Sí — los líquidos de bebidas y alimentos ricos en agua suman. El objetivo es el líquido total diario, no solo agua pura.",
+          a: "Sí. Los líquidos de bebidas y alimentos ricos en agua suman. El objetivo es el líquido total diario, no solo agua pura.",
         },
         {
           q: "¿Se puede beber demasiada agua?",
@@ -486,7 +486,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "¿Debo beber más los días de entreno?",
-          a: "Sí — eso refleja el extra por actividad. Añade más para reponer el sudor en sesiones calurosas.",
+          a: "Sí. Eso refleja el extra por actividad. Añade más para reponer el sudor en sesiones calurosas.",
         },
       ],
     },
@@ -494,7 +494,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
 
   plates: {
     en: {
-      seoTitle: "Plate Calculator — Barbell Loading",
+      seoTitle: "Plate Calculator · Barbell Loading",
       seoDescription:
         "Free barbell plate calculator. Enter a target weight and bar weight to see exactly which plates to load on each side.",
       h1: "Plate Calculator",
@@ -508,7 +508,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         "Enter the total weight you want on the bar and your bar's weight (20 kg Olympic by default). The calculator subtracts the bar, halves the rest, and greedily loads the largest plates first: 25, 20, 15, 10, 5, 2.5, 1.25 kg.",
       ],
       interpret: [
-        "Each row is the plate and how many go on each side. If there's a remainder, your target isn't reachable with standard plates and the smaller increment — round to the nearest loadable weight.",
+        "Each row is the plate and how many go on each side. If there's a remainder, your target isn't reachable with standard plates and the smaller increment; round to the nearest loadable weight.",
       ],
       faq: [
         {
@@ -526,7 +526,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
       ],
     },
     es: {
-      seoTitle: "Calculadora de Discos — Carga de barra",
+      seoTitle: "Calculadora de Discos · Carga de barra",
       seoDescription:
         "Calculadora de discos gratis. Introduce un peso objetivo y el peso de la barra para ver exactamente qué discos cargar en cada lado.",
       h1: "Calculadora de Discos",
@@ -541,7 +541,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         "Introduce el peso total que quieres en la barra y el peso de tu barra (20 kg olímpica por defecto). La calculadora resta la barra, divide el resto a la mitad y carga los discos más grandes primero: 25, 20, 15, 10, 5, 2.5, 1.25 kg.",
       ],
       interpret: [
-        "Cada fila es el disco y cuántos van en cada lado. Si queda un resto, tu objetivo no se alcanza con discos estándar y el incremento menor — redondea al peso cargable más cercano.",
+        "Cada fila es el disco y cuántos van en cada lado. Si queda un resto, tu objetivo no se alcanza con discos estándar y el incremento menor; redondea al peso cargable más cercano.",
       ],
       faq: [
         {
@@ -562,7 +562,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
 
   idealweight: {
     en: {
-      seoTitle: "Ideal Weight Calculator — Devine, Robinson & BMI Range",
+      seoTitle: "Ideal Weight Calculator · Devine, Robinson & BMI Range",
       seoDescription:
         "Free ideal weight calculator. Find your healthy weight from height and sex using the Devine and Robinson formulas, plus your BMI healthy-weight range.",
       h1: "Ideal Weight Calculator",
@@ -576,7 +576,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         "Enter your height and sex. We compute the Devine estimate (the clinical standard, also used for drug dosing), the slightly different Robinson estimate, and the WHO healthy-weight range derived from a BMI of 18.5–24.9.",
       ],
       interpret: [
-        "Use the BMI range as your healthy band and the Devine/Robinson numbers as a midpoint reference. Muscular people will sit above these estimates without being overweight — pair them with body-fat percentage for a fuller picture.",
+        "Use the BMI range as your healthy band and the Devine/Robinson numbers as a midpoint reference. Muscular people will sit above these estimates without being overweight; pair them with body-fat percentage for a fuller picture.",
       ],
       faq: [
         {
@@ -585,7 +585,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "Is there one perfect weight?",
-          a: "No — a healthy weight is a range, not a single number. These formulas give a midpoint; the BMI band shows the full healthy span for your height.",
+          a: "No. A healthy weight is a range, not a single number. These formulas give a midpoint; the BMI band shows the full healthy span for your height.",
         },
         {
           q: "Do these work for athletes?",
@@ -594,7 +594,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
       ],
     },
     es: {
-      seoTitle: "Calculadora de Peso Ideal — Devine, Robinson y rango de IMC",
+      seoTitle: "Calculadora de Peso Ideal · Devine, Robinson y rango de IMC",
       seoDescription:
         "Calculadora de peso ideal gratis. Encuentra tu peso saludable según altura y sexo con las fórmulas de Devine y Robinson, más tu rango de peso saludable por IMC.",
       h1: "Calculadora de Peso Ideal",
@@ -608,7 +608,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         "Introduce tu altura y sexo. Calculamos la estimación de Devine (el estándar clínico, también usado para dosificar fármacos), la algo distinta de Robinson y el rango de peso saludable de la OMS derivado de un IMC de 18.5–24.9.",
       ],
       interpret: [
-        "Usa el rango de IMC como tu banda saludable y los valores Devine/Robinson como referencia central. Las personas musculadas estarán por encima sin tener sobrepeso — combínalos con el % de grasa para una imagen completa.",
+        "Usa el rango de IMC como tu banda saludable y los valores Devine/Robinson como referencia central. Las personas musculadas estarán por encima sin tener sobrepeso; combínalos con el % de grasa para una imagen completa.",
       ],
       faq: [
         {
@@ -617,7 +617,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "¿Existe un peso perfecto?",
-          a: "No — un peso saludable es un rango, no un único número. Estas fórmulas dan un punto medio; la banda de IMC muestra todo el rango saludable para tu altura.",
+          a: "No. Un peso saludable es un rango, no un único número. Estas fórmulas dan un punto medio; la banda de IMC muestra todo el rango saludable para tu altura.",
         },
         {
           q: "¿Sirven para atletas?",
@@ -629,7 +629,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
 
   deficit: {
     en: {
-      seoTitle: "Calorie Deficit Calculator — Goal Weight Timeline",
+      seoTitle: "Calorie Deficit Calculator · Goal Weight Timeline",
       seoDescription:
         "Free calorie deficit calculator. Enter your current and goal weight to get the daily calorie deficit and a realistic timeline in weeks and months.",
       h1: "Calorie Deficit Calculator",
@@ -644,7 +644,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         "Enter your current weight, goal weight and a weekly rate of change (0.5 kg/week is a sustainable default). We compute the daily calorie deficit and project the number of weeks and months to reach your goal. It also works for gaining weight.",
       ],
       interpret: [
-        "A 0.25–0.75 kg/week loss is sustainable for most people; faster than ~1% of bodyweight per week risks muscle loss. The timeline is an estimate — real progress is rarely perfectly linear, so reassess every few weeks.",
+        "A 0.25–0.75 kg/week loss is sustainable for most people; faster than ~1% of bodyweight per week risks muscle loss. The timeline is an estimate: real progress is rarely perfectly linear, so reassess every few weeks.",
       ],
       faq: [
         {
@@ -657,13 +657,13 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "Can I use this to gain weight?",
-          a: "Yes — set a goal heavier than your current weight and the result becomes a daily surplus with the same timeline math.",
+          a: "Yes. Set a goal heavier than your current weight and the result becomes a daily surplus with the same timeline math.",
         },
       ],
     },
     es: {
       seoTitle:
-        "Calculadora de Déficit Calórico — Plazo hasta tu peso objetivo",
+        "Calculadora de Déficit Calórico · Plazo hasta tu peso objetivo",
       seoDescription:
         "Calculadora de déficit calórico gratis. Introduce tu peso actual y objetivo para obtener el déficit diario y un plazo realista en semanas y meses.",
       h1: "Calculadora de Déficit Calórico",
@@ -678,7 +678,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         "Introduce tu peso actual, tu peso objetivo y un ritmo semanal de cambio (0.5 kg/semana es un valor sostenible por defecto). Calculamos el déficit calórico diario y proyectamos las semanas y meses hasta tu meta. También funciona para ganar peso.",
       ],
       interpret: [
-        "Perder 0.25–0.75 kg por semana es sostenible para la mayoría; más rápido de ~1% del peso por semana arriesga músculo. El plazo es una estimación — el progreso real rara vez es perfectamente lineal, así que revísalo cada pocas semanas.",
+        "Perder 0.25–0.75 kg por semana es sostenible para la mayoría; más rápido de ~1% del peso por semana arriesga músculo. El plazo es una estimación: el progreso real rara vez es perfectamente lineal, así que revísalo cada pocas semanas.",
       ],
       faq: [
         {
@@ -691,7 +691,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "¿Puedo usarla para ganar peso?",
-          a: "Sí — fija un objetivo más alto que tu peso actual y el resultado pasa a ser un superávit diario con el mismo cálculo de plazos.",
+          a: "Sí. Fija un objetivo más alto que tu peso actual y el resultado pasa a ser un superávit diario con el mismo cálculo de plazos.",
         },
       ],
     },
@@ -699,7 +699,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
 
   protein: {
     en: {
-      seoTitle: "Protein Calculator — Daily Protein Intake",
+      seoTitle: "Protein Calculator · Daily Protein Intake",
       seoDescription:
         "Free protein calculator. Get your daily protein target in grams from your bodyweight and goal, with calories from protein and a per-meal breakdown.",
       h1: "Protein Calculator",
@@ -713,7 +713,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         "Enter your bodyweight and goal. We multiply by 2.2 g/kg for a cut (to protect muscle in a deficit), 2.0 for maintenance and 1.8 for a bulk, then show the calories that come from protein and a per-meal target across four meals.",
       ],
       interpret: [
-        "Spreading protein across 3–5 meals of 0.3–0.5 g/kg each maximises muscle protein synthesis. Hitting your daily total is what matters most — the per-meal figure is a practical way to get there.",
+        "Spreading protein across 3–5 meals of 0.3–0.5 g/kg each maximises muscle protein synthesis. Hitting your daily total is what matters most; the per-meal figure is a practical way to get there.",
       ],
       faq: [
         {
@@ -731,7 +731,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
       ],
     },
     es: {
-      seoTitle: "Calculadora de Proteína — Ingesta diaria de proteína",
+      seoTitle: "Calculadora de Proteína · Ingesta diaria de proteína",
       seoDescription:
         "Calculadora de proteína gratis. Obtén tu objetivo diario de proteína en gramos según tu peso y meta, con las calorías de la proteína y el reparto por comida.",
       h1: "Calculadora de Proteína",
@@ -745,7 +745,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         "Introduce tu peso y tu meta. Multiplicamos por 2.2 g/kg en definición (para proteger el músculo en déficit), 2.0 en mantenimiento y 1.8 en volumen, y mostramos las calorías que aporta la proteína y un objetivo por comida en cuatro comidas.",
       ],
       interpret: [
-        "Repartir la proteína en 3–5 comidas de 0.3–0.5 g/kg cada una maximiza la síntesis de proteína muscular. Lo que más importa es cumplir el total diario — la cifra por comida es una forma práctica de lograrlo.",
+        "Repartir la proteína en 3–5 comidas de 0.3–0.5 g/kg cada una maximiza la síntesis de proteína muscular. Lo que más importa es cumplir el total diario; la cifra por comida es una forma práctica de lograrlo.",
       ],
       faq: [
         {
@@ -766,26 +766,26 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
 
   leanmass: {
     en: {
-      seoTitle: "Lean Body Mass Calculator — LBM & Fat Mass",
+      seoTitle: "Lean Body Mass Calculator · LBM & Fat Mass",
       seoDescription:
         "Free lean body mass calculator. Estimate your fat-free mass with the Boer formula and from your body-fat percentage, plus your total fat mass.",
       h1: "Lean Body Mass Calculator",
       tagline:
         "Estimate your fat-free mass and how much of you is muscle and organs.",
       about: [
-        "Lean body mass (LBM) is everything in your body that isn't fat — muscle, bone, organs and water. Knowing it helps set protein needs, dose certain medications and track whether you're losing fat or muscle.",
+        "Lean body mass (LBM) is everything in your body that isn't fat: muscle, bone, organs and water. Knowing it helps set protein needs, dose certain medications and track whether you're losing fat or muscle.",
       ],
       formula:
         "Boer (male):   0.407×kg + 0.267×cm − 19.2\nBoer (female): 0.252×kg + 0.473×cm − 48.3\nLBM = weight × (1 − bodyfat%)",
       how: [
-        "Enter your sex, weight, height and body-fat percentage. We compute LBM two ways — the Boer formula (from height and weight) and directly from your body-fat figure — and show your fat mass for comparison.",
+        "Enter your sex, weight, height and body-fat percentage. We compute LBM two ways (the Boer formula, from height and weight, and directly from your body-fat figure) and show your fat mass for comparison.",
       ],
       interpret: [
         "If you know your body fat, the direct LBM figure is usually the most accurate; the Boer estimate is a useful cross-check when you don't. When dieting, the goal is to lose fat mass while keeping LBM steady.",
       ],
       faq: [
         {
-          q: "LBM vs fat-free mass — same thing?",
+          q: "LBM vs fat-free mass: same thing?",
           a: "Almost. Fat-free mass excludes all fat; LBM technically includes a small amount of essential fat. In practice the terms are used interchangeably.",
         },
         {
@@ -794,24 +794,24 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "Why does LBM matter?",
-          a: "It drives protein needs, reflects training progress, and on a diet it tells you whether you're losing fat or muscle — the difference between a good and bad cut.",
+          a: "It drives protein needs, reflects training progress, and on a diet it tells you whether you're losing fat or muscle, the difference between a good and bad cut.",
         },
       ],
     },
     es: {
-      seoTitle: "Calculadora de Masa Magra — MLG y masa grasa",
+      seoTitle: "Calculadora de Masa Magra · MLG y masa grasa",
       seoDescription:
         "Calculadora de masa magra gratis. Estima tu masa libre de grasa con la fórmula de Boer y desde tu % de grasa, más tu masa grasa total.",
       h1: "Calculadora de Masa Magra",
       tagline:
         "Estima tu masa libre de grasa y cuánto de ti es músculo y órganos.",
       about: [
-        "La masa magra (MLG) es todo lo que no es grasa en tu cuerpo — músculo, hueso, órganos y agua. Conocerla ayuda a fijar las necesidades de proteína, dosificar ciertos fármacos y saber si pierdes grasa o músculo.",
+        "La masa magra (MLG) es todo lo que no es grasa en tu cuerpo: músculo, hueso, órganos y agua. Conocerla ayuda a fijar las necesidades de proteína, dosificar ciertos fármacos y saber si pierdes grasa o músculo.",
       ],
       formula:
         "Boer (hombre):  0.407×kg + 0.267×cm − 19.2\nBoer (mujer):  0.252×kg + 0.473×cm − 48.3\nMLG = peso × (1 − %grasa)",
       how: [
-        "Introduce tu sexo, peso, altura y porcentaje de grasa. Calculamos la MLG de dos formas — la fórmula de Boer (desde altura y peso) y directamente desde tu % de grasa — y mostramos tu masa grasa para comparar.",
+        "Introduce tu sexo, peso, altura y porcentaje de grasa. Calculamos la MLG de dos formas (la fórmula de Boer, desde altura y peso, y directamente desde tu % de grasa) y mostramos tu masa grasa para comparar.",
       ],
       interpret: [
         "Si conoces tu % de grasa, la MLG directa suele ser la más precisa; la estimación de Boer es un buen contraste cuando no lo conoces. Al hacer dieta, la meta es perder masa grasa manteniendo estable la MLG.",
@@ -827,7 +827,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "¿Por qué importa la MLG?",
-          a: "Determina las necesidades de proteína, refleja el progreso del entrenamiento y, en dieta, indica si pierdes grasa o músculo — la diferencia entre una buena y una mala definición.",
+          a: "Determina las necesidades de proteína, refleja el progreso del entrenamiento y, en dieta, indica si pierdes grasa o músculo, la diferencia entre una buena y una mala definición.",
         },
       ],
     },
@@ -835,14 +835,14 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
 
   heartrate: {
     en: {
-      seoTitle: "Heart Rate Zone Calculator — Max HR & Training Zones",
+      seoTitle: "Heart Rate Zone Calculator · Max HR & Training Zones",
       seoDescription:
         "Free heart-rate zone calculator. Get your max heart rate (Tanaka) and five Karvonen training zones in beats per minute from your age and resting heart rate.",
       h1: "Heart Rate Zone Calculator",
       tagline:
         "Your max heart rate and five training zones in beats per minute.",
       about: [
-        "Training by heart-rate zone keeps each workout at the right intensity — easy days easy and hard days hard. This calculator finds your maximum heart rate and five personalised zones using your resting heart rate.",
+        "Training by heart-rate zone keeps each workout at the right intensity: easy days easy and hard days hard. This calculator finds your maximum heart rate and five personalised zones using your resting heart rate.",
       ],
       formula:
         "max HR = 208 − 0.7 × age   (Tanaka)\nzone bpm = resting + %×(max − resting)   (Karvonen)",
@@ -869,14 +869,14 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
     },
     es: {
       seoTitle:
-        "Calculadora de Zonas de Frecuencia Cardíaca — FC máxima y zonas",
+        "Calculadora de Zonas de Frecuencia Cardíaca · FC máxima y zonas",
       seoDescription:
         "Calculadora de zonas de frecuencia cardíaca gratis. Obtén tu FC máxima (Tanaka) y cinco zonas de entrenamiento (Karvonen) en pulsaciones según tu edad y FC en reposo.",
       h1: "Calculadora de Zonas de Frecuencia Cardíaca",
       tagline:
         "Tu frecuencia cardíaca máxima y cinco zonas de entrenamiento en pulsaciones.",
       about: [
-        "Entrenar por zonas de frecuencia cardíaca mantiene cada sesión en la intensidad correcta — los días suaves suaves y los duros duros. Esta calculadora encuentra tu frecuencia máxima y cinco zonas personalizadas con tu FC en reposo.",
+        "Entrenar por zonas de frecuencia cardíaca mantiene cada sesión en la intensidad correcta: los días suaves suaves y los duros duros. Esta calculadora encuentra tu frecuencia máxima y cinco zonas personalizadas con tu FC en reposo.",
       ],
       formula:
         "FC máxima = 208 − 0.7 × edad   (Tanaka)\nzona ppm = reposo + %×(máx − reposo)   (Karvonen)",
@@ -905,12 +905,12 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
 
   whtr: {
     en: {
-      seoTitle: "Waist-to-Height Ratio Calculator — WHtR",
+      seoTitle: "Waist-to-Height Ratio Calculator · WHtR",
       seoDescription:
-        "Free waist-to-height ratio calculator. Divide your waist by your height for a simple, accurate screen of central fat and health risk — better than BMI.",
+        "Free waist-to-height ratio calculator. Divide your waist by your height for a simple, accurate screen of central fat and health risk, better than BMI.",
       h1: "Waist-to-Height Ratio Calculator",
       tagline:
-        "A simple central-fat screen — keep your waist under half your height.",
+        "A simple central-fat screen: keep your waist under half your height.",
       about: [
         "Waist-to-height ratio (WHtR) is a quick screen for central (abdominal) fat, which carries more health risk than fat elsewhere. It's often a better predictor of cardiometabolic risk than BMI and works across heights and sexes.",
       ],
@@ -919,12 +919,12 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         "Measure your waist at the navel, relaxed, and enter it with your height in the same units. The ratio falls into bands: below 0.4 low, 0.4–0.5 healthy, 0.5–0.6 increased risk, and 0.6 or above high risk.",
       ],
       interpret: [
-        "The simple rule is 'keep your waist to less than half your height' — a ratio under 0.5. Rising WHtR signals accumulating abdominal fat even if your weight looks stable, making it a useful trend to track.",
+        "The simple rule is 'keep your waist to less than half your height', a ratio under 0.5. Rising WHtR signals accumulating abdominal fat even if your weight looks stable, making it a useful trend to track.",
       ],
       faq: [
         {
           q: "Is WHtR better than BMI?",
-          a: "For health risk, often yes — it captures dangerous central fat that BMI misses, and the 0.5 threshold works across heights and both sexes.",
+          a: "For health risk, often yes: it captures dangerous central fat that BMI misses, and the 0.5 threshold works across heights and both sexes.",
         },
         {
           q: "Where do I measure my waist?",
@@ -937,12 +937,12 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
       ],
     },
     es: {
-      seoTitle: "Calculadora de Ratio Cintura-Altura — WHtR",
+      seoTitle: "Calculadora de Ratio Cintura-Altura · WHtR",
       seoDescription:
-        "Calculadora de ratio cintura-altura gratis. Divide tu cintura entre tu altura para un cribado simple y preciso de grasa central y riesgo — mejor que el IMC.",
+        "Calculadora de ratio cintura-altura gratis. Divide tu cintura entre tu altura para un cribado simple y preciso de grasa central y riesgo, mejor que el IMC.",
       h1: "Calculadora de Ratio Cintura-Altura",
       tagline:
-        "Un cribado simple de grasa central — mantén tu cintura por debajo de media altura.",
+        "Un cribado simple de grasa central: mantén tu cintura por debajo de media altura.",
       about: [
         "El ratio cintura-altura (WHtR) es un cribado rápido de grasa central (abdominal), que conlleva más riesgo que la grasa de otras zonas. Suele predecir mejor el riesgo cardiometabólico que el IMC y funciona en distintas alturas y sexos.",
       ],
@@ -951,12 +951,12 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         "Mide tu cintura a la altura del ombligo, relajado, e introdúcela con tu altura en las mismas unidades. El ratio cae en bandas: por debajo de 0.4 bajo, 0.4–0.5 saludable, 0.5–0.6 riesgo aumentado y 0.6 o más riesgo alto.",
       ],
       interpret: [
-        "La regla simple es 'mantén tu cintura por debajo de la mitad de tu altura' — un ratio menor de 0.5. Un WHtR que sube señala grasa abdominal en aumento aunque tu peso parezca estable, así que es una tendencia útil de seguir.",
+        "La regla simple es 'mantén tu cintura por debajo de la mitad de tu altura', un ratio menor de 0.5. Un WHtR que sube señala grasa abdominal en aumento aunque tu peso parezca estable, así que es una tendencia útil de seguir.",
       ],
       faq: [
         {
           q: "¿Es el WHtR mejor que el IMC?",
-          a: "Para el riesgo de salud, a menudo sí — capta la grasa central peligrosa que el IMC ignora, y el umbral de 0.5 funciona en distintas alturas y ambos sexos.",
+          a: "Para el riesgo de salud, a menudo sí: capta la grasa central peligrosa que el IMC ignora, y el umbral de 0.5 funciona en distintas alturas y ambos sexos.",
         },
         {
           q: "¿Dónde mido la cintura?",
@@ -972,25 +972,25 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
 
   wilks: {
     en: {
-      seoTitle: "Wilks / DOTS Calculator — Powerlifting Strength Score",
+      seoTitle: "Wilks / DOTS Calculator · Powerlifting Strength Score",
       seoDescription:
         "Free DOTS calculator (the modern Wilks replacement). Score your powerlifting total relative to bodyweight to compare strength fairly across weight classes.",
       h1: "Wilks / DOTS Calculator",
       tagline:
-        "Score your total relative to bodyweight — compare strength across weight classes.",
+        "Score your total relative to bodyweight to compare strength across weight classes.",
       about: [
         "How do you compare a 90 kg lifter's total to a 60 kg lifter's? Coefficient scores do it by weighting your total against bodyweight. This calculator uses DOTS, the modern formula that has replaced Wilks in most federations.",
       ],
       formula: "score = total × 500 / (A·bw⁴ + B·bw³ + C·bw² + D·bw + E)",
       how: [
-        "Enter your sex, bodyweight and competition total (squat + bench + deadlift, all in kg). We plug them into the DOTS polynomial to produce a single comparable strength score — higher is stronger, pound-for-pound.",
+        "Enter your sex, bodyweight and competition total (squat + bench + deadlift, all in kg). We plug them into the DOTS polynomial to produce a single comparable strength score: higher is stronger, pound-for-pound.",
       ],
       interpret: [
         "As a rough guide, DOTS around 300 is a solid intermediate, 400 is advanced, and 500+ is elite/competitive. Because it normalises for bodyweight, you can track it as you gain or lose weight to see true strength change.",
       ],
       faq: [
         {
-          q: "DOTS vs Wilks — what changed?",
+          q: "DOTS vs Wilks: what changed?",
           a: "DOTS is a newer coefficient fitted to modern data. It's now the standard in many federations because it treats today's weight classes more fairly than the original Wilks.",
         },
         {
@@ -1005,25 +1005,25 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
     },
     es: {
       seoTitle:
-        "Calculadora Wilks / DOTS — Puntuación de fuerza en powerlifting",
+        "Calculadora Wilks / DOTS · Puntuación de fuerza en powerlifting",
       seoDescription:
         "Calculadora DOTS gratis (el reemplazo moderno de Wilks). Puntúa tu total de powerlifting según tu peso para comparar la fuerza de forma justa entre categorías.",
       h1: "Calculadora Wilks / DOTS",
       tagline:
-        "Puntúa tu total según tu peso — compara la fuerza entre categorías.",
+        "Puntúa tu total según tu peso para comparar la fuerza entre categorías.",
       about: [
         "¿Cómo comparas el total de un atleta de 90 kg con el de uno de 60 kg? Las puntuaciones por coeficiente lo hacen ponderando tu total frente al peso. Esta calculadora usa DOTS, la fórmula moderna que ha reemplazado a Wilks en la mayoría de federaciones.",
       ],
       formula: "puntuación = total × 500 / (A·pc⁴ + B·pc³ + C·pc² + D·pc + E)",
       how: [
-        "Introduce tu sexo, peso corporal y total de competición (sentadilla + press banca + peso muerto, todo en kg). Lo introducimos en el polinomio DOTS para producir una única puntuación de fuerza comparable — más alta es más fuerte, kilo por kilo.",
+        "Introduce tu sexo, peso corporal y total de competición (sentadilla + press banca + peso muerto, todo en kg). Lo introducimos en el polinomio DOTS para producir una única puntuación de fuerza comparable: más alta es más fuerte, kilo por kilo.",
       ],
       interpret: [
         "Como guía: un DOTS de ~300 es un intermedio sólido, 400 es avanzado y 500+ es élite/competitivo. Como normaliza por peso corporal, puedes seguirlo al ganar o perder peso para ver el cambio real de fuerza.",
       ],
       faq: [
         {
-          q: "DOTS vs Wilks — ¿qué cambió?",
+          q: "DOTS vs Wilks: ¿qué cambió?",
           a: "DOTS es un coeficiente más nuevo ajustado a datos modernos. Hoy es el estándar en muchas federaciones porque trata las categorías actuales de forma más justa que el Wilks original.",
         },
         {
@@ -1040,26 +1040,26 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
 
   calsburned: {
     en: {
-      seoTitle: "Calories Burned Calculator — By Activity & Duration",
+      seoTitle: "Calories Burned Calculator · By Activity & Duration",
       seoDescription:
         "Free calories burned calculator. Estimate the calories you burn from any activity using MET values, your bodyweight and how long you exercise.",
       h1: "Calories Burned Calculator",
       tagline:
         "How many calories an activity burns for your weight and duration.",
       about: [
-        "Different activities burn energy at different rates. This calculator uses MET values — a standard measure of exercise intensity — together with your bodyweight and time to estimate the calories you burn in a session.",
+        "Different activities burn energy at different rates. This calculator uses MET values (a standard measure of exercise intensity) together with your bodyweight and time to estimate the calories you burn in a session.",
       ],
       formula: "kcal = MET × 3.5 × weight(kg) / 200 × minutes",
       how: [
-        "Pick an activity, enter your bodyweight and how many minutes you did it. Each activity has a MET (metabolic equivalent) rating — walking is ~3.5, running ~9.8 — and the formula scales that by your weight and duration.",
+        "Pick an activity, enter your bodyweight and how many minutes you did it. Each activity has a MET (metabolic equivalent) rating, for example walking is ~3.5 and running ~9.8, and the formula scales that by your weight and duration.",
       ],
       interpret: [
-        "Treat the result as a ballpark — real burn varies with intensity, fitness and efficiency. It's most useful for comparing activities and for rough planning, not as a precise figure to 'eat back' calorie-for-calorie.",
+        "Treat the result as a ballpark: real burn varies with intensity, fitness and efficiency. It's most useful for comparing activities and for rough planning, not as a precise figure to 'eat back' calorie-for-calorie.",
       ],
       faq: [
         {
           q: "What is a MET?",
-          a: "A metabolic equivalent — the ratio of an activity's energy cost to resting. 1 MET is rest; a 8-MET activity burns eight times as much energy per minute.",
+          a: "A metabolic equivalent: the ratio of an activity's energy cost to resting. 1 MET is rest; a 8-MET activity burns eight times as much energy per minute.",
         },
         {
           q: "How accurate is the estimate?",
@@ -1067,30 +1067,30 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "Should I eat back these calories?",
-          a: "Be conservative — estimates often run high. If you're tracking for fat loss, eating back only part of the figure is usually wiser.",
+          a: "Be conservative; estimates often run high. If you're tracking for fat loss, eating back only part of the figure is usually wiser.",
         },
       ],
     },
     es: {
-      seoTitle: "Calculadora de Calorías Quemadas — Por actividad y duración",
+      seoTitle: "Calculadora de Calorías Quemadas · Por actividad y duración",
       seoDescription:
         "Calculadora de calorías quemadas gratis. Estima las calorías que quemas en cualquier actividad usando valores MET, tu peso corporal y el tiempo de ejercicio.",
       h1: "Calculadora de Calorías Quemadas",
       tagline: "Cuántas calorías quema una actividad según tu peso y duración.",
       about: [
-        "Cada actividad quema energía a un ritmo distinto. Esta calculadora usa valores MET — una medida estándar de intensidad del ejercicio — junto con tu peso y tiempo para estimar las calorías que quemas en una sesión.",
+        "Cada actividad quema energía a un ritmo distinto. Esta calculadora usa valores MET (una medida estándar de intensidad del ejercicio) junto con tu peso y tiempo para estimar las calorías que quemas en una sesión.",
       ],
       formula: "kcal = MET × 3.5 × peso(kg) / 200 × minutos",
       how: [
-        "Elige una actividad, introduce tu peso y cuántos minutos la hiciste. Cada actividad tiene un valor MET (equivalente metabólico) — caminar es ~3.5, correr ~9.8 — y la fórmula lo escala según tu peso y duración.",
+        "Elige una actividad, introduce tu peso y cuántos minutos la hiciste. Cada actividad tiene un valor MET (equivalente metabólico), por ejemplo caminar es ~3.5 y correr ~9.8, y la fórmula lo escala según tu peso y duración.",
       ],
       interpret: [
-        "Toma el resultado como una aproximación — el gasto real varía con la intensidad, la forma física y la eficiencia. Es más útil para comparar actividades y planificar a grandes rasgos que como cifra precisa para 'recuperar' caloría por caloría.",
+        "Toma el resultado como una aproximación: el gasto real varía con la intensidad, la forma física y la eficiencia. Es más útil para comparar actividades y planificar a grandes rasgos que como cifra precisa para 'recuperar' caloría por caloría.",
       ],
       faq: [
         {
           q: "¿Qué es un MET?",
-          a: "Un equivalente metabólico — la relación entre el coste energético de una actividad y el reposo. 1 MET es reposo; una actividad de 8 MET quema ocho veces más energía por minuto.",
+          a: "Un equivalente metabólico: la relación entre el coste energético de una actividad y el reposo. 1 MET es reposo; una actividad de 8 MET quema ocho veces más energía por minuto.",
         },
         {
           q: "¿Qué precisión tiene la estimación?",
@@ -1098,7 +1098,7 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "¿Debo recuperar estas calorías?",
-          a: "Sé conservador — las estimaciones suelen quedar altas. Si controlas la pérdida de grasa, recuperar solo parte de la cifra suele ser más prudente.",
+          a: "Sé conservador; las estimaciones suelen quedar altas. Si controlas la pérdida de grasa, recuperar solo parte de la cifra suele ser más prudente.",
         },
       ],
     },
@@ -1106,20 +1106,20 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
 
   lbkg: {
     en: {
-      seoTitle: "lb to kg Converter — Pounds ↔ Kilograms",
+      seoTitle: "lb to kg Converter · Pounds ↔ Kilograms",
       seoDescription:
         "Free pounds to kilograms converter. Convert lb to kg (and kg to lb) with the exact 0.45359237 factor, plus gym-plate and barbell references.",
       h1: "lb ↔ kg Converter",
-      tagline: "Convert pounds to kilograms and back — exact, both directions.",
+      tagline: "Convert pounds to kilograms and back: exact, both directions.",
       about: [
         "Gyms, programs and scales don't agree on units: a US rack is marked in pounds, an Olympic bar is 20 kg, and most training articles quote kilos. This converter moves any number between the two with the exact legal factor, so your numbers stay comparable across sources.",
       ],
       formula: "kg = lb × 0.45359237\nlb = kg ÷ 0.45359237",
       how: [
-        "Enter an amount and pick the direction. Since 1959 the international pound has been defined as exactly 0.45359237 kg, so this is a definition, not an approximation — the only rounding happens at the second decimal in the displayed result. The preset chips cover the loads you meet most often: bumper plates, a 45 lb plate, and 135/225/315 lb bar totals.",
+        "Enter an amount and pick the direction. Since 1959 the international pound has been defined as exactly 0.45359237 kg, so this is a definition, not an approximation; the only rounding happens at the second decimal in the displayed result. The preset chips cover the loads you meet most often: bumper plates, a 45 lb plate, and 135/225/315 lb bar totals.",
       ],
       interpret: [
-        "For mental math, divide pounds by 2.2 (or halve and subtract 10%) to get kilos, and multiply kilos by 2.2 to go back. That is accurate to under 1% — fine for picking a warm-up, not for a competition weigh-in. Use the exact result when you're logging a lift or reporting bodyweight.",
+        "For mental math, divide pounds by 2.2 (or halve and subtract 10%) to get kilos, and multiply kilos by 2.2 to go back. That is accurate to under 1%: fine for picking a warm-up, not for a competition weigh-in. Use the exact result when you're logging a lift or reporting bodyweight.",
       ],
       faq: [
         {
@@ -1132,34 +1132,34 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "Is an Olympic bar 20 kg or 45 lb?",
-          a: "A competition Olympic bar is 20 kg, which is 44.09 lb — not 45. Many US gyms sell a 45 lb bar (20.41 kg) instead. Check the stamp on your bar before you trust a rounded conversion.",
+          a: "A competition Olympic bar is 20 kg, which is 44.09 lb, not 45. Many US gyms sell a 45 lb bar (20.41 kg) instead. Check the stamp on your bar before you trust a rounded conversion.",
         },
         {
           q: "Is 225 lb really 100 kg?",
-          a: "No — 225 lb is 102.06 kg, and 100 kg is 220.46 lb. The 'two plates' benchmark is 225 lb in the US and 100 kg elsewhere, so they are not the same lift.",
+          a: "No: 225 lb is 102.06 kg, and 100 kg is 220.46 lb. The 'two plates' benchmark is 225 lb in the US and 100 kg elsewhere, so they are not the same lift.",
         },
         {
           q: "Are pounds and pound-force the same here?",
-          a: "This converter handles mass, which is what scales and plates measure. Pound-force is a unit of force and is a different quantity — you won't need it for training numbers.",
+          a: "This converter handles mass, which is what scales and plates measure. Pound-force is a unit of force and is a different quantity; you won't need it for training numbers.",
         },
       ],
     },
     es: {
-      seoTitle: "Conversor de libras a kilos — lb ↔ kg",
+      seoTitle: "Conversor de libras a kilos · lb ↔ kg",
       seoDescription:
         "Conversor de libras a kilos gratis. Convierte lb a kg (y kg a lb) con el factor exacto 0.45359237, con referencias de discos y barras de gimnasio.",
       h1: "Conversor lb ↔ kg",
       tagline:
-        "Convierte libras a kilos y al revés — exacto, en ambos sentidos.",
+        "Convierte libras a kilos y al revés: exacto, en ambos sentidos.",
       about: [
         "Los gimnasios, los programas y las básculas no usan las mismas unidades: un rack estadounidense viene marcado en libras, una barra olímpica pesa 20 kg y la mayoría de los artículos de entrenamiento hablan en kilos. Este conversor pasa cualquier número entre ambos con el factor legal exacto, para que tus cifras sigan siendo comparables.",
       ],
       formula: "kg = lb × 0.45359237\nlb = kg ÷ 0.45359237",
       how: [
-        "Introduce una cantidad y elige la dirección. Desde 1959 la libra internacional está definida como exactamente 0.45359237 kg, así que esto es una definición, no una aproximación — el único redondeo ocurre en el segundo decimal del resultado mostrado. Los botones rápidos cubren las cargas más habituales: discos bumper, el disco de 45 lb y los totales de barra de 135/225/315 lb.",
+        "Introduce una cantidad y elige la dirección. Desde 1959 la libra internacional está definida como exactamente 0.45359237 kg, así que esto es una definición, no una aproximación; el único redondeo ocurre en el segundo decimal del resultado mostrado. Los botones rápidos cubren las cargas más habituales: discos bumper, el disco de 45 lb y los totales de barra de 135/225/315 lb.",
       ],
       interpret: [
-        "Para calcular de cabeza, divide las libras entre 2.2 (o divide a la mitad y resta un 10%) para obtener kilos, y multiplica los kilos por 2.2 para volver. El error es inferior al 1% — suficiente para elegir un calentamiento, no para un pesaje de competición. Usa el resultado exacto cuando registres un levantamiento o reportes tu peso corporal.",
+        "Para calcular de cabeza, divide las libras entre 2.2 (o divide a la mitad y resta un 10%) para obtener kilos, y multiplica los kilos por 2.2 para volver. El error es inferior al 1%: suficiente para elegir un calentamiento, no para un pesaje de competición. Usa el resultado exacto cuando registres un levantamiento o reportes tu peso corporal.",
       ],
       faq: [
         {
@@ -1172,15 +1172,15 @@ export const CALC_CONTENT: Record<CalcId, Record<Locale, CalcContent>> = {
         },
         {
           q: "¿La barra olímpica pesa 20 kg o 45 lb?",
-          a: "La barra olímpica de competición pesa 20 kg, es decir 44.09 lb — no 45. Muchos gimnasios de EE. UU. venden una barra de 45 lb (20.41 kg). Revisa la marca de tu barra antes de fiarte de una conversión redondeada.",
+          a: "La barra olímpica de competición pesa 20 kg, es decir 44.09 lb, no 45. Muchos gimnasios de EE. UU. venden una barra de 45 lb (20.41 kg). Revisa la marca de tu barra antes de fiarte de una conversión redondeada.",
         },
         {
           q: "¿225 lb son realmente 100 kg?",
-          a: "No — 225 lb son 102.06 kg, y 100 kg son 220.46 lb. La marca de 'dos discos' es 225 lb en EE. UU. y 100 kg en el resto, así que no es el mismo levantamiento.",
+          a: "No: 225 lb son 102.06 kg, y 100 kg son 220.46 lb. La marca de 'dos discos' es 225 lb en EE. UU. y 100 kg en el resto, así que no es el mismo levantamiento.",
         },
         {
           q: "¿Libra y libra-fuerza son lo mismo aquí?",
-          a: "Este conversor trabaja con masa, que es lo que miden las básculas y los discos. La libra-fuerza es una unidad de fuerza y es otra magnitud — no la necesitas para tus números de entrenamiento.",
+          a: "Este conversor trabaja con masa, que es lo que miden las básculas y los discos. La libra-fuerza es una unidad de fuerza y es otra magnitud; no la necesitas para tus números de entrenamiento.",
         },
       ],
     },

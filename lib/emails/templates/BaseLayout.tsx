@@ -100,7 +100,7 @@ export const EmailShell = ({
   preview,
   children,
   lang = "en",
-  tagline = "Metri — open-source fitness, built for lifters.",
+  tagline = "Metri · open-source fitness, built for lifters.",
   footerNote = DEFAULT_FOOTER_NOTE,
 }: {
   preview: string;

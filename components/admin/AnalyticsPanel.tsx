@@ -19,7 +19,7 @@ const COLORS = ["#84cc16", "#38bdf8", "#f59e0b", "#8b5cf6", "#22c55e"];
 
 const ConnectHint = () => (
   <Placeholder>
-    Connect PostHog — set POSTHOG_PERSONAL_API_KEY and POSTHOG_PROJECT_ID.
+    Connect PostHog: set POSTHOG_PERSONAL_API_KEY and POSTHOG_PROJECT_ID.
   </Placeholder>
 );
 

@@ -45,7 +45,7 @@ export const HEALTH_CALCS: ReadonlySet<CalcId> = new Set<CalcId>([
 export const CALC_SOURCES: Record<CalcId, Citation[]> = {
   onerm: [
     {
-      text: "Brzycki M. Strength testing—predicting a one-rep max from reps-to-fatigue. JOPERD. 1993;64(1):88-90.",
+      text: "Brzycki M. Strength testing: predicting a one-rep max from reps-to-fatigue. JOPERD. 1993;64(1):88-90.",
     },
     {
       text: "Epley B. Poundage chart. Boyd Epley Workout. Lincoln, NE; 1985.",

@@ -34,7 +34,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Metri — Open-source fitness tracker for serious lifters",
+    default: "Metri · Open-source fitness tracker for serious lifters",
     template: "%s · Metri",
   },
   description:
@@ -59,13 +59,13 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Metri",
     url: siteUrl,
-    title: "Metri — Open-source fitness tracker for serious lifters",
+    title: "Metri · Open-source fitness tracker for serious lifters",
     description:
       "Free fitness calculators and an evidence-based knowledge base. Offline-first and open source.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Metri — Open-source fitness tracker",
+    title: "Metri · Open-source fitness tracker",
     description:
       "Free fitness calculators and a knowledge base. Offline-first and open source.",
   },
@@ -107,11 +107,14 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <html
       lang="en"
-      className={`${GeistSans.variable} ${jetbrainsMono.variable}`}
+      className={`dark ${GeistSans.variable} ${jetbrainsMono.variable}`}
     >
       <body className="min-h-dvh font-sans antialiased">
         <Providers>
-          <div className="flex min-h-dvh flex-col">
+          {/* `overflow-x-clip` here (not on <html>) swallows decorative overflow
+              from any page without turning the body into a scroll container, so
+              sticky headers keep tracking the viewport under Radix scroll-lock. */}
+          <div className="flex min-h-dvh flex-col overflow-x-clip">
             {/* The header reads the URL (usePathname, for nav highlighting and
                 the locale switch). On routes whose path is known at build time
                 PPR resolves it into the static shell; on a fully dynamic route

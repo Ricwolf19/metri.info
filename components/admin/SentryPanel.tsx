@@ -10,7 +10,7 @@ const COLORS = ["#ef4444", "#f59e0b", "#f97316", "#8b5cf6", "#ec4899"];
 
 const ConnectHint = () => (
   <Placeholder>
-    Connect Sentry — set SENTRY_API_TOKEN (a User Auth Token with{" "}
+    Connect Sentry: set SENTRY_API_TOKEN (a User Auth Token with{" "}
     <code className="text-ink-300">event:read project:read org:read</code>).
   </Placeholder>
 );

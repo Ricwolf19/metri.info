@@ -15,7 +15,7 @@ const COLORS = ["#4285F4", "#34A853", "#FBBC05", "#EA4335", "#8b5cf6"];
 
 const ConnectHint = () => (
   <Placeholder>
-    Connect Google Analytics — set GA4_PROPERTY_ID and GA4_CREDENTIALS_JSON.
+    Connect Google Analytics: set GA4_PROPERTY_ID and GA4_CREDENTIALS_JSON.
   </Placeholder>
 );
 

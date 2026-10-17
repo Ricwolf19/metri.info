@@ -50,7 +50,7 @@ export const VerifyEmail = ({
           marginTop: 8,
         }}
       >
-        Didn&apos;t sign up for Metri? You can safely ignore this email — no
+        Didn&apos;t sign up for Metri? You can safely ignore this email; no
         account will be created.
       </Text>
       <Link
