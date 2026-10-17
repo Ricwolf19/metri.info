@@ -23,7 +23,7 @@ const start = () => {
   posthog.init(key, {
     // First-party reverse proxy (see next.config rewrites) so ad blockers don't
     // drop events; `ui_host` keeps the toolbar/links pointing at PostHog itself.
-    api_host: "/ingest",
+    api_host: "/relay",
     ui_host: "https://us.posthog.com",
     autocapture: true,
     enable_heatmaps: true,

@@ -6,7 +6,7 @@ import { tags } from "@/lib/cache/tags";
 const apiKey = process.env.POSTHOG_PERSONAL_API_KEY;
 const projectId = process.env.POSTHOG_PROJECT_ID;
 // Query API host (reads data back out). Kept separate from the client's ingest
-// proxy: the browser sends events to `/ingest`, but server-side HogQL must hit
+// proxy: the browser sends events to `/relay`, but server-side HogQL must hit
 // PostHog's API host directly. Override with POSTHOG_API_HOST for non-US clouds.
 const host = (process.env.POSTHOG_API_HOST || "https://us.posthog.com").replace(
   /\/$/,

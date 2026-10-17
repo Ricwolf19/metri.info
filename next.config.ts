@@ -13,8 +13,9 @@ const nextConfig: NextConfig = {
   // the server build (Next's recommended handling for such packages).
   serverExternalPackages: ["@google-analytics/data"],
   // PostHog ingests through this reverse proxy: the browser talks to first-party
-  // `/ingest/*` (which ad blockers don't blocklist) and Next forwards to
-  // PostHog's US ingestion/asset hosts. PostHog needs the trailing slash kept.
+  // `/relay/*` and Next forwards to PostHog's US ingestion/asset hosts. The
+  // path is deliberately not `/ingest` (now on common blocklists). PostHog
+  // needs the trailing slash kept.
   skipTrailingSlashRedirect: true,
   images: {
     formats: ["image/avif", "image/webp"],
@@ -35,11 +36,11 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: "/ingest/static/:path*",
+        source: "/relay/static/:path*",
         destination: "https://us-assets.i.posthog.com/static/:path*",
       },
       {
-        source: "/ingest/:path*",
+        source: "/relay/:path*",
         destination: "https://us.i.posthog.com/:path*",
       },
     ];
@@ -83,6 +84,6 @@ export default withSentryConfig(nextConfig, {
   widenClientFileUpload: true,
   // Proxy browser → Sentry through a first-party route so ad blockers (which
   // blocklist `*.sentry.io`) don't drop error events — same trick as the
-  // PostHog `/ingest` rewrite. Routed under `/monitoring`.
+  // PostHog `/relay` rewrite. Routed under `/monitoring`.
   tunnelRoute: "/monitoring",
 });
