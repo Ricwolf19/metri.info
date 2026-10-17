@@ -1,10 +1,16 @@
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { AccountFavorites } from "@/components/account/AccountFavorites";
-import { AccountHistory } from "@/components/account/AccountHistory";
+import {
+  HistoryData,
+  type HistorySearchParams,
+} from "@/components/account/HistoryData";
 import { SyncedActivity } from "@/components/account/SyncedActivity";
+import { QuizHistory } from "@/components/quiz/QuizHistory";
 import { ArrowLeftIcon } from "@/components/icons";
 import { Container } from "@/components/shared/Container";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { PageHero } from "@/components/shared/PageHero";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
@@ -33,12 +39,12 @@ export const ActivityView = ({
   userId,
   plan,
   locale,
-  page,
+  historyParams,
 }: {
   userId: string;
   plan: string | null | undefined;
   locale: Locale;
-  page: number;
+  historyParams: HistorySearchParams;
 }) => {
   const t = createT(locale);
 
@@ -70,6 +76,14 @@ export const ActivityView = ({
         </Block>
 
         <Block
+          id="quiz"
+          title={t("quiz.historyTitle")}
+          subtitle={t("quiz.historySubtitle")}
+        >
+          <QuizHistory userId={userId} locale={locale} />
+        </Block>
+
+        <Block
           title={t("account.favoritesTitle")}
           subtitle={t("account.favoritesSubtitle")}
         >
@@ -81,7 +95,13 @@ export const ActivityView = ({
           title={t("account.historyTitle")}
           subtitle={t("account.historySubtitle")}
         >
-          <AccountHistory userId={userId} locale={locale} page={page} />
+          <Suspense fallback={<LoadingScreen label={t("common.loading")} />}>
+            <HistoryData
+              userId={userId}
+              locale={locale}
+              searchParams={historyParams}
+            />
+          </Suspense>
         </Block>
       </Container>
     </>

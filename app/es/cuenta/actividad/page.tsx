@@ -9,18 +9,17 @@ export const metadata: Metadata = {
 };
 
 const ActividadPage = async (props: {
-  searchParams: Promise<{ historyPage?: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) => {
   const user = await requireUser();
-  const { historyPage } = await props.searchParams;
-  const page = Number(historyPage) || 1;
+  const historyParams = await props.searchParams;
 
   return (
     <ActivityView
       userId={user.id}
       plan={(user as { plan?: string | null }).plan}
       locale="es"
-      page={page}
+      historyParams={historyParams}
     />
   );
 };
