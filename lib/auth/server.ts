@@ -314,6 +314,10 @@ export const auth = betterAuth({
       trustedProviders: ["google", "github"],
       // Trusted providers verify the email themselves, so allow linking to a pre-existing unverified local account — otherwise a bootstrap admin (emailVerified=false) hits `account_not_linked` when signing in with the same Google/GitHub email.
       requireLocalEmailVerified: false,
+      // An email-first account that later signs in with Google/GitHub picks
+      // up the provider's name and avatar; otherwise `user.image` stays null
+      // forever and the header shows initials.
+      updateUserInfoOnLink: true,
     },
   },
   // Share the session cookie across apex + www so the canonical 308 between them never drops the session.
