@@ -1,3 +1,4 @@
+import { ScrollHint } from "@/components/ui/ScrollHint";
 import { cn } from "@/lib/utils";
 
 /**
@@ -9,12 +10,14 @@ export const Table = ({
   className,
   ...props
 }: React.ComponentProps<"table">) => (
-  <div className="my-6 overflow-x-auto rounded-card border border-ink-600">
-    <table
-      className={cn("w-full border-collapse text-sm", className)}
-      {...props}
-    />
-  </div>
+  <ScrollHint className="my-6 rounded-card border border-ink-600">
+    <div className="overflow-x-auto">
+      <table
+        className={cn("w-full border-collapse text-sm", className)}
+        {...props}
+      />
+    </div>
+  </ScrollHint>
 );
 
 export const TableHeader = ({

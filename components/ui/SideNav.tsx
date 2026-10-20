@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import type { IconProps } from "@/components/icons";
+import { ScrollHint } from "@/components/ui/ScrollHint";
 import { cn } from "@/lib/utils";
 
 export type SideNavItem = {
@@ -129,7 +130,7 @@ export const SideNav = ({
 
   const vertical = layout === "vertical";
 
-  return (
+  const nav = (
     <nav
       ref={navRef}
       aria-label={ariaLabel}
@@ -236,5 +237,13 @@ export const SideNav = ({
         </div>
       ))}
     </nav>
+  );
+
+  // Below `lg` the row scrolls sideways; the hints say so on a phone, where a
+  // cut-off tab is the only clue otherwise.
+  return vertical ? (
+    nav
+  ) : (
+    <ScrollHint hintClassName="lg:hidden">{nav}</ScrollHint>
   );
 };

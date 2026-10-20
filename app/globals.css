@@ -143,6 +143,22 @@ summary {
   animation: metri-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* "There is more this way": the chevron of a horizontal scroll hint
+ * (`ScrollHint`) breathes sideways. Reduced motion (below) freezes it. */
+@keyframes metri-nudge-x {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+}
+
+.animate-nudge-x {
+  animation: metri-nudge-x 1.4s ease-in-out infinite;
+}
+
 /*
  * Ambient glow — replaces expensive `blur-[120px]` filter orbs (which are slow
  * to paint on mobile GPUs and delayed our LCP). A radial-gradient paints in a
