@@ -8,7 +8,7 @@ import {
 } from "@/components/account/HistoryData";
 import { SyncedActivity } from "@/components/account/SyncedActivity";
 import { QuizHistory } from "@/components/quiz/QuizHistory";
-import { ArrowLeftIcon } from "@/components/icons";
+import { ArrowLeftIcon, ArrowRightIcon, ScaleIcon } from "@/components/icons";
 import { Container } from "@/components/shared/Container";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { PageHero } from "@/components/shared/PageHero";
@@ -73,6 +73,14 @@ export const ActivityView = ({
           subtitle={t("activity.sync.subtitle")}
         >
           <SyncedActivity userId={userId} plan={plan} locale={locale} />
+          <Link
+            href={routePath("body", locale)}
+            className="mt-4 inline-flex items-center gap-2 rounded-field border border-ink-600 px-4 py-2.5 text-sm font-medium text-ink-100 transition-colors hover:border-brand/50 hover:text-ink-50"
+          >
+            <ScaleIcon size={16} className="text-brand" />
+            {t("body.link")}
+            <ArrowRightIcon size={16} className="text-ink-400" />
+          </Link>
         </Block>
 
         <Block

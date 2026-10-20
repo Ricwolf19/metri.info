@@ -6,7 +6,7 @@ import { NotificationsSection } from "@/components/account/settings/Notification
 import { ProfileSection } from "@/components/account/settings/ProfileSection";
 import { SecuritySection } from "@/components/account/settings/SecuritySection";
 import { SettingsNav } from "@/components/account/settings/SettingsNav";
-import { ArrowRightIcon, StarIcon } from "@/components/icons";
+import { ArrowRightIcon, ScaleIcon, StarIcon } from "@/components/icons";
 import { Container } from "@/components/shared/Container";
 import { PageHero } from "@/components/shared/PageHero";
 import { buttonVariants } from "@/components/ui/button";
@@ -57,7 +57,7 @@ export const AccountView = ({
         align="left"
         compact
       >
-        <div className="mt-6">
+        <div className="mt-6 flex flex-wrap gap-2">
           <Link
             href={routePath("activity", locale)}
             className={buttonVariants({ variant: "secondary", size: "sm" })}
@@ -65,6 +65,13 @@ export const AccountView = ({
             <StarIcon size={16} />
             {t("account.activityLink")}
             <ArrowRightIcon size={16} />
+          </Link>
+          <Link
+            href={routePath("body", locale)}
+            className={buttonVariants({ variant: "outline", size: "sm" })}
+          >
+            <ScaleIcon size={16} />
+            {t("body.link")}
           </Link>
         </div>
       </PageHero>

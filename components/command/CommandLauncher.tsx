@@ -50,7 +50,7 @@ export const CommandLauncher = () => {
   if (isChromelessPath(pathname)) return null;
 
   return (
-    <div className="fixed top-[4.5rem] right-4 z-40 hidden sm:block">
+    <div className="fixed top-[4.5rem] right-4 z-40 hidden sm:block print:hidden">
       {hidden ? (
         <button
           type="button"

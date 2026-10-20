@@ -500,3 +500,40 @@ summary {
     scroll-behavior: auto !important;
   }
 }
+
+/*
+ * Print: the body page's "PDF" is the browser's print. Chrome is hidden, the
+ * page goes light-on-white, and the map's controls drop out (`print:hidden`
+ * in the markup); the figure and numbers stay.
+ */
+@media print {
+  header,
+  footer,
+  [data-launcher],
+  .print\:hidden {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #111;
+  }
+  .rounded-card,
+  .rounded-field {
+    border-color: #ddd !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+  .text-ink-50,
+  .text-ink-100,
+  .text-ink-200 {
+    color: #111 !important;
+  }
+  .text-ink-300,
+  .text-ink-400,
+  .text-ink-500 {
+    color: #555 !important;
+  }
+  a[href]::after {
+    content: "";
+  }
+}

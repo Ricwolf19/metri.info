@@ -45,6 +45,7 @@ import {
   Pause,
   Play,
   Plus,
+  Printer,
   ProfileCircle,
   NavArrowRight,
   Refresh,
@@ -134,6 +135,7 @@ export const LeafIcon = sized(Leaf, "LeafIcon");
 export const MedalIcon = sized(Medal, "MedalIcon");
 export const PauseIcon = sized(Pause, "PauseIcon");
 export const PlayIcon = sized(Play, "PlayIcon");
+export const PrinterIcon = sized(Printer, "PrinterIcon");
 export const PlusIcon = sized(Plus, "PlusIcon");
 export const RefreshIcon = sized(Refresh, "RefreshIcon");
 export const TimerIcon = sized(Timer, "TimerIcon");
