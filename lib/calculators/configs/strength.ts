@@ -5,8 +5,13 @@ import {
   dotsScore,
   oneRm,
   plateLoad,
+  PLATE_SETS,
+  type PlateRack,
+  kgToLb,
 } from "@/lib/calculations";
 import { C, SEX_OPTIONS, fmt, num, str } from "../_shared";
+import type { TranslationKey } from "@/lib/i18n/en";
+
 import type { CalcConfig } from "../types";
 
 export const onerm: CalcConfig = {
@@ -83,6 +88,8 @@ export const plates: CalcConfig = {
       max: 500,
       step: 2.5,
       default: 100,
+      // The loads people walk up to most, lightest first.
+      presets: [60, 80, 100, 120, 140, 160, 180, 200],
     },
     {
       name: "bar",
@@ -93,20 +100,47 @@ export const plates: CalcConfig = {
       max: 25,
       step: 5,
       default: 20,
+      // Olympic bar, women's bar, technique bar.
+      presets: [20, 15, 10],
+    },
+    {
+      name: "rack",
+      kind: "select",
+      labelKey: "calc.rack",
+      default: "kg",
+      options: [
+        { value: "kg", labelKey: "calc.rack.kg" },
+        { value: "lb", labelKey: "calc.rack.lb" },
+      ],
     },
   ],
   compute: (v) => {
-    const r = plateLoad(num(v, "target"), num(v, "bar"));
+    // Values are stored in kg; an lb rack is loaded in lb, so convert once
+    // and plate in that unit (a 45 lb plate is not 20.41 kg on the rack).
+    const rack: PlateRack = str(v, "rack") === "lb" ? "lb" : "kg";
+    const toRack = (kg: number) => (rack === "lb" ? kgToLb(kg) : kg);
+    const r = plateLoad(
+      toRack(num(v, "target")),
+      toRack(num(v, "bar")),
+      PLATE_SETS[rack],
+    );
     if (r.perSide <= 0) return null;
+    const rows: { label?: string; labelKey?: TranslationKey; value: string }[] =
+      r.plates.map((p) => ({
+        label: `${p.plate} ${rack}`,
+        value: `× ${p.count}`,
+      }));
+    if (r.remainder > 0)
+      rows.push({
+        labelKey: "calc.result.remainder",
+        value: `${fmt(r.remainder)} ${rack}`,
+      });
     return {
       primaryLabelKey: "calc.result.perSide",
       primaryValue: fmt(r.perSide),
-      primaryUnit: "kg",
-      rows: r.plates.map((p) => ({
-        label: `${p.plate} kg`,
-        value: `× ${p.count}`,
-      })),
-      chart: { kind: "barbell", plates: r.plates },
+      primaryUnit: rack,
+      rows,
+      chart: { kind: "barbell", plates: r.plates, unit: rack },
     };
   },
 };
