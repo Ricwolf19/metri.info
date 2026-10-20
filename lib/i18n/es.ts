@@ -9,6 +9,7 @@ export const es: Record<TranslationKey, string> = {
   "common.comingSoon": "Próximamente",
   "common.openSource": "Código abierto",
   "common.search": "Buscar",
+  "common.cancel": "Cancelar",
   "common.loading": "Cargando…",
 
   "pwa.installTitle": "Instalar Metri",
@@ -268,17 +269,21 @@ export const es: Record<TranslationKey, string> = {
   "plans.ctaPremium": "Solicitar acceso Premium",
 
   "quiz.title": "Test de conocimientos",
-  "quiz.eyebrow": "Gratis · De 4 a 16 preguntas · unos 5 minutos",
+  "quiz.eyebrow": "Gratis · 16 preguntas · unos 8 minutos",
   "quiz.seoDescription":
-    "Un test de conocimientos gratuito y adaptativo sobre nutrición, entrenamiento, composición corporal y fundamentos. Empieza fácil, se detiene en tu nivel y te dice qué estudiar después.",
+    "Un diagnóstico gratuito de nutrición, entrenamiento, composición corporal y fundamentos: 16 preguntas, cuatro niveles por área y un mapa de qué estudiar después.",
   "quiz.introTitle": "Comprueba lo que sabes",
   "quiz.introBody":
-    "Una pregunta a la vez en cuatro áreas. Cada acierto sube esa área un nivel, de básico a pro; el primer fallo la cierra. Cada respuesta viene explicada, así que aprendes de cualquier forma.",
+    "Dieciséis preguntas, cuatro por área, de básico a pro y en orden mezclado. Cada respuesta viene explicada y al final ves todas las que fallaste.",
+  "quiz.honest":
+    "Esto es un diagnóstico, no un examen que aprobar. Responde lo que de verdad piensas: un acierto de suerte esconde justo el hueco que el mapa debería mostrarte.",
+  "quiz.areaLevels": "4 preguntas · de básico a pro",
+  "quiz.lengthNote": "{n} preguntas · cada respuesta explicada",
   "quiz.start": "Empezar",
   "quiz.retake": "Hacerlo de nuevo",
   "quiz.resultTitle": "Tu mapa de conocimientos",
   "quiz.resultBody":
-    "El nivel más alto que superaste en cada área. Las guías de abajo cubren todos los niveles.",
+    "Tu nivel en cada área es la racha de niveles superados seguidos desde básico. Abajo aparece cada pregunta fallada con su explicación.",
   "quiz.questionN": "Pregunta {n}",
   "quiz.dontKnow": "No lo sé",
   "quiz.next": "Siguiente pregunta",
@@ -324,7 +329,7 @@ export const es: Record<TranslationKey, string> = {
     "Tus intentos, del más reciente al más antiguo, y qué leer después.",
   "quiz.historyEmpty":
     "Aún no hay intentos. Haz el test y tu mapa aparecerá aquí.",
-  "quiz.remaining": "hasta {n} más",
+  "quiz.remaining": "{n} más",
   "quiz.pause": "Pausar la cuenta atrás",
   "quiz.resume": "Reanudar la cuenta atrás",
   "quiz.review": "Repasa esto",
@@ -405,7 +410,6 @@ export const es: Record<TranslationKey, string> = {
   "calc.saveCta": "Guardar cálculo",
   "calc.saving": "Guardando…",
   "calc.saved": "Guardado",
-  "calc.saveViewHistory": "Ver historial",
   "calc.savePromptTitle": "Guarda tus cálculos",
   "calc.savePromptDesc":
     "Crea una cuenta gratis para guardar este resultado en tu historial, fijar favoritos y sincronizar en toda la app web.",
@@ -417,11 +421,8 @@ export const es: Record<TranslationKey, string> = {
   "share.action": "Compartir",
   "share.copyLink": "Copiar enlace",
   "share.copied": "Enlace copiado",
-  "share.copyFailed": "No se pudo copiar el enlace. Aquí está:",
   "share.copyImage": "Copiar imagen",
   "share.imageCopied": "Imagen copiada al portapapeles",
-  "share.copyImageFailed":
-    "Este navegador no puede copiar imágenes. Descárgala en su lugar.",
   "share.open": "Abrir la calculadora",
   "share.note":
     "Se calcula al instante en tu navegador. Ábrela para cambiar los datos.",
@@ -429,6 +430,16 @@ export const es: Record<TranslationKey, string> = {
   "calc.imperial": "Imperial",
   "calc.profilePrefilled":
     "Rellenado desde tu perfil. Edita lo que quieras abajo.",
+  "calc.hint.bodyFatKatch":
+    "Solo la fórmula Katch-McArdle usa la grasa corporal; Mifflin y Harris la ignoran.",
+  "calc.hint.useKatch": "Usar Katch-McArdle",
+  "calc.hint.caloriesTdee": "Tus calorías diarias de mantenimiento (TDEE).",
+  "calc.hint.caloriesTdeeLink": "Calcúlalas con la calculadora de TDEE.",
+  "calc.perSideEach": "por lado",
+  "calc.rack": "Discos del rack",
+  "calc.rack.kg": "Discos en kg (de 25 a 0.5)",
+  "calc.rack.lb": "Discos en lb (de 45 a 2.5)",
+  "calc.result.remainder": "Sobrante, ningún disco cabe",
   "calc.bodyFatOptional": "Grasa corporal (opcional)",
   "calc.macrosLeanBasis":
     "La proteína se calcula con tu masa magra (2.2 g/kg), no con tu peso.",
@@ -457,6 +468,12 @@ export const es: Record<TranslationKey, string> = {
   "activity.moderate": "Moderado",
   "activity.active": "Activo",
   "activity.veryActive": "Muy activo",
+  "activity.sedentary.desc": "Trabajo de escritorio, poco o nada de ejercicio",
+  "activity.light.desc": "Ejercicio ligero 1 a 3 días por semana",
+  "activity.moderate.desc": "Ejercicio moderado 3 a 5 días por semana",
+  "activity.active.desc": "Ejercicio intenso 6 a 7 días por semana",
+  "activity.veryActive.desc":
+    "Entrenamiento intenso diario, o trabajo físico más entrenamiento",
   "calc.goal.cut": "Definición",
   "calc.goal.maintain": "Mantenimiento",
   "calc.goal.bulk": "Volumen",
@@ -820,6 +837,11 @@ export const es: Record<TranslationKey, string> = {
   "history.search": "Busca en tu historial…",
   "history.filtersTitle": "Filtrar historial",
   "history.filterCalculator": "Calculadora",
+  "history.delete": "Eliminar este cálculo",
+  "history.deleteTitle": "¿Eliminar este cálculo?",
+  "history.deleteBody": "Desaparece de tu historial. No se puede deshacer.",
+  "history.deleted": "Cálculo eliminado",
+  "history.deleteFailed": "No se pudo eliminar. Inténtalo de nuevo.",
   "history.filterDate": "Guardado",
   "history.colCalculator": "Calculadora",
   "history.colResult": "Resultado",

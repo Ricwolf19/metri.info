@@ -7,6 +7,7 @@ export const en = {
   "common.comingSoon": "Coming soon",
   "common.openSource": "Open source",
   "common.search": "Search",
+  "common.cancel": "Cancel",
   "common.loading": "Loading…",
 
   "pwa.installTitle": "Install Metri",
@@ -254,17 +255,21 @@ export const en = {
   "plans.ctaPremium": "Request Premium access",
 
   "quiz.title": "Knowledge check",
-  "quiz.eyebrow": "Free · 4 to 16 questions · about 5 minutes",
+  "quiz.eyebrow": "Free · 16 questions · about 8 minutes",
   "quiz.seoDescription":
-    "A free, adaptive knowledge check across nutrition, training, body composition and the fundamentals. It starts easy, stops at your level, and tells you what to study next.",
+    "A free diagnostic across nutrition, training, body composition and the fundamentals: 16 questions, four levels per area, and a map of what to study next.",
   "quiz.introTitle": "Check what you know",
   "quiz.introBody":
-    "One question at a time across four areas. Each correct answer moves that area up a level, from basic to pro; the first miss closes it. Every answer is explained, so you learn either way.",
+    "Sixteen questions, four per area, from basic to pro in mixed order. Every answer is explained, and you see every one you missed at the end.",
+  "quiz.honest":
+    "This is a diagnostic, not an exam to pass. Answer what you actually think: a lucky guess hides exactly the gap the map is meant to show you.",
+  "quiz.areaLevels": "4 questions · basic to pro",
+  "quiz.lengthNote": "{n} questions · every answer explained",
   "quiz.start": "Start",
   "quiz.retake": "Take it again",
   "quiz.resultTitle": "Your knowledge map",
   "quiz.resultBody":
-    "The highest level you cleared in each area. The guides below cover every level.",
+    "Your level in each area is the run of levels you cleared in a row from basic. Every missed question is listed below with its explanation.",
   "quiz.questionN": "Question {n}",
   "quiz.dontKnow": "I don't know",
   "quiz.next": "Next question",
@@ -311,7 +316,7 @@ export const en = {
     "Your attempts, newest first, and where to read next.",
   "quiz.historyEmpty":
     "No attempts yet. Take the check and your map appears here.",
-  "quiz.remaining": "up to {n} more",
+  "quiz.remaining": "{n} more",
   "quiz.pause": "Pause the countdown",
   "quiz.resume": "Resume the countdown",
   "quiz.review": "Review these",
@@ -392,7 +397,6 @@ export const en = {
   "calc.saveCta": "Save calculation",
   "calc.saving": "Saving…",
   "calc.saved": "Saved",
-  "calc.saveViewHistory": "View history",
   "calc.savePromptTitle": "Save your calculations",
   "calc.savePromptDesc":
     "Create a free account to save this result to your history, pin favorites, and sync across the web app.",
@@ -404,17 +408,24 @@ export const en = {
   "share.action": "Share",
   "share.copyLink": "Copy link",
   "share.copied": "Link copied",
-  "share.copyFailed": "Couldn't copy the link. Here it is:",
   "share.copyImage": "Copy image",
   "share.imageCopied": "Image copied to the clipboard",
-  "share.copyImageFailed":
-    "This browser can't copy images. Download it instead.",
   "share.open": "Open the calculator",
   "share.note":
     "Computed instantly in your browser. Open it to change the inputs.",
   "calc.metric": "Metric",
   "calc.imperial": "Imperial",
   "calc.profilePrefilled": "Prefilled from your profile. Edit anything below.",
+  "calc.hint.bodyFatKatch":
+    "Only the Katch-McArdle formula uses body fat; Mifflin and Harris ignore it.",
+  "calc.hint.useKatch": "Use Katch-McArdle",
+  "calc.hint.caloriesTdee": "Your daily maintenance calories (TDEE).",
+  "calc.hint.caloriesTdeeLink": "Find yours with the TDEE calculator.",
+  "calc.perSideEach": "per side",
+  "calc.rack": "Plates on the rack",
+  "calc.rack.kg": "kg plates (25 down to 0.5)",
+  "calc.rack.lb": "lb plates (45 down to 2.5)",
+  "calc.result.remainder": "Left over, no plate fits",
   "calc.bodyFatOptional": "Body fat (optional)",
   "calc.macrosLeanBasis":
     "Protein is scaled to your lean mass (2.2 g/kg), not your bodyweight.",
@@ -443,6 +454,12 @@ export const en = {
   "activity.moderate": "Moderate",
   "activity.active": "Active",
   "activity.veryActive": "Very active",
+  "activity.sedentary.desc": "Desk job, little or no exercise",
+  "activity.light.desc": "Light exercise 1 to 3 days a week",
+  "activity.moderate.desc": "Moderate exercise 3 to 5 days a week",
+  "activity.active.desc": "Hard exercise 6 to 7 days a week",
+  "activity.veryActive.desc":
+    "Hard daily training, or a physical job plus training",
   "calc.goal.cut": "Cut",
   "calc.goal.maintain": "Maintain",
   "calc.goal.bulk": "Bulk",
@@ -802,6 +819,11 @@ export const en = {
   "history.search": "Search your history…",
   "history.filtersTitle": "Filter history",
   "history.filterCalculator": "Calculator",
+  "history.delete": "Delete this calculation",
+  "history.deleteTitle": "Delete this calculation?",
+  "history.deleteBody": "It disappears from your history. There is no undo.",
+  "history.deleted": "Calculation deleted",
+  "history.deleteFailed": "Couldn't delete it. Try again.",
   "history.filterDate": "Saved",
   "history.colCalculator": "Calculator",
   "history.colResult": "Result",
