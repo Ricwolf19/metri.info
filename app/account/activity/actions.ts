@@ -1,9 +1,14 @@
 "use server";
 
+import { and, eq } from "drizzle-orm";
 import type { ListQuery, ListResult } from "listkit";
 import { executeSqlList } from "listkit/sql";
+import { updateTag } from "next/cache";
 
 import { getSession } from "@/lib/auth/session";
+import { tags } from "@/lib/cache/tags";
+import { db } from "@/lib/db";
+import { calculationLog } from "@/lib/db/schema";
 import type { HistoryRow } from "@/lib/lists/history";
 import { listPool } from "@/lib/lists/pool";
 import { isoColumn } from "@/lib/lists/sql";
@@ -40,5 +45,37 @@ export const listMyCalculations = async (
       error: String(error),
     });
     return EMPTY;
+  }
+};
+
+export type DeleteResult =
+  | { ok: true }
+  | { ok: false; reason: "unauthenticated" | "not_found" | "error" };
+
+/** Remove one of the caller's own saved calculations. The user id is part of
+ * the predicate, so an id from another account deletes nothing. */
+export const deleteMyCalculation = async (
+  id: string,
+): Promise<DeleteResult> => {
+  if (typeof id !== "string" || id.length === 0 || id.length > 64)
+    return { ok: false, reason: "not_found" };
+  try {
+    const session = await getSession();
+    if (!session) return { ok: false, reason: "unauthenticated" };
+    const deleted = await db
+      .delete(calculationLog)
+      .where(
+        and(
+          eq(calculationLog.id, id),
+          eq(calculationLog.userId, session.user.id),
+        ),
+      )
+      .returning({ id: calculationLog.id });
+    if (deleted.length === 0) return { ok: false, reason: "not_found" };
+    updateTag(tags.metrics.db);
+    return { ok: true };
+  } catch (error) {
+    event.warn("history.delete-failed", { error: String(error) });
+    return { ok: false, reason: "error" };
   }
 };

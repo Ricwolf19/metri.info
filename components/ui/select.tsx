@@ -58,8 +58,13 @@ export const SelectContent = ({
 export const SelectItem = ({
   className,
   children,
+  description,
   ...props
-}: React.ComponentProps<typeof SelectPrimitive.Item>) => (
+}: React.ComponentProps<typeof SelectPrimitive.Item> & {
+  /** A second, quieter line under the label. Kept out of `ItemText`, so the
+   * closed trigger shows the label alone. */
+  description?: string;
+}) => (
   <SelectPrimitive.Item
     className={cn(
       "relative flex w-full cursor-pointer items-center rounded-lg py-2 pr-2.5 pl-8 text-sm outline-none select-none",
@@ -73,6 +78,13 @@ export const SelectItem = ({
         <CheckIcon size={15} />
       </SelectPrimitive.ItemIndicator>
     </span>
-    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+    {description ? (
+      <span className="flex flex-col gap-0.5">
+        <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+        <span className="text-xs leading-snug text-ink-400">{description}</span>
+      </span>
+    ) : (
+      <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+    )}
   </SelectPrimitive.Item>
 );

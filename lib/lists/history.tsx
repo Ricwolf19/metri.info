@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { defineListConfig } from "listkit/server";
 
+import { HistoryRowActions } from "@/components/account/HistoryRowActions";
 import { ArrowRightIcon, CalculatorIcon } from "@/components/icons";
 import { CALC_CONTENT } from "@/lib/calculators/content";
 import { CALCULATORS } from "@/lib/calculators/registry";
@@ -134,6 +135,13 @@ export const historyListConfig = (locale: Locale) => {
             </span>
           ),
           exportValue: (r) => r.createdAt,
+        },
+        {
+          key: "actions",
+          header: "",
+          overlay: true,
+          width: "3.5rem",
+          render: (r) => <HistoryRowActions id={r.id} />,
         },
       ],
     },

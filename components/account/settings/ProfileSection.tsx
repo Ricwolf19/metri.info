@@ -27,7 +27,12 @@ import type { AccountProfile } from "@/lib/account/settings";
 
 const UNSET = "unset";
 
-type Option = { value: string; key: TranslationKey };
+type Option = {
+  value: string;
+  key: TranslationKey;
+  /** One line under the label explaining the choice. */
+  descKey?: TranslationKey;
+};
 
 /** Labels per option value. `Record` over the shared sets keeps the form and
  * the save action's whitelist in lockstep: add a level in `options.ts` and
@@ -43,6 +48,16 @@ const ACTIVITY_KEY: Record<(typeof ACTIVITY_LEVELS)[number], TranslationKey> = {
   active: "settings.activityActive",
   very_active: "settings.activityVeryActive",
 };
+const ACTIVITY_DESC_KEY: Record<
+  (typeof ACTIVITY_LEVELS)[number],
+  TranslationKey
+> = {
+  sedentary: "activity.sedentary.desc",
+  light: "activity.light.desc",
+  moderate: "activity.moderate.desc",
+  active: "activity.active.desc",
+  very_active: "activity.veryActive.desc",
+};
 const FORMULA_KEY: Record<(typeof BMR_FORMULAS)[number], TranslationKey> = {
   mifflin_st_jeor: "calc.formula.mifflin",
   harris_benedict: "calc.formula.harris",
@@ -53,9 +68,14 @@ const withUnset = <T extends string>(
   unsetKey: TranslationKey,
   values: readonly T[],
   keys: Record<T, TranslationKey>,
+  descs?: Record<T, TranslationKey>,
 ): Option[] => [
   { value: UNSET, key: unsetKey },
-  ...values.map((value) => ({ value, key: keys[value] })),
+  ...values.map((value) => ({
+    value,
+    key: keys[value],
+    descKey: descs?.[value],
+  })),
 ];
 
 const SEX_OPTIONS = withUnset("settings.sexUnset", SEXES, SEX_KEY);
@@ -65,6 +85,7 @@ const ACTIVITY_OPTIONS = withUnset(
   "settings.activityUnset",
   ACTIVITY_LEVELS,
   ACTIVITY_KEY,
+  ACTIVITY_DESC_KEY,
 );
 const FORMULA_OPTIONS = withUnset(
   "settings.formulaUnset",
@@ -95,7 +116,11 @@ const OptionSelect = <T extends string>({
 }: {
   value: T;
   onChange: (v: T) => void;
-  options: readonly { value: T; key: TranslationKey }[];
+  options: readonly {
+    value: T;
+    key: TranslationKey;
+    descKey?: TranslationKey;
+  }[];
 }) => {
   const t = useT();
   return (
@@ -105,7 +130,11 @@ const OptionSelect = <T extends string>({
       </SelectTrigger>
       <SelectContent>
         {options.map((o) => (
-          <SelectItem key={o.value} value={o.value}>
+          <SelectItem
+            key={o.value}
+            value={o.value}
+            description={o.descKey ? t(o.descKey) : undefined}
+          >
             {t(o.key)}
           </SelectItem>
         ))}
