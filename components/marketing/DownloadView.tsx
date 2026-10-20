@@ -154,9 +154,11 @@ export const DownloadView = async ({ locale }: { locale: Locale }) => {
         }
         aside={
           <div className="relative">
+            {/* An orb, not the top-anchored glow: on a phone the aside sits
+                mid-page, where a box edge shows as a straight green line. */}
             <div
               aria-hidden
-              className="glow-brand absolute inset-x-0 -top-12 -z-10 h-80"
+              className="glow-orb pointer-events-none absolute top-1/2 left-1/2 -z-10 h-[130%] w-[200%] -translate-x-1/2 -translate-y-1/2"
             />
             <DeviceFrame className="w-[15rem] sm:w-[16rem]">
               <TourScreen
