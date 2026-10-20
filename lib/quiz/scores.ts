@@ -58,14 +58,15 @@ const AREA_SET = new Set<string>(QUIZ_AREAS);
 export const parseMisses = (value: unknown): QuizMiss[] => {
   if (!Array.isArray(value)) return [];
   const out: QuizMiss[] = [];
-  const areas = new Set<string>();
+  const cells = new Set<string>();
   for (const m of value) {
     if (typeof m !== "object" || m === null) continue;
     const r = m as Record<string, unknown>;
+    const key = `${String(r.area)}:${String(r.level)}`;
     if (
       typeof r.area !== "string" ||
       !AREA_SET.has(r.area) ||
-      areas.has(r.area) ||
+      cells.has(key) ||
       !Number.isInteger(r.level) ||
       (r.level as number) < 1 ||
       (r.level as number) > QUIZ_MAX_LEVEL ||
@@ -73,26 +74,32 @@ export const parseMisses = (value: unknown): QuizMiss[] => {
       (r.variant as number) < 0
     )
       continue;
-    areas.add(r.area);
+    cells.add(key);
     out.push({
       area: r.area as QuizArea,
       level: r.level as number,
       variant: r.variant as number,
     });
-    if (out.length === QUIZ_AREAS.length) break;
+    if (out.length === QUIZ_AREAS.length * QUIZ_MAX_LEVEL) break;
   }
   return out;
 };
 
-/** A real run always satisfies `asked = Σ cleared levels + misses`: every
- * correct answer cleared a level and every area closes on at most one miss. */
+/** A real run asks every cell once, and an area's level is the run of
+ * correct answers from basic: exactly `first missed level - 1`, or the top
+ * when nothing in the area was missed. */
 export const isConsistentAttempt = (
   scores: QuizScores,
   misses: QuizMiss[],
   asked: number,
-): boolean =>
-  QUIZ_AREAS.reduce((sum, a) => sum + scores[a], 0) + misses.length === asked &&
-  misses.every((m) => m.level === scores[m.area] + 1);
+): boolean => {
+  if (asked !== QUIZ_AREAS.length * QUIZ_MAX_LEVEL) return false;
+  return QUIZ_AREAS.every((area) => {
+    const levels = misses.filter((m) => m.area === area).map((m) => m.level);
+    const first = levels.length ? Math.min(...levels) : QUIZ_MAX_LEVEL + 1;
+    return scores[area] === first - 1;
+  });
+};
 
 export const readLocalResult = (): StoredResult | null => {
   try {

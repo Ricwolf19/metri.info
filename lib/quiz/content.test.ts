@@ -41,20 +41,22 @@ describe("quiz bank", () => {
 });
 
 describe("quiz engine", () => {
-  it("climbs on correct answers and closes an area on the first miss", () => {
+  it("scores the run from basic and keeps asking an area after a miss", () => {
     let s = startQuiz(QUIZ_QUESTIONS, () => 0);
-    // nutrition L1 correct, training L1 wrong, body L1 correct, fundamentals L1 correct
+    const [first, second] = s.queue.map((c) => c.area);
+    // Round 1: the second area misses its basic question.
     s = answerCurrent(s, true);
     s = answerCurrent(s, false);
     s = answerCurrent(s, true);
     s = answerCurrent(s, true);
-    expect(s.order).toEqual(["nutrition", "body", "fundamentals"]);
-    expect(s.cleared.training).toBe(0);
-    expect(s.cleared.nutrition).toBe(1);
+    expect(s.cleared[second]).toBe(0);
+    expect(s.cleared[first]).toBe(1);
     expect(s.asked).toBe(4);
+    expect(s.current[second]).toBe(2);
+    expect(s.misses).toEqual([{ area: second, level: 1, variant: 0 }]);
   });
 
-  it("completes after at most 16 answers and reports 0..4 per area", () => {
+  it("completes after exactly 16 answers and reports 0..4 per area", () => {
     let s = startQuiz(QUIZ_QUESTIONS, () => 0.99);
     let n = 0;
     while (!isQuizComplete(s) && n < 50) {

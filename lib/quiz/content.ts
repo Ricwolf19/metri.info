@@ -128,6 +128,25 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
   },
   {
     area: "training",
+    level: 1,
+    prompt: {
+      en: "In a squat, which part of the rep is the concentric phase?",
+      es: "En una sentadilla, ¿qué parte de la repetición es la fase concéntrica?",
+    },
+    options: [
+      { en: "Standing back up", es: "Subir de vuelta" },
+      { en: "Lowering into the squat", es: "Bajar a la sentadilla" },
+      { en: "The pause at the bottom", es: "La pausa abajo" },
+      { en: "Unracking the bar", es: "Sacar la barra del rack" },
+    ],
+    answer: 0,
+    why: {
+      en: "Concentric means the muscle shortens while it produces force: the way up in a squat, the curl up in a biceps curl. Eccentric is the lowering, where the muscle lengthens under load; that phase causes most of the soreness afterwards.",
+      es: "Concéntrica significa que el músculo se acorta mientras produce fuerza: la subida en la sentadilla, la subida en un curl de bíceps. La excéntrica es la bajada, donde el músculo se alarga bajo carga; esa fase causa la mayor parte del dolor muscular posterior.",
+    },
+  },
+  {
+    area: "training",
     level: 2,
     prompt: {
       en: '"RIR 2" on a set means…',

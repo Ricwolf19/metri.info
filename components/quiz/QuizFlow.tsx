@@ -36,10 +36,14 @@ import {
 import { QUIZ_QUESTIONS } from "@/lib/quiz/content";
 import {
   answerCurrent,
+  areaDone,
+  cellKey,
   currentArea,
   currentQuestion,
   isQuizComplete,
   maxRemaining,
+  optionOrderFor,
+  QUIZ_LENGTH,
   type QuizState,
   startQuiz,
 } from "@/lib/quiz/engine";
@@ -66,8 +70,8 @@ const AREA_ICON: Record<QuizArea, React.ComponentType<IconProps>> = {
 type Phase = "intro" | "question" | "result";
 type SaveState = "saved" | "local" | "failed" | null;
 
-/** Four tiny ladders, one per area, filled to the cleared level; the area
- * being asked glows. Reads as "where am I" without promising a total. */
+/** Four tiny ladders, one per area: cleared levels in brand, a missed level
+ * dimmed, the cell being asked glowing. Reads as "where am I" at a glance. */
 const AreaLadder = ({
   state,
   labels,
@@ -80,7 +84,7 @@ const AreaLadder = ({
     <ol className="grid grid-cols-4 gap-2" aria-hidden>
       {QUIZ_AREAS.map((area) => {
         const Icon = AREA_ICON[area];
-        const closed = !state.order.includes(area);
+        const closed = areaDone(state, area);
         return (
           <li key={area}>
             <div className="grid grid-cols-4 gap-0.5">
@@ -89,11 +93,13 @@ const AreaLadder = ({
                   key={i}
                   className={cn(
                     "h-1 rounded-full transition-colors",
-                    i < state.cleared[area]
+                    state.answered[cellKey(area, i + 1)] === true
                       ? "bg-brand"
-                      : area === active && i === state.current[area] - 1
-                        ? "bg-brand/40"
-                        : "bg-ink-700",
+                      : state.answered[cellKey(area, i + 1)] === false
+                        ? "bg-ink-500"
+                        : area === active && i === state.current[area] - 1
+                          ? "bg-brand/40"
+                          : "bg-ink-700",
                   )}
                 />
               ))}
@@ -265,7 +271,7 @@ export const QuizFlow = ({
 
   if (phase === "intro") {
     return (
-      <div className="mx-auto max-w-3xl space-y-6">
+      <div className="mx-auto max-w-5xl space-y-6">
         {shared && (
           <div className="rounded-card border border-brand/30 bg-ink-800 p-6 sm:p-8">
             <p className="font-mono text-[11px] font-medium tracking-widest text-brand uppercase">
@@ -277,19 +283,52 @@ export const QuizFlow = ({
             </div>
           </div>
         )}
-        <div className="rounded-card border border-ink-600 bg-ink-800 p-6 sm:p-8">
-          <h2 className="text-2xl font-bold tracking-tight text-ink-50">
-            {t("quiz.introTitle")}
-          </h2>
-          <p className="mt-3 text-pretty text-ink-300">{t("quiz.introBody")}</p>
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <Button variant="brand" size="lg" onClick={begin}>
-              {last ? t("quiz.retake") : t("quiz.start")}
-            </Button>
-            {!signedIn && (
-              <p className="text-xs text-ink-400">{t("quiz.keepHint")}</p>
-            )}
+        <div className="grid gap-8 rounded-card border border-ink-600 bg-ink-800 p-6 sm:p-8 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] md:gap-10 md:p-10">
+          <div className="flex flex-col">
+            <h2 className="text-2xl font-bold tracking-tight text-ink-50 sm:text-3xl">
+              {t("quiz.introTitle")}
+            </h2>
+            <p className="mt-3 text-pretty text-ink-300">
+              {t("quiz.introBody")}
+            </p>
+            <p className="mt-4 rounded-field border border-brand/25 bg-brand/5 px-4 py-3 text-sm leading-relaxed text-ink-200">
+              {t("quiz.honest")}
+            </p>
+            <div className="mt-6 flex flex-wrap items-center gap-3 md:mt-auto md:pt-6">
+              <Button variant="brand" size="lg" onClick={begin}>
+                {last ? t("quiz.retake") : t("quiz.start")}
+              </Button>
+              {!signedIn && (
+                <p className="text-xs text-ink-400">{t("quiz.keepHint")}</p>
+              )}
+            </div>
           </div>
+          <ol className="grid content-center gap-2.5">
+            {QUIZ_AREAS.map((a) => {
+              const Icon = AREA_ICON[a];
+              return (
+                <li
+                  key={a}
+                  className="flex items-center gap-3 rounded-field border border-ink-600/70 bg-ink-900/40 px-4 py-3"
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
+                    <Icon size={18} />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm font-semibold text-ink-50">
+                      {labels[a]}
+                    </span>
+                    <span className="block text-xs text-ink-400">
+                      {t("quiz.areaLevels")}
+                    </span>
+                  </span>
+                </li>
+              );
+            })}
+            <li className="px-1 pt-1 font-mono text-[11px] tracking-wide text-ink-400 uppercase">
+              {t("quiz.lengthNote", { n: QUIZ_LENGTH })}
+            </li>
+          </ol>
         </div>
         {last && (
           <div className="rounded-card border border-ink-600 bg-ink-800 p-6 sm:p-8">
@@ -384,6 +423,7 @@ export const QuizFlow = ({
 
   if (!question || !area) return null;
   const level = toQuizLevel(state.current[area]);
+  const order = optionOrderFor(state, question);
   const willFinish =
     revealed &&
     isQuizComplete(answerCurrent(state, picked === question.answer));
@@ -418,7 +458,8 @@ export const QuizFlow = ({
           </h2>
 
           <ul className="mt-6 grid gap-2">
-            {question.options.map((option, i) => {
+            {order.map((i, slot) => {
+              const option = question.options[i];
               const isAnswer = i === question.answer;
               const isPicked = i === picked;
               return (
@@ -458,7 +499,7 @@ export const QuizFlow = ({
                       ) : revealed && isPicked ? (
                         <XIcon size={14} />
                       ) : (
-                        LETTERS[i]
+                        LETTERS[slot]
                       )}
                     </span>
                     {option[locale]}
