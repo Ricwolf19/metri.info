@@ -1,4 +1,5 @@
 import type { TranslationKey } from "@/lib/i18n/en";
+import type { RouteId } from "@/lib/i18n/routes";
 
 export type CalcId =
   | "onerm"
@@ -33,6 +34,13 @@ type CalcField =
       default: number;
       /** Common values offered as one-tap chips under the input (base unit). */
       presets?: number[];
+      /** One line under the input: what the value means, where to get it
+       * (`route`) or a one-tap change to a sibling field (`set`). */
+      hint?: {
+        key: TranslationKey;
+        route?: { id: RouteId; labelKey: TranslationKey };
+        set?: { field: string; value: string; labelKey: TranslationKey };
+      };
     }
   | {
       name: string;
@@ -89,6 +97,8 @@ export type CalcChart =
   | {
       kind: "barbell";
       plates: { plate: number; count: number }[];
+      /** The rack's unit; colours and labels follow it. */
+      unit?: "kg" | "lb";
     };
 
 export type CalcResult = {

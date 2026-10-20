@@ -115,8 +115,21 @@ const PLATE_COLORS: Record<number, string> = {
   2.5: "#f97316",
   1.25: "#a1a1aa",
 };
-const plateColor = (p: number) => PLATE_COLORS[p] ?? "#a1a1aa";
-const plateHeight = (p: number) => 22 + (Math.min(p, 25) / 25) * 42;
+/** lb racks: 45 red, 35 blue, 25 yellow, 10 green, 5 white, 2.5 orange. */
+const PLATE_COLORS_LB: Record<number, string> = {
+  45: "#ef4444",
+  35: "#3b82f6",
+  25: "#eab308",
+  10: "#22c55e",
+  5: "#e5e7eb",
+  2.5: "#f97316",
+};
+const plateColor = (p: number, unit: "kg" | "lb") =>
+  (unit === "lb" ? PLATE_COLORS_LB : PLATE_COLORS)[p] ?? "#a1a1aa";
+const plateHeight = (p: number, unit: "kg" | "lb") => {
+  const max = unit === "lb" ? 45 : 25;
+  return 22 + (Math.min(p, max) / max) * 42;
+};
 
 export const CalcChart = ({
   chart,
@@ -190,29 +203,41 @@ export const CalcChart = ({
   }
 
   if (chart.kind === "barbell") {
+    // One side's stack, heaviest against the collar; the bar is drawn whole,
+    // so the reader sees what they will load: the same plates on each side.
+    const unit = chart.unit ?? "kg";
     const stack = chart.plates.flatMap((p) =>
       Array.from({ length: p.count }, () => p.plate),
     );
+    const plate = (p: number, i: number) => (
+      <span
+        key={i}
+        title={`${p} ${unit}`}
+        className="chart-anim shrink-0 rounded-[2px] ring-1 ring-black/15"
+        style={{
+          height: `${plateHeight(p, unit)}px`,
+          width: "9px",
+          background: plateColor(p, unit),
+        }}
+      />
+    );
     return (
-      <div className="flex w-full max-w-full flex-wrap items-center justify-center gap-x-[3px] gap-y-1 overflow-hidden rounded-xl border border-ink-700 bg-ink-900/40 px-2 py-4">
-        <span className="h-1.5 w-9 rounded-l-sm bg-ink-500" />
-        {stack.length === 0 ? (
-          <span className="h-1.5 w-16 bg-ink-600" />
-        ) : (
-          stack.map((p, i) => (
-            <span
-              key={i}
-              title={`${p} kg`}
-              className="chart-anim rounded-[2px] ring-1 ring-black/15"
-              style={{
-                height: `${plateHeight(p)}px`,
-                width: "9px",
-                background: plateColor(p),
-              }}
-            />
-          ))
+      <div className="w-full overflow-hidden rounded-xl border border-ink-700 bg-ink-900/40 px-3 py-4">
+        <div className="flex items-center justify-center gap-[3px]">
+          <span className="h-1.5 w-5 shrink-0 rounded-l-sm bg-ink-500" />
+          {[...stack].reverse().map(plate)}
+          <span className="h-2.5 w-2 shrink-0 bg-ink-500" />
+          <span className="h-1.5 min-w-10 flex-1 bg-ink-600" />
+          <span className="h-2.5 w-2 shrink-0 bg-ink-500" />
+          {stack.map(plate)}
+          <span className="h-1.5 w-5 shrink-0 rounded-r-sm bg-ink-500" />
+        </div>
+        {stack.length > 0 && (
+          <p className="mt-3 text-center font-mono text-[11px] tracking-wide text-ink-400 uppercase">
+            {stack.map((p) => `${p}`).join(" · ")} {unit} ·{" "}
+            {t("calc.perSideEach")}
+          </p>
         )}
-        <span className="h-2.5 w-2 rounded-r-sm bg-ink-500" />
       </div>
     );
   }
@@ -252,8 +277,11 @@ export const CalcChart = ({
   }
 
   const { value, min, max, segments } = chart;
+  const activeIndex = segments.findIndex((s) => value < s.upto);
   const active =
-    segments.find((s) => value < s.upto) ?? segments[segments.length - 1];
+    segments[activeIndex === -1 ? segments.length - 1 : activeIndex];
+  const activeFrom = activeIndex <= 0 ? min : segments[activeIndex - 1].upto;
+  const activeTo = activeIndex === -1 ? max : active.upto;
   const markerPct = clamp(((value - min) / (max - min || 1)) * 100, 0, 100);
   const gaugeClass =
     size === "lg"
@@ -284,10 +312,26 @@ export const CalcChart = ({
         </span>
       </div>
       <span
-        className="mt-1 rounded-md px-2 py-0.5 text-xs font-medium transition-colors duration-300"
-        style={{ color: active.color }}
+        className={cn(
+          "mt-2 inline-flex items-center gap-2 rounded-full border px-3 py-1 font-semibold transition-colors duration-300",
+          size === "lg" ? "text-base" : "text-sm",
+        )}
+        style={{
+          color: active.color,
+          borderColor: `${active.color}55`,
+          background: `${active.color}14`,
+        }}
       >
+        <span
+          className="h-2 w-2 rounded-full"
+          style={{ background: active.color }}
+        />
         {t(active.labelKey)}
+        <span className="font-mono text-xs font-medium text-ink-300 tabular-nums">
+          {activeFrom}
+          {"–"}
+          {activeTo}
+        </span>
       </span>
 
       <div className="mt-3 w-full">
@@ -298,9 +342,11 @@ export const CalcChart = ({
               return (
                 <div
                   key={s.labelKey}
+                  className="transition-opacity duration-300"
                   style={{
                     width: `${((s.upto - prev) / (max - min || 1)) * 100}%`,
                     background: s.color,
+                    opacity: s === active ? 1 : 0.35,
                   }}
                 />
               );

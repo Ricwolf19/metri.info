@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -20,6 +21,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { track } from "@/lib/analytics/track";
 import { useI18n, useT } from "@/lib/i18n";
+import { routePath } from "@/lib/i18n/routes";
 import { applyProfileToValues } from "@/lib/calculators/prefill";
 import { getCalcProfile } from "@/lib/calculators/profile";
 import { CALCULATORS } from "@/lib/calculators/registry";
@@ -85,7 +87,7 @@ const FieldInputs = ({
   /** Lay fields out in a responsive 2-column grid (single-calculator view). */
   columns?: boolean;
 }) => {
-  const t = useT();
+  const { t, locale } = useI18n();
   const toDisplay = (m: number, unit?: string) =>
     units === "imperial" && convertible(unit)
       ? r1(m * (unit === "kg" ? KG_TO_LB : CM_TO_IN))
@@ -138,11 +140,12 @@ const FieldInputs = ({
           f.min !== undefined ? toDisplay(f.min, f.unit) : undefined;
         const dispMax =
           f.max !== undefined ? toDisplay(f.max, f.unit) : undefined;
+        // Imperial keeps a decimal for body measures: a tape reads 33.5 in.
         const dispStep =
           units === "imperial" && convertible(f.unit)
             ? f.unit === "kg"
-              ? 1
-              : 0.5
+              ? 0.5
+              : 0.1
             : f.step;
         const hasRange = dispMin !== undefined && dispMax !== undefined;
         const step = dispStep ?? 1;
@@ -229,6 +232,37 @@ const FieldInputs = ({
                   );
                 })}
               </div>
+            )}
+            {f.hint && (
+              <p className="mt-2 text-xs leading-relaxed text-ink-400">
+                {t(f.hint.key)}
+                {f.hint.route && (
+                  <>
+                    {" "}
+                    <Link
+                      href={routePath(f.hint.route.id, locale)}
+                      className="font-medium text-brand underline-offset-2 hover:underline"
+                    >
+                      {t(f.hint.route.labelKey)}
+                    </Link>
+                  </>
+                )}
+                {f.hint.set &&
+                  values[f.hint.set.field] !== f.hint.set.value && (
+                    <>
+                      {" "}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          onChange(f.hint!.set!.field, f.hint!.set!.value)
+                        }
+                        className="font-medium text-brand underline-offset-2 hover:underline"
+                      >
+                        {t(f.hint.set.labelKey)}
+                      </button>
+                    </>
+                  )}
+              </p>
             )}
           </div>
         );

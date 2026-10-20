@@ -53,7 +53,7 @@ export const bodyfat: CalcConfig = {
       unit: "cm",
       min: 20,
       max: 80,
-      step: 0.5,
+      step: 0.1,
       default: 38,
     },
     {
@@ -63,7 +63,7 @@ export const bodyfat: CalcConfig = {
       unit: "cm",
       min: 40,
       max: 200,
-      step: 0.5,
+      step: 0.1,
       default: 85,
     },
     {
@@ -73,7 +73,7 @@ export const bodyfat: CalcConfig = {
       unit: "cm",
       min: 40,
       max: 200,
-      step: 0.5,
+      step: 0.1,
       default: 95,
     },
   ],
@@ -430,7 +430,7 @@ export const whtr: CalcConfig = {
       unit: "cm",
       min: 40,
       max: 200,
-      step: 0.5,
+      step: 0.1,
       default: 85,
     },
     {

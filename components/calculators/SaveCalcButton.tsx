@@ -111,14 +111,6 @@ export const SaveCalcButton = ({
               ? t("calc.saving")
               : t("calc.saveCta")}
         </button>
-        {saved && (
-          <Link
-            href={routePath("activity", locale)}
-            className="animate-rise text-xs font-medium text-accent underline-offset-2 hover:underline"
-          >
-            {t("calc.saveViewHistory")}
-          </Link>
-        )}
       </div>
 
       <Dialog open={promptOpen} onOpenChange={setPromptOpen}>

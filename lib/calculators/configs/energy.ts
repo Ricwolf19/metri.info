@@ -71,6 +71,14 @@ export const tdeeConfig: CalcConfig = {
       max: 70,
       step: 0.5,
       default: 18,
+      hint: {
+        key: "calc.hint.bodyFatKatch",
+        set: {
+          field: "formula",
+          value: "katch",
+          labelKey: "calc.hint.useKatch",
+        },
+      },
     },
     {
       name: "activity",
@@ -159,6 +167,10 @@ export const macrosConfig: CalcConfig = {
       max: 6000,
       step: 10,
       default: 2500,
+      hint: {
+        key: "calc.hint.caloriesTdee",
+        route: { id: "tdee", labelKey: "calc.hint.caloriesTdeeLink" },
+      },
     },
     {
       name: "weight",
