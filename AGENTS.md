@@ -73,13 +73,16 @@ committed, `scripts/vercel-migrate.mjs` applies it on deploy.
   browser extensions crash on our pages (`components/seo/JsonLd.tsx` explains the escaping too).
 - **`lib/calculations` is mirrored 1:1 in the mobile app** (`src/features/calculators/math`).
   Same rule as the sync contract: change one, change both, or the two apps quote different
-  numbers for the same body. Only `lib/calculations/energy.test.ts` guards this side.
+  numbers for the same body. `lib/calculations/{energy,strength}.test.ts` guard this side. The
+  plate calculator's racks (`PLATE_SETS`, kg and lb) come from the app's training `plate-math.ts`.
 - **Knowledge check** (`lib/quiz`): `areas.ts` and the first sixteen questions of `content.ts` are the
   mobile app's `src/features/quiz` verbatim (area ids and `REVEAL_MS` are shared contracts); the web
-  adds more questions per (area, level) and the engine picks one per cell per attempt. Results keep
-  the app's `Record<QuizArea, 0..4>` shape: the browser's localStorage for everyone, `quiz_attempt`
-  for any signed-in account (`can(plan, "history")` is the one switch if that ever narrows). It
-  recommends guides, it never locks one.
+  adds more questions per (area, level). The web engine is a full diagnostic: all sixteen cells are
+  asked (one question per cell and a shuffled option order fixed per attempt), level by level with
+  the areas rotated. Results keep the app's `Record<QuizArea, 0..4>` shape (a level is the run of
+  correct answers from basic) and add every miss: the browser's localStorage for everyone,
+  `quiz_attempt` for any signed-in account (`can(plan, "history")` is the one switch if that ever
+  narrows). It recommends guides, it never locks one.
 - **Entitlements**: gate with `can(plan, feature)` (`lib/entitlements.ts`), never
   `plan === "premium"`. `subscription` is the billing source of truth; `user.plan` is a denormalized
   cache the client can never write (`input: false`).
