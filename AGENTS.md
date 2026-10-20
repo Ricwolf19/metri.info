@@ -71,24 +71,41 @@ committed, `scripts/vercel-migrate.mjs` applies it on deploy.
 - **JSON-LD emits one `<script type="application/ld+json">` per node, never one array.** A bare
   array makes `JSON.parse(el.textContent)["@context"]` undefined, which is how page-scanning
   browser extensions crash on our pages (`components/seo/JsonLd.tsx` explains the escaping too).
+- **Body & training map** (`/account/body`, `components/body`, `lib/sync/body.ts`): the app's
+  Metrics tab read-only from the sync mirror, Premium only. `lib/training/{muscles,muscle-load}.ts`
+  and `lib/training/catalog.ts` mirror the app's muscle model and seeded exercise catalog (only
+  custom exercises sync, so the catalog is what attributes a logged set to muscles); `lib/body/
+  {sites,weekly,map}.ts` mirror the tape sites, the weekly-average math and the map's colours;
+  `lib/body/figure.ts` is the figure's SVG path data (from `react-native-body-highlighter`, MIT,
+  the library the app draws with), server-only and passed down as a prop. Share cards go through
+  `/og/body?c=<token>` (numbers only, `lib/body/share.ts`); exports stream from
+  `/account/body/export` as CSV or a dependency-free `.xlsx` (`lib/exports/xlsx.ts`), and "PDF"
+  is the browser's print under the `@media print` rules in `globals.css`.
+- **Horizontal scrollers** wrap in `components/ui/ScrollHint.tsx` (the side nav's phone row, data
+  tables, the admin heatmaps): a fade plus a nudging chevron on whichever edge still has content.
 - **`lib/calculations` is mirrored 1:1 in the mobile app** (`src/features/calculators/math`).
   Same rule as the sync contract: change one, change both, or the two apps quote different
   numbers for the same body. `lib/calculations/{energy,strength}.test.ts` guard this side. The
   plate calculator's racks (`PLATE_SETS`, kg and lb) come from the app's training `plate-math.ts`.
-- **Knowledge check** (`lib/quiz`): `areas.ts` and the first sixteen questions of `content.ts` are the
-  mobile app's `src/features/quiz` verbatim (area ids and `REVEAL_MS` are shared contracts); the web
-  adds more questions per (area, level). The web engine is a full diagnostic: all sixteen cells are
-  asked (one question per cell and a shuffled option order fixed per attempt), level by level with
-  the areas rotated. Results keep the app's `Record<QuizArea, 0..4>` shape (a level is the run of
-  correct answers from basic) and add every miss: the browser's localStorage for everyone,
-  `quiz_attempt` for any signed-in account (`can(plan, "history")` is the one switch if that ever
-  narrows). It recommends guides, it never locks one.
+- **Knowledge check** (`lib/quiz`): `areas.ts` and the first sixteen questions of `content.ts` came
+  from the app's former `src/features/quiz` (area ids and `REVEAL_MS` are still shared contracts;
+  the web is the quiz's home now). The engine is a full diagnostic: every (area, level) cell is asked
+  twice with two different questions (thirty-two in all, `QUIZ_LENGTH`), level by level with the
+  areas rotated and the option order shuffled per attempt; a level counts only when both answers
+  are right. Results keep the app's `Record<QuizArea, 0..4>` shape and add every miss: the
+  browser's localStorage for everyone, `quiz_attempt` for any signed-in account (`can(plan,
+  "history")` is the one switch if that ever narrows). It recommends guides, it never locks one.
+  Writing rule, held by `content.test.ts`: the right answer must not be the longest option more
+  often than chance, and never by a wide margin.
 - **Entitlements**: gate with `can(plan, feature)` (`lib/entitlements.ts`), never
   `plan === "premium"`. `subscription` is the billing source of truth; `user.plan` is a denormalized
   cache the client can never write (`input: false`).
 - **`saveCalculation` requires a session** — no anonymous rows in `calculation_log`; aggregate usage
   goes to PostHog, not the DB.
-- **Admin** (`/admin`) is EN-only and gated by `requireAdmin`. It has no sidebar: the site header
+- **Admin** (`/admin`) is EN-only and gated by `requireAdmin`. The overview opens with one number
+  per upstream (Postgres, PostHog, Sentry, GA4) so a missing key shows there, then first-party
+  series, the PostHog traffic calendar and weekday/hour heatmaps (`components/admin/charts`, plain
+  SVG, no chart package) and the top lists; every card degrades on its own. It has no sidebar: the site header
   swaps its sections for `ADMIN_NAV_GROUPS` on admin paths (`isAdminPath`), and the footer and
   launcher stay off (`isChromelessPath`).
 - **Lists** (admin users, admin calculations, account history) are `listkit`: a config built with
