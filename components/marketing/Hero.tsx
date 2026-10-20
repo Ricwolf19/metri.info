@@ -111,14 +111,16 @@ export const Hero = () => {
             </Link>
           </div>
 
+          {/* A grid, not a wrapping row: four chips in a flex row broke
+              three-plus-one on tablets and one-per-line on phones. */}
           <dl
-            className="animate-rise mx-auto mt-12 flex max-w-2xl flex-wrap items-center justify-center gap-2.5"
+            className="animate-rise mx-auto mt-10 grid max-w-3xl grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-2.5"
             style={{ animationDelay: "240ms" }}
           >
             {STATS.map(({ value, key }) => (
               <div
                 key={key}
-                className="inline-flex items-center gap-2 rounded-full border border-ink-600 bg-ink-800 px-3.5 py-1.5"
+                className="inline-flex min-w-0 items-center justify-center gap-2 rounded-full border border-ink-600 bg-ink-800 px-3 py-1.5"
               >
                 <span
                   aria-hidden
@@ -127,7 +129,7 @@ export const Hero = () => {
                 <dt className="font-mono text-sm font-semibold text-ink-50">
                   {value}
                 </dt>
-                <dd className="font-mono text-[11px] tracking-wide text-ink-400 uppercase">
+                <dd className="truncate font-mono text-[11px] tracking-wide text-ink-400 uppercase">
                   {t(key)}
                 </dd>
               </div>
