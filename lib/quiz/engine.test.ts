@@ -4,11 +4,14 @@ import { QUIZ_AREAS, QUIZ_MAX_LEVEL } from "./areas";
 import { QUIZ_QUESTIONS } from "./content";
 import {
   answerCurrent,
+  cellKey,
   currentArea,
   currentQuestion,
   isQuizComplete,
+  levelOutcome,
   maxRemaining,
   optionOrderFor,
+  QUESTIONS_PER_CELL,
   QUIZ_LENGTH,
   startQuiz,
 } from "./engine";
@@ -23,31 +26,58 @@ const seeded = (seed: number) => () => {
 };
 
 describe("quiz engine (full diagnostic)", () => {
-  it("asks every cell once, level by level, with the areas rotated", () => {
+  it("asks every cell twice, level by level, with the areas rotated", () => {
     const s = startQuiz(QUIZ_QUESTIONS, seeded(7));
     expect(s.queue).toHaveLength(QUIZ_LENGTH);
+    const perLevel = QUIZ_AREAS.length * QUESTIONS_PER_CELL;
     for (let level = 1; level <= QUIZ_MAX_LEVEL; level++) {
-      const round = s.queue.slice(
-        (level - 1) * QUIZ_AREAS.length,
-        level * QUIZ_AREAS.length,
-      );
-      expect(round.every((c) => c.level === level)).toBe(true);
-      expect(new Set(round.map((c) => c.area)).size).toBe(QUIZ_AREAS.length);
+      const block = s.queue.slice((level - 1) * perLevel, level * perLevel);
+      expect(block.every((c) => c.level === level)).toBe(true);
+      for (let slot = 0; slot < QUESTIONS_PER_CELL; slot++) {
+        const pass = block.filter((c) => c.slot === slot);
+        expect(new Set(pass.map((c) => c.area)).size).toBe(QUIZ_AREAS.length);
+      }
     }
     expect(maxRemaining(s)).toBe(QUIZ_LENGTH);
   });
 
+  it("never asks the same question twice in one attempt", () => {
+    for (const seed of [1, 2, 3, 5, 8, 13]) {
+      const s = startQuiz(QUIZ_QUESTIONS, seeded(seed));
+      for (const area of QUIZ_AREAS)
+        for (let level = 1; level <= QUIZ_MAX_LEVEL; level++) {
+          const picks = new Set(
+            Array.from(
+              { length: QUESTIONS_PER_CELL },
+              (_, slot) => s.variant[cellKey(area, level, slot)],
+            ),
+          );
+          expect(picks.size, `${area} L${level} seed ${seed}`).toBe(
+            QUESTIONS_PER_CELL,
+          );
+        }
+    }
+  });
+
   it("keeps asking an area after a miss and scores the run from basic", () => {
     let s = startQuiz(QUIZ_QUESTIONS, seeded(3));
-    const failAt = { area: s.queue[4].area, level: 2 }; // first cell of round 2
+    // One wrong answer in level 2 of some area: the other question of that
+    // level is still asked, and the level does not count.
+    const failAt = { area: s.queue[9].area, level: 2 };
+    let missed = false;
     while (!isQuizComplete(s)) {
       const area = currentArea(s)!;
       const level = s.current[area];
-      const wrong = area === failAt.area && level === failAt.level;
+      const wrong = !missed && area === failAt.area && level === failAt.level;
+      if (wrong) missed = true;
+      if (area === failAt.area && level === failAt.level && !wrong)
+        expect(levelOutcome(s, area, level)).toBe(false);
       s = answerCurrent(s, !wrong);
     }
     expect(s.asked).toBe(QUIZ_LENGTH);
     expect(s.cleared[failAt.area]).toBe(1);
+    expect(levelOutcome(s, failAt.area, 1)).toBe(true);
+    expect(levelOutcome(s, failAt.area, 2)).toBe(false);
     expect(s.misses).toEqual([
       { area: failAt.area, level: 2, variant: expect.any(Number) },
     ]);
@@ -75,6 +105,7 @@ describe("quiz engine (full diagnostic)", () => {
     };
     const misses = [
       { area: "training" as const, level: 3, variant: 0 },
+      { area: "training" as const, level: 3, variant: 2 },
       { area: "body" as const, level: 1, variant: 0 },
     ];
     expect(isConsistentAttempt(scores, misses, QUIZ_LENGTH)).toBe(true);

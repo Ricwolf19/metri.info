@@ -1,4 +1,4 @@
-import type { QuizMiss } from "@/lib/quiz/engine";
+import { QUIZ_LENGTH, type QuizMiss } from "@/lib/quiz/engine";
 import {
   QUIZ_AREAS,
   QUIZ_MAX_LEVEL,
@@ -53,8 +53,9 @@ export type StoredResult = {
 
 const AREA_SET = new Set<string>(QUIZ_AREAS);
 
-/** Misses are advisory: anything malformed is dropped, never rendered. At
- * most one per area (an area closes on its first miss), integers only. */
+/** Misses are advisory: anything malformed is dropped, never rendered. One
+ * entry per question (area, level and variant), integers only, never more
+ * than an attempt asks. */
 export const parseMisses = (value: unknown): QuizMiss[] => {
   if (!Array.isArray(value)) return [];
   const out: QuizMiss[] = [];
@@ -62,7 +63,7 @@ export const parseMisses = (value: unknown): QuizMiss[] => {
   for (const m of value) {
     if (typeof m !== "object" || m === null) continue;
     const r = m as Record<string, unknown>;
-    const key = `${String(r.area)}:${String(r.level)}`;
+    const key = `${String(r.area)}:${String(r.level)}:${String(r.variant)}`;
     if (
       typeof r.area !== "string" ||
       !AREA_SET.has(r.area) ||
@@ -80,20 +81,20 @@ export const parseMisses = (value: unknown): QuizMiss[] => {
       level: r.level as number,
       variant: r.variant as number,
     });
-    if (out.length === QUIZ_AREAS.length * QUIZ_MAX_LEVEL) break;
+    if (out.length === QUIZ_LENGTH) break;
   }
   return out;
 };
 
-/** A real run asks every cell once, and an area's level is the run of
- * correct answers from basic: exactly `first missed level - 1`, or the top
- * when nothing in the area was missed. */
+/** A real run asks every question of every cell, and an area's level is the
+ * run of levels cleared from basic: exactly `first missed level - 1`, or the
+ * top when nothing in the area was missed. */
 export const isConsistentAttempt = (
   scores: QuizScores,
   misses: QuizMiss[],
   asked: number,
 ): boolean => {
-  if (asked !== QUIZ_AREAS.length * QUIZ_MAX_LEVEL) return false;
+  if (asked !== QUIZ_LENGTH) return false;
   return QUIZ_AREAS.every((area) => {
     const levels = misses.filter((m) => m.area === area).map((m) => m.level);
     const first = levels.length ? Math.min(...levels) : QUIZ_MAX_LEVEL + 1;

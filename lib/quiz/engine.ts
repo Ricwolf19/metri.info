@@ -5,46 +5,52 @@ import type { QuizQuestion } from "@/lib/quiz/content";
  * Quiz state machine, pure and UI-free.
  *
  * The web runs the check as a full diagnostic: every (area, level) cell is
- * asked, sixteen questions in all, grouped by level and with the areas in a
- * different order each round, so nobody can tell which area is being probed
- * or stop early. The score keeps the mobile app's meaning (`cleared` = the
- * run of levels answered right in a row from basic), so a map from either
- * app reads the same; the web just also records every miss above the run,
- * which is what the review list and the study advice are built from.
+ * asked twice with two different questions, thirty-two in all, grouped by
+ * level and with the areas in a different order each pass, so nobody can tell
+ * which area is being probed or stop early. A level counts as cleared only
+ * when both of its questions are right, which keeps a lucky guess (one in
+ * four) from reading as knowledge. The score keeps the mobile app's meaning
+ * (`cleared` = the run of levels cleared in a row from basic), so a map from
+ * either app reads the same; the web just also records every miss, which is
+ * what the review list and the study advice are built from.
  *
  * Per attempt the engine fixes two things so a re-render never swaps the
  * prompt under the reader: `variant` (which question of the cell's pool is
- * asked; the bank holds several per cell) and `optionOrder` (the shuffled
- * order of the four answers, so the right one has no fixed position).
+ * asked in each slot; the bank holds several per cell) and `optionOrder` (the
+ * shuffled order of the four answers, so the right one has no fixed position).
  */
-export type QuizCell = { area: QuizArea; level: number };
+export type QuizCell = { area: QuizArea; level: number; slot: number };
 
 export type QuizState = {
-  /** Every cell of the attempt, in the order asked. */
+  /** Every question of the attempt, in the order asked. */
   queue: QuizCell[];
   /** Index into `queue`. */
   cursor: number;
   /** Level being (or next to be) asked per area; `QUIZ_MAX_LEVEL + 1` when done. */
   current: Record<QuizArea, number>;
-  /** Levels answered right in a row from basic (0 = not even basic). */
+  /** Levels cleared in a row from basic (0 = not even basic). */
   cleared: Record<QuizArea, number>;
-  /** Outcome per answered cell, keyed `area:level`. */
+  /** Outcome per answered question, keyed `area:level:slot`. */
   answered: Record<string, boolean>;
-  /** Chosen question per cell, keyed `area:level`. */
+  /** Chosen question per slot, keyed `area:level:slot`. */
   variant: Record<string, number>;
-  /** Display order of the options per cell, keyed `area:level`. */
+  /** Display order of the options per slot, keyed `area:level:slot`. */
   optionOrder: Record<string, number[]>;
   /** Questions answered so far. */
   asked: number;
-  /** Cells answered wrong (or skipped), in order: what to review afterwards. */
+  /** Questions answered wrong (or skipped), in order: what to review afterwards. */
   misses: QuizMiss[];
 };
 
-/** A missed cell; `variant` identifies the exact question within the cell. */
+/** A missed question; `variant` identifies it within the cell's pool. */
 export type QuizMiss = { area: QuizArea; level: number; variant: number };
 
+/** Questions per (area, level) cell in one attempt. */
+export const QUESTIONS_PER_CELL = 2;
+
 /** Questions in one attempt. */
-export const QUIZ_LENGTH = QUIZ_AREAS.length * QUIZ_MAX_LEVEL;
+export const QUIZ_LENGTH =
+  QUIZ_AREAS.length * QUIZ_MAX_LEVEL * QUESTIONS_PER_CELL;
 
 const zero = (): Record<QuizArea, number> => ({
   nutrition: 0,
@@ -53,7 +59,8 @@ const zero = (): Record<QuizArea, number> => ({
   fundamentals: 0,
 });
 
-export const cellKey = (area: QuizArea, level: number) => `${area}:${level}`;
+export const cellKey = (area: QuizArea, level: number, slot: number) =>
+  `${area}:${level}:${slot}`;
 
 const pool = (
   questions: readonly QuizQuestion[],
@@ -79,17 +86,38 @@ export const startQuiz = (
   const variant: Record<string, number> = {};
   const optionOrder: Record<string, number[]> = {};
   for (let level = 1; level <= QUIZ_MAX_LEVEL; level++) {
-    for (const area of shuffled(QUIZ_AREAS, random)) {
-      queue.push({ area, level });
+    // Each area's pool is dealt once per level, so the two slots never ask
+    // the same question (a pool of one repeats, by necessity).
+    const dealt = new Map<
+      QuizArea,
+      { candidates: QuizQuestion[]; hand: number[] }
+    >();
+    for (const area of QUIZ_AREAS) {
       const candidates = pool(questions, area, level);
-      const n = candidates.length;
-      const pick = n > 1 ? Math.floor(random() * n) % n : 0;
-      variant[cellKey(area, level)] = pick;
-      const options = candidates[pick]?.options.length ?? 4;
-      optionOrder[cellKey(area, level)] = shuffled(
-        Array.from({ length: options }, (_, i) => i),
-        random,
-      );
+      dealt.set(area, {
+        candidates,
+        hand: shuffled(
+          Array.from({ length: candidates.length }, (_, i) => i),
+          random,
+        ),
+      });
+    }
+    for (let slot = 0; slot < QUESTIONS_PER_CELL; slot++) {
+      for (const area of shuffled(QUIZ_AREAS, random)) {
+        queue.push({ area, level, slot });
+        const { candidates, hand } = dealt.get(area) ?? {
+          candidates: [],
+          hand: [],
+        };
+        const pick = hand.length ? hand[slot % hand.length] : 0;
+        const key = cellKey(area, level, slot);
+        variant[key] = pick;
+        const options = candidates[pick]?.options.length ?? 4;
+        optionOrder[key] = shuffled(
+          Array.from({ length: options }, (_, i) => i),
+          random,
+        );
+      }
     }
   }
   return {
@@ -122,7 +150,7 @@ export const currentQuestion = (
   if (!cell) return null;
   const candidates = pool(questions, cell.area, cell.level);
   if (candidates.length === 0) return null;
-  const pick = state.variant[cellKey(cell.area, cell.level)] ?? 0;
+  const pick = state.variant[cellKey(cell.area, cell.level, cell.slot)] ?? 0;
   return candidates[pick % candidates.length] ?? null;
 };
 
@@ -133,15 +161,54 @@ export const optionOrderFor = (
   question: QuizQuestion,
 ): number[] => {
   const cell = currentCell(state);
-  const order = cell ? state.optionOrder[cellKey(cell.area, cell.level)] : null;
+  const order = cell
+    ? state.optionOrder[cellKey(cell.area, cell.level, cell.slot)]
+    : null;
   return order && order.length === question.options.length
     ? order
     : question.options.map((_, i) => i);
 };
 
+/** How a level stands for an area: cleared (both right), missed (any wrong),
+ * `"open"` while one of its questions is still to come, or `null` untouched. */
+export const levelOutcome = (
+  state: QuizState,
+  area: QuizArea,
+  level: number,
+): boolean | "open" | null => {
+  let answered = 0;
+  for (let slot = 0; slot < QUESTIONS_PER_CELL; slot++) {
+    const v = state.answered[cellKey(area, level, slot)];
+    if (v === false) return false;
+    if (v === true) answered++;
+  }
+  if (answered === QUESTIONS_PER_CELL) return true;
+  return answered > 0 ? "open" : null;
+};
+
 /** True once every level of the area has been answered. */
 export const areaDone = (state: QuizState, area: QuizArea): boolean =>
   state.current[area] > QUIZ_MAX_LEVEL;
+
+const levelSettled = (
+  answered: Record<string, boolean>,
+  area: QuizArea,
+  level: number,
+) => {
+  for (let slot = 0; slot < QUESTIONS_PER_CELL; slot++)
+    if (!(cellKey(area, level, slot) in answered)) return false;
+  return true;
+};
+
+const levelCleared = (
+  answered: Record<string, boolean>,
+  area: QuizArea,
+  level: number,
+) => {
+  for (let slot = 0; slot < QUESTIONS_PER_CELL; slot++)
+    if (answered[cellKey(area, level, slot)] !== true) return false;
+  return true;
+};
 
 export const answerCurrent = (
   state: QuizState,
@@ -149,13 +216,12 @@ export const answerCurrent = (
 ): QuizState => {
   const cell = currentCell(state);
   if (!cell) return state;
-  const { area, level } = cell;
-  const answered = { ...state.answered, [cellKey(area, level)]: correct };
+  const { area, level, slot } = cell;
+  const answered = { ...state.answered, [cellKey(area, level, slot)]: correct };
   let run = 0;
-  while (run < QUIZ_MAX_LEVEL && answered[cellKey(area, run + 1)] === true)
-    run++;
+  while (run < QUIZ_MAX_LEVEL && levelCleared(answered, area, run + 1)) run++;
   let nextLevel = 1;
-  while (nextLevel <= QUIZ_MAX_LEVEL && cellKey(area, nextLevel) in answered)
+  while (nextLevel <= QUIZ_MAX_LEVEL && levelSettled(answered, area, nextLevel))
     nextLevel++;
   return {
     ...state,
@@ -168,7 +234,11 @@ export const answerCurrent = (
       ? state.misses
       : [
           ...state.misses,
-          { area, level, variant: state.variant[cellKey(area, level)] ?? 0 },
+          {
+            area,
+            level,
+            variant: state.variant[cellKey(area, level, slot)] ?? 0,
+          },
         ],
   };
 };

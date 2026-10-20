@@ -255,15 +255,15 @@ export const en = {
   "plans.ctaPremium": "Request Premium access",
 
   "quiz.title": "Knowledge check",
-  "quiz.eyebrow": "Free · 16 questions · about 8 minutes",
+  "quiz.eyebrow": "Free · 32 questions · about 15 minutes",
   "quiz.seoDescription":
-    "A free diagnostic across nutrition, training, body composition and the fundamentals: 16 questions, four levels per area, and a map of what to study next.",
+    "A free diagnostic across nutrition, training, body composition and the fundamentals: 32 questions, four levels per area, and a map of what to study next.",
   "quiz.introTitle": "Check what you know",
   "quiz.introBody":
-    "Sixteen questions, four per area, from basic to pro in mixed order. Every answer is explained, and you see every one you missed at the end.",
+    "Thirty-two questions, eight per area, from basic to pro in mixed order. Each level asks two, so a lucky guess does not count. Every answer is explained, and you see every one you missed at the end.",
   "quiz.honest":
     "This is a diagnostic, not an exam to pass. Answer what you actually think: a lucky guess hides exactly the gap the map is meant to show you.",
-  "quiz.areaLevels": "4 questions · basic to pro",
+  "quiz.areaLevels": "{n} questions · basic to pro",
   "quiz.lengthNote": "{n} questions · every answer explained",
   "quiz.start": "Start",
   "quiz.retake": "Take it again",

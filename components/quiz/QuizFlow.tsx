@@ -37,12 +37,13 @@ import { QUIZ_QUESTIONS } from "@/lib/quiz/content";
 import {
   answerCurrent,
   areaDone,
-  cellKey,
   currentArea,
   currentQuestion,
   isQuizComplete,
+  levelOutcome,
   maxRemaining,
   optionOrderFor,
+  QUESTIONS_PER_CELL,
   QUIZ_LENGTH,
   type QuizState,
   startQuiz,
@@ -71,7 +72,8 @@ type Phase = "intro" | "question" | "result";
 type SaveState = "saved" | "local" | "failed" | null;
 
 /** Four tiny ladders, one per area: cleared levels in brand, a missed level
- * dimmed, the cell being asked glowing. Reads as "where am I" at a glance. */
+ * dimmed, a half-answered or current level glowing. Reads as "where am I"
+ * at a glance. */
 const AreaLadder = ({
   state,
   labels,
@@ -88,21 +90,25 @@ const AreaLadder = ({
         return (
           <li key={area}>
             <div className="grid grid-cols-4 gap-0.5">
-              {Array.from({ length: QUIZ_MAX_LEVEL }).map((_, i) => (
-                <span
-                  key={i}
-                  className={cn(
-                    "h-1 rounded-full transition-colors",
-                    state.answered[cellKey(area, i + 1)] === true
-                      ? "bg-brand"
-                      : state.answered[cellKey(area, i + 1)] === false
-                        ? "bg-ink-500"
-                        : area === active && i === state.current[area] - 1
-                          ? "bg-brand/40"
-                          : "bg-ink-700",
-                  )}
-                />
-              ))}
+              {Array.from({ length: QUIZ_MAX_LEVEL }).map((_, i) => {
+                const outcome = levelOutcome(state, area, i + 1);
+                return (
+                  <span
+                    key={i}
+                    className={cn(
+                      "h-1 rounded-full transition-colors",
+                      outcome === true
+                        ? "bg-brand"
+                        : outcome === false
+                          ? "bg-ink-500"
+                          : outcome === "open" ||
+                              (area === active && i === state.current[area] - 1)
+                            ? "bg-brand/40"
+                            : "bg-ink-700",
+                    )}
+                  />
+                );
+              })}
             </div>
             <p
               className={cn(
@@ -319,7 +325,9 @@ export const QuizFlow = ({
                       {labels[a]}
                     </span>
                     <span className="block text-xs text-ink-400">
-                      {t("quiz.areaLevels")}
+                      {t("quiz.areaLevels", {
+                        n: QUIZ_MAX_LEVEL * QUESTIONS_PER_CELL,
+                      })}
                     </span>
                   </span>
                 </li>
@@ -434,7 +442,7 @@ export const QuizFlow = ({
       <AreaLadder state={state} labels={labels} />
       <AnimatePresence mode="wait" initial={false}>
         <m.div
-          key={`${area}-${state.current[area]}`}
+          key={`${area}-${state.current[area]}-${state.asked}`}
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}

@@ -269,15 +269,15 @@ export const es: Record<TranslationKey, string> = {
   "plans.ctaPremium": "Solicitar acceso Premium",
 
   "quiz.title": "Test de conocimientos",
-  "quiz.eyebrow": "Gratis · 16 preguntas · unos 8 minutos",
+  "quiz.eyebrow": "Gratis · 32 preguntas · unos 15 minutos",
   "quiz.seoDescription":
-    "Un diagnóstico gratuito de nutrición, entrenamiento, composición corporal y fundamentos: 16 preguntas, cuatro niveles por área y un mapa de qué estudiar después.",
+    "Un diagnóstico gratuito de nutrición, entrenamiento, composición corporal y fundamentos: 32 preguntas, cuatro niveles por área y un mapa de qué estudiar después.",
   "quiz.introTitle": "Comprueba lo que sabes",
   "quiz.introBody":
-    "Dieciséis preguntas, cuatro por área, de básico a pro y en orden mezclado. Cada respuesta viene explicada y al final ves todas las que fallaste.",
+    "Treinta y dos preguntas, ocho por área, de básico a pro y en orden mezclado. Cada nivel pregunta dos veces, así que un acierto de suerte no cuenta. Cada respuesta viene explicada y al final ves todas las que fallaste.",
   "quiz.honest":
     "Esto es un diagnóstico, no un examen que aprobar. Responde lo que de verdad piensas: un acierto de suerte esconde justo el hueco que el mapa debería mostrarte.",
-  "quiz.areaLevels": "4 preguntas · de básico a pro",
+  "quiz.areaLevels": "{n} preguntas · de básico a pro",
   "quiz.lengthNote": "{n} preguntas · cada respuesta explicada",
   "quiz.start": "Empezar",
   "quiz.retake": "Hacerlo de nuevo",
