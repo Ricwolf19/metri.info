@@ -58,11 +58,8 @@ export const ShareButton = ({
       await navigator.clipboard.writeText(url);
       toast({ title: t("share.copied"), description: url, variant: "success" });
     } catch {
-      toast({
-        title: t("share.copyFailed"),
-        description: url,
-        variant: "error",
-      });
+      // The clipboard refused (insecure context, permission). The URL is in
+      // the address bar; a failure banner only adds noise.
     }
   };
 

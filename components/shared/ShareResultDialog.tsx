@@ -77,11 +77,7 @@ export const ShareResultDialog = ({
       track("share_method", { subject: analyticsId, method: "copy" });
       setTimeout(() => setCopied(false), 1600);
     } catch {
-      toast({
-        title: t("share.copyFailed"),
-        description: url,
-        variant: "error",
-      });
+      // The link is printed under the QR; selecting it by hand still works.
     }
   };
 
@@ -104,7 +100,13 @@ export const ShareResultDialog = ({
       track("share_method", { subject: analyticsId, method: "image_copy" });
       toast({ title: t("share.imageCopied"), variant: "success" });
     } catch {
-      toast({ title: t("share.copyImageFailed"), variant: "error" });
+      // Browsers without image clipboard support (Firefox, some Android
+      // WebViews) get the file instead of a failure banner.
+      const a = document.createElement("a");
+      a.href = imageUrl;
+      a.download = fileName;
+      a.click();
+      track("share_method", { subject: analyticsId, method: "image_download" });
     } finally {
       setCopyingImage(false);
     }
