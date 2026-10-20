@@ -5,7 +5,7 @@ const AdminPage = () => (
   <>
     <PageHeader
       title="Overview"
-      description="First-party metrics aggregated from the database: registered users, active sessions, saved calculations and favorites."
+      description="One number per source up top, then the first-party series, when the site is used, and the top lists. Each card degrades on its own; drilldowns live under Analytics."
     />
     <Overview />
   </>

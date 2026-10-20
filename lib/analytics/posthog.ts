@@ -177,3 +177,60 @@ export const getSignupFunnel = async (): Promise<FunnelStep[] | null> => {
     { label: "Created account", count: signedUp },
   ];
 };
+
+export type DayCount = { date: string; count: number };
+
+/** Pageviews per day for the last `days` days (UTC), oldest first, gaps
+ * filled with zero so a calendar can lay them out without checking. */
+export const getDailyPageviews = async (
+  days = 84,
+): Promise<DayCount[] | null> => {
+  const rows = await runHogQL(
+    `SELECT toDate(timestamp) AS day, count() AS views
+     FROM events
+     WHERE event = '$pageview'
+       AND timestamp >= now() - INTERVAL ${Math.max(1, Math.min(366, days))} DAY
+     GROUP BY day
+     ORDER BY day`,
+  );
+  if (!rows) return null;
+  const map = new Map(
+    (rows as [string, number][]).map((r) => [
+      String(r[0]).slice(0, 10),
+      Number(r[1] ?? 0),
+    ]),
+  );
+  const out: DayCount[] = [];
+  const today = new Date();
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setUTCDate(d.getUTCDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    out.push({ date: key, count: map.get(key) ?? 0 });
+  }
+  return out;
+};
+
+/** Pageviews by weekday (1 = Monday … 7 = Sunday) and hour of day, UTC,
+ * over the last `days` days: `cells[dow - 1][hour]`. */
+export const getHourlyPageviews = async (
+  days = 30,
+): Promise<number[][] | null> => {
+  const rows = await runHogQL(
+    `SELECT toDayOfWeek(timestamp) AS dow, toHour(timestamp) AS hour, count() AS views
+     FROM events
+     WHERE event = '$pageview'
+       AND timestamp >= now() - INTERVAL ${Math.max(1, Math.min(366, days))} DAY
+     GROUP BY dow, hour
+     ORDER BY dow, hour`,
+  );
+  if (!rows) return null;
+  const cells = Array.from({ length: 7 }, () => Array<number>(24).fill(0));
+  for (const r of rows as [number, number, number][]) {
+    const dow = Number(r[0]);
+    const hour = Number(r[1]);
+    if (dow >= 1 && dow <= 7 && hour >= 0 && hour < 24)
+      cells[dow - 1][hour] = Number(r[2] ?? 0);
+  }
+  return cells;
+};
