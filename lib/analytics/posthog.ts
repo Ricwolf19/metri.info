@@ -1,5 +1,7 @@
 import "server-only";
 
+import { cacheLife, cacheTag } from "next/cache";
+
 import { createApiClient } from "@/lib/cache/api";
 import { tags } from "@/lib/cache/tags";
 
@@ -181,10 +183,15 @@ export const getSignupFunnel = async (): Promise<FunnelStep[] | null> => {
 export type DayCount = { date: string; count: number };
 
 /** Pageviews per day for the last `days` days (UTC), oldest first, gaps
- * filled with zero so a calendar can lay them out without checking. */
+ * filled with zero so a calendar can lay them out without checking. Cached
+ * like `getDbMetrics`: the zero-fill reads the clock, which a prerender only
+ * allows inside a cache scope. */
 export const getDailyPageviews = async (
   days = 84,
 ): Promise<DayCount[] | null> => {
+  "use cache";
+  cacheTag(tags.metrics.posthog);
+  cacheLife("minutes");
   const rows = await runHogQL(
     `SELECT toDate(timestamp) AS day, count() AS views
      FROM events
