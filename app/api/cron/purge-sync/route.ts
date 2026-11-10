@@ -1,18 +1,16 @@
 import * as Sentry from "@sentry/nextjs";
 import { NextResponse } from "next/server";
 
+import { isCronRequest } from "@/lib/cron";
 import { event } from "@/lib/log/logger";
 import { purgeTombstones } from "@/lib/sync/store";
 
 /**
  * GET /api/cron/purge-sync — daily tombstone purge, invoked by Vercel Cron
- * (see `vercel.json`). Auth is the `CRON_SECRET` bearer token Vercel attaches
- * to cron requests; without the env var the route fails closed, so a fresh
- * deploy without the secret can't be triggered by strangers.
+ * (see `vercel.json`), guarded by `isCronRequest`.
  */
 export const GET = async (req: Request) => {
-  const secret = process.env.CRON_SECRET;
-  if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) {
+  if (!isCronRequest(req)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 

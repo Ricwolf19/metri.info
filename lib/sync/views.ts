@@ -5,6 +5,15 @@ import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { event } from "@/lib/log/logger";
 import { syncRow } from "@/lib/db/schema";
+import {
+  asRow,
+  type FoodDay,
+  foodTotalsByDay,
+  isDate,
+  num,
+  type Row,
+  str,
+} from "@/lib/sync/rows";
 
 /**
  * Read-only views over the premium sync mirror for the web's Activity page.
@@ -24,7 +33,6 @@ type SyncedSession = {
   durationSeconds: number | null;
   weekNumber: number | null;
 };
-type FoodDay = { date: string; kcal: number; proteinG: number };
 type NutritionPhase = {
   phase: string;
   targetKcal: number | null;
@@ -40,17 +48,6 @@ export type SyncedSnapshot = {
   /** True when at least one synced row exists for the user at all. */
   hasAnyData: boolean;
 };
-
-type Row = Record<string, unknown>;
-
-const num = (v: unknown): number | null =>
-  typeof v === "number" && Number.isFinite(v) ? v : null;
-const str = (v: unknown): string | null =>
-  typeof v === "string" && v.length > 0 ? v : null;
-const isDate = (v: unknown): v is string =>
-  typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v);
-const asRow = (v: unknown): Row | null =>
-  typeof v === "object" && v !== null && !Array.isArray(v) ? (v as Row) : null;
 
 const LIMITS = {
   body_metrics: 120,
@@ -137,16 +134,7 @@ export const getSyncedSnapshot = async (
       .sort((a, b) => b.startedAt - a.startedAt)
       .slice(0, SESSION_COUNT);
 
-    const byDay = new Map<string, FoodDay>();
-    for (const f of foods) {
-      if (!isDate(f.date)) continue;
-      const day = byDay.get(f.date) ?? { date: f.date, kcal: 0, proteinG: 0 };
-      day.kcal += num(f.kcal) ?? 0;
-      day.proteinG += num(f.protein_g) ?? 0;
-      byDay.set(f.date, day);
-    }
-    const foodDays = [...byDay.values()]
-      .sort((a, b) => a.date.localeCompare(b.date))
+    const foodDays = foodTotalsByDay(foods)
       .slice(-FOOD_DAYS)
       .map((d) => ({
         ...d,

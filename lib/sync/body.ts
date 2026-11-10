@@ -11,6 +11,7 @@ import {
 } from "@/lib/body/weekly";
 import { db } from "@/lib/db";
 import { syncRow } from "@/lib/db/schema";
+import { asRow, isDate, num, type Row, str, strList } from "@/lib/sync/rows";
 import { event } from "@/lib/log/logger";
 import { EXERCISE_CATALOG } from "@/lib/training/catalog";
 import {
@@ -73,19 +74,6 @@ export type BodySnapshot = {
   today: string;
 };
 
-type Row = Record<string, unknown>;
-
-const num = (v: unknown): number | null =>
-  typeof v === "number" && Number.isFinite(v) ? v : null;
-const str = (v: unknown): string | null =>
-  typeof v === "string" && v.length > 0 ? v : null;
-const isDate = (v: unknown): v is string =>
-  typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v);
-const asRow = (v: unknown): Row | null =>
-  typeof v === "object" && v !== null && !Array.isArray(v) ? (v as Row) : null;
-const strList = (v: unknown): string[] | null =>
-  Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : null;
-
 const MS_PER_DAY = 86_400_000;
 
 const LIMITS = {
@@ -94,9 +82,12 @@ const LIMITS = {
   workout_logs: 400,
   set_logs: 8000,
   exercises: 400,
+  training_days: 500,
+  food_logs: 3000,
+  body_goals: 10,
 } as const;
 
-const readTable = async (
+export const readSyncTable = async (
   userId: string,
   table: keyof typeof LIMITS,
   sinceMs?: number,
@@ -188,6 +179,77 @@ const windowLoads = (
   };
 };
 
+/** Every catalog exercise plus the account's custom ones, and the names the
+ * custom ones synced with. */
+export const buildMuscleIndex = (customs: readonly Row[]) => {
+  const index = new Map<string, ExerciseMuscles>();
+  for (const e of EXERCISE_CATALOG)
+    index.set(e.id, {
+      primary: e.primary,
+      secondary: e.secondary,
+      category: e.category,
+    });
+  const customNames: Record<string, string> = {};
+  for (const r of customs) {
+    const id = str(r.id);
+    if (!id || !isExerciseCategory(r.category)) continue;
+    index.set(id, {
+      primary: strList(r.primary_muscles),
+      secondary: strList(r.secondary_muscles),
+      category: r.category,
+    });
+    const name = str(r.name);
+    if (name) customNames[id] = name;
+  }
+  return { index, customNames };
+};
+
+/** A working set, with the session it belongs to. */
+type SyncedSet = LoadedSet & { logId: string };
+
+/** Working sets of completed sessions only (no warm-ups), and when each of
+ * those sessions started. */
+export const parseWorkingSets = (
+  logs: readonly Row[],
+  setRows: readonly Row[],
+) => {
+  const completed = new Map<string, number>();
+  for (const r of logs) {
+    const id = str(r.id);
+    const startedAt = num(r.started_at);
+    if (id && startedAt !== null && r.status === "completed")
+      completed.set(id, startedAt);
+  }
+  const sets: SyncedSet[] = [];
+  for (const r of setRows) {
+    const logId = str(r.workout_log_id);
+    const exerciseId = str(r.exercise_id);
+    const reps = num(r.reps);
+    const weightKg = num(r.weight_kg);
+    const at = num(r.created_at);
+    if (
+      !logId ||
+      !completed.has(logId) ||
+      !exerciseId ||
+      reps === null ||
+      weightKg === null ||
+      at === null ||
+      r.is_warmup === true
+    )
+      continue;
+    sets.push({
+      logId,
+      exerciseId,
+      reps,
+      weightKg,
+      rir: num(r.rir),
+      isFailure: r.is_failure === true,
+      at,
+    });
+  }
+  return { sets, completed };
+};
+
 export const getBodySnapshot = async (
   userId: string,
   sex: string | null | undefined,
@@ -199,11 +261,11 @@ export const getBodySnapshot = async (
   const sinceKey = dateKey(new Date(sinceMs));
   try {
     const [metrics, tape, logs, setRows, customs] = await Promise.all([
-      readTable(userId, "body_metrics"),
-      readTable(userId, "body_measurements"),
-      readTable(userId, "workout_logs"),
-      readTable(userId, "set_logs", sinceMs),
-      readTable(userId, "exercises"),
+      readSyncTable(userId, "body_metrics"),
+      readSyncTable(userId, "body_measurements"),
+      readSyncTable(userId, "workout_logs"),
+      readSyncTable(userId, "set_logs", sinceMs),
+      readSyncTable(userId, "exercises"),
     ]);
 
     const weighIns: WeighIn[] = [];
@@ -261,59 +323,8 @@ export const getBodySnapshot = async (
     const keySiteDeltaCm =
       sites.find((s) => s.site === keySite)?.deltaCm ?? null;
 
-    const index = new Map<string, ExerciseMuscles>();
-    for (const e of EXERCISE_CATALOG)
-      index.set(e.id, {
-        primary: e.primary,
-        secondary: e.secondary,
-        category: e.category,
-      });
-    const customNames: Record<string, string> = {};
-    for (const r of customs) {
-      const id = str(r.id);
-      if (!id || !isExerciseCategory(r.category)) continue;
-      index.set(id, {
-        primary: strList(r.primary_muscles),
-        secondary: strList(r.secondary_muscles),
-        category: r.category,
-      });
-      const name = str(r.name);
-      if (name) customNames[id] = name;
-    }
-
-    const completed = new Map<string, number>();
-    for (const r of logs) {
-      const id = str(r.id);
-      const startedAt = num(r.started_at);
-      if (id && startedAt !== null && r.status === "completed")
-        completed.set(id, startedAt);
-    }
-    const sets: LoadedSet[] = [];
-    for (const r of setRows) {
-      const logId = str(r.workout_log_id);
-      const exerciseId = str(r.exercise_id);
-      const reps = num(r.reps);
-      const weightKg = num(r.weight_kg);
-      const at = num(r.created_at);
-      if (
-        !logId ||
-        !completed.has(logId) ||
-        !exerciseId ||
-        reps === null ||
-        weightKg === null ||
-        at === null ||
-        r.is_warmup === true
-      )
-        continue;
-      sets.push({
-        exerciseId,
-        reps,
-        weightKg,
-        rir: num(r.rir),
-        isFailure: r.is_failure === true,
-        at,
-      });
-    }
+    const { index, customNames } = buildMuscleIndex(customs);
+    const { sets, completed } = parseWorkingSets(logs, setRows);
     const sessionStarts = [...completed.values()];
 
     return {
