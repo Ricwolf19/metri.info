@@ -26,6 +26,7 @@
     "bots:preview": "bun scripts/purge-bot-users.ts",
     "bots:purge": "bun scripts/purge-bot-users.ts --run",
     "test": "vitest run",
+    "test:browsers": "playwright test",
     "ci": "bun run format && bun run lint && bun run typecheck && bun run test && bun run lint:circular && bun run build",
     "verify": "bun run ci",
     "prepare": "husky"
@@ -43,6 +44,7 @@
     "@radix-ui/react-switch": "^1.4.1",
     "@radix-ui/react-toggle-group": "^1.2.1",
     "@react-email/components": "1.0.12",
+    "@react-pdf/renderer": "^4.9.0",
     "@sentry/nextjs": "^10",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
@@ -76,6 +78,7 @@
     "@commitlint/config-conventional": "^21.0.2",
     "@commitlint/types": "^21.0.1",
     "@electric-sql/pglite": "^0.5.4",
+    "@playwright/test": "^1.65.0",
     "@secretlint/secretlint-rule-preset-recommend": "^13.0.2",
     "@tailwindcss/postcss": "^4",
     "@types/mdx": "^2.0.14",
