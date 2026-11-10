@@ -6,3 +6,5 @@ drizzle
 content
 *.md
 *.mdx
+test-results
+playwright-report
