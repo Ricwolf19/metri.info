@@ -14,6 +14,9 @@
  * The email uses it: on a phone the compare link in the heading and a commit
  * link per line are the largest tappable things in the message, and every one
  * of them leads to GitHub instead of our download.
+ *
+ * `versionHeading: false` drops release-please's `## [1.2.0](…) (date)` line,
+ * for a surface that already says which version this is.
  */
 
 type Styles = Partial<
@@ -31,13 +34,15 @@ const escapeHtml = (value: string): string =>
 const attr = (style: string | undefined): string =>
   style ? ` style="${style}"` : "";
 
-type Options = { links?: boolean };
+type Options = { links?: boolean; versionHeading?: boolean };
 
 // `([abc1234](https://…/commit/abc1234))` at the end of a bullet.
 const COMMIT_REF_RE = /\s*\(\[[0-9a-f]{7,40}\]\(https?:\/\/[^\s)]+\)\)\s*$/;
 // The URL excludes `<`, `*` and backticks so the code/bold passes can never
 // splice markup into an href.
 const LINK_RE = /\[([^\]]+)\]\((https?:\/\/[^\s)<*`]+)\)/g;
+
+const VERSION_HEADING_RE = /^\[?\d+\.\d+\.\d+/;
 
 const inline = (text: string, styles: Styles, { links = true }: Options) =>
   escapeHtml(links ? text : text.replace(COMMIT_REF_RE, ""))
@@ -75,6 +80,11 @@ export const renderReleaseNotes = (
     if (heading) {
       flushList();
       flushParagraph();
+      if (
+        options.versionHeading === false &&
+        VERSION_HEADING_RE.test(heading[2])
+      )
+        continue;
       // h1–h2 → h2 and h3+ → h3: the email already owns the page title.
       const level = heading[1].length <= 2 ? "h2" : "h3";
       out.push(

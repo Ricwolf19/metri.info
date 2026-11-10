@@ -1,10 +1,50 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
+
 import { AppleIcon, DownloadIcon, GithubIcon } from "@/components/icons";
+import { CopyButton } from "@/components/shared/CopyButton";
 import { buttonVariants } from "@/components/ui/button";
 import { track } from "@/lib/analytics/track";
 import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+
+const noSubscribe = () => () => undefined;
+/** Android marks its embedded browser with `; wv)` in the user agent. */
+const isAndroidWebView = () => /; wv\)/.test(navigator.userAgent);
+
+/** Reopens this page in Chrome; the fallback keeps Android on a page if Chrome
+ * is missing instead of failing the tap. */
+const chromeIntentUrl = () =>
+  `intent://${location.host}${location.pathname}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(location.href)};end`;
+
+/**
+ * Tapping a link in an email app often lands in its embedded browser, where a
+ * file download does nothing at all. Rather than show a button that can't
+ * work, this says so and offers Chrome, or the link to paste into any browser.
+ */
+const OpenInBrowser = () => {
+  const t = useT();
+  return (
+    <div className="mt-8 max-w-xl rounded-card border border-brand/30 bg-brand/10 p-4">
+      <p className="font-semibold text-ink-50">{t("download.webviewTitle")}</p>
+      <p className="mt-1 text-sm text-ink-300">{t("download.webviewBody")}</p>
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <a
+          href={chromeIntentUrl()}
+          className={buttonVariants({ variant: "brand", size: "lg" })}
+        >
+          {t("download.webviewOpen")}
+        </a>
+        <CopyButton
+          value={location.href}
+          label={t("download.webviewCopy")}
+          copiedLabel={t("calc.copied")}
+        />
+      </div>
+    </div>
+  );
+};
 
 /** Client-side; the APK <a/> needs onClick for the analytics event. */
 export const DownloadButtons = ({
@@ -17,6 +57,12 @@ export const DownloadButtons = ({
   version?: string;
 }) => {
   const t = useT();
+  const inWebView = useSyncExternalStore(
+    noSubscribe,
+    isAndroidWebView,
+    () => false,
+  );
+  if (inWebView && version) return <OpenInBrowser />;
   return (
     <>
       {version && (

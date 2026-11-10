@@ -41,6 +41,15 @@ describe("renderReleaseNotes", () => {
     expect(html).not.toContain("href");
   });
 
+  it("can drop release-please's version heading", () => {
+    const html = renderReleaseNotes(
+      "## [1.12.0](https://github.com/x/y/compare/a...b) (2026-09-28)\n\n### Features\n\n* one",
+      {},
+      { links: false, versionHeading: false },
+    );
+    expect(html).toBe("<h3>Features</h3>\n<ul><li>one</li></ul>");
+  });
+
   it("escapes raw HTML instead of rendering it", () => {
     const html = renderReleaseNotes(
       '<script>alert("x")</script>\n* <img src=x onerror=alert(1)>',

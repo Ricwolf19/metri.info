@@ -1,13 +1,16 @@
-import { Section, Text } from "@react-email/components";
+import { Section } from "@react-email/components";
 
 import { createT, type Locale } from "@/lib/i18n/config";
 import { renderReleaseNotes } from "@/lib/releases/markdown";
 
 import {
   CtaButton,
+  EmailDivider,
   EmailHeading,
+  EmailKicker,
   EmailLink,
   EmailParagraph,
+  EmailSectionLabel,
   EmailShell,
   emailTheme,
 } from "./BaseLayout";
@@ -16,8 +19,6 @@ type ReleaseEmailProps = {
   locale: Locale;
   version: string;
   notes: string;
-  /** Our own APK endpoint (served with the Android package type). */
-  apkUrl: string;
   downloadPageUrl: string;
   // Per-recipient; `notify.ts` passes a placeholder and swaps it after render.
   unsubscribeUrl: string;
@@ -33,44 +34,28 @@ const noteStyles = {
   code: "font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px",
 };
 
-const monoLabel = {
-  display: "inline-block",
-  padding: "4px 10px",
-  borderRadius: 999,
-  border: `1px solid ${emailTheme.cardBorder}`,
-  backgroundColor: emailTheme.bg,
-  color: emailTheme.accent,
-  fontFamily: "ui-monospace, Menlo, Consolas, monospace",
-  fontSize: 12,
-  fontWeight: 700,
-  letterSpacing: "0.08em",
-  textTransform: "uppercase" as const,
-  margin: "0 0 14px",
-};
-
-const stepStyle = {
-  fontSize: 13,
-  lineHeight: 1.6,
-  color: emailTheme.textMuted,
-  margin: "0 0 6px",
-};
-
 /**
- * "A new version is out" — the version as a badge, what changed inside its
- * own panel, one lime button for the APK and a quiet link to the download
- * page, then the three install steps in short form. Same tokens as the site.
+ * "A new version is out": the kicker and the version each on their own line,
+ * what changed in its own panel, and one button to the download page.
+ *
+ * Never link the APK from here. Email apps open links in an embedded browser,
+ * where a file download silently does nothing; the page can tell and offer a
+ * way out (see `DownloadButtons`), and it carries the install steps.
  */
 export const ReleaseEmail = ({
   locale,
   version,
   notes,
-  apkUrl,
   downloadPageUrl,
   unsubscribeUrl,
 }: ReleaseEmailProps) => {
   const t = createT(locale);
-  // No links inside the notes: the one way to the APK is the button below.
-  const notesHtml = renderReleaseNotes(notes, noteStyles, { links: false });
+  // No links inside the notes: the one way forward is the button below. The
+  // changelog's own version heading goes too, the email already opens with it.
+  const notesHtml = renderReleaseNotes(notes, noteStyles, {
+    links: false,
+    versionHeading: false,
+  });
   return (
     <EmailShell
       lang={locale}
@@ -85,10 +70,9 @@ export const ReleaseEmail = ({
         </>
       }
     >
-      <Text style={monoLabel}>
-        {t("releaseEmail.badge")} · v{version}
-      </Text>
+      <EmailKicker>{t("releaseEmail.badge")}</EmailKicker>
       <EmailHeading>{t("releaseEmail.heading", { version })}</EmailHeading>
+      <EmailDivider />
       <EmailParagraph>{t("releaseEmail.intro")}</EmailParagraph>
 
       {notesHtml && (
@@ -101,59 +85,17 @@ export const ReleaseEmail = ({
             margin: "0 0 8px",
           }}
         >
-          <Text
-            style={{
-              fontSize: 11,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: emailTheme.textSubtle,
-              fontFamily: "ui-monospace, Menlo, Consolas, monospace",
-              margin: "12px 0 0",
-            }}
-          >
-            {t("releaseEmail.whatsNew")}
-          </Text>
+          <EmailSectionLabel>{t("releaseEmail.whatsNew")}</EmailSectionLabel>
           {/* Escaped + allow-listed markup only — see lib/releases/markdown.ts. */}
           <div dangerouslySetInnerHTML={{ __html: notesHtml }} />
         </Section>
       )}
 
-      <CtaButton href={apkUrl} label={t("releaseEmail.download")} />
-      <Text
-        style={{
-          fontSize: 13,
-          color: emailTheme.textSubtle,
-          textAlign: "center",
-          margin: "0 0 20px",
-        }}
-      >
-        <EmailLink href={downloadPageUrl}>
-          {t("releaseEmail.downloadPage")}
-        </EmailLink>
-      </Text>
-
-      <Section
-        style={{
-          borderTop: `1px solid ${emailTheme.cardBorder}`,
-          paddingTop: 16,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 11,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            color: emailTheme.textSubtle,
-            fontFamily: "ui-monospace, Menlo, Consolas, monospace",
-            margin: "0 0 8px",
-          }}
-        >
-          {t("releaseEmail.installTitle")}
-        </Text>
-        <Text style={stepStyle}>1. {t("releaseEmail.step1")}</Text>
-        <Text style={stepStyle}>2. {t("releaseEmail.step2")}</Text>
-        <Text style={stepStyle}>3. {t("releaseEmail.step3")}</Text>
-      </Section>
+      <CtaButton
+        block
+        href={downloadPageUrl}
+        label={t("releaseEmail.download")}
+      />
     </EmailShell>
   );
 };
