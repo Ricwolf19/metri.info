@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 
 import { BodyView } from "@/components/body/BodyView";
-import { getUserProfile } from "@/lib/account/settings";
+import {
+  getUserNotificationPrefs,
+  getUserProfile,
+} from "@/lib/account/settings";
 import { requireUser } from "@/lib/auth/admin";
 import { parseWindow } from "@/lib/body/windows";
 
@@ -14,8 +17,9 @@ const CuerpoPage = async (props: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) => {
   const user = await requireUser();
-  const [profile, { w }] = await Promise.all([
+  const [profile, prefs, { w }] = await Promise.all([
     getUserProfile(user.id),
+    getUserNotificationPrefs(user.id),
     props.searchParams,
   ]);
   return (
@@ -26,6 +30,7 @@ const CuerpoPage = async (props: {
       imperial={profile?.unitsPreference === "lb"}
       locale="es"
       windowDays={parseWindow(w)}
+      askMonthlyReport={prefs.monthlyReportEmails === null}
     />
   );
 };

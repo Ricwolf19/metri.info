@@ -110,6 +110,25 @@ export const setReleaseEmails = async (
     return { releaseEmails: enabled };
   });
 
+/** The monthly email's opt-in: the Notifications switch, the one-time prompt.
+ * The same flag the email's unsubscribe link clears. */
+export const setMonthlyReportEmails = async (
+  enabled: boolean,
+): Promise<Result<{ monthlyReportEmails: boolean }>> =>
+  safeAsync(async () => {
+    const sessionUser = await requireSessionUser();
+    await db
+      .update(user)
+      .set({ monthlyReportEmails: enabled, updatedAt: new Date() })
+      .where(eq(user.id, sessionUser.id));
+    event.info("monthly.preference-changed", {
+      userId: sessionUser.id,
+      enabled,
+    });
+    revalidateAccount();
+    return { monthlyReportEmails: enabled };
+  });
+
 /**
  * Set a password for an OAuth-only account via `auth.api.setPassword`
  * (verified to exist in better-auth 1.6.18 — `dist/api/routes/update-user.mjs`,

@@ -26,6 +26,10 @@ export const user = pgTable("user", {
   // Release announcement emails, on by default. Cleared by the email's
   // unsubscribe link/header or `releaseEmails` on `/api/profile`.
   releaseEmails: boolean("release_emails").default(true).notNull(),
+  // Monthly report emails, opt-in because they carry body data: null = never
+  // answered (the account pages prompt once), false = declined or
+  // unsubscribed, true = on.
+  monthlyReportEmails: boolean("monthly_report_emails"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -224,4 +228,24 @@ export const quizAttempt = pgTable(
       .notNull(),
   },
   (t) => [index("quiz_attempt_user_idx").on(t.userId, t.createdAt)],
+);
+
+/**
+ * One row per account per month that was emailed: what makes the monthly job
+ * safe to repeat. Vercel Cron can miss or duplicate a run, so the schedule runs
+ * on several days and each run skips whoever already has a row.
+ */
+export const monthlyReport = pgTable(
+  "monthly_report",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    /** The month reported on, `YYYY-MM`. */
+    period: text("period").notNull(),
+    /** Which edition went out: 'report' | 'tips'. */
+    kind: text("kind").notNull(),
+    sentAt: timestamp("sent_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.period] })],
 );

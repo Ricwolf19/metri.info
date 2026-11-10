@@ -11,6 +11,9 @@ export const es: Record<TranslationKey, string> = {
   "common.search": "Buscar",
   "common.cancel": "Cancelar",
   "common.loading": "Cargando…",
+  "common.resultsCount": "{count} resultados",
+  "common.breadcrumb": "Ruta de navegación",
+  "motion.pause": "Pausar animaciones",
 
   "pwa.installTitle": "Instalar Metri",
   "pwa.installBody":
@@ -43,10 +46,15 @@ export const es: Record<TranslationKey, string> = {
   "nav.sections": "Secciones",
   "nav.links": "Enlaces",
   "nav.currentPage": "Página actual",
+  "nav.skipToContent": "Saltar al contenido",
+  "nav.switchLanguage": "Cambiar idioma: {language} ({code})",
 
   "cmd.title": "Paleta de comandos",
   "cmd.open": "Buscar",
   "cmd.hide": "Ocultar",
+  "cmd.show": "Mostrar buscador",
+  "cmd.hint":
+    "Usa las flechas para moverte, Intro para abrir y Esc para cerrar.",
   "cmd.placeholder": "Busca calculadoras, guías, páginas…",
   "cmd.empty": "Sin resultados.",
   "cmd.group.pages": "Páginas",
@@ -60,6 +68,8 @@ export const es: Record<TranslationKey, string> = {
   "auth.signUp": "Crear cuenta",
   "auth.email": "Correo",
   "auth.password": "Contraseña",
+  "auth.passwordHint": "Al menos 8 caracteres.",
+  "auth.showPassword": "Mostrar contraseña",
   "auth.name": "Nombre",
   "auth.or": "o",
   "auth.continueGoogle": "Continuar con Google",
@@ -125,7 +135,7 @@ export const es: Record<TranslationKey, string> = {
     "Open source · App offline-first · Herramientas y guías web gratis",
   "hero.title": "Mide. Progresa. Evoluciona.",
   "hero.subtitle":
-    "Un sistema de entrenamiento open source en dos lugares que se complementan: una app gratuita y offline-first para Android con programas, series, check-ins corporales y comida, y este sitio, con 17 calculadoras, una base de conocimiento basada en evidencia y un test de conocimientos que corren en cualquier navegador.",
+    "Una app gratuita y offline-first para Android con tus programas, series, comida y check-ins corporales, más 17 calculadoras web y guías basadas en evidencia. Con Premium, tu entrenamiento se sincroniza con la web.",
   "hero.ctaDownload": "Descargar app",
   "hero.ctaTools": "Probar las calculadoras",
 
@@ -291,8 +301,12 @@ export const es: Record<TranslationKey, string> = {
   "quiz.correct": "Correcto.",
   "quiz.incorrect": "No exactamente.",
   "quiz.answerWas": "La respuesta: {answer}",
+  "quiz.rightAnswer": "Respuesta correcta",
+  "quiz.yourAnswer": "Tu respuesta",
   "quiz.why": "Por qué",
   "quiz.autoNext": "La siguiente pregunta llega sola. Páusala con el botón.",
+  "quiz.autoAdvance":
+    "Pasar a la siguiente pregunta sola, {seconds} segundos después de cada respuesta",
   "quiz.cardTitle": "Test de conocimientos",
   "quiz.cardBody":
     "Descubre tu nivel en nutrición, entrenamiento, composición corporal y fundamentos.",
@@ -331,7 +345,6 @@ export const es: Record<TranslationKey, string> = {
     "Aún no hay intentos. Haz el test y tu mapa aparecerá aquí.",
   "quiz.remaining": "{n} más",
   "quiz.pause": "Pausar la cuenta atrás",
-  "quiz.resume": "Reanudar la cuenta atrás",
   "quiz.review": "Repasa esto",
   "quiz.reviewHint":
     "Las preguntas que fallaste, con la explicación y dónde leer más.",
@@ -407,6 +420,9 @@ export const es: Record<TranslationKey, string> = {
   "calc.difference": "Diferencia",
   "calc.increase": "Aumentar {field}",
   "calc.decrease": "Disminuir {field}",
+  "calc.presets": "Valores rápidos de {field}",
+  "calc.outOfRange": "Introduce un valor entre {min} y {max}.",
+  "calc.noResult": "Ajusta los valores para ver un resultado.",
   "calc.saveCta": "Guardar cálculo",
   "calc.saving": "Guardando…",
   "calc.saved": "Guardado",
@@ -631,6 +647,9 @@ export const es: Record<TranslationKey, string> = {
   "docs.noResults": "Sin resultados.",
   "docs.readingTime": "{minutes} min de lectura",
   "docs.onThisPage": "En esta página",
+  "docs.callout.tip": "Consejo",
+  "docs.callout.info": "Nota",
+  "docs.callout.warning": "Advertencia",
   "docs.sourcesTitle": "Fuentes y referencias",
   "docs.reviewedBy": "Escrito y revisado por",
   "docs.lastUpdated": "Última actualización",
@@ -798,20 +817,12 @@ export const es: Record<TranslationKey, string> = {
 
   "releaseEmail.badge": "Nueva versión",
   "releaseEmail.whatsNew": "Qué cambió",
-  "releaseEmail.installTitle": "Instálala en tres pasos",
-  "releaseEmail.step1":
-    "Abre este correo en tu teléfono Android y toca el botón de arriba.",
-  "releaseEmail.step2":
-    "Permite la instalación cuando Android lo pida; la app se actualiza sin borrar tus datos.",
-  "releaseEmail.step3":
-    "Abre Metri. Las siguientes versiones se actualizan solas.",
   "releaseEmail.subject": "Ya salió Metri {version}",
   "releaseEmail.preview": "Novedades de Metri {version}",
   "releaseEmail.heading": "Ya salió Metri {version}",
   "releaseEmail.intro":
     "Hay una nueva versión de la app de Metri para Android. Esto es lo que cambió:",
-  "releaseEmail.download": "Descargar para Android",
-  "releaseEmail.downloadPage": "Abrir la página de descarga",
+  "releaseEmail.download": "Ir a la página de descarga",
   "releaseEmail.tagline":
     "Metri · fitness de código abierto, hecho para quienes entrenan.",
   "releaseEmail.footer":
@@ -1082,6 +1093,8 @@ export const es: Record<TranslationKey, string> = {
   "body.legend.fatigued": "Fatigado",
   "body.legend.recent": "Entrenado hace poco",
   "body.legend.detrained": "Perdiendo terreno",
+  "body.chartSummary":
+    "Peso medio semanal, del {from} al {to}. Última lectura {latest} {unit}, {n} lecturas.",
   "body.balanceHint":
     "Series duras por semana y músculo, contra un objetivo de {min}–{max}.",
   "body.fatigueHint":
@@ -1135,4 +1148,181 @@ export const es: Record<TranslationKey, string> = {
   "muscle.side_delts": "Deltoides lateral",
   "muscle.rear_delts": "Deltoides posterior",
   "muscle.adductors": "Aductores",
+
+  "download.webviewTitle": "Abre esta página en tu navegador",
+  "download.webviewBody":
+    "Estás dentro de tu app de correo y no puede descargar archivos. Abre Chrome para obtener el APK, o copia el enlace y pégalo en cualquier navegador.",
+  "download.webviewOpen": "Abrir en Chrome",
+  "download.webviewCopy": "Copiar enlace",
+  "notifications.monthlyTitle": "Reporte mensual",
+  "notifications.monthlyDesc":
+    "Un resumen de tu mes por correo, con un PDF completo cuando tienes datos de entrenamiento, o consejos y recomendaciones cuando no.",
+  "notifications.monthlyOnToast": "Correos mensuales activados",
+  "notifications.monthlyOffToast": "Correos mensuales desactivados",
+  "monthlyPrompt.title": "¿Quieres recibir tu mes por correo?",
+  "monthlyPrompt.body":
+    "Un resumen mensual con un reporte completo en PDF cuando tienes datos de entrenamiento, o consejos y recomendaciones cuando no. Puede incluir datos corporales, así que queda apagado hasta que digas que sí.",
+  "monthlyPrompt.accept": "Activarlo",
+  "monthlyPrompt.decline": "Ahora no",
+  "unsubscribe.monthlyTitle": "¿Dejar de recibir los correos mensuales?",
+  "unsubscribe.monthlyBody":
+    "Te enviamos un resumen de tu mes, o consejos cuando no hay nada que reportar. Confirma abajo y dejaremos de hacerlo; tu cuenta y tus datos quedan exactamente igual.",
+  "unsubscribe.monthlyDoneBody":
+    "Ya no recibirás correos mensuales. Puedes volver a activarlos cuando quieras desde Notificaciones en tu cuenta de metri.info.",
+  "monthlyReport.subject": "Tu reporte de Metri de {month}",
+  "monthlyReport.kicker": "Reporte mensual",
+  "monthlyReport.footer":
+    "Recibes esto porque activaste los correos mensuales en tu cuenta de Metri.",
+  "monthlyReport.unsubscribe": "Cancelar los correos mensuales",
+  "monthlyReport.cta": "Abrir tu mapa corporal",
+  "monthlyReport.pdfNote": "Tu reporte completo va adjunto en PDF.",
+  "monthlyReport.attention": "Vale la pena revisar",
+  "monthlyReport.nextStep": "Siguiente paso",
+  "monthlyReport.readGuide": "Leer la guía",
+  "monthlyReport.stat.sessions": "Sesiones",
+  "monthlyReport.stat.sets": "Series efectivas",
+  "monthlyReport.stat.weightChange": "Cambio de peso",
+  "monthlyReport.stat.protein": "Proteína prom.",
+  "monthlyReport.verdict.first":
+    "Tu primer mes registrado. A partir de ahora, cada reporte se compara con este.",
+  "monthlyReport.verdict.strong":
+    "Un mes fuerte: entrenaste al menos lo mismo que el mes pasado y tus levantamientos subieron.",
+  "monthlyReport.verdict.steady":
+    "Un mes estable: tu entrenamiento se mantuvo cerca del mes pasado.",
+  "monthlyReport.verdict.down":
+    "Un mes más ligero: entrenaste bastante menos que el mes pasado.",
+  "monthlyReport.verdict.tracking":
+    "Seguiste registrando este mes, aunque sin sesiones.",
+  "monthlyReport.anomaly.weight_down.title": "El peso está bajando rápido",
+  "monthlyReport.anomaly.weight_down.body":
+    "Tu promedio semanal bajó cerca de {rate}% del peso corporal por semana, más rápido de lo que tu fase suele pedir. Si no era el plan, revisa tus calorías y tu recuperación.",
+  "monthlyReport.anomaly.weight_up.title": "El peso está subiendo rápido",
+  "monthlyReport.anomaly.weight_up.body":
+    "Tu promedio semanal subió cerca de {rate}% del peso corporal por semana, más rápido de lo que tu fase suele pedir. Si no era el plan, revisa tu objetivo de calorías.",
+  "monthlyReport.anomaly.gap.title": "Un descanso largo entre sesiones",
+  "monthlyReport.anomaly.gap.body":
+    "Pasaron {days} días sin una sesión en algún momento del mes.",
+  "monthlyReport.anomaly.strength.title": "{exercise} bajó",
+  "monthlyReport.anomaly.strength.body":
+    "Tu 1RM estimado bajó {pct}% respecto al mes pasado. El sueño, la comida y la fatiga acumulada son los primeros lugares donde mirar.",
+  "monthlyReport.anomaly.volume.title":
+    "El volumen de entrenamiento se disparó",
+  "monthlyReport.anomaly.volume.body":
+    "Hiciste {pct}% más series por semana de lo habitual. Un salto repentino cuesta más recuperarlo, así que vigila tus articulaciones y tu energía.",
+  "monthlyReport.anomaly.muscle.title": "{muscle} recibió menos trabajo",
+  "monthlyReport.anomaly.muscle.body":
+    "Cerca de {now} series por semana, contra tus {usual} habituales.",
+  "monthlyReport.step.adjust_phase":
+    "Compara el ritmo de este mes con tu plan y ajusta tus calorías si hace falta.",
+  "monthlyReport.step.plan_days":
+    "Elige desde ahora tus días de entrenamiento del próximo mes, y haz las sesiones más cortas si eso ayuda a que sucedan.",
+  "monthlyReport.step.recover":
+    "Mantén los pesos una o dos semanas y prioriza el sueño antes de volver a exigirte.",
+  "monthlyReport.step.hold_volume":
+    "Mantén tu volumen actual el próximo mes en lugar de aumentarlo, y deja que la recuperación te alcance.",
+  "monthlyReport.step.restore_muscle":
+    "Vuelve a incluir algunas series para ese músculo en tu semana.",
+  "monthlyReport.step.log_food":
+    "Registra tu comida más días el próximo mes para que los promedios signifiquen algo.",
+  "monthlyReport.step.weigh_in":
+    "Pésate al menos tres veces por semana para que tu tendencia sea confiable.",
+  "monthlyReport.step.keep_progressing":
+    "Sigue sumando repeticiones o carga en tus levantamientos principales.",
+  "monthlyReport.pdf.weight": "Peso corporal",
+  "monthlyReport.pdf.vsLast": "{delta} vs. mes pasado",
+  "monthlyReport.pdf.target": "Meta {value}",
+  "monthlyReport.pdf.training": "Entrenamiento",
+  "monthlyReport.pdf.perWeekLong": "Por semana",
+  "monthlyReport.pdf.sessionsUnit": "sesiones",
+  "monthlyReport.pdf.timeTrained": "Tiempo entrenado",
+  "monthlyReport.pdf.hoursUnit": "horas",
+  "monthlyReport.pdf.skipped": "Omitidos",
+  "monthlyReport.pdf.daysUnit": "días",
+  "monthlyReport.pdf.longestBreak": "Mayor descanso",
+  "monthlyReport.pdf.strength": "Fuerza",
+  "monthlyReport.pdf.noLifts":
+    "Todavía no hay levantamientos para comparar con el mes pasado.",
+  "monthlyReport.pdf.exercise": "Ejercicio",
+  "monthlyReport.pdf.before": "Mes pasado",
+  "monthlyReport.pdf.now": "Este mes",
+  "monthlyReport.pdf.change": "Cambio",
+  "monthlyReport.pdf.stalled": "Sin cambios: {names}.",
+  "monthlyReport.pdf.e1rmNote": "1RM estimado, mejor serie del mes.",
+  "monthlyReport.pdf.muscles": "Series semanales por músculo",
+  "monthlyReport.pdf.muscle": "Músculo",
+  "monthlyReport.pdf.perWeek": "Series",
+  "monthlyReport.pdf.usual": "Habitual",
+  "monthlyReport.pdf.muscleLegend":
+    "El rango productivo es de {min} a {max} series efectivas por semana. Habitual es tu promedio de los últimos tres meses.",
+  "monthlyReport.pdf.body": "Cuerpo",
+  "monthlyReport.pdf.weightRange":
+    "Tu promedio semanal pasó de {start} a {end}.",
+  "monthlyReport.pdf.weightRate":
+    "Equivale a {rate}% del peso corporal por semana.",
+  "monthlyReport.pdf.weighIns": "Pesajes este mes: {count}.",
+  "monthlyReport.pdf.excluded":
+    "Excluidos por parecer errores de captura: {count}.",
+  "monthlyReport.pdf.nutrition": "Nutrición",
+  "monthlyReport.pdf.daysLogged": "Registrado en {count} de {total} días.",
+  "monthlyReport.pdf.averages":
+    "Promedios: {kcal} kcal y {protein} g de proteína al día.",
+  "monthlyReport.pdf.kcalTarget": "Objetivo de calorías: {kcal} kcal.",
+  "monthlyReport.pdf.unreliable":
+    "Registrado en menos de la mitad de los días, así que se omiten los promedios.",
+  "monthlyReport.pdf.disclaimer":
+    "metri.info · Información general, no es consejo médico.",
+  "monthlyTips.subject": "Tu mes en Metri: 3 cosas para probar",
+  "monthlyTips.preview":
+    "Tres ideas para probar este mes, tomadas de nuestras guías.",
+  "monthlyTips.kicker": "Tu mes en Metri",
+  "monthlyTips.heading": "Tres cosas que vale la pena probar este mes",
+  "monthlyTips.headingQuiet": "Un mes tranquilo, y cómo retomar",
+  "monthlyTips.intro":
+    "Todavía no hay datos de entrenamiento en tu cuenta, así que esta vez no hay reporte. Esto te puede ayudar mientras tanto.",
+  "monthlyTips.introQuiet":
+    "No hubo suficientes registros en {month} para un reporte completo. Esto te puede ayudar a retomar.",
+  "monthlyTips.savedOne": "Guardaste 1 cálculo en {month}.",
+  "monthlyTips.savedMany": "Guardaste {count} cálculos en {month}.",
+  "monthlyTips.mostUsed": "El más usado: {name}.",
+  "monthlyTips.tipsLabel": "Consejos del mes",
+  "monthlyTips.recommendedLabel": "Recomendado para ti",
+  "monthlyTips.takeQuiz": "Descubre en qué vas bien y qué leer después.",
+  "monthlyTips.studyArea":
+    "Tu test de conocimientos indica que {area} es el área por trabajar ahora.",
+  "monthlyTips.tryCalculator": "Siguiente herramienta por probar: {name}.",
+  "monthlyTips.openCalculator": "Abrirla",
+  "monthlyTips.newsLabel": "Novedades en Metri",
+  "monthlyTips.news":
+    "La app para Android va en la versión {version}: gratuita y offline-first, con tus programas, series, comida y check-ins corporales. Con la sincronización Premium, lo que registras ahí se convierte en un reporte mensual completo.",
+  "monthlyTips.newsQuiet":
+    "Metri {version} es la versión más reciente de la app. Actualízala si aún no lo haces.",
+  "monthlyTips.ctaApp": "Obtener la app para Android",
+  "monthlyTips.overload.title": "Suma una repetición antes de subir peso",
+  "monthlyTips.overload.body":
+    "Supera tu sesión anterior por una repetición en tus levantamientos principales, y sube el peso al llegar al tope de tu rango.",
+  "monthlyTips.volume.title":
+    "Apunta a 10 a 20 series efectivas por músculo a la semana",
+  "monthlyTips.volume.body":
+    "Es el rango productivo para la mayoría. Empieza cerca del mínimo y agrega series solo si te recuperas bien.",
+  "monthlyTips.intensity.title": "Haz que tus series cuenten",
+  "monthlyTips.intensity.body":
+    "Dejar de 3 a 5 repeticiones en reserva es trabajo casi desperdiciado. Anota cuántas te quedaban y baja ese número.",
+  "monthlyTips.measuring.title": "No midas tu progreso solo con la báscula",
+  "monthlyTips.measuring.body":
+    "Registra peso, medidas y fotos, cada semana y en ayunas. Juntos muestran lo que un solo número no puede.",
+  "monthlyTips.protein.title": "Define primero tu proteína",
+  "monthlyTips.protein.body":
+    "Preserva músculo en déficit y lo construye en superávit. Después acomoda carbohidratos y grasas.",
+  "monthlyTips.tdee.title": "Encuentra tus calorías de mantenimiento",
+  "monthlyTips.tdee.body":
+    "Todo déficit o superávit empieza ahí. Saca un estimado y ajústalo según lo que de verdad hace tu peso semanal.",
+  "monthlyTips.sleep.title": "Trata el sueño como parte del entrenamiento",
+  "monthlyTips.sleep.body":
+    "Apunta a dormir de 7 a 9 horas. Es la herramienta de recuperación con más impacto que tienes.",
+  "monthlyTips.technique.title": "Controla la bajada",
+  "monthlyTips.technique.body":
+    "Baja el peso en unos 3 segundos y usa todo el rango. Nunca cambies rango por más peso.",
+  "monthlyTips.diet.title": "Mantén simple tu dieta",
+  "monthlyTips.diet.body":
+    "Dos palancas importan más: calorías totales y proteína total. Ajústalas antes de preocuparte por lo demás.",
 };

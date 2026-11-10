@@ -64,6 +64,13 @@
       "when": 1792258501893,
       "tag": "0008_quiz_attempt",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794268173554,
+      "tag": "0009_monthly_report",
+      "breakpoints": true
     }
   ]
 }

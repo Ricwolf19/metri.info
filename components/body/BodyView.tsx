@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { MonthlyReportPrompt } from "@/components/account/MonthlyReportPrompt";
 import { BodyActions } from "@/components/body/BodyActions";
 import { BodyMap } from "@/components/body/BodyMap";
 import { TapeList } from "@/components/body/TapeList";
@@ -89,6 +90,7 @@ export const BodyView = async ({
   imperial,
   locale,
   windowDays,
+  askMonthlyReport,
 }: {
   userId: string;
   plan: string | null | undefined;
@@ -96,6 +98,8 @@ export const BodyView = async ({
   imperial: boolean;
   locale: Locale;
   windowDays: BodyWindow;
+  /** Show the one-time monthly email opt-in. */
+  askMonthlyReport: boolean;
 }) => {
   const t = createT(locale);
   const back = (
@@ -116,6 +120,7 @@ export const BodyView = async ({
       compact
     >
       {children}
+      {askMonthlyReport && <MonthlyReportPrompt className="mt-6" />}
     </PageHero>
   );
 
@@ -276,6 +281,7 @@ export const BodyView = async ({
                 avgKg: w.avgKg === null ? null : weight(w.avgKg),
               }))}
               today={snap.today}
+              unit={weightUnit}
               locale={locale}
               t={t}
             />

@@ -24,7 +24,11 @@ export type AccountProfile = {
   latestTdee: number | null;
 };
 
-export type AccountNotificationPrefs = { releaseEmails: boolean };
+export type AccountNotificationPrefs = {
+  releaseEmails: boolean;
+  /** Null until the account has answered the opt-in. */
+  monthlyReportEmails: boolean | null;
+};
 
 /** Connected providers for a user, by `providerId` (e.g. `credential`,
  * `google`, `github`). Drives password-presence detection and the linked-
@@ -72,19 +76,26 @@ export const getUserProfile = async (
   }
 };
 
-/** Account-level notification flags (today: release emails only — push and
- * reminder preferences live on the device and never reach the server). */
+/** Account-level notification flags (push and reminder preferences live on the
+ * device and never reach the server). */
 export const getUserNotificationPrefs = async (
   userId: string,
 ): Promise<AccountNotificationPrefs> => {
   try {
     const [row] = await db
-      .select({ releaseEmails: user.releaseEmails })
+      .select({
+        releaseEmails: user.releaseEmails,
+        monthlyReportEmails: user.monthlyReportEmails,
+      })
       .from(user)
       .where(eq(user.id, userId))
       .limit(1);
-    return { releaseEmails: row?.releaseEmails ?? true };
+    return {
+      releaseEmails: row?.releaseEmails ?? true,
+      monthlyReportEmails: row?.monthlyReportEmails ?? null,
+    };
   } catch {
-    return { releaseEmails: true };
+    // `false`, not null: a failed read must not re-ask someone who answered.
+    return { releaseEmails: true, monthlyReportEmails: false };
   }
 };

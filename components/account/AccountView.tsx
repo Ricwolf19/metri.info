@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { AccountIdentity } from "@/components/account/AccountIdentity";
+import { MonthlyReportPrompt } from "@/components/account/MonthlyReportPrompt";
 import { ConnectionsSection } from "@/components/account/settings/ConnectionsSection";
 import { NotificationsSection } from "@/components/account/settings/NotificationsSection";
 import { ProfileSection } from "@/components/account/settings/ProfileSection";
@@ -77,6 +78,9 @@ export const AccountView = ({
       </PageHero>
 
       <Container className="py-10 sm:py-14">
+        {prefs.monthlyReportEmails === null && (
+          <MonthlyReportPrompt className="mb-8" />
+        )}
         <AccountIdentity
           name={user.name}
           email={user.email}
@@ -98,6 +102,7 @@ export const AccountView = ({
             <NotificationsSection
               id="notifications"
               initialReleaseEmails={prefs.releaseEmails}
+              initialMonthlyReportEmails={prefs.monthlyReportEmails === true}
             />
             <SecuritySection id="security" hasPassword={userHasPassword} />
             <ConnectionsSection

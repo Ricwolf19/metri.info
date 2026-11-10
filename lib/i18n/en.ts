@@ -9,6 +9,9 @@ export const en = {
   "common.search": "Search",
   "common.cancel": "Cancel",
   "common.loading": "Loading…",
+  "common.resultsCount": "{count} results",
+  "common.breadcrumb": "Breadcrumb",
+  "motion.pause": "Pause animations",
 
   "pwa.installTitle": "Install Metri",
   "pwa.installBody": "Add Metri to your home screen for offline calculators.",
@@ -40,10 +43,14 @@ export const en = {
   "nav.sections": "Sections",
   "nav.links": "Links",
   "nav.currentPage": "Current page",
+  "nav.skipToContent": "Skip to content",
+  "nav.switchLanguage": "Switch language: {language} ({code})",
 
   "cmd.title": "Command menu",
   "cmd.open": "Search",
   "cmd.hide": "Hide",
+  "cmd.show": "Show search",
+  "cmd.hint": "Use the arrow keys to move, Enter to open, Escape to close.",
   "cmd.placeholder": "Search calculators, guides, pages…",
   "cmd.empty": "No results.",
   "cmd.group.pages": "Pages",
@@ -57,6 +64,8 @@ export const en = {
   "auth.signUp": "Create account",
   "auth.email": "Email",
   "auth.password": "Password",
+  "auth.passwordHint": "At least 8 characters.",
+  "auth.showPassword": "Show password",
   "auth.name": "Name",
   "auth.or": "or",
   "auth.continueGoogle": "Continue with Google",
@@ -117,7 +126,7 @@ export const en = {
   "hero.kicker": "Open source · Offline-first app · Free web tools and guides",
   "hero.title": "Track. Progress. Evolve.",
   "hero.subtitle":
-    "One open-source training system, in two places that work together: a free, offline-first Android app for programs, sets, body check-ins and food, and this site, with 17 calculators, an evidence-based knowledge base and a knowledge check that run in any browser.",
+    "A free, offline-first Android app for your programs, sets, food and body check-ins, plus 17 web calculators and evidence-based guides. With Premium, your training syncs to the web.",
   "hero.ctaDownload": "Download App",
   "hero.ctaTools": "Try the Calculators",
 
@@ -277,9 +286,13 @@ export const en = {
   "quiz.correct": "Correct.",
   "quiz.incorrect": "Not quite.",
   "quiz.answerWas": "The answer: {answer}",
+  "quiz.rightAnswer": "Correct answer",
+  "quiz.yourAnswer": "Your answer",
   "quiz.why": "Why",
   "quiz.autoNext":
     "The next question comes on its own. Pause it with the button.",
+  "quiz.autoAdvance":
+    "Move to the next question on its own, {seconds} seconds after each answer",
   "quiz.cardTitle": "Knowledge check",
   "quiz.cardBody":
     "Find your level in nutrition, training, body composition and the fundamentals.",
@@ -318,7 +331,6 @@ export const en = {
     "No attempts yet. Take the check and your map appears here.",
   "quiz.remaining": "{n} more",
   "quiz.pause": "Pause the countdown",
-  "quiz.resume": "Resume the countdown",
   "quiz.review": "Review these",
   "quiz.reviewHint":
     "The questions you missed, with the explanation and where to read more.",
@@ -394,6 +406,9 @@ export const en = {
   "calc.difference": "Difference",
   "calc.increase": "Increase {field}",
   "calc.decrease": "Decrease {field}",
+  "calc.presets": "Quick values for {field}",
+  "calc.outOfRange": "Enter a value from {min} to {max}.",
+  "calc.noResult": "Adjust the values to see a result.",
   "calc.saveCta": "Save calculation",
   "calc.saving": "Saving…",
   "calc.saved": "Saved",
@@ -617,6 +632,9 @@ export const en = {
   "docs.noResults": "No results found.",
   "docs.readingTime": "{minutes} min read",
   "docs.onThisPage": "On this page",
+  "docs.callout.tip": "Tip",
+  "docs.callout.info": "Note",
+  "docs.callout.warning": "Warning",
   "docs.sourcesTitle": "Sources & references",
   "docs.reviewedBy": "Written & reviewed by",
   "docs.lastUpdated": "Last updated",
@@ -782,19 +800,12 @@ export const en = {
 
   "releaseEmail.badge": "New release",
   "releaseEmail.whatsNew": "What changed",
-  "releaseEmail.installTitle": "Install in three steps",
-  "releaseEmail.step1":
-    "Open this email on your Android phone and tap the button above.",
-  "releaseEmail.step2":
-    "Allow the install when Android asks; the app updates in place and keeps your data.",
-  "releaseEmail.step3": "Open Metri. Later versions arrive over the air.",
   "releaseEmail.subject": "Metri {version} is out",
   "releaseEmail.preview": "What's new in Metri {version}",
   "releaseEmail.heading": "Metri {version} is out",
   "releaseEmail.intro":
     "A new version of the Metri Android app is ready. Here's what changed:",
-  "releaseEmail.download": "Download for Android",
-  "releaseEmail.downloadPage": "Open the download page",
+  "releaseEmail.download": "Go to the download page",
   "releaseEmail.tagline": "Metri · open-source fitness, built for lifters.",
   "releaseEmail.footer":
     "You're getting this because your Metri account has release emails turned on.",
@@ -1054,6 +1065,8 @@ export const en = {
   "body.legend.fatigued": "Fatigued",
   "body.legend.recent": "Trained recently",
   "body.legend.detrained": "Losing ground",
+  "body.chartSummary":
+    "Weekly average weight, {from} to {to}. Latest reading {latest} {unit}, {n} readings.",
   "body.balanceHint":
     "Weekly hard sets per muscle, against a {min}–{max} set target.",
   "body.fatigueHint":
@@ -1107,6 +1120,178 @@ export const en = {
   "muscle.side_delts": "Side delts",
   "muscle.rear_delts": "Rear delts",
   "muscle.adductors": "Adductors",
+
+  "download.webviewTitle": "Open this page in your browser",
+  "download.webviewBody":
+    "You're inside your email app, and it can't download files. Open Chrome to get the APK, or copy the link and paste it into any browser.",
+  "download.webviewOpen": "Open in Chrome",
+  "download.webviewCopy": "Copy link",
+  "notifications.monthlyTitle": "Monthly report",
+  "notifications.monthlyDesc":
+    "A summary of your month by email, with a full PDF when you have training data, or tips and recommendations when you don't.",
+  "notifications.monthlyOnToast": "Monthly emails on",
+  "notifications.monthlyOffToast": "Monthly emails off",
+  "monthlyPrompt.title": "Get your month by email?",
+  "monthlyPrompt.body":
+    "A monthly summary with a full PDF report when you have training data, or tips and recommendations when you don't. It can include body data, so it stays off until you say yes.",
+  "monthlyPrompt.accept": "Turn it on",
+  "monthlyPrompt.decline": "Not now",
+  "unsubscribe.monthlyTitle": "Stop monthly emails?",
+  "unsubscribe.monthlyBody":
+    "We email you a summary of your month, or tips when there's nothing to report. Confirm below and we'll stop; your account and data stay exactly as they are.",
+  "unsubscribe.monthlyDoneBody":
+    "You won't get monthly emails anymore. You can turn them back on any time from Notifications in your account on metri.info.",
+  "monthlyReport.subject": "Your Metri report for {month}",
+  "monthlyReport.kicker": "Monthly report",
+  "monthlyReport.footer":
+    "You're getting this because you turned on monthly emails in your Metri account.",
+  "monthlyReport.unsubscribe": "Unsubscribe from monthly emails",
+  "monthlyReport.cta": "Open your body map",
+  "monthlyReport.pdfNote": "Your full report is attached as a PDF.",
+  "monthlyReport.attention": "Worth a look",
+  "monthlyReport.nextStep": "Next step",
+  "monthlyReport.readGuide": "Read the guide",
+  "monthlyReport.stat.sessions": "Sessions",
+  "monthlyReport.stat.sets": "Working sets",
+  "monthlyReport.stat.weightChange": "Weight change",
+  "monthlyReport.stat.protein": "Avg protein",
+  "monthlyReport.verdict.first":
+    "Your first month on record. From here on, every report compares against this one.",
+  "monthlyReport.verdict.strong":
+    "A strong month: you trained at least as much as last month and your lifts moved up.",
+  "monthlyReport.verdict.steady":
+    "A steady month: your training held close to last month.",
+  "monthlyReport.verdict.down":
+    "A lighter month: you trained noticeably less than last month.",
+  "monthlyReport.verdict.tracking":
+    "You kept tracking this month, even without logged sessions.",
+  "monthlyReport.anomaly.weight_down.title": "Weight is dropping quickly",
+  "monthlyReport.anomaly.weight_down.body":
+    "Your weekly average fell about {rate}% of body weight per week, faster than your phase usually calls for. If that wasn't the plan, review your calories and recovery.",
+  "monthlyReport.anomaly.weight_up.title": "Weight is climbing quickly",
+  "monthlyReport.anomaly.weight_up.body":
+    "Your weekly average rose about {rate}% of body weight per week, faster than your phase usually calls for. If that wasn't the plan, review your calorie target.",
+  "monthlyReport.anomaly.gap.title": "A long break between sessions",
+  "monthlyReport.anomaly.gap.body":
+    "{days} days passed without a session at one point this month.",
+  "monthlyReport.anomaly.strength.title": "{exercise} dipped",
+  "monthlyReport.anomaly.strength.body":
+    "Your estimated 1RM is down {pct}% from last month. Sleep, food and accumulated fatigue are the usual places to look.",
+  "monthlyReport.anomaly.volume.title": "Training volume jumped",
+  "monthlyReport.anomaly.volume.body":
+    "You did {pct}% more sets per week than usual. A sudden jump is harder to recover from, so keep an eye on your joints and energy.",
+  "monthlyReport.anomaly.muscle.title": "{muscle} got less work",
+  "monthlyReport.anomaly.muscle.body":
+    "About {now} sets a week, against your usual {usual}.",
+  "monthlyReport.step.adjust_phase":
+    "Compare this month's rate with your plan and adjust your calories if you need to.",
+  "monthlyReport.step.plan_days":
+    "Pick your training days for next month now, and keep sessions shorter if that's what makes them happen.",
+  "monthlyReport.step.recover":
+    "Hold the weights steady for a week or two and put sleep first before pushing again.",
+  "monthlyReport.step.hold_volume":
+    "Keep your volume where it is next month instead of adding more, and let recovery catch up.",
+  "monthlyReport.step.restore_muscle":
+    "Work a few sets for that muscle back into your week.",
+  "monthlyReport.step.log_food":
+    "Log your food on more days next month so the averages mean something.",
+  "monthlyReport.step.weigh_in":
+    "Weigh in at least three times a week so your trend is reliable.",
+  "monthlyReport.step.keep_progressing":
+    "Keep adding reps or load on your main lifts.",
+  "monthlyReport.pdf.weight": "Body weight",
+  "monthlyReport.pdf.vsLast": "{delta} vs last month",
+  "monthlyReport.pdf.target": "Target {value}",
+  "monthlyReport.pdf.training": "Training",
+  "monthlyReport.pdf.perWeekLong": "Per week",
+  "monthlyReport.pdf.sessionsUnit": "sessions",
+  "monthlyReport.pdf.timeTrained": "Time trained",
+  "monthlyReport.pdf.hoursUnit": "hours",
+  "monthlyReport.pdf.skipped": "Skipped",
+  "monthlyReport.pdf.daysUnit": "days",
+  "monthlyReport.pdf.longestBreak": "Longest break",
+  "monthlyReport.pdf.strength": "Strength",
+  "monthlyReport.pdf.noLifts": "No lift to compare with last month yet.",
+  "monthlyReport.pdf.exercise": "Exercise",
+  "monthlyReport.pdf.before": "Last month",
+  "monthlyReport.pdf.now": "This month",
+  "monthlyReport.pdf.change": "Change",
+  "monthlyReport.pdf.stalled": "Holding steady: {names}.",
+  "monthlyReport.pdf.e1rmNote": "Estimated one-rep max, best set of the month.",
+  "monthlyReport.pdf.muscles": "Weekly sets by muscle",
+  "monthlyReport.pdf.muscle": "Muscle",
+  "monthlyReport.pdf.perWeek": "Sets",
+  "monthlyReport.pdf.usual": "Usual",
+  "monthlyReport.pdf.muscleLegend":
+    "The productive range is {min} to {max} hard sets a week. Usual is your average over the last three months.",
+  "monthlyReport.pdf.body": "Body",
+  "monthlyReport.pdf.weightRange":
+    "Your weekly average went from {start} to {end}.",
+  "monthlyReport.pdf.weightRate": "That's {rate}% of body weight per week.",
+  "monthlyReport.pdf.weighIns": "Weigh-ins this month: {count}.",
+  "monthlyReport.pdf.excluded": "Left out as likely typos: {count}.",
+  "monthlyReport.pdf.nutrition": "Nutrition",
+  "monthlyReport.pdf.daysLogged": "Logged on {count} of {total} days.",
+  "monthlyReport.pdf.averages":
+    "Averages: {kcal} kcal and {protein} g of protein a day.",
+  "monthlyReport.pdf.kcalTarget": "Calorie target: {kcal} kcal.",
+  "monthlyReport.pdf.unreliable":
+    "Logged on fewer than half the days, so averages are left out.",
+  "monthlyReport.pdf.disclaimer":
+    "metri.info · General information, not medical advice.",
+  "monthlyTips.subject": "Your month in Metri: 3 things to try",
+  "monthlyTips.preview":
+    "Three ideas to try this month, picked from our guides.",
+  "monthlyTips.kicker": "Your month in Metri",
+  "monthlyTips.heading": "Three things worth trying this month",
+  "monthlyTips.headingQuiet": "A quieter month, and a way back in",
+  "monthlyTips.intro":
+    "There's no training data on your account yet, so there's no report this time. Here's what can help in the meantime.",
+  "monthlyTips.introQuiet":
+    "There wasn't enough logged in {month} for a full report. These can help you pick it back up.",
+  "monthlyTips.savedOne": "You saved 1 calculation in {month}.",
+  "monthlyTips.savedMany": "You saved {count} calculations in {month}.",
+  "monthlyTips.mostUsed": "Most used: {name}.",
+  "monthlyTips.tipsLabel": "This month's tips",
+  "monthlyTips.recommendedLabel": "Recommended for you",
+  "monthlyTips.takeQuiz": "Find out where you're strong and what to read next.",
+  "monthlyTips.studyArea":
+    "Your knowledge check says {area} is the area to work on next.",
+  "monthlyTips.tryCalculator": "Next tool to try: {name}.",
+  "monthlyTips.openCalculator": "Open it",
+  "monthlyTips.newsLabel": "What's new in Metri",
+  "monthlyTips.news":
+    "The Android app is at version {version}: free and offline-first, for your programs, sets, food and body check-ins. With Premium sync, what you log there becomes a full monthly report.",
+  "monthlyTips.newsQuiet":
+    "Metri {version} is the latest version of the app. Update it if you haven't yet.",
+  "monthlyTips.ctaApp": "Get the Android app",
+  "monthlyTips.overload.title": "Add a rep before you add weight",
+  "monthlyTips.overload.body":
+    "Beat last session by one rep on your main lifts, and add weight once you reach the top of your rep range.",
+  "monthlyTips.volume.title": "Aim for 10 to 20 hard sets per muscle a week",
+  "monthlyTips.volume.body":
+    "That's the productive range for most people. Start near the low end and add sets only if you're recovering well.",
+  "monthlyTips.intensity.title": "Make your hard sets count",
+  "monthlyTips.intensity.body":
+    "Leaving 3 to 5 reps in reserve is mostly wasted work. Track how many you had left, and bring that number down.",
+  "monthlyTips.measuring.title": "Don't judge progress by the scale alone",
+  "monthlyTips.measuring.body":
+    "Track weight, tape measurements and photos, weekly and fasted. Together they show what one number can't.",
+  "monthlyTips.protein.title": "Set your protein first",
+  "monthlyTips.protein.body":
+    "It preserves muscle in a deficit and builds it in a surplus. Fit carbs and fat around it afterwards.",
+  "monthlyTips.tdee.title": "Find your maintenance calories",
+  "monthlyTips.tdee.body":
+    "Every cut or bulk starts there. Get an estimate, then adjust it using what your weekly weight actually does.",
+  "monthlyTips.sleep.title": "Treat sleep like training",
+  "monthlyTips.sleep.body":
+    "Aim for 7 to 9 hours. It's the highest-leverage recovery tool you have.",
+  "monthlyTips.technique.title": "Control the way down",
+  "monthlyTips.technique.body":
+    "Lower the weight in about 3 seconds and use your full range. Never trade range for more weight.",
+  "monthlyTips.diet.title": "Keep your diet simple",
+  "monthlyTips.diet.body":
+    "Two levers matter most: total calories and total protein. Get those right before worrying about the rest.",
 } as const;
 
 export type TranslationKey = keyof typeof en;

@@ -1,6 +1,8 @@
 import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
+import { ROUTES } from "./lib/i18n/routes";
+
 const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
@@ -12,6 +14,15 @@ const nextConfig: NextConfig = {
   // Native gRPC/protobuf deps — keep them external instead of bundling them into
   // the server build (Next's recommended handling for such packages).
   serverExternalPackages: ["@google-analytics/data"],
+  // The monthly PDF reads these TTFs from disk at runtime. Turbopack traces
+  // the font folder from the computed path today; this pins the five it uses
+  // so a change in tracing can't ship the cron without them.
+  outputFileTracingIncludes: {
+    "/api/cron/monthly-report": [
+      "./node_modules/geist/dist/fonts/geist-sans/Geist-{Regular,SemiBold,Bold}.ttf",
+      "./node_modules/geist/dist/fonts/geist-mono/GeistMono-{Regular,Bold}.ttf",
+    ],
+  },
   // PostHog ingests through this reverse proxy: the browser talks to first-party
   // `/relay/*` and Next forwards to PostHog's US ingestion/asset hosts. The
   // path is deliberately not `/ingest` (now on common blocklists). PostHog
@@ -25,6 +36,15 @@ const nextConfig: NextConfig = {
   // them redirecting so indexed links don't 404.
   async redirects() {
     return [
+      // Shared quiz results moved to their own URL so the quiz's metadata
+      // could stay static (see lib/quiz/metadata.ts). Links already posted
+      // keep their preview: the query string rides along.
+      ...(["en", "es"] as const).map((locale) => ({
+        source: ROUTES.quiz[locale],
+        has: [{ type: "query" as const, key: "r" }],
+        destination: ROUTES.quizResult[locale],
+        permanent: true,
+      })),
       { source: "/changelog", destination: "/download", permanent: true },
       {
         source: "/es/changelog",

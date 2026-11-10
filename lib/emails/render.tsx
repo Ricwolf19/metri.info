@@ -1,6 +1,8 @@
 import { render } from "@react-email/components";
 import { createElement } from "react";
 
+import { MonthlyReportEmail } from "./templates/MonthlyReportEmail";
+import { MonthlyTipsEmail } from "./templates/MonthlyTipsEmail";
 import { ReleaseEmail } from "./templates/ReleaseEmail";
 import { ResetPasswordEmail } from "./templates/ResetPasswordEmail";
 import { VerifyEmail } from "./templates/VerifyEmail";
@@ -31,3 +33,11 @@ export const renderResetPasswordEmail = (props: {
 export const renderReleaseEmail = (
   props: React.ComponentProps<typeof ReleaseEmail>,
 ): Promise<Rendered> => renderEmail(createElement(ReleaseEmail, props));
+
+export const renderMonthlyReportEmail = (
+  props: React.ComponentProps<typeof MonthlyReportEmail>,
+): Promise<Rendered> => renderEmail(createElement(MonthlyReportEmail, props));
+
+export const renderMonthlyTipsEmail = (
+  props: React.ComponentProps<typeof MonthlyTipsEmail>,
+): Promise<Rendered> => renderEmail(createElement(MonthlyTipsEmail, props));
