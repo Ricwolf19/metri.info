@@ -6,7 +6,10 @@ import { metaAlternates } from "@/lib/i18n/routes";
 import { organizationSchema, websiteSchema } from "@/lib/seo/schema";
 
 export const metadata: Metadata = {
-  title: "Metri · Tracker de fitness de código abierto para lifters",
+  // Absolute: the layout template would append " · Metri" a second time.
+  title: {
+    absolute: "Metri · Tracker de fitness de código abierto para lifters",
+  },
   description:
     "Metri es un compañero de entrenamiento de código abierto y sin conexión: calculadoras de fitness gratis (1RM, TDEE, macros, grasa corporal, FFMI), programas, biblioteca de ejercicios y una base de conocimiento basada en evidencia.",
   alternates: metaAlternates("home", "es"),

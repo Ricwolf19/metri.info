@@ -21,26 +21,30 @@ import { textMatches } from "@/lib/search";
 
 type CategoryInfo = { category: DocCategory; labelKey: TranslationKey };
 
+type DocsBrowserProps = {
+  docs: DocMeta[];
+  categories: CategoryInfo[];
+  basePath: string;
+};
+
 /**
  * The docs index as a reference list, not a card grid: a category rail on the
  * left (the shared `SideNav`, anchor mode — a scrollable chip row on small
  * screens) and, on the right, one dense row per guide grouped under compact
  * category headers. Rows span the full width, so a category with one guide
  * takes one line instead of a third of a grid and a block of empty space.
+ *
+ * Never reads the URL itself: rendered without `initialQuery` it is the
+ * Suspense fallback, the full list in the prerendered HTML that crawlers read.
  */
 export const DocsBrowser = ({
   docs,
   categories,
   basePath,
-}: {
-  docs: DocMeta[];
-  categories: CategoryInfo[];
-  basePath: string;
-}) => {
+  initialQuery = "",
+}: DocsBrowserProps & { initialQuery?: string }) => {
   const t = useT();
-  const searchParams = useSearchParams();
-  // Seed from `?q=` so a tag link from a doc page lands pre-filtered.
-  const [query, setQuery] = useState(() => searchParams.get("q") ?? "");
+  const [query, setQuery] = useState(initialQuery);
   const favorites = useFavoriteIds("doc");
 
   const filtered = useMemo(
@@ -83,9 +87,16 @@ export const DocsBrowser = ({
           onChange={(e) => setQuery(e.target.value)}
           placeholder={t("docs.searchPlaceholder")}
           aria-label={t("docs.searchPlaceholder")}
-          className="h-12 w-full rounded-xl border border-ink-600 bg-ink-800 pr-4 pl-11 text-ink-50 placeholder:text-ink-400 focus:border-ink-500 focus:ring-2 focus:ring-ink-500/40 focus:outline-none"
+          className="h-12 w-full rounded-xl border border-ink-600 bg-ink-800 pr-4 pl-11 text-ink-50 placeholder:text-ink-400 focus:border-brand/60 focus:ring-2 focus:ring-brand/30 focus:outline-none"
         />
       </div>
+      <p className="sr-only" aria-live="polite">
+        {query
+          ? t("common.resultsCount", {
+              count: groups.reduce((n, g) => n + g.items.length, 0),
+            })
+          : ""}
+      </p>
 
       {groups.length === 0 ? (
         <p className="mt-12 text-center text-ink-400">{t("docs.noResults")}</p>
@@ -121,23 +132,27 @@ export const DocsBrowser = ({
                   </div>
                   <ul className="mt-3 divide-y divide-ink-700 overflow-hidden rounded-card border border-ink-600 bg-ink-800">
                     {items.map((doc) => (
+                      // The title is the row's one link, stretched over it;
+                      // the tag filters and the pin sit above it. A row-wide
+                      // <Link> around the tag buttons nested interactive
+                      // content, and its focus showed only as a 1.1:1 tint.
                       <li key={doc.slug} className="relative">
-                        <Link
-                          href={`${basePath}/${doc.slug}`}
-                          onClick={() =>
-                            track("doc_opened", { slug: doc.slug })
-                          }
-                          className="group flex items-center gap-4 py-3.5 pr-14 pl-4 transition-colors hover:bg-ink-750 focus-visible:bg-ink-750 focus-visible:outline-none sm:pr-16 sm:pl-5"
-                        >
+                        <div className="group flex items-center gap-4 py-3.5 pr-14 pl-4 transition-colors hover:bg-ink-750 has-[a:focus-visible]:bg-ink-750 sm:pr-16 sm:pl-5">
                           <span className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-ink-700 text-accent sm:flex">
                             <Icon size={18} />
                           </span>
                           <span className="min-w-0 flex-1">
                             <span className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-                              <span className="text-sm font-semibold text-ink-50">
+                              <Link
+                                href={`${basePath}/${doc.slug}`}
+                                onClick={() =>
+                                  track("doc_opened", { slug: doc.slug })
+                                }
+                                className="text-sm font-semibold text-ink-50 after:absolute after:inset-0 focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-brand/55 focus-visible:after:ring-inset"
+                              >
                                 {doc.title}
-                              </span>
-                              <span className="font-mono text-[11px] text-ink-500">
+                              </Link>
+                              <span className="font-mono text-[11px] text-ink-400">
                                 {t("docs.readingTime", {
                                   minutes: doc.readingMinutes,
                                 })}
@@ -147,17 +162,13 @@ export const DocsBrowser = ({
                               {doc.description}
                             </span>
                             {doc.tags && doc.tags.length > 0 && (
-                              <span className="mt-1.5 hidden flex-wrap gap-1.5 md:flex">
+                              <span className="relative z-10 mt-1.5 hidden flex-wrap gap-1.5 md:flex">
                                 {doc.tags.slice(0, 4).map((tag) => (
                                   <button
                                     key={tag}
                                     type="button"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                      setQuery(tag);
-                                    }}
-                                    className="rounded-full bg-ink-900/70 px-2 py-0.5 font-mono text-[10px] text-ink-400 transition-colors hover:bg-ink-700 hover:text-ink-200"
+                                    onClick={() => setQuery(tag)}
+                                    className="min-h-6 rounded-full bg-ink-900/70 px-2 py-0.5 font-mono text-[10px] text-ink-400 transition-colors hover:bg-ink-700 hover:text-ink-200 focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:outline-none"
                                   >
                                     #{tag}
                                   </button>
@@ -169,13 +180,13 @@ export const DocsBrowser = ({
                             size={16}
                             className="hidden shrink-0 text-ink-500 transition-transform group-hover:translate-x-0.5 group-hover:text-ink-200 sm:block"
                           />
-                        </Link>
+                        </div>
                         <PinButton
                           itemType="doc"
                           itemId={doc.slug}
                           initialPinned={favorites.ids.has(doc.slug)}
                           loading={!favorites.ready}
-                          className="absolute top-1/2 right-3 -translate-y-1/2"
+                          className="absolute top-1/2 right-3 z-10 -translate-y-1/2"
                         />
                       </li>
                     ))}
@@ -188,4 +199,12 @@ export const DocsBrowser = ({
       )}
     </div>
   );
+};
+
+/** Seeds the list from `?q=`, so a tag link from a doc page lands
+ * pre-filtered. `useSearchParams` makes this half render in the browser only,
+ * which is why it lives apart from the list. */
+export const DocsBrowserFromUrl = (props: DocsBrowserProps) => {
+  const searchParams = useSearchParams();
+  return <DocsBrowser {...props} initialQuery={searchParams.get("q") ?? ""} />;
 };

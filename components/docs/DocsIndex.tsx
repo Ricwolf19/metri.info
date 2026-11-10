@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { DocsBrowser } from "@/components/docs/DocsBrowser";
+import { DocsBrowser, DocsBrowserFromUrl } from "@/components/docs/DocsBrowser";
 import { Container } from "@/components/shared/Container";
 import { QuizPromo } from "@/components/quiz/QuizPromo";
 import { PageHero } from "@/components/shared/PageHero";
@@ -16,6 +16,11 @@ export const DocsIndex = ({ locale }: { locale: Locale }) => {
     category,
     labelKey: CATEGORY_LABEL[category],
   }));
+  const browserProps = {
+    docs,
+    categories,
+    basePath: routePath("docs", locale),
+  };
 
   return (
     <>
@@ -29,13 +34,11 @@ export const DocsIndex = ({ locale }: { locale: Locale }) => {
       <Container className="py-12 sm:py-16">
         <QuizPromo className="mb-10" />
         {/* Suspense isolates `useSearchParams` (tag deep-links) so the page
-            stays statically prerendered. */}
-        <Suspense>
-          <DocsBrowser
-            docs={docs}
-            categories={categories}
-            basePath={routePath("docs", locale)}
-          />
+            stays statically prerendered. The fallback is the same list,
+            unfiltered: an empty fallback left the prerendered HTML with no
+            links to the guides, which is all a crawler reads first. */}
+        <Suspense fallback={<DocsBrowser {...browserProps} />}>
+          <DocsBrowserFromUrl {...browserProps} />
         </Suspense>
       </Container>
     </>
