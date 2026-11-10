@@ -26,7 +26,7 @@ export const Stat = ({
   label: string;
   value: number | null;
 }) => (
-  <div className="rounded-card border border-ink-600 bg-ink-800 p-5">
+  <div className="min-w-0 rounded-card border border-ink-600 bg-ink-800 p-5">
     <p className="text-sm text-ink-400">{label}</p>
     <p className="mt-1 font-mono text-3xl font-bold text-ink-50">
       {value === null ? "—" : fmt(value)}
@@ -48,11 +48,11 @@ export const Card = ({
 }) => (
   <section
     className={cn(
-      "rounded-card border border-ink-600 bg-ink-800 p-5",
+      "min-w-0 rounded-card border border-ink-600 bg-ink-800 p-5",
       className,
     )}
   >
-    <h3 className="text-sm font-semibold text-ink-100">{title}</h3>
+    <h2 className="text-sm font-semibold text-ink-100">{title}</h2>
     {subtitle ? (
       <p className="mt-0.5 text-xs text-ink-400">{subtitle}</p>
     ) : null}

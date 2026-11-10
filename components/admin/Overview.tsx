@@ -51,7 +51,7 @@ const Pulse = ({
   href?: string;
   tone?: "flame";
 }) => (
-  <div className="rounded-card border border-ink-600 bg-ink-800 p-5">
+  <div className="min-w-0 rounded-card border border-ink-600 bg-ink-800 p-5">
     <div className="flex items-center justify-between gap-2">
       <p className="text-sm text-ink-400">{label}</p>
       <span
@@ -124,7 +124,7 @@ export const Overview = async () => {
 
   return (
     <div className="space-y-10">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Pulse
           label="Registered users"
           value={dbMetrics?.totals.users ?? null}
@@ -155,7 +155,7 @@ export const Overview = async () => {
         />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Card
           title="Active sessions"
           subtitle="Signed-in sessions not yet expired"
@@ -176,7 +176,7 @@ export const Overview = async () => {
         </Card>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card title="Saved calculations" subtitle="Per day · last 30 days">
           {dbMetrics ? (
             <AreaLine
@@ -200,7 +200,7 @@ export const Overview = async () => {
         </Card>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card
           title="Traffic calendar"
           subtitle={`Pageviews per day · last ${CALENDAR_DAYS} days · PostHog`}
@@ -233,7 +233,7 @@ export const Overview = async () => {
         </Card>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card
           title="Top calculators"
           subtitle="By saved calculations · Postgres"

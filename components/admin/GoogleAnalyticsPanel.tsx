@@ -55,7 +55,7 @@ export const GoogleAnalyticsPanel = async () => {
   const empty = <Placeholder>No Google Analytics data available.</Placeholder>;
 
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       <Card title="Active users" subtitle="GA4 · activeUsers">
         {!configured ? (
           <ConnectHint />

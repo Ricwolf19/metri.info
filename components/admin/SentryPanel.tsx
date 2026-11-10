@@ -46,7 +46,7 @@ export const SentryPanel = async () => {
   const empty = <Placeholder>No Sentry data available.</Placeholder>;
 
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       <Card title="Error events" subtitle="Captured errors · 24h vs 14d">
         {!configured ? (
           <ConnectHint />
