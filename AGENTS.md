@@ -30,6 +30,7 @@ premium sync API the mobile app consumes. Overview, quick start, env vars and de
 bun run dev            # dev server (Turbopack)
 bun run verify         # bun run ci — format + lint + typecheck + test + circular + build (CI gate)
 bun run test           # vitest — unit + PGlite integration suites
+bun run test:browsers  # Playwright: every public page × Chromium, Firefox, WebKit, Pixel 7, iPhone 14
 bun run db:generate    # author migrations locally, commit them; Vercel migrates on deploy
 bun run db:status      # applied vs pending migrations on the live DB (exits 1 on drift)
 bun run admin:bootstrap
@@ -37,6 +38,12 @@ bun run admin:bootstrap
 
 Never auto-generate migrations in CI — `db:generate` is manual/local, the SQL in `drizzle/` is
 committed, `scripts/vercel-migrate.mjs` applies it on deploy.
+
+`test:browsers` builds and serves production on port 3100 with dummy env (no real DB, analytics,
+Sentry upload or auth rate limit) and checks each page in EN and ES: loads, throws nothing, logs no
+error, fits the screen. `--project=webkit` runs one browser; `bunx playwright install` once first.
+It is not part of `verify`. Playwright's WebKit is close to Safari but not Safari, so check
+critical flows on a real iPhone before a release.
 
 ## Invariants
 
@@ -68,6 +75,12 @@ committed, `scripts/vercel-migrate.mjs` applies it on deploy.
 - **SEO is server-first**: Metadata API, JSON-LD, file-based sitemap/robots/manifest, dynamic OG.
   `app/sitemap.ts` must stay statically cached (`"use cache"` + `cacheLife("max")`) — a per-request
   sitemap broke GSC ingestion. SEO/analytics playbooks live in the maintainer's private notes.
+  Two rules the page HTML depends on, both guarded by `e2e/smoke.spec.ts`: an indexable page's
+  `generateMetadata` never reads `searchParams` (dynamic metadata is streamed after the HTML to
+  crawlers that run JS, Googlebot included, so the title and canonical go missing; shared quiz
+  results live on `/quiz/result` for that reason, see `lib/quiz/metadata.ts`), and a Suspense
+  around `useSearchParams` renders the real content as its fallback (`DocsIndex`), or the
+  prerendered HTML ships without it.
 - **JSON-LD emits one `<script type="application/ld+json">` per node, never one array.** A bare
   array makes `JSON.parse(el.textContent)["@context"]` undefined, which is how page-scanning
   browser extensions crash on our pages (`components/seo/JsonLd.tsx` explains the escaping too).
@@ -107,7 +120,9 @@ committed, `scripts/vercel-migrate.mjs` applies it on deploy.
   series, the PostHog traffic calendar and weekday/hour heatmaps (`components/admin/charts`, plain
   SVG, no chart package) and the top lists; every card degrades on its own. It has no sidebar: the site header
   swaps its sections for `ADMIN_NAV_GROUPS` on admin paths (`isAdminPath`), and the footer and
-  launcher stay off (`isChromelessPath`).
+  launcher stay off (`isChromelessPath`). Admin grids always declare `grid-cols-1` below their
+  breakpoint and `Card` is `min-w-0`: an implicit `auto` column grows to its widest child (the
+  hour heatmap, a truncated Sentry title) and pushes the whole page past a phone's edge.
 - **Lists** (admin users, admin calculations, account history) are `listkit`: a config built with
   `defineListConfig` from `listkit/server` in `lib/lists/*`, a `"use server"` fetcher that runs
   `executeSqlList` (`listkit/sql`) on `lib/lists/pool.ts` with a filter-id → column whitelist, a
@@ -139,7 +154,7 @@ Read `docs/sync.md` before touching `app/api/sync/*` or `lib/sync/*`. Load-beari
   means the from-address is still Resend's restricted `onboarding@resend.dev` — verify a domain and
   set `AUTH_FROM_EMAIL`.
 - `AUTH_FROM_EMAIL` is the one sender for everything an account receives (verification, reset,
-  release notices) — no per-feature from-address.
+  release notices, monthly emails) — no per-feature from-address (`lib/emails/sender.ts`).
 - Rate limits are hardcoded in `RATE_LIMITS` (`lib/auth/server.ts`) — edit + redeploy, don't turn
   them into env vars. `BETTER_AUTH_RATE_LIMIT_ENABLED=false` is the single env kill-switch.
 - Map new Better Auth error codes in `authErrorMessage()` (`lib/auth/errors.ts`); never surface
@@ -172,15 +187,46 @@ Contract with the mobile repo's release workflow (the pipeline itself lives ther
   the versioned GitHub asset with `Content-Type: application/vnd.android.package-archive`, a
   filename and Range passthrough. GitHub serves `application/octet-stream`, and Android's download
   manager stalls at 100% / never offers to install on that type. Never link the GitHub asset URL
-  directly from a phone-facing control; keep it as the checksum reference only. The release email
-  renders the notes with `links: false` for the same reason: no GitHub link anywhere in it.
+  directly from a phone-facing control; keep it as the checksum reference only.
+- The release email has ONE button, to the download page, never the APK: email apps open links
+  in an embedded WebView where a file download silently does nothing. `DownloadButtons` spots
+  that WebView (`; wv)` in the user agent) and offers "Open in Chrome" (an `intent://` link) and
+  copy-link instead of a button that can't work. The notes render with `links: false` (no GitHub
+  link anywhere in the email) and `versionHeading: false` (the heading already names the version).
 - `proxy.ts` (locale detection) only ever redirects a `GET` document navigation: Server Action
   POSTs, RSC fetches and prefetches pass through untouched, or the client receives HTML where it
   expects a Flight payload ("An unexpected response was received from the server").
 - Release emails: on by default, one-click opt-out. Unsubscribe tokens are HMACs keyed off
-  `BETTER_AUTH_SECRET` (`lib/releases/unsubscribe.ts`); rotating it dead-links old emails. A GET
+  `BETTER_AUTH_SECRET` (`lib/emails/unsubscribe.ts`); rotating it dead-links old emails. A GET
   never unsubscribes (link scanners) — only the page's form or the RFC 8058 POST does. The mobile
   app reads/writes the flag as `releaseEmails` on `/api/profile`.
+
+## Monthly email
+
+`/api/cron/monthly-report` (`CRON_SECRET`, `0 15 2-4 * *`) emails the month that just ended to
+verified accounts with `user.monthly_report_emails = true`. Code lives in `lib/reports`.
+
+- **Opt-in**, because it carries body data: `null` = never answered, and `MonthlyReportPrompt`
+  asks once on `/account` and `/account/body`; either answer is stored. The switch lives under
+  Notifications. Unsubscribe tokens are scoped per list (`EmailList` in
+  `lib/emails/unsubscribe.ts`), so a monthly link can never turn off release emails.
+- **Never an empty report.** Premium with enough data (`hasEnoughData`: 4+ sessions, 4+ weigh-ins
+  or 14+ food days) gets the report: the email shows the verdict, changes only (never absolute
+  body numbers), up to two observations and the next step, with the full PDF attached. Everyone
+  else gets the tips edition (`tips.ts`): three rotating tips, a recommendation built from saved
+  calculations and the knowledge check, and the latest app version. A Premium account that's
+  short on data waits for the day-4 run in case the phone syncs late.
+- `monthly.ts` is pure and rule-based on the mirrored `muscle-load`/`weekly` helpers; thresholds
+  are constants at its top. Sessions and sets count on the device-local day from
+  `training_days`. Observations are worded as observations, not medical advice. Every tip
+  restates a guide, and `tips.test.ts` checks each linked guide exists in both languages.
+- The PDF is `@react-pdf/renderer` (`pdf.tsx`, same dark tokens as the emails). Its Geist TTFs
+  are read from `node_modules/geist` at runtime and pinned by `outputFileTracingIncludes`.
+- One `emails.send` per person, because Resend's batch endpoint takes no attachments. Sends are
+  paced 600 ms apart, with a 270 s budget, and three failures in a row stop the run. The
+  `monthly_report` (user, period) row plus the idempotency key `monthly-<period>-<user>` make any
+  rerun safe; a failed person is retried on the next day's run. Preview everything (both
+  editions and the PDF) with `bun run email:preview`.
 
 ## Layout
 
@@ -190,7 +236,9 @@ app/            App Router routes (EN at root, ES under /es) + SEO files +
 components/     ui, icons (barrel), layout, marketing, calculators, docs, account, admin, auth, …
 content/docs/   MDX knowledge base (en/es)
 lib/            calculations (pure math) · calculators (registry/configs) · sync · auth · db ·
-                i18n · seo · analytics · entitlements · releases (mobile release feed + emails)
+                i18n · seo · analytics · entitlements · releases (mobile release feed + emails) ·
+                reports (monthly email + PDF)
+e2e/            Playwright cross-browser smoke (`bun run test:browsers`)
 drizzle/        committed migrations
 docs/           sync.md (protocol, authoritative)
 ```
