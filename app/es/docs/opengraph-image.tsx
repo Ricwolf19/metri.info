@@ -1,7 +1,7 @@
 import { sectionCopy } from "@/lib/seo/pages";
 import { ogContentType, ogSize, renderOg } from "@/lib/og";
 
-export const alt = "Metri · Knowledge base";
+export const alt = "Metri · Base de conocimiento";
 export const size = ogSize;
 export const contentType = ogContentType;
 
