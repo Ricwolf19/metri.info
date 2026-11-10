@@ -6,8 +6,11 @@ import { Container } from "@/components/shared/Container";
 import { buttonVariants } from "@/components/ui/button";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
-import { confirmUnsubscribe } from "@/lib/releases/actions";
-import { verifyUnsubscribeToken } from "@/lib/releases/unsubscribe";
+import { confirmUnsubscribe } from "@/lib/emails/unsubscribe-action";
+import {
+  parseEmailList,
+  verifyUnsubscribeToken,
+} from "@/lib/emails/unsubscribe";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -28,12 +31,19 @@ const UnsubscribeState = async ({
   const params = await searchParams;
   const token = first(params.token);
   const done = first(params.done) === "1";
-  const valid = !done && verifyUnsubscribeToken(token) !== null;
+  const list = parseEmailList(first(params.list));
+  const monthly = list === "monthly";
+  const valid = !done && verifyUnsubscribeToken(token, list) !== null;
 
   const [title, body] = done
-    ? [t("unsubscribe.doneTitle"), t("unsubscribe.doneBody")]
+    ? [
+        t("unsubscribe.doneTitle"),
+        monthly ? t("unsubscribe.monthlyDoneBody") : t("unsubscribe.doneBody"),
+      ]
     : valid
-      ? [t("unsubscribe.title"), t("unsubscribe.body")]
+      ? monthly
+        ? [t("unsubscribe.monthlyTitle"), t("unsubscribe.monthlyBody")]
+        : [t("unsubscribe.title"), t("unsubscribe.body")]
       : [t("unsubscribe.invalidTitle"), t("unsubscribe.invalidBody")];
 
   return (
@@ -46,6 +56,7 @@ const UnsubscribeState = async ({
         {valid && (
           <form action={confirmUnsubscribe}>
             <input type="hidden" name="token" value={token} />
+            <input type="hidden" name="list" value={list} />
             <input type="hidden" name="locale" value={locale} />
             <button type="submit" className={buttonVariants({ size: "lg" })}>
               {t("unsubscribe.confirm")}
@@ -63,7 +74,7 @@ const UnsubscribeState = async ({
   );
 };
 
-/** Release-email opt-out page — shared by /unsubscribe and
+/** Account-email opt-out page (`?list=` picks which) — shared by /unsubscribe and
  * /es/cancelar-suscripcion. */
 export const UnsubscribeView = ({
   locale,

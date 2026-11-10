@@ -44,5 +44,9 @@ export const createT =
 export const intlLocale = (locale: Locale): string =>
   locale === "es" ? "es-MX" : "en-US";
 
+/** An account's stored language tag as a site locale. */
+export const localeFromTag = (value: string | null | undefined): Locale =>
+  value?.toLowerCase().startsWith("es") ? "es" : "en";
+
 export const isLocale = (value: unknown): value is Locale =>
   value === "en" || value === "es";

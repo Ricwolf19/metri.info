@@ -8,8 +8,8 @@ import { tags } from "@/lib/cache/tags";
 import { db } from "@/lib/db";
 import { user, userProfile } from "@/lib/db/schema";
 import { renderReleaseEmail } from "@/lib/emails/render";
-import type { Locale } from "@/lib/i18n/config";
-import { createT } from "@/lib/i18n/config";
+import { senderAddress } from "@/lib/emails/sender";
+import { createT, type Locale, localeFromTag } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
 import { event } from "@/lib/log/logger";
 import { absoluteUrl } from "@/lib/utils";
@@ -21,7 +21,7 @@ import {
   signUnsubscribeToken,
   unsubscribeApiUrl,
   unsubscribePageUrl,
-} from "./unsubscribe";
+} from "@/lib/emails/unsubscribe";
 
 /** Resend's batch endpoint accepts at most 100 messages per call. */
 const BATCH_SIZE = 100;
@@ -31,17 +31,12 @@ const BATCH_GAP_MS = 600;
 const RATE_LIMIT_BACKOFF_MS = 1500;
 /** Swapped for each recipient's own link after rendering once per locale. */
 const UNSUBSCRIBE_PLACEHOLDER = "__METRI_UNSUBSCRIBE_URL__";
-// Resend's shared sender (test mode); production sets a verified sender.
-const DEFAULT_FROM = "Metri <onboarding@resend.dev>";
 
 export type NotifyOutcome =
   | { ok: true; emailed: number }
   | { ok: false; reason: FetchFailure };
 
 type Recipient = { id: string; email: string; locale: Locale };
-
-const toLocale = (value: string | null): Locale =>
-  value?.toLowerCase().startsWith("es") ? "es" : "en";
 
 /**
  * Verified accounts that kept release emails on and existed when the release
@@ -67,7 +62,7 @@ const readRecipients = async (
       ),
     )
     .orderBy(asc(user.id));
-  return rows.map((r) => ({ ...r, locale: toLocale(r.locale) }));
+  return rows.map((r) => ({ ...r, locale: localeFromTag(r.locale) }));
 };
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -81,7 +76,6 @@ const renderFor = async (release: AppRelease, locale: Locale) => {
     locale,
     version: release.version,
     notes: release.notes,
-    apkUrl: absoluteUrl("/download/apk"),
     downloadPageUrl: absoluteUrl(routePath("download", locale)),
     unsubscribeUrl: UNSUBSCRIBE_PLACEHOLDER,
   });
@@ -156,8 +150,7 @@ const sendAnnouncement = async (
     return { emailed: 0, complete: false };
   }
 
-  // One sender for everything an account receives (verification, reset, releases).
-  const from = process.env.AUTH_FROM_EMAIL ?? DEFAULT_FROM;
+  const from = senderAddress();
   const templates = {
     en: await renderFor(release, "en"),
     es: await renderFor(release, "es"),

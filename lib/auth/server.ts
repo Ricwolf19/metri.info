@@ -15,12 +15,9 @@ import {
   renderResetPasswordEmail,
   renderVerifyEmail,
 } from "@/lib/emails/render";
+import { senderAddress } from "@/lib/emails/sender";
 import { event } from "@/lib/log/logger";
 import { siteUrl } from "@/lib/utils";
-
-// Resend's shared sender (test mode) — no domain verification needed; swap via AUTH_FROM_EMAIL / CONTACT_FROM_EMAIL in production.
-const RESET_FROM = "Metri <onboarding@resend.dev>";
-const VERIFY_FROM = "Metri <onboarding@resend.dev>";
 
 /**
  * Hardcoded rate-limit caps — no `.env` plumbing required for a deploy.
@@ -141,9 +138,7 @@ const sendVerificationEmail = async ({
     { user: target, url },
     rendered,
     "Confirm your Metri email",
-    process.env.AUTH_FROM_EMAIL ??
-      process.env.CONTACT_FROM_EMAIL ??
-      VERIFY_FROM,
+    senderAddress(),
     "verification email not sent — refusing to create unverified account",
   );
 };
@@ -173,7 +168,7 @@ const sendResetPassword = async ({
     { user: target, url },
     rendered,
     "Reset your Metri password",
-    process.env.AUTH_FROM_EMAIL ?? process.env.CONTACT_FROM_EMAIL ?? RESET_FROM,
+    senderAddress(),
     "password-reset email not sent",
   );
 };

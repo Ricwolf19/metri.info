@@ -3,31 +3,32 @@ import { NextResponse } from "next/server";
 import { routePath } from "@/lib/i18n/routes";
 import { event } from "@/lib/log/logger";
 import {
-  optOutOfReleaseEmails,
+  optOutOfEmails,
+  parseEmailList,
   verifyUnsubscribeToken,
-} from "@/lib/releases/unsubscribe";
+} from "@/lib/emails/unsubscribe";
 
 /**
- * The `List-Unsubscribe` target of release emails.
+ * The `List-Unsubscribe` target of account emails (`?list=` picks which).
  *
  *   POST ?token=… → RFC 8058 one-click: opts the signed user out, 200.
  *   GET  ?token=… → 303 to the localized confirmation page. A GET never
  *                   unsubscribes: mail scanners prefetch links.
  */
 export const POST = async (req: Request) => {
-  const userId = verifyUnsubscribeToken(
-    new URL(req.url).searchParams.get("token"),
-  );
+  const params = new URL(req.url).searchParams;
+  const list = parseEmailList(params.get("list"));
+  const userId = verifyUnsubscribeToken(params.get("token"), list);
   if (!userId) {
     return NextResponse.json({ error: "invalid_token" }, { status: 400 });
   }
   try {
-    await optOutOfReleaseEmails(userId);
+    await optOutOfEmails(userId, list);
   } catch (error) {
     event.error("release.unsubscribe-failed", { userId, error });
     return NextResponse.json({ error: "unsubscribe_failed" }, { status: 500 });
   }
-  event.info("release.unsubscribed", { userId, via: "one-click" });
+  event.info("release.unsubscribed", { userId, list, via: "one-click" });
   return NextResponse.json({ ok: true });
 };
 
@@ -37,5 +38,7 @@ export const GET = (req: Request) => {
   const target = new URL(routePath("unsubscribe", locale), url.origin);
   const token = url.searchParams.get("token");
   if (token) target.searchParams.set("token", token);
+  const list = url.searchParams.get("list");
+  if (list) target.searchParams.set("list", list);
   return NextResponse.redirect(target, 303);
 };

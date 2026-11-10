@@ -14,7 +14,10 @@ import { POST as notify } from "@/app/api/releases/notify/route";
 import { POST as oneClickUnsubscribe } from "@/app/api/releases/unsubscribe/route";
 import { db } from "@/lib/db";
 
-import { signUnsubscribeToken, verifyUnsubscribeToken } from "./unsubscribe";
+import {
+  signUnsubscribeToken,
+  verifyUnsubscribeToken,
+} from "@/lib/emails/unsubscribe";
 
 /**
  * The release pipeline end to end — webhook → GitHub (mocked fetch) → real
@@ -242,9 +245,10 @@ describe("POST /api/releases/notify — store + announce", () => {
     expect(byTo["es@x.dev"].subject).toBe("Ya salió Metri 1.12.0");
 
     const en = byTo["en@x.dev"];
-    // The button goes through our APK endpoint (served with the Android package
-    // type), never the raw GitHub asset; the stored row keeps the GitHub URL.
-    expect(en.html).toContain("/download/apk");
+    // The one button opens the download page: email apps' embedded browsers
+    // silently drop a file download, so the APK itself is never linked here.
+    expect(en.html).toContain("/download");
+    expect(en.html).not.toContain("/download/apk");
     // The notes carry no links either: a tap anywhere in the message that
     // leads to GitHub is "the old download" to a phone user.
     expect(en.html).not.toContain("github.com");
