@@ -74,7 +74,7 @@ export const AccountFavorites = async ({
                 <div key={id} className="flex items-stretch gap-2">
                   <Link
                     href={routePath(id, locale)}
-                    className="flex flex-1 items-start gap-3 rounded-card border border-ink-600 bg-ink-800 p-4 transition-colors hover:border-ink-500"
+                    className="flex flex-1 items-start gap-3 rounded-card border border-ink-600 bg-ink-800 p-4 transition-colors hover:border-ink-500/50"
                   >
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-ink-700 text-accent">
                       <Icon size={18} />
@@ -106,7 +106,7 @@ export const AccountFavorites = async ({
               <div key={doc.slug} className="flex items-stretch gap-2">
                 <Link
                   href={`${docsBase}/${doc.slug}`}
-                  className="flex flex-1 flex-col rounded-card border border-ink-600 bg-ink-800 p-4 transition-colors hover:border-ink-500"
+                  className="flex flex-1 flex-col rounded-card border border-ink-600 bg-ink-800 p-4 transition-colors hover:border-ink-500/50"
                 >
                   <span className="text-sm font-semibold text-ink-50">
                     {doc.title}

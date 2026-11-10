@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
  * typed (they live in the URL) instead of resetting to the defaults. The
  * `href` stays bare for crawlers; the click adds the live search. */
 export const LocaleToggle = ({ className }: { className?: string }) => {
-  const { locale } = useI18n();
+  const { locale, t } = useI18n();
   const pathname = usePathname() ?? "/";
   const router = useRouter();
   const target = locale === "en" ? "es" : "en";
@@ -31,7 +31,12 @@ export const LocaleToggle = ({ className }: { className?: string }) => {
         e.preventDefault();
         router.push(`${href}${search}`);
       }}
-      aria-label={`Switch language to ${target === "en" ? "English" : "Español"}`}
+      // Names the target in its own language, and keeps the visible "EN"/"ES"
+      // inside the name so voice control can say what it sees.
+      aria-label={t("nav.switchLanguage", {
+        language: target === "en" ? "English" : "Español",
+        code: target.toUpperCase(),
+      })}
       className={cn(
         "inline-flex h-9 min-w-9 items-center justify-center rounded-lg border border-ink-600 bg-ink-800 px-2.5 font-mono text-xs font-semibold text-ink-200 uppercase transition-colors hover:bg-ink-700 hover:text-ink-50",
         className,

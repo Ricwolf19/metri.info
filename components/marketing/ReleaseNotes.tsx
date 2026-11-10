@@ -3,10 +3,17 @@ import { renderReleaseNotes } from "@/lib/releases/markdown";
 /**
  * The release-please changelog as HTML. `renderReleaseNotes` escapes the whole
  * source before adding markup, so the raw GitHub text can be injected safely.
- * Clamped with a fade; the full notes live on the GitHub release.
+ * Clamped with a fade; the full notes live on the GitHub release. No links
+ * inside: the clamp hides the lower lines, and a commit link there still took
+ * Tab focus while invisible. No version heading either: the panel names the
+ * version, so the notes' own headings (h3) sit under the panel's h2.
  */
 export const ReleaseNotes = ({ markdown }: { markdown: string }) => {
-  const html = renderReleaseNotes(markdown);
+  const html = renderReleaseNotes(
+    markdown,
+    {},
+    { links: false, versionHeading: false },
+  );
   if (!html) return null;
   return (
     <div className="relative max-h-56 overflow-hidden">

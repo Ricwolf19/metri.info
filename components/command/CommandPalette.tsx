@@ -2,7 +2,7 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { SearchIcon } from "@/components/icons";
 import { useSession } from "@/lib/auth/client";
@@ -25,7 +25,9 @@ export type DocsIndex = Record<Locale, CommandDoc[]>;
 /**
  * ⌘K command palette — jump to any page, calculator or account section. Keyboard
  * driven (↑/↓ to move, ↵ to open, Esc to close) with hover + click support.
- * Commands come from the scalable `buildCommands` registry.
+ * Commands come from the scalable `buildCommands` registry. Focus never leaves
+ * the input: it is an ARIA combobox and the active row is its
+ * `aria-activedescendant`, so a screen reader follows the arrow keys.
  */
 export const CommandPalette = ({
   open,
@@ -42,6 +44,9 @@ export const CommandPalette = ({
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const listRef = useRef<HTMLDivElement>(null);
+  const uid = useId();
+  const listId = `${uid}-list`;
+  const optionId = (id: string) => `${uid}-opt-${id}`;
 
   const commands = useMemo(
     () =>
@@ -95,7 +100,10 @@ export const CommandPalette = ({
           className="fixed top-[12vh] left-1/2 z-50 w-[calc(100vw-2rem)] max-w-xl -translate-x-1/2 [animation:metri-pop-in_0.15s_ease-out] overflow-hidden rounded-card border border-ink-600 bg-ink-900 shadow-2xl"
         >
           <Dialog.Title className="sr-only">{t("cmd.title")}</Dialog.Title>
-          <div className="flex items-center gap-3 border-b border-ink-700 px-4">
+          <Dialog.Description className="sr-only">
+            {t("cmd.hint")}
+          </Dialog.Description>
+          <div className="flex items-center gap-3 border-b border-ink-700 px-4 focus-within:border-brand/55">
             <SearchIcon size={18} className="shrink-0 text-ink-400" />
             <input
               autoFocus
@@ -106,6 +114,13 @@ export const CommandPalette = ({
               }}
               placeholder={t("cmd.placeholder")}
               aria-label={t("cmd.placeholder")}
+              role="combobox"
+              aria-expanded={filtered.length > 0}
+              aria-controls={listId}
+              aria-autocomplete="list"
+              aria-activedescendant={
+                filtered[active] ? optionId(filtered[active].id) : undefined
+              }
               className="h-12 flex-1 bg-transparent text-sm text-ink-50 placeholder:text-ink-400 focus:outline-none"
             />
             <kbd className="shrink-0 rounded border border-ink-600 px-1.5 py-0.5 font-mono text-[10px] text-ink-400">
@@ -113,18 +128,39 @@ export const CommandPalette = ({
             </kbd>
           </div>
 
+          <p className="sr-only" aria-live="polite">
+            {query
+              ? groups.length === 0
+                ? t("cmd.empty")
+                : t("common.resultsCount", { count: filtered.length })
+              : ""}
+          </p>
           <div
             ref={listRef}
+            id={listId}
+            role="listbox"
+            aria-label={t("cmd.title")}
             className="max-h-[min(60vh,24rem)] overflow-y-auto p-2"
           >
             {groups.length === 0 ? (
-              <p className="px-3 py-8 text-center text-sm text-ink-400">
+              <p
+                role="presentation"
+                className="px-3 py-8 text-center text-sm text-ink-400"
+              >
                 {t("cmd.empty")}
               </p>
             ) : (
               groups.map(({ group, items }) => (
-                <div key={group} className="mb-1">
-                  <p className="px-3 py-1.5 font-mono text-[10px] tracking-widest text-ink-500 uppercase">
+                <div
+                  key={group}
+                  role="group"
+                  aria-labelledby={`${uid}-group-${group}`}
+                  className="mb-1"
+                >
+                  <p
+                    id={`${uid}-group-${group}`}
+                    className="px-3 py-1.5 font-mono text-[10px] tracking-widest text-ink-500 uppercase"
+                  >
                     {t(GROUP_LABEL[group])}
                   </p>
                   {items.map((command) => {
@@ -134,13 +170,19 @@ export const CommandPalette = ({
                     return (
                       <button
                         key={command.id}
+                        id={optionId(command.id)}
                         type="button"
+                        role="option"
+                        aria-selected={isActive}
+                        tabIndex={-1}
                         data-active={isActive || undefined}
                         onClick={() => go(command)}
                         onMouseMove={() => setActive(idx)}
                         className={cn(
                           "flex w-full items-center gap-3 rounded-field px-3 py-2.5 text-left text-sm transition-colors",
-                          isActive ? "bg-ink-800 text-ink-50" : "text-ink-300",
+                          isActive
+                            ? "bg-ink-800 text-ink-50 shadow-[inset_2px_0_0_rgb(var(--brand))]"
+                            : "text-ink-300",
                         )}
                       >
                         <span
@@ -155,7 +197,10 @@ export const CommandPalette = ({
                         </span>
                         <span className="flex-1 truncate">{command.label}</span>
                         {isActive && (
-                          <kbd className="shrink-0 font-mono text-[10px] text-ink-500">
+                          <kbd
+                            aria-hidden
+                            className="shrink-0 font-mono text-[10px] text-ink-500"
+                          >
                             ↵
                           </kbd>
                         )}

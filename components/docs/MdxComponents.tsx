@@ -54,7 +54,7 @@ export const getMdxComponents = (locale: Locale): MDXComponents => ({
     href.startsWith("/") ? (
       <Link
         href={href}
-        className="text-accent underline-offset-2 hover:underline"
+        className="text-accent underline decoration-ink-500 underline-offset-2 hover:decoration-accent"
         {...props}
       />
     ) : (
@@ -62,13 +62,13 @@ export const getMdxComponents = (locale: Locale): MDXComponents => ({
         href={href}
         target="_blank"
         rel="noreferrer noopener"
-        className="text-accent underline-offset-2 hover:underline"
+        className="text-accent underline decoration-ink-500 underline-offset-2 hover:decoration-accent"
         {...props}
       />
     ),
   blockquote: (props) => (
     <blockquote
-      className="mt-6 border-l-2 border-ink-500 pl-4 text-ink-300 italic"
+      className="mt-6 border-l-2 border-ink-500/50 pl-4 text-ink-300 italic"
       {...props}
     />
   ),
@@ -78,9 +78,11 @@ export const getMdxComponents = (locale: Locale): MDXComponents => ({
       {...props}
     />
   ),
+  // Focusable: a keyboard has no other way to scroll a long line sideways.
   pre: (props) => (
     <pre
-      className="mt-6 overflow-x-auto rounded-xl border border-ink-600 bg-ink-850 p-4 font-mono text-sm text-ink-200"
+      tabIndex={0}
+      className="mt-6 overflow-x-auto rounded-xl border border-ink-600 bg-ink-850 p-4 font-mono text-sm text-ink-200 focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:outline-none"
       {...props}
     />
   ),
@@ -93,7 +95,9 @@ export const getMdxComponents = (locale: Locale): MDXComponents => ({
   td: ({ children, ...props }) => (
     <TableCell {...props}>{autoLinkTerms(children, locale)}</TableCell>
   ),
-  Callout,
+  Callout: (props: React.ComponentProps<typeof Callout>) => (
+    <Callout {...props} locale={locale} />
+  ),
   MuscleBadge,
   Term: ({ id, children }: { id: string; children: React.ReactNode }) => (
     <Term id={id} locale={locale}>

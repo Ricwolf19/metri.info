@@ -56,7 +56,7 @@ export const TapeList = ({
                   </span>
                 )}
               </span>
-              <span className="block font-mono text-[11px] text-ink-500">
+              <span className="block font-mono text-[11px] text-ink-400">
                 {fmt.format(new Date(`${s.latest.date}T00:00:00Z`))}
                 {s.previous
                   ? ` · ${t("body.previous", { value: `${displayLength(s.previous.cm, imperial)} ${unit}` })}`
@@ -74,7 +74,7 @@ export const TapeList = ({
                 <span
                   className={cn(
                     "block font-mono text-[11px] tabular-nums",
-                    s.deltaCm === 0 ? "text-ink-500" : "text-ink-300",
+                    s.deltaCm === 0 ? "text-ink-400" : "text-ink-300",
                   )}
                 >
                   {signed(displayLength(s.deltaCm, imperial))} {unit}

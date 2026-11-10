@@ -288,6 +288,10 @@ export const SyncedActivity = async ({
                       )}
                       style={{ height: `${Math.max(6, h)}%` }}
                     />
+                    {/* Over target is a colour on the bar; say it too. */}
+                    {over && (
+                      <span className="sr-only">{t("body.legend.high")}</span>
+                    )}
                     <span className="font-mono text-[10px] text-ink-500 uppercase">
                       {dayLabel.format(new Date(`${d.date}T00:00:00Z`))}
                     </span>

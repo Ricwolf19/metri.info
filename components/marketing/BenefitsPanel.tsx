@@ -107,7 +107,7 @@ const TierCard = ({ tier, compact }: { tier: Tier; compact: boolean }) => {
               "inline-flex shrink-0 items-center rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold tracking-wide uppercase",
               tier.highlight
                 ? "bg-brand text-brand-contrast"
-                : "border border-ink-500 bg-ink-700 text-ink-300",
+                : "border border-ink-500/50 bg-ink-700 text-ink-300",
             )}
           >
             {t(tier.badgeKey)}

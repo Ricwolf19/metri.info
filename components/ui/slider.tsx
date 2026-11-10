@@ -12,10 +12,13 @@ import { cn } from "@/lib/utils";
 export const Slider = ({
   className,
   thumbLabel,
+  valueText,
   ...props
 }: React.ComponentProps<typeof SliderPrimitive.Root> & {
   /** Accessible name for the thumb. */
   thumbLabel: string;
+  /** Spoken value when the bare number is not enough ("80 kg"). */
+  valueText?: string;
 }) => (
   <SliderPrimitive.Root
     className={cn(
@@ -29,10 +32,11 @@ export const Slider = ({
     </SliderPrimitive.Track>
     <SliderPrimitive.Thumb
       aria-label={thumbLabel}
+      aria-valuetext={valueText}
       className={cn(
         "block size-6 cursor-grab rounded-full border-[3px] border-brand bg-ink-50 shadow-[0_2px_10px_rgba(0,0,0,0.4)]",
         "transition-[transform,box-shadow] duration-150 hover:scale-110 active:scale-110 active:cursor-grabbing",
-        "focus-visible:ring-4 focus-visible:ring-brand/30 focus-visible:outline-none",
+        "focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-900 focus-visible:outline-none",
       )}
     />
   </SliderPrimitive.Root>

@@ -20,15 +20,20 @@ export type MapView = "balance" | "fatigue" | "strength";
 
 export const MAP_VIEWS: readonly MapView[] = ["balance", "fatigue", "strength"];
 
-/** The figure's outline, the grey the app draws it with. */
-export const OUTLINE = "#52525b";
+/** The figure's outline, as the app draws it: ≥ 3:1 on every card (zinc-600 was 2.4:1). */
+export const OUTLINE = "#71717a";
 /** Selected region stroke and the "on target" fill: the brand token's value. */
 export const BRAND = "#bef82b";
 const OVER = "#ef4444";
 const UNDER = "#f59e0b";
 
-/** Faintest tint that still separates from the bare fill on a black page. */
-const MIN_TINT = 0.4;
+/**
+ * Faintest tint of each ramp that still reads ≥ 3:1 against the card (WCAG
+ * non-text contrast), as in the app: brand reaches it at 40 %, the darker
+ * red only at 75 % — a 40 % red was 1.7:1.
+ */
+const RECENCY_MIN_TINT = 0.4;
+const FATIGUE_MIN_TINT = 0.75;
 
 /** Muscle with no recorded work in the window: bare, not coloured. */
 export const UNTRAINED_FILL = "#3f3f46";
@@ -48,7 +53,7 @@ export const balanceFill = (status: BalanceStatus): string => {
 /** One hue, ramped by opacity: fatigue is a continuum. `index` is 0–1. */
 export const fatigueFill = (index: number): string => {
   if (index <= 0) return UNTRAINED_FILL;
-  return withAlpha(OVER, MIN_TINT + index * (1 - MIN_TINT));
+  return withAlpha(OVER, FATIGUE_MIN_TINT + index * (1 - FATIGUE_MIN_TINT));
 };
 
 /** Days after which a muscle reads as detrained rather than merely resting. */
@@ -58,7 +63,7 @@ export const recencyFill = (daysSince: number | null): string => {
   if (daysSince == null) return UNTRAINED_FILL;
   if (daysSince >= DETRAINED_DAYS) return UNDER;
   const freshness = 1 - daysSince / DETRAINED_DAYS;
-  return withAlpha(BRAND, Math.max(MIN_TINT, freshness));
+  return withAlpha(BRAND, Math.max(RECENCY_MIN_TINT, freshness));
 };
 
 export type HeadFill = { color: string; weight: number };

@@ -47,7 +47,7 @@ export const UnpinButton = ({
       aria-label={t("favorites.unpin")}
       title={t("favorites.unpin")}
       aria-busy={pending || undefined}
-      className="inline-flex w-11 shrink-0 items-center justify-center rounded-card border border-ink-600 bg-ink-800 text-brand transition-colors hover:border-red-500/40 hover:bg-red-500/10 hover:text-red-400 focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:outline-none disabled:opacity-50"
+      className="inline-flex w-11 shrink-0 items-center justify-center rounded-card border border-ink-600 bg-ink-800 text-brand transition-colors hover:border-red-500/40 hover:bg-red-500/10 hover:text-red-400 focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:outline-none disabled:opacity-50"
     >
       {pending ? <Spinner size="sm" /> : <StarSolidIcon size={16} />}
     </button>

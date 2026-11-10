@@ -12,6 +12,7 @@ import { useToast } from "@/components/ui/toast";
 import { setAccountPassword } from "@/app/account/settings/actions";
 import { track } from "@/lib/analytics/track";
 import { authClient } from "@/lib/auth/client";
+import { authErrorMessage } from "@/lib/auth/errors";
 import { useT } from "@/lib/i18n";
 
 const MIN_PASSWORD = 8;
@@ -65,7 +66,10 @@ export const SecuritySection = ({
         });
         if (res.error) {
           const message =
-            res.error.message ?? t("settings.errorCurrentPassword");
+            // Mapped, never `res.error.message` (English on /es).
+            res.error.code === "INVALID_PASSWORD"
+              ? t("settings.errorCurrentPassword")
+              : authErrorMessage(t, res.error);
           setStatus({ tone: "error", message });
           toast({
             title: t("toast.passwordError"),
@@ -150,6 +154,7 @@ export const SecuritySection = ({
             type="password"
             autoComplete="new-password"
             required
+            hint={t("auth.passwordHint")}
             value={next}
             onChange={(e) => setNext(e.target.value)}
           />

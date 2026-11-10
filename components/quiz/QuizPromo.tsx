@@ -27,7 +27,7 @@ export const QuizPromo = ({
   return (
     <div
       className={cn(
-        "group relative flex items-center gap-4 rounded-card border border-ink-600 bg-ink-800 transition-colors focus-within:border-brand/40 hover:border-brand/40",
+        "group relative flex items-center gap-4 rounded-card border border-ink-600 bg-ink-800 transition-colors hover:border-brand/40",
         compact ? "p-3.5" : "p-5 sm:p-6",
         className,
       )}
@@ -44,7 +44,7 @@ export const QuizPromo = ({
         <Link
           href={href}
           className={cn(
-            "block font-bold tracking-tight text-ink-50 after:absolute after:inset-0 after:rounded-card focus-visible:outline-none",
+            "block font-bold tracking-tight text-ink-50 after:absolute after:inset-0 after:rounded-card focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-brand/55",
             compact ? "text-sm" : "text-lg",
           )}
         >

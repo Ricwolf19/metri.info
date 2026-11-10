@@ -91,7 +91,7 @@ const sheetRowClass =
   "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-ink-200 transition-colors hover:bg-ink-800 hover:text-ink-50";
 
 const chipClass =
-  "inline-flex items-center gap-2 rounded-full border border-ink-600 bg-ink-800 px-3 py-1.5 text-sm text-ink-200 transition-colors hover:border-ink-500 hover:text-ink-50";
+  "inline-flex items-center gap-2 rounded-full border border-ink-600 bg-ink-800 px-3 py-1.5 text-sm text-ink-200 transition-colors hover:border-ink-500/50 hover:text-ink-50";
 
 export const Header = () => {
   const { t, locale } = useI18n();
@@ -143,7 +143,10 @@ export const Header = () => {
           )}
         </div>
 
-        <nav className="hidden items-center gap-1 justify-self-center md:flex">
+        <nav
+          aria-label={t("nav.sections")}
+          className="hidden items-center gap-1 justify-self-center md:flex"
+        >
           {items.map((item) => {
             const { id, href, label } = item;
             const active = isCurrent(pathname, item);

@@ -1,4 +1,5 @@
 import { Marquee } from "@/components/marketing/Marquee";
+import { MotionPauseButton } from "@/components/marketing/MotionPauseButton";
 import { CALC_CONTENT } from "@/lib/calculators/content";
 import { getDocsIndex } from "@/lib/docs";
 import type { Locale } from "@/lib/i18n/config";
@@ -21,7 +22,10 @@ export const Marquees = async ({ locale }: { locale: Locale }) => {
   }));
 
   return (
-    <div className="border-y border-ink-600/40 bg-ink-900 py-2">
+    <div className="relative border-y border-ink-600/40 bg-ink-900 py-2">
+      {/* The strips glide on their own; this stops them (WCAG 2.2.2). It
+          sits over the right-hand fade, where the chips are already dim. */}
+      <MotionPauseButton className="absolute top-1/2 right-2 z-10 -translate-y-1/2" />
       <Marquee items={calcs} labelKey="nav.tools" />
       <Marquee
         items={guides}

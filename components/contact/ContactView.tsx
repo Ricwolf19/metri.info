@@ -91,7 +91,7 @@ export const ContactView = ({ locale }: { locale: Locale }) => {
 
           <Card>
             <CardContent className="p-6 sm:p-8">
-              <Suspense fallback={<LoadingScreen />}>
+              <Suspense fallback={<LoadingScreen locale={locale} />}>
                 <ContactForm />
               </Suspense>
             </CardContent>

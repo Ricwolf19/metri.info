@@ -17,3 +17,11 @@ export const siteUrl = (() => {
 /** Build an absolute URL from a path (for canonical / OG / hreflang). */
 export const absoluteUrl = (path = "") =>
   `${siteUrl}${path.startsWith("/") ? path : `/${path}`}`;
+
+/** Ref callback that focuses its node once, as it mounts: for a message that
+ * replaces the control just pressed (a form's "sent" state), so focus lands on
+ * the news instead of dropping to <body>. Give the node `tabIndex={-1}`. A
+ * module-level function, so React sees one stable ref and never re-runs it. */
+export const focusOnMount = (node: HTMLElement | null): void => {
+  node?.focus();
+};

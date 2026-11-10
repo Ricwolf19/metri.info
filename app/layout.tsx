@@ -10,11 +10,13 @@ import { CommandLauncher } from "@/components/command/CommandLauncher";
 import { CommandPaletteMount } from "@/components/command/CommandPaletteMount";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { MAIN_ID, SkipLink } from "@/components/layout/SkipLink";
 import { CookieConsent } from "@/components/legal/CookieConsent";
 import { Providers } from "@/components/providers";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
 import { getDocsIndex } from "@/lib/docs";
+import { HTML_LANG_SCRIPT } from "@/lib/i18n/html-lang";
 import { siteUrl } from "@/lib/utils";
 
 import "./globals.css";
@@ -105,12 +107,20 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const docsIndex = await getDocsIndex();
 
   return (
+    // `lang` is the shell's default; the head script switches it to `es` on
+    // Spanish paths before paint, and `suppressHydrationWarning` lets React
+    // keep that corrected attribute instead of flagging it.
     <html
       lang="en"
+      suppressHydrationWarning
       className={`dark ${GeistSans.variable} ${jetbrainsMono.variable}`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: HTML_LANG_SCRIPT }} />
+      </head>
       <body className="min-h-dvh font-sans antialiased">
         <Providers>
+          <SkipLink />
           {/* `overflow-x-clip` here (not on <html>) swallows decorative overflow
               from any page without turning the body into a scroll container, so
               sticky headers keep tracking the viewport under Radix scroll-lock. */}
@@ -126,7 +136,13 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
             {/* `min-h-dvh` keeps short pages (contact, download, auth) at least a
                 full viewport tall so the footer always sits below the fold, not
                 floating up into the first screen. */}
-            <main className="min-h-dvh flex-1">{children}</main>
+            <main
+              id={MAIN_ID}
+              tabIndex={-1}
+              className="min-h-dvh flex-1 focus:outline-none"
+            >
+              {children}
+            </main>
             <Footer />
           </div>
           <CookieConsent />

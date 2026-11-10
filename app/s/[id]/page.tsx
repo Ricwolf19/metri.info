@@ -94,11 +94,13 @@ const ShareContent = async ({
   const t = createT(data.locale);
 
   return (
+    // The result is in the language it was shared in, whatever the /s/ path
+    // says, so the block carries its own `lang`.
     <Container className="py-16 sm:py-24">
-      <div className="mx-auto max-w-2xl text-center">
-        <p className="text-sm font-semibold tracking-wide text-accent uppercase">
+      <div lang={data.locale} className="mx-auto max-w-2xl text-center">
+        <h1 className="text-sm font-semibold tracking-wide text-accent uppercase">
           {data.content.h1}
-        </p>
+        </h1>
         {data.result && (
           <p className="mt-3 font-mono text-5xl font-bold text-ink-50 sm:text-6xl">
             {data.result.primaryValue}

@@ -26,11 +26,21 @@ import { Segmented } from "@/components/ui/segmented";
 import { useI18n } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
 import { exerciseLabel } from "@/lib/training/exercise-names";
-import { WEEKLY_SET_TARGET } from "@/lib/training/muscle-load";
+import {
+  type BalanceStatus,
+  WEEKLY_SET_TARGET,
+} from "@/lib/training/muscle-load";
 import { muscleHeadKey } from "@/lib/training/muscles";
 import { cn } from "@/lib/utils";
 
 type Side = "front" | "back";
+
+const BALANCE_STATUS_KEY: Record<BalanceStatus, TranslationKey> = {
+  untrained: "body.legend.untrained",
+  low: "body.legend.low",
+  optimal: "body.legend.optimal",
+  high: "body.legend.high",
+};
 
 const WINDOW_KEY: Record<BodyWindow, TranslationKey> = {
   7: "body.window.7",
@@ -156,30 +166,42 @@ export const BodyMap = ({
 
       <div className="mt-5 grid gap-6 md:grid-cols-[minmax(0,14rem)_minmax(0,1fr)]">
         <div className="flex flex-col items-center gap-3">
+          {/* Each region is a toggle button (Tab, then Enter or Space), not
+              just a click target: the drilldown was mouse-only. */}
           <svg
             viewBox={figure.viewBox}
             className="h-[26rem] w-auto max-w-full"
-            role="img"
+            role="group"
             aria-label={t("body.sectionMap")}
           >
             {figure.regions
               .filter((r) => !HIDDEN_REGIONS.includes(r.slug))
               .map((r) => {
                 const selected = r.slug === region;
+                const toggle = () => setRegion(selected ? null : r.slug);
+                const names = headsForRegion(r.slug)
+                  .map((h) => t(muscleHeadKey(h)))
+                  .join(" · ");
                 return (
                   <g
                     key={r.slug}
-                    onClick={() => setRegion(selected ? null : r.slug)}
-                    className="cursor-pointer transition-opacity hover:opacity-90"
+                    role="button"
+                    tabIndex={0}
+                    aria-label={names}
+                    aria-pressed={selected}
+                    onClick={toggle}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        toggle();
+                      }
+                    }}
+                    className="cursor-pointer transition-opacity outline-none hover:opacity-90 focus-visible:stroke-brand focus-visible:[stroke-width:6]"
                     fill={byRegion[r.slug] ?? UNTRAINED_FILL}
                     stroke={selected ? BRAND : OUTLINE}
                     strokeWidth={selected ? 6 : 2}
                   >
-                    <title>
-                      {headsForRegion(r.slug)
-                        .map((h) => t(muscleHeadKey(h)))
-                        .join(" · ")}
-                    </title>
+                    <title>{names}</title>
                     {r.d.map((d, i) => (
                       <path key={i} d={d} />
                     ))}
@@ -219,9 +241,9 @@ export const BodyMap = ({
           ) : null}
 
           <div className="mt-5">
-            <p className="font-mono text-[11px] font-medium tracking-widest text-ink-400 uppercase">
+            <h3 className="font-mono text-[11px] font-medium tracking-widest text-ink-400 uppercase">
               {t("body.muscleDetail")}
-            </p>
+            </h3>
             {heads.length === 0 ? (
               <p className="mt-2 text-sm text-ink-400">
                 {t("body.sectionMapHint")}
@@ -237,6 +259,7 @@ export const BodyMap = ({
                     <li key={head} className="py-3 first:pt-0 last:pb-0">
                       <div className="flex items-center gap-3">
                         <span
+                          aria-hidden
                           className="h-3 w-3 shrink-0 rounded-full"
                           style={{ backgroundColor: fills[head].color }}
                         />
@@ -252,6 +275,13 @@ export const BodyMap = ({
                           )}
                         >
                           {t("body.setsPerWeek", { n: b?.sets ?? 0 })}
+                          {/* The status is the dot's colour; say it too. */}
+                          {b && (
+                            <span className="sr-only">
+                              {" · "}
+                              {t(BALANCE_STATUS_KEY[b.status])}
+                            </span>
+                          )}
                         </span>
                       </div>
                       <p className="mt-1 pl-6 font-mono text-[11px] text-ink-400">
@@ -275,7 +305,7 @@ export const BodyMap = ({
                               className="rounded-full border border-ink-600 px-2 py-0.5 text-[11px] text-ink-200"
                             >
                               {exerciseName(e.id)}{" "}
-                              <span className="font-mono text-ink-500">
+                              <span className="font-mono text-ink-400">
                                 {e.sets}
                               </span>
                             </li>

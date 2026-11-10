@@ -61,9 +61,9 @@ export const PhoneChrome = ({
       </div>
 
       <div className="relative mt-3 min-h-0 flex-1 overflow-hidden px-3 pb-16">
-        <h3 className="mb-2.5 text-base font-bold tracking-tight text-ink-50">
+        <p className="mb-2.5 text-base font-bold tracking-tight text-ink-50">
           {title}
-        </h3>
+        </p>
         {children}
         <div
           aria-hidden

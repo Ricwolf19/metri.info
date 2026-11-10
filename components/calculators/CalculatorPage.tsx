@@ -150,12 +150,20 @@ export const CalculatorPage = async ({
     <Container className="py-12 sm:py-16">
       <JsonLd data={jsonLd} />
       <div className="mx-auto max-w-5xl">
-        <nav className="flex items-center gap-1.5 text-sm text-ink-400">
-          <Link href={toolsPath} className="hover:text-ink-200">
-            {t("nav.tools")}
-          </Link>
-          <ChevronRightIcon size={14} />
-          <span className="text-ink-300">{c.h1}</span>
+        <nav aria-label={t("common.breadcrumb")}>
+          <ol className="flex items-center gap-1.5 text-sm text-ink-400">
+            <li>
+              <Link href={toolsPath} className="hover:text-ink-200">
+                {t("nav.tools")}
+              </Link>
+            </li>
+            <li aria-hidden>
+              <ChevronRightIcon size={14} />
+            </li>
+            <li aria-current="page" className="text-ink-300">
+              {c.h1}
+            </li>
+          </ol>
         </nav>
 
         <div className="mt-6 flex items-center gap-3">
@@ -168,12 +176,10 @@ export const CalculatorPage = async ({
             {t("calc.eyebrow")}
           </p>
           {isPopularCalc(id) && (
-            <span
-              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand/10 px-2 py-0.5 text-xs font-semibold tracking-wide text-brand"
-              aria-label={t("tools.popularAria")}
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-              {t("tools.popular")}
+            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand/10 px-2 py-0.5 text-xs font-semibold tracking-wide text-brand">
+              <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-brand" />
+              <span aria-hidden>{t("tools.popular")}</span>
+              <span className="sr-only">{t("tools.popularAria")}</span>
             </span>
           )}
         </div>
@@ -190,18 +196,25 @@ export const CalculatorPage = async ({
             href={CALC_AUTHOR.url}
             rel="author noreferrer noopener"
             target="_blank"
-            className="font-medium text-ink-200 underline-offset-2 hover:text-accent hover:underline"
+            className="font-medium text-ink-200 underline underline-offset-2 hover:text-accent"
           >
             {CALC_AUTHOR.name}
           </a>
-          <span className="px-1.5 text-ink-600">·</span>
+          <span aria-hidden className="px-1.5 text-ink-600">
+            ·
+          </span>
           {t("calc.lastUpdated")}{" "}
           <time dateTime={CALC_LAST_REVIEWED}>{reviewedDate}</time>
         </p>
 
         <div className="mt-8">
           <Suspense
-            fallback={<LoadingScreen className="min-h-64 rounded-card" />}
+            fallback={
+              <LoadingScreen
+                locale={locale}
+                className="min-h-64 rounded-card"
+              />
+            }
           >
             <Calculator id={id} />
           </Suspense>
@@ -373,7 +386,7 @@ export const CalculatorPage = async ({
                 <Link
                   key={r}
                   href={routePath(r, locale)}
-                  className="group flex items-center gap-3 rounded-xl border border-ink-600 bg-ink-800 px-4 py-3.5 transition-colors hover:border-ink-500 hover:bg-ink-750"
+                  className="group flex items-center gap-3 rounded-xl border border-ink-600 bg-ink-800 px-4 py-3.5 transition-colors hover:border-ink-500/50 hover:bg-ink-750"
                 >
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-ink-700 text-accent">
                     <Icon size={18} />

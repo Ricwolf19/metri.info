@@ -109,7 +109,7 @@ export const calculationsListConfig = defineListConfig<AdminCalculationRow>({
         truncate: true,
         width: "16rem",
         render: (c) =>
-          c.email ?? <span className="text-ink-500">Anonymous</span>,
+          c.email ?? <span className="text-ink-400">Anonymous</span>,
         exportValue: (c) => c.email ?? "anonymous",
       },
       {

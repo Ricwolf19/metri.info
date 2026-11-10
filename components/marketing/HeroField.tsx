@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
+import { useMotionPaused, usePrefersReducedMotion } from "@/lib/motion-prefs";
+
 /** Distance between dots, in CSS px. */
 const STEP = 26;
 /** Radius of the pointer lens, in CSS px. */
@@ -34,6 +36,9 @@ const channels = (el: Element, name: string, fallback: string) =>
  */
 export const HeroField = () => {
   const ref = useRef<HTMLCanvasElement>(null);
+  // Either one paints the single still frame; a change restarts the effect.
+  const reduce = usePrefersReducedMotion();
+  const paused = useMotionPaused();
 
   useEffect(() => {
     const canvas = ref.current;
@@ -41,7 +46,7 @@ export const HeroField = () => {
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduceMotion = reduce || paused;
     const brand = channels(canvas, "--brand", "190 248 43");
     const ink = channels(canvas, "--ink-300", "161 161 170");
 
@@ -187,7 +192,7 @@ export const HeroField = () => {
       document.documentElement.removeEventListener("pointerleave", onLeave);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, []);
+  }, [reduce, paused]);
 
   return (
     <canvas

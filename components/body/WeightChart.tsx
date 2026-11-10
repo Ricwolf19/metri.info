@@ -9,18 +9,24 @@ const PAD_Y = 14;
 /**
  * Daily weigh-ins as faint points and the weekly average as the line, the
  * way the app's Metrics tab draws it: the week is the signal, the day is
- * noise. Pure SVG, server-rendered, scaled by its viewBox.
+ * noise. Pure SVG, server-rendered, scaled by its viewBox — except the axis
+ * values: SVG text scales with the drawing, never with the reader's text
+ * size, so they are HTML laid over it (the box keeps the viewBox's aspect, so
+ * a percentage of its height IS a y in the drawing).
  */
 export const WeightChart = ({
   weighIns,
   weeks,
   today,
+  unit = "kg",
   locale,
   t,
 }: {
   weighIns: WeighIn[];
   weeks: WeekAverage[];
   today: string;
+  /** The unit the values arrive in (the page converts for imperial). */
+  unit?: "kg" | "lb";
   locale: Locale;
   t: TFunction;
 }) => {
@@ -59,55 +65,64 @@ export const WeightChart = ({
 
   return (
     <div>
-      <svg
-        viewBox={`0 0 ${W} ${H}`}
-        className="h-44 w-full"
-        role="img"
-        aria-label={`${t("body.sectionWeight")}: ${latest.weightKg} kg`}
-      >
-        {[lo, (lo + hi) / 2, hi].map((v) => (
-          <g key={v}>
-            <line
-              x1={PAD_X}
-              x2={W - PAD_X}
-              y1={y(v)}
-              y2={y(v)}
-              stroke="rgb(var(--ink-700))"
-              strokeDasharray="2 4"
+      <div className="relative">
+        <svg
+          viewBox={`0 0 ${W} ${H}`}
+          className="block h-auto w-full"
+          role="img"
+          aria-label={t("body.chartSummary", {
+            from: fmt.format(new Date(`${start}T00:00:00Z`)),
+            to: fmt.format(new Date(`${today}T00:00:00Z`)),
+            latest: latest.weightKg.toFixed(1),
+            unit,
+            n: weighIns.length,
+          })}
+        >
+          {[lo, (lo + hi) / 2, hi].map((v) => (
+            <g key={v}>
+              <line
+                x1={PAD_X}
+                x2={W - PAD_X}
+                y1={y(v)}
+                y2={y(v)}
+                stroke="rgb(var(--ink-700))"
+                strokeDasharray="2 4"
+              />
+            </g>
+          ))}
+          {weighIns.map((w) => (
+            <circle
+              key={w.date}
+              cx={x(w.date)}
+              cy={y(w.weightKg)}
+              r={2.5}
+              fill="rgb(var(--ink-400))"
             />
-            <text
-              x={W - PAD_X}
-              y={y(v) - 3}
-              textAnchor="end"
-              fontSize={10}
-              fill="rgb(var(--ink-500))"
-              fontFamily="var(--font-mono)"
-            >
-              {v.toFixed(1)}
-            </text>
-          </g>
+          ))}
+          {line && (
+            <path
+              d={line}
+              fill="none"
+              stroke="rgb(var(--brand))"
+              strokeWidth={2.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          )}
+        </svg>
+        {[lo, (lo + hi) / 2, hi].map((v, i) => (
+          <span
+            key={v}
+            aria-hidden
+            // Above its line, except the top one: above it there is no room left in the box.
+            className={`absolute right-2 font-mono text-xs text-ink-500 ${i === 2 ? "pt-0.5" : "-translate-y-full pb-0.5"}`}
+            style={{ top: `${(y(v) / H) * 100}%` }}
+          >
+            {v.toFixed(1)}
+          </span>
         ))}
-        {weighIns.map((w) => (
-          <circle
-            key={w.date}
-            cx={x(w.date)}
-            cy={y(w.weightKg)}
-            r={2.5}
-            fill="rgb(var(--ink-400))"
-          />
-        ))}
-        {line && (
-          <path
-            d={line}
-            fill="none"
-            stroke="rgb(var(--brand))"
-            strokeWidth={2.5}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        )}
-      </svg>
-      <p className="mt-1 flex justify-between font-mono text-[11px] text-ink-500">
+      </div>
+      <p className="mt-1 flex justify-between font-mono text-xs text-ink-500">
         <span>{fmt.format(new Date(`${start}T00:00:00Z`))}</span>
         <span>{t("body.readings", { n: weighIns.length })}</span>
         <span>{fmt.format(new Date(`${today}T00:00:00Z`))}</span>

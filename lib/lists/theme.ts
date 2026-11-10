@@ -5,7 +5,7 @@ type Tones = Exclude<NonNullable<ListConfig<unknown>["tones"]>, string>;
 /** listkit accents on the brand lime, read from the same tokens as the rest of
  * the site. Backgrounds stay opaque: pinned cells inherit the row colour. */
 export const metriListTheme: ThemeClasses = {
-  focusRing: "focus:ring-brand/40",
+  focusRing: "focus:ring-brand/55",
   focusBorder: "focus:border-brand/60",
   primaryBg: "bg-brand",
   primaryText: "text-brand-contrast",

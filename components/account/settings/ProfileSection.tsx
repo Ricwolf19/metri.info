@@ -110,10 +110,13 @@ const Field = ({
 );
 
 const OptionSelect = <T extends string>({
+  label,
   value,
   onChange,
   options,
 }: {
+  /** The trigger is a button: its name, since a <label> can't point at it. */
+  label: string;
   value: T;
   onChange: (v: T) => void;
   options: readonly {
@@ -125,7 +128,7 @@ const OptionSelect = <T extends string>({
   const t = useT();
   return (
     <Select value={value} onValueChange={(v) => onChange(v as T)}>
-      <SelectTrigger>
+      <SelectTrigger aria-label={label}>
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
@@ -287,6 +290,7 @@ export const ProfileSection = ({
             <FieldGrid>
               <Field label={t("settings.sex")}>
                 <OptionSelect
+                  label={t("settings.sex")}
                   value={sex}
                   onChange={setSex}
                   options={SEX_OPTIONS}
@@ -336,6 +340,7 @@ export const ProfileSection = ({
               />
               <Field label={t("settings.activityLevel")}>
                 <OptionSelect
+                  label={t("settings.activityLevel")}
                   value={activity}
                   onChange={setActivity}
                   options={ACTIVITY_OPTIONS}
@@ -344,6 +349,7 @@ export const ProfileSection = ({
             </FieldGrid>
             <Field label={t("settings.bmrFormula")}>
               <OptionSelect
+                label={t("settings.bmrFormula")}
                 value={formula}
                 onChange={setFormula}
                 options={FORMULA_OPTIONS}

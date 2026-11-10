@@ -64,7 +64,7 @@ export const BodyActions = ({
         <PrinterIcon size={14} />
         {t("body.exportPdf")}
       </button>
-      <p className="w-full text-xs text-ink-500 sm:w-auto sm:pl-2">
+      <p className="w-full text-xs text-ink-400 sm:w-auto sm:pl-2">
         {t("body.exportHint")}
       </p>
     </div>

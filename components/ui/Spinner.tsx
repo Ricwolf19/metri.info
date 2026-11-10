@@ -6,7 +6,9 @@ type SpinnerSize = keyof typeof SIZES;
 
 /**
  * Tokenized loading spinner. Inherits `currentColor` so it adopts the button or
- * text color it sits in. `role="status"` + an sr-only label keep it accessible.
+ * text color it sits in. With a `label` it is a `role="status"` region with an
+ * sr-only label; without one it is decoration (the control it sits in, e.g. a
+ * busy button, already says so), not an empty live region.
  */
 export const Spinner = ({
   size = "md",
@@ -19,7 +21,10 @@ export const Spinner = ({
 }) => {
   const px = SIZES[size];
   return (
-    <span role="status" className={cn("inline-flex", className)}>
+    <span
+      role={label ? "status" : undefined}
+      className={cn("inline-flex", className)}
+    >
       <svg
         width={px}
         height={px}

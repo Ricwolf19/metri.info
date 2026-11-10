@@ -118,18 +118,20 @@ export const Hero = () => {
             style={{ animationDelay: "240ms" }}
           >
             {STATS.map(({ value, key }) => (
+              // `rounded-2xl` is the same pill on one line and still holds
+              // a label that wraps at 200 % zoom (it used to be truncated).
               <div
                 key={key}
-                className="inline-flex min-w-0 items-center justify-center gap-2 rounded-full border border-ink-600 bg-ink-800 px-3 py-1.5"
+                className="inline-flex min-w-0 items-center justify-center gap-2 rounded-2xl border border-ink-600 bg-ink-800 px-3 py-1.5"
               >
-                <span
-                  aria-hidden
-                  className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand"
-                />
-                <dt className="font-mono text-sm font-semibold text-ink-50">
+                <dt className="inline-flex shrink-0 items-center gap-2 font-mono text-sm font-semibold text-ink-50">
+                  <span
+                    aria-hidden
+                    className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand"
+                  />
                   {value}
                 </dt>
-                <dd className="truncate font-mono text-[11px] tracking-wide text-ink-400 uppercase">
+                <dd className="min-w-0 font-mono text-[11px] leading-tight tracking-wide text-ink-400 uppercase">
                   {t(key)}
                 </dd>
               </div>

@@ -12,6 +12,7 @@ export const ApkQr = ({ url, label }: { url: string; label: string }) => (
         level="M"
         bgColor="transparent"
         fgColor="currentColor"
+        role="img"
         aria-label={label}
       />
     </div>

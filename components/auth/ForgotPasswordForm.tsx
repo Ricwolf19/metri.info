@@ -10,6 +10,7 @@ import { authClient } from "@/lib/auth/client";
 import { authErrorMessage } from "@/lib/auth/errors";
 import { useI18n } from "@/lib/i18n";
 import { routePath } from "@/lib/i18n/routes";
+import { focusOnMount } from "@/lib/utils";
 
 /** Requests a password-reset email. Always shows the same neutral confirmation
  * (whether or not the email exists) to avoid leaking which addresses have an
@@ -55,7 +56,14 @@ export const ForgotPasswordForm = () => {
   if (sent) {
     return (
       <div className="space-y-5 text-center">
-        <p className="text-sm text-ink-200">{t("auth.forgotSent")}</p>
+        <p
+          ref={focusOnMount}
+          role="status"
+          tabIndex={-1}
+          className="text-sm text-ink-200 focus:outline-none"
+        >
+          {t("auth.forgotSent")}
+        </p>
         <Link
           href={signIn}
           className="inline-block text-sm font-medium text-accent hover:underline"

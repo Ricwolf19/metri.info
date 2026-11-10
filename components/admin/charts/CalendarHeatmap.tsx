@@ -65,14 +65,20 @@ export const CalendarHeatmap = ({
 
   return (
     <ScrollHint fade="from-ink-800">
-      <div className="overflow-x-auto">
+      {/* Focusable so a keyboard can scroll the weeks past a phone's edge. */}
+      <div
+        tabIndex={0}
+        role="region"
+        aria-label={title}
+        className="overflow-x-auto rounded-md focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:outline-none"
+      >
         <svg
           width={width}
           height={height}
           viewBox={`0 0 ${width} ${height}`}
           className="block"
           role="img"
-          aria-label={`${title}: ${total.toLocaleString("en-US")} over ${days.length} days`}
+          aria-label={`${title}: ${total.toLocaleString("en-US")} over ${days.length} days, peak ${max.toLocaleString("en-US")} in a day`}
         >
           <title>{title}</title>
           {monthMarks.map((m) => (
@@ -115,7 +121,8 @@ export const CalendarHeatmap = ({
                 height={CELL}
                 rx={2.5}
                 fill={level === 0 ? "rgb(var(--ink-700))" : color}
-                fillOpacity={level === 0 ? 1 : 0.25 + level * 0.1875}
+                // Lowest step at 0.55: a quiet day still reads 3:1 on the card.
+                fillOpacity={level === 0 ? 1 : 0.55 + (level - 1) * 0.15}
               >
                 <title>{`${d.date}: ${d.count.toLocaleString("en-US")}`}</title>
               </rect>

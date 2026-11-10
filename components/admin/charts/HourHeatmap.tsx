@@ -29,14 +29,20 @@ export const HourHeatmap = ({
   const height = TOP + 7 * (CELL + GAP);
   return (
     <ScrollHint fade="from-ink-800">
-      <div className="overflow-x-auto">
+      {/* Focusable so a keyboard can scroll the hours past a phone's edge. */}
+      <div
+        tabIndex={0}
+        role="region"
+        aria-label={title}
+        className="overflow-x-auto rounded-md focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:outline-none"
+      >
         <svg
           width={width}
           height={height}
           viewBox={`0 0 ${width} ${height}`}
           className="block"
           role="img"
-          aria-label={`${title}: ${total.toLocaleString("en-US")} events by weekday and hour (UTC)`}
+          aria-label={`${title}: ${total.toLocaleString("en-US")} events by weekday and hour (UTC), peak ${max.toLocaleString("en-US")} in an hour`}
         >
           <title>{title}</title>
           {Array.from({ length: 24 }, (_, h) =>
@@ -75,7 +81,8 @@ export const HourHeatmap = ({
                 height={CELL}
                 rx={3}
                 fill={n === 0 ? "rgb(var(--ink-700))" : color}
-                fillOpacity={n === 0 ? 1 : 0.2 + (n / max) * 0.8}
+                // Floor at 0.55: the quietest hour still reads 3:1 on the card.
+                fillOpacity={n === 0 ? 1 : 0.55 + (n / max) * 0.45}
               >
                 <title>{`${DAYS[r]} ${String(h).padStart(2, "0")}:00 UTC: ${n.toLocaleString("en-US")}`}</title>
               </rect>

@@ -16,11 +16,11 @@ export const buttonVariants = cva(
         primary: "bg-ink-50 text-ink-900 hover:bg-ink-200",
         brand: "bg-brand text-brand-contrast hover:bg-brand/90",
         secondary:
-          "border border-ink-600 bg-ink-800 text-ink-50 hover:border-ink-500 hover:bg-ink-700",
+          "border border-ink-600 bg-ink-800 text-ink-50 hover:border-ink-500/50 hover:bg-ink-700",
         outline:
-          "border border-ink-600 text-ink-100 hover:border-ink-500 hover:bg-ink-800",
+          "border border-ink-600 text-ink-100 hover:border-ink-500/50 hover:bg-ink-800",
         ghost: "text-ink-200 hover:bg-ink-800 hover:text-ink-50",
-        destructive: "bg-red-500 text-white hover:bg-red-600",
+        destructive: "bg-red-600 text-white hover:bg-red-700",
       },
       size: {
         sm: "h-9 px-3.5 text-sm",

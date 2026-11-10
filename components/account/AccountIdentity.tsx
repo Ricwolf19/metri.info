@@ -65,7 +65,8 @@ export const AccountIdentity = ({
             </span>
           )}
           <div className="min-w-0">
-            <h1 className="truncate text-xl font-bold text-ink-50">{name}</h1>
+            {/* The page's h1 is the PageHero above; the name heads this card. */}
+            <h2 className="truncate text-xl font-bold text-ink-50">{name}</h2>
             <p className="truncate text-sm text-ink-400">{email}</p>
             <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs tracking-wide text-ink-500">
               {since && (
@@ -143,7 +144,7 @@ export const AccountIdentity = ({
                 >
                   {t("account.tier.pro")}
                 </p>
-                <p className="truncate text-xs text-ink-500">
+                <p className="truncate text-xs text-ink-400">
                   {t("account.tier.proDesc")}
                 </p>
               </div>

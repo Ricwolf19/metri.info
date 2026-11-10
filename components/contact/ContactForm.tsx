@@ -27,7 +27,7 @@ import {
 } from "@/lib/contact/types";
 import { useI18n } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
-import { cn } from "@/lib/utils";
+import { cn, focusOnMount } from "@/lib/utils";
 
 type Fields = { name: string; email: string; message: string };
 const EMPTY: Fields = { name: "", email: "", message: "" };
@@ -43,10 +43,16 @@ const TOPIC_KEY: Record<ContactTopic, TranslationKey> = {
 const RECAPTCHA_PRIVACY = "https://policies.google.com/privacy";
 const RECAPTCHA_TERMS = "https://policies.google.com/terms";
 
-const FieldError = ({ message }: { message?: string }) =>
+/** A field's error, tied to its input by `id` (`aria-describedby`). */
+const FieldError = ({ id, message }: { id: string; message?: string }) =>
   message ? (
-    <p className="animate-rise text-xs font-medium text-red-500">{message}</p>
+    <p id={id} className="animate-rise text-xs font-medium text-red-500">
+      {message}
+    </p>
   ) : null;
+
+const describedBy = (...ids: (string | false | undefined)[]) =>
+  ids.filter(Boolean).join(" ") || undefined;
 
 /**
  * Contact form. `?topic=` preselects the subject (the plans section links
@@ -104,7 +110,12 @@ export const ContactForm = () => {
         <span className="animate-check-in flex h-14 w-14 items-center justify-center rounded-full bg-brand text-brand-contrast">
           <CheckIcon size={28} />
         </span>
-        <p className="mt-5 text-lg font-semibold text-ink-50">
+        {/* Focus moves here: the form (and the button pressed) is gone. */}
+        <p
+          ref={focusOnMount}
+          tabIndex={-1}
+          className="mt-5 text-lg font-semibold text-ink-50 focus:outline-none"
+        >
           {t("contact.successTitle")}
         </p>
         <p className="mt-1.5 max-w-sm text-sm text-ink-300">
@@ -134,10 +145,13 @@ export const ContactForm = () => {
             required
             value={values.name}
             aria-invalid={Boolean(fieldErrors.name)}
+            aria-describedby={describedBy(
+              Boolean(fieldErrors.name) && "contact-name-error",
+            )}
             placeholder={t("contact.namePlaceholder")}
             onChange={(e) => set("name", e.target.value)}
           />
-          <FieldError message={fieldErrors.name} />
+          <FieldError id="contact-name-error" message={fieldErrors.name} />
         </div>
 
         <div className="space-y-1.5">
@@ -149,10 +163,13 @@ export const ContactForm = () => {
             required
             value={values.email}
             aria-invalid={Boolean(fieldErrors.email)}
+            aria-describedby={describedBy(
+              Boolean(fieldErrors.email) && "contact-email-error",
+            )}
             placeholder={t("contact.emailPlaceholder")}
             onChange={(e) => set("email", e.target.value)}
           />
-          <FieldError message={fieldErrors.email} />
+          <FieldError id="contact-email-error" message={fieldErrors.email} />
         </div>
       </div>
 
@@ -165,6 +182,9 @@ export const ContactForm = () => {
           <SelectTrigger
             id="contact-topic"
             aria-label={t("contact.topicLabel")}
+            aria-describedby={describedBy(
+              topic === "premium" && "contact-premium-hint",
+            )}
           >
             <SelectValue />
           </SelectTrigger>
@@ -177,7 +197,10 @@ export const ContactForm = () => {
           </SelectContent>
         </Select>
         {topic === "premium" && (
-          <p className="animate-rise text-xs leading-relaxed text-ink-400">
+          <p
+            id="contact-premium-hint"
+            className="animate-rise text-xs leading-relaxed text-ink-400"
+          >
             {t("contact.premiumHint")}
           </p>
         )}
@@ -186,12 +209,14 @@ export const ContactForm = () => {
       <div className="space-y-1.5">
         <div className="flex items-baseline justify-between">
           <Label htmlFor="contact-message">{t("contact.messageLabel")}</Label>
+          {/* Read with the field (`aria-describedby`), not live: a live
+              counter spoke on every keystroke. */}
           <span
+            id="contact-count"
             className={cn(
               "font-mono text-[11px] tabular-nums",
               remaining < 0 ? "text-red-500" : "text-ink-500",
             )}
-            aria-live="polite"
           >
             {values.message.length.toLocaleString()} /{" "}
             {MESSAGE_MAX.toLocaleString()}
@@ -203,11 +228,15 @@ export const ContactForm = () => {
           rows={6}
           maxLength={MESSAGE_MAX + 100}
           value={values.message}
-          aria-invalid={Boolean(fieldErrors.message)}
+          aria-invalid={Boolean(fieldErrors.message) || remaining < 0}
+          aria-describedby={describedBy(
+            "contact-count",
+            Boolean(fieldErrors.message) && "contact-message-error",
+          )}
           placeholder={t("contact.messagePlaceholder")}
           onChange={(e) => set("message", e.target.value)}
         />
-        <FieldError message={fieldErrors.message} />
+        <FieldError id="contact-message-error" message={fieldErrors.message} />
       </div>
 
       {formError && (

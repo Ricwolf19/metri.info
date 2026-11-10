@@ -8,6 +8,7 @@ import { AuthInput } from "@/components/auth/AuthInput";
 import { Button } from "@/components/ui/button";
 import { track } from "@/lib/analytics/track";
 import { authClient } from "@/lib/auth/client";
+import { authErrorMessage } from "@/lib/auth/errors";
 import { useI18n } from "@/lib/i18n";
 import { routePath } from "@/lib/i18n/routes";
 
@@ -29,6 +30,10 @@ export const ResetPasswordForm = () => {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
+  // A rule a field broke is shown on that field; a server error stays below.
+  const [errorField, setErrorField] = useState<"password" | "confirm" | null>(
+    null,
+  );
   const [loading, setLoading] = useState(false);
 
   if (tokenError || !token) {
@@ -50,12 +55,15 @@ export const ResetPasswordForm = () => {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setErrorField(null);
     if (password.length < MIN_PASSWORD) {
       setError(t("auth.errorPasswordShort"));
+      setErrorField("password");
       return;
     }
     if (password !== confirm) {
       setError(t("auth.errorPasswordMatch"));
+      setErrorField("confirm");
       return;
     }
     setLoading(true);
@@ -65,7 +73,8 @@ export const ResetPasswordForm = () => {
         token,
       });
       if (res.error) {
-        setError(res.error.message ?? t("auth.resetInvalidToken"));
+        // Mapped, never `res.error.message`: that is English on /es.
+        setError(authErrorMessage(t, res.error));
         return;
       }
       track("password_reset_completed");
@@ -85,6 +94,8 @@ export const ResetPasswordForm = () => {
         type="password"
         autoComplete="new-password"
         required
+        hint={t("auth.passwordHint")}
+        error={errorField === "password" ? error : null}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
@@ -93,10 +104,11 @@ export const ResetPasswordForm = () => {
         type="password"
         autoComplete="new-password"
         required
+        error={errorField === "confirm" ? error : null}
         value={confirm}
         onChange={(e) => setConfirm(e.target.value)}
       />
-      {error && (
+      {error && !errorField && (
         <p role="alert" className="text-sm font-medium text-red-500">
           {error}
         </p>

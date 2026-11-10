@@ -1,4 +1,5 @@
 import { MetriMark } from "@/components/layout/MetriMark";
+import { type Locale, translate } from "@/lib/i18n/config";
 import { cn } from "@/lib/utils";
 
 /**
@@ -8,15 +9,19 @@ import { cn } from "@/lib/utils";
  * fallbacks alike, and it always sits in the middle of whatever it replaces:
  * `fullScreen` fills the viewport, otherwise it fills its container with a
  * floor height. This is the one loading state the site uses; there are no
- * grey skeleton blocks.
+ * grey skeleton blocks. Without a visible `label` it still announces itself:
+ * pass `locale` so the hidden "Loading…" is spoken in the page's language.
  */
 export const LoadingScreen = ({
   label,
+  locale = "en",
   variant = "block",
   size = 72,
   className,
 }: {
   label?: string;
+  /** Language of the hidden fallback label when no `label` is shown. */
+  locale?: Locale;
   /** `block`: fills its container (floor 22rem). `route`: fills the viewport
    * below the 4rem header, for `loading.tsx` files, so the mark sits in the
    * middle of the screen instead of at the top of an empty page. `screen`:
@@ -30,7 +35,6 @@ export const LoadingScreen = ({
   return (
     <div
       role="status"
-      aria-busy="true"
       aria-live="polite"
       className={cn(
         "flex w-full flex-1 flex-col items-center justify-center gap-6 bg-ink-900",
@@ -79,7 +83,7 @@ export const LoadingScreen = ({
       {label ? (
         <p className="font-mono text-xs tracking-wide text-ink-400">{label}</p>
       ) : (
-        <span className="sr-only">Loading</span>
+        <span className="sr-only">{translate(locale, "common.loading")}</span>
       )}
     </div>
   );

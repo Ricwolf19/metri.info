@@ -16,18 +16,18 @@ export const DeviceFrame = ({
 }) => (
   <div
     className={cn(
-      "relative mx-auto aspect-[9/19.5] w-[17rem] rounded-[2.75rem] border border-ink-500/60 bg-ink-950 p-2 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.85)] ring-1 ring-ink-50/5",
+      "relative mx-auto aspect-[9/19.5] w-[17rem] rounded-[2.75rem] border border-ink-500/30 bg-ink-950 p-2 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.85)] ring-1 ring-ink-50/5",
       className,
     )}
   >
     {/* Side keys: volume (left), power (right) */}
     <span
       aria-hidden
-      className="absolute top-24 -left-[3px] h-14 w-[3px] rounded-l-sm bg-ink-500/70"
+      className="absolute top-24 -left-[3px] h-14 w-[3px] rounded-l-sm bg-ink-500/35"
     />
     <span
       aria-hidden
-      className="absolute top-28 -right-[3px] h-20 w-[3px] rounded-r-sm bg-ink-500/70"
+      className="absolute top-28 -right-[3px] h-20 w-[3px] rounded-r-sm bg-ink-500/35"
     />
     {/* Punch-hole camera */}
     <span

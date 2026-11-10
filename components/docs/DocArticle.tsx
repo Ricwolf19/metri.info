@@ -141,14 +141,20 @@ export const DocArticle = async ({
             categories={categories}
             basePath={basePath}
           />
-          <nav className="flex items-center gap-1.5 text-sm text-ink-400">
-            <Link href={basePath} className="hover:text-ink-200">
-              {t("docs.title")}
-            </Link>
-            <ChevronRightIcon size={14} />
-            <span className="text-ink-300">
-              {t(CATEGORY_LABEL[doc.meta.category])}
-            </span>
+          <nav aria-label={t("common.breadcrumb")}>
+            <ol className="flex items-center gap-1.5 text-sm text-ink-400">
+              <li>
+                <Link href={basePath} className="hover:text-ink-200">
+                  {t("docs.title")}
+                </Link>
+              </li>
+              <li aria-hidden>
+                <ChevronRightIcon size={14} />
+              </li>
+              <li className="text-ink-300">
+                {t(CATEGORY_LABEL[doc.meta.category])}
+              </li>
+            </ol>
           </nav>
 
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-balance text-ink-50">
@@ -167,11 +173,13 @@ export const DocArticle = async ({
               href={DOC_AUTHOR.url}
               rel="author noreferrer noopener"
               target="_blank"
-              className="font-medium text-ink-200 underline-offset-2 hover:text-accent hover:underline"
+              className="font-medium text-ink-200 underline underline-offset-2 hover:text-accent"
             >
               {DOC_AUTHOR.name}
             </a>
-            <span className="px-1.5 text-ink-600">·</span>
+            <span aria-hidden className="px-1.5 text-ink-600">
+              ·
+            </span>
             {t("docs.lastUpdated")}{" "}
             <time dateTime={DOC_LAST_REVIEWED}>{reviewedDate}</time>
           </p>
@@ -231,7 +239,7 @@ export const DocArticle = async ({
             {prev ? (
               <Link
                 href={`${basePath}/${prev.slug}`}
-                className="group rounded-xl border border-ink-600 bg-ink-800 p-4 transition-colors hover:border-ink-500"
+                className="group rounded-xl border border-ink-600 bg-ink-800 p-4 transition-colors hover:border-ink-500/50"
               >
                 <span className="flex items-center gap-1 text-xs text-ink-400">
                   <ArrowLeftIcon size={13} /> {t("common.readMore")}
@@ -246,7 +254,7 @@ export const DocArticle = async ({
             {next && (
               <Link
                 href={`${basePath}/${next.slug}`}
-                className="group rounded-xl border border-ink-600 bg-ink-800 p-4 text-right transition-colors hover:border-ink-500"
+                className="group rounded-xl border border-ink-600 bg-ink-800 p-4 text-right transition-colors hover:border-ink-500/50"
               >
                 <span className="flex items-center justify-end gap-1 text-xs text-ink-400">
                   {t("common.readMore")} <ArrowRightIcon size={13} />
@@ -259,7 +267,7 @@ export const DocArticle = async ({
           </div>
         </article>
 
-        <aside className="hidden xl:block">
+        <aside aria-label={t("docs.onThisPage")} className="hidden xl:block">
           <div className="sticky top-24 space-y-8">
             <TableOfContents items={toc} />
             <div className="rounded-card border border-ink-600 bg-ink-800 p-5">

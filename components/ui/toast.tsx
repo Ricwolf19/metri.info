@@ -77,15 +77,33 @@ const VARIANT_STYLES: Record<
 const ToastCard = ({
   toast,
   onClose,
+  onHold,
   closeLabel,
 }: {
   toast: Toast;
   onClose: (id: number) => void;
+  /** Pauses the auto-dismiss while pointed at or focused (WCAG 2.2.1). */
+  onHold: (id: number, held: boolean) => void;
   closeLabel: string;
 }) => {
   const { container, icon, Icon } = VARIANT_STYLES[toast.variant];
+  // Pointer and focus each hold the toast: the pointer leaving must not
+  // dismiss a toast whose button still has keyboard focus.
+  const held = useRef({ pointer: false, focus: false });
+  const hold = (patch: Partial<typeof held.current>) => {
+    held.current = { ...held.current, ...patch };
+    onHold(toast.id, held.current.pointer || held.current.focus);
+  };
   return (
     <div
+      onPointerEnter={() => hold({ pointer: true })}
+      onPointerLeave={() => hold({ pointer: false })}
+      onFocus={() => hold({ focus: true })}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+          hold({ focus: false });
+        }
+      }}
       className={cn(
         "pointer-events-auto flex w-full items-start gap-3 rounded-card border px-4 py-3 shadow-2xl",
         toast.closing
@@ -94,7 +112,7 @@ const ToastCard = ({
         container,
       )}
     >
-      <span className={cn("mt-0.5 shrink-0", icon)}>
+      <span aria-hidden className={cn("mt-0.5 shrink-0", icon)}>
         <Icon size={18} />
       </span>
       <div className="min-w-0 flex-1">
@@ -107,7 +125,7 @@ const ToastCard = ({
         type="button"
         onClick={() => onClose(toast.id)}
         aria-label={closeLabel}
-        className="-mr-1 shrink-0 rounded-md p-1 text-ink-400 transition-colors hover:text-ink-100 focus-visible:ring-2 focus-visible:ring-ink-500/50 focus-visible:outline-none"
+        className="-my-0.5 -mr-1.5 shrink-0 rounded-md p-1.5 text-ink-400 transition-colors hover:text-ink-100 focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:outline-none"
       >
         <XIcon size={14} />
       </button>
@@ -118,8 +136,10 @@ const ToastCard = ({
 /**
  * App-wide toast system — a fixed portal that stacks transient feedback for
  * server-action results. Bottom-right on desktop, full-width bottom on mobile.
- * Each toast auto-dismisses after ~4s and can be closed manually. Timers are
- * cleared on unmount and on manual close to avoid leaks.
+ * Each toast auto-dismisses after ~4s (held while pointed at or focused) and
+ * can be closed manually. Timers are cleared on unmount and on manual close to
+ * avoid leaks. The stack is one polite live region that reads only what was
+ * added (`aria-atomic="false"`), never the toasts already on screen.
  */
 export const ToastProvider = ({
   children,
@@ -151,6 +171,22 @@ export const ToastProvider = ({
     );
   }, []);
 
+  // Hovered or focused: stop the clock; released: give it a full run again.
+  const hold = useCallback(
+    (id: number, held: boolean) => {
+      const timer = timers.current.get(id);
+      if (timer) clearTimeout(timer);
+      timers.current.delete(id);
+      if (!held) {
+        timers.current.set(
+          id,
+          setTimeout(() => dismiss(id), AUTO_DISMISS_MS),
+        );
+      }
+    },
+    [dismiss],
+  );
+
   const toast = useCallback(
     ({ title, description, variant = "info" }: ToastOptions) => {
       const id = nextId.current++;
@@ -181,6 +217,7 @@ export const ToastProvider = ({
           <div
             role="status"
             aria-live="polite"
+            aria-atomic="false"
             className="pointer-events-none fixed inset-x-0 bottom-0 z-[100] flex flex-col items-stretch gap-2 p-4 sm:inset-x-auto sm:right-0 sm:bottom-0 sm:w-[22rem] sm:max-w-[calc(100vw-2rem)]"
           >
             {toasts.map((t) => (
@@ -188,6 +225,9 @@ export const ToastProvider = ({
                 key={t.id}
                 toast={t}
                 onClose={dismiss}
+                onHold={(id, held) => {
+                  if (!t.closing) hold(id, held);
+                }}
                 closeLabel={closeLabel}
               />
             ))}

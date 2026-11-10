@@ -151,7 +151,9 @@ export const AppTour = () => {
                   <span className="font-mono text-xs tracking-widest text-ink-500 uppercase">
                     {String(i + 1).padStart(2, "0")} /{" "}
                     {String(TOUR_STEPS.length).padStart(2, "0")}
-                    <span className="mx-2 text-ink-600">·</span>
+                    <span aria-hidden className="mx-2 text-ink-600">
+                      ·
+                    </span>
                     {t(s.tabKey)}
                   </span>
                 </div>

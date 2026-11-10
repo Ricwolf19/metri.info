@@ -70,9 +70,14 @@
   --ink-800: 18 18 21; /* cards / surfaces */
   --ink-750: 24 24 27;
   --ink-700: 32 32 36; /* raised surfaces */
-  --ink-600: 42 42 47; /* borders */
-  --ink-500: 63 63 70;
-  --ink-400: 113 113 122; /* muted text */
+  --ink-600: 42 42 47; /* borders, hairlines (decoration only: 1.39:1) */
+  /* 500 and 400 are text colours, retuned with the app for WCAG AA: 500 holds
+   * 4.5:1 on ink-800 and darker, 400 on ink-700 and darker (the old 63 63 70
+   * read 1.91:1, the old 113 113 122 4.12:1). A border or fill that should
+   * stay quiet takes 500 at half strength (`border-ink-500/50` is about the
+   * old 500) or the 600 hairline. */
+  --ink-500: 124 124 134;
+  --ink-400: 136 136 146; /* muted text */
   --ink-300: 161 161 170; /* secondary text */
   --ink-200: 212 212 216;
   --ink-100: 228 228 231;
@@ -83,12 +88,25 @@
   --brand-contrast: 8 9 13; /* ink-950 — dark text on brand fills */
 }
 
-* {
-  border-color: rgb(var(--ink-600));
+/* The default border colour lives in the base layer, after preflight. As an
+ * unlayered rule it outranked every `border-*` utility (unlayered CSS beats
+ * any @layer), so the focus, error and selected borders never drew. */
+@layer base {
+  * {
+    border-color: rgb(var(--ink-600));
+  }
 }
 
 html {
   -webkit-text-size-adjust: 100%;
+  /* The app's solid lime caret (selection is below). */
+  caret-color: rgb(var(--brand));
+  /* A fixed bottom banner publishes its height while shown
+   * (`useViewportReserve`), so focus never lands underneath it (2.4.11). */
+  scroll-padding-bottom: max(
+    var(--reserve-consent, 0px),
+    var(--reserve-install, 0px)
+  );
   /* No overflow rule here on purpose. With a non-visible overflow on <html>,
    * the `overflow: hidden` that Radix scroll-lock puts on <body> (selects,
    * menus, dialogs) stops propagating to the viewport: the body becomes the
@@ -109,8 +127,60 @@ body {
   overflow-x: clip;
 }
 
+/* Selection matches the app: a lime wash under the primary text colour
+ * (4.7–5.7:1 on every dark surface, whatever grey the text was). */
 ::selection {
-  background-color: rgb(var(--accent) / 0.25);
+  background-color: rgb(var(--brand) / 0.4);
+  color: rgb(var(--ink-50));
+}
+
+/* On a light fill (lime buttons and result cards, the near-white primary
+ * button) a lime wash would vanish and ink-50 on it would be unreadable, so
+ * selection there inverts to the dark ink. */
+:where(
+  .bg-brand,
+  .bg-lime-400,
+  .bg-lime-500,
+  .bg-accent-fill,
+  .bg-ink-50,
+  .bg-ink-100,
+  .bg-ink-200,
+  .bg-white
+)::selection,
+:where(
+    .bg-brand,
+    .bg-lime-400,
+    .bg-lime-500,
+    .bg-accent-fill,
+    .bg-ink-50,
+    .bg-ink-100,
+    .bg-ink-200,
+    .bg-white
+  )
+  *::selection {
+  background-color: rgb(var(--brand-contrast) / 0.85);
+  color: rgb(var(--ink-50));
+}
+
+@layer base {
+  /* The keyboard focus fallback: a control that draws no ring of its own
+   * gets a lime outline (15:1 on the dark surfaces). Components that style
+   * focus (`focus-visible:ring-*` + `outline-none`) override it as utilities,
+   * and a pointer click never shows it (`:focus-visible`). */
+  :focus-visible {
+    outline: 2px solid rgb(var(--brand));
+    outline-offset: 2px;
+  }
+
+  /* WCAG 2.4.11: the sticky 4rem header must not cover the control that just
+   * took focus (shift-Tab scrolls it in at the top edge). Page scroller only:
+   * inside dialogs, menus and listboxes the margin would just push items away
+   * from their own container's edge. */
+  :where(a[href], button, input, select, textarea, summary, [tabindex]):not(
+    :where([role="dialog"], [role="menu"], [role="listbox"]) *
+  ) {
+    scroll-margin-top: 5rem;
+  }
 }
 
 /* Every actionable control gets a pointer cursor on hover (Tailwind's preflight
@@ -144,7 +214,9 @@ summary {
 }
 
 /* "There is more this way": the chevron of a horizontal scroll hint
- * (`ScrollHint`) breathes sideways. Reduced motion (below) freezes it. */
+ * (`ScrollHint`) breathes sideways three times and rests, so nothing on the
+ * page keeps moving past five seconds (WCAG 2.2.2). Reduced motion (below)
+ * freezes it outright. */
 @keyframes metri-nudge-x {
   0%,
   100% {
@@ -156,7 +228,7 @@ summary {
 }
 
 .animate-nudge-x {
-  animation: metri-nudge-x 1.4s ease-in-out infinite;
+  animation: metri-nudge-x 1.4s ease-in-out 3;
 }
 
 /*

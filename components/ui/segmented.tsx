@@ -14,7 +14,9 @@ export type SegmentedOption<T extends string> = {
  * Single-choice segmented control (Radix ToggleGroup) with a sliding active
  * pill. The pill is pure CSS: the group exposes the active index and the
  * option count as custom properties, and the pill translates by its own width
- * — no measuring, no animation runtime.
+ * — no measuring, no animation runtime. The pill is light with dark text, as
+ * in the app: a dark-grey pill on the dark track was 1.14:1, so the selection
+ * hung on a text-colour change alone.
  */
 export const Segmented = <T extends string>({
   value,
@@ -60,7 +62,7 @@ export const Segmented = <T extends string>({
     >
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-y-1 left-1 -z-10 rounded-[calc(var(--radius-field)-0.25rem)] bg-ink-700 shadow-sm transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+        className="pointer-events-none absolute inset-y-1 left-1 -z-10 rounded-[calc(var(--radius-field)-0.25rem)] bg-ink-50 shadow-sm transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
         style={{
           width: "calc((100% - 0.5rem) / var(--seg-n))",
           transform: "translateX(calc(var(--seg-i) * 100%))",
@@ -72,7 +74,7 @@ export const Segmented = <T extends string>({
           value={o.value}
           className={cn(
             "relative z-10 min-w-0 rounded-[calc(var(--radius-field)-0.25rem)] font-medium whitespace-nowrap text-ink-400 transition-colors",
-            "hover:text-ink-100 data-[state=on]:text-ink-50",
+            "hover:text-ink-100 data-[state=on]:text-ink-950 data-[state=on]:hover:text-ink-950",
             "focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:outline-none",
             size === "sm" ? "h-8 px-2 text-xs" : "h-10 px-3 text-sm",
           )}

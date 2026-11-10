@@ -59,7 +59,7 @@ export const TrainScreen = () => {
                   {s.done ? (
                     <CheckIcon size={12} className="text-brand" />
                   ) : (
-                    <span className="h-3 w-3 rounded-full border border-ink-500" />
+                    <span className="h-3 w-3 rounded-full border border-ink-500/50" />
                   )}
                 </span>
               </div>

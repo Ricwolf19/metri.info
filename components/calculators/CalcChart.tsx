@@ -26,7 +26,7 @@ const Gauge = ({
   const ARC = 0.75;
   const frac = clamp((value - min) / (max - min || 1), 0, 1);
   return (
-    <svg viewBox="0 0 120 120" className={className}>
+    <svg viewBox="0 0 120 120" className={className} aria-hidden>
       <circle
         cx="60"
         cy="60"
@@ -74,7 +74,11 @@ const Ring = ({
   const C = 2 * Math.PI * R;
   return (
     <div className="relative">
-      <svg viewBox="0 0 120 120" className={cn("-rotate-90", className)}>
+      <svg
+        viewBox="0 0 120 120"
+        className={cn("-rotate-90", className)}
+        aria-hidden
+      >
         <circle
           cx="60"
           cy="60"
@@ -141,15 +145,17 @@ export const CalcChart = ({
   const t = useT();
 
   if (chart.kind === "bars") {
-    const labelW = size === "sm" ? "w-12" : "w-20";
-    const valueW = size === "sm" ? "w-12" : "w-20";
+    // Labels wrap and values size to their text: fixed truncating columns
+    // clipped "Z4 · Threshold" and "142.5 kg" even at 100 % zoom.
+    const labelW = size === "sm" ? "w-16" : "w-24";
+    const valueW = size === "sm" ? "min-w-12" : "min-w-20";
     return (
       <div className="w-full space-y-2.5">
         {chart.bars.map((b, i) => (
           <div key={i} className="flex items-center gap-2 sm:gap-3">
             <span
               className={cn(
-                "min-w-0 shrink-0 truncate text-xs text-ink-300",
+                "min-w-0 shrink-0 text-xs leading-tight break-words text-ink-300",
                 labelW,
               )}
             >
@@ -167,7 +173,7 @@ export const CalcChart = ({
             </div>
             <span
               className={cn(
-                "shrink-0 truncate text-right font-mono text-xs text-ink-100 tabular-nums",
+                "shrink-0 text-right font-mono text-xs whitespace-nowrap text-ink-100 tabular-nums",
                 valueW,
               )}
             >
@@ -224,13 +230,13 @@ export const CalcChart = ({
     return (
       <div className="w-full overflow-hidden rounded-xl border border-ink-700 bg-ink-900/40 px-3 py-4">
         <div className="flex items-center justify-center gap-[3px]">
-          <span className="h-1.5 w-5 shrink-0 rounded-l-sm bg-ink-500" />
+          <span className="h-1.5 w-5 shrink-0 rounded-l-sm bg-ink-500/50" />
           {[...stack].reverse().map(plate)}
-          <span className="h-2.5 w-2 shrink-0 bg-ink-500" />
+          <span className="h-2.5 w-2 shrink-0 bg-ink-500/50" />
           <span className="h-1.5 min-w-10 flex-1 bg-ink-600" />
-          <span className="h-2.5 w-2 shrink-0 bg-ink-500" />
+          <span className="h-2.5 w-2 shrink-0 bg-ink-500/50" />
           {stack.map(plate)}
-          <span className="h-1.5 w-5 shrink-0 rounded-r-sm bg-ink-500" />
+          <span className="h-1.5 w-5 shrink-0 rounded-r-sm bg-ink-500/50" />
         </div>
         {stack.length > 0 && (
           <p className="mt-3 text-center font-mono text-[11px] tracking-wide text-ink-400 uppercase">
@@ -313,11 +319,12 @@ export const CalcChart = ({
       </div>
       <span
         className={cn(
-          "mt-2 inline-flex items-center gap-2 rounded-full border px-3 py-1 font-semibold transition-colors duration-300",
+          "mt-2 inline-flex items-center gap-2 rounded-full border px-3 py-1 font-semibold text-ink-50 transition-colors duration-300",
           size === "lg" ? "text-base" : "text-sm",
         )}
+        // The band colour rides the dot, border and tint; the words stay
+        // ink-50, since a band hue as text (violet) fell under 4.5:1.
         style={{
-          color: active.color,
           borderColor: `${active.color}55`,
           background: `${active.color}14`,
         }}

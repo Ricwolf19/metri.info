@@ -26,7 +26,7 @@ export const GlowCard = ({
       className={cn(
         "group relative overflow-hidden rounded-card border border-ink-600 bg-ink-800 p-6 transition-all duration-300",
         "before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-ink-50/15 before:to-transparent",
-        "hover:-translate-y-0.5 hover:border-ink-500 hover:shadow-[0_12px_36px_-14px_rgba(0,0,0,0.55)]",
+        "hover:-translate-y-0.5 hover:border-ink-500/50 hover:shadow-[0_12px_36px_-14px_rgba(0,0,0,0.55)]",
         className,
       )}
     >

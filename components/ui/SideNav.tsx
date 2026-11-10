@@ -195,7 +195,7 @@ export const SideNav = ({
                   {item.description && (
                     <span
                       className={cn(
-                        "truncate text-xs text-ink-500",
+                        "truncate text-xs text-ink-400",
                         vertical ? "block" : "hidden lg:block",
                       )}
                     >

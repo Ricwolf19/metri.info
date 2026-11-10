@@ -21,7 +21,7 @@ export const UserRowActions = ({ user }: { user: AdminUserRow }) => {
         : undefined;
   return (
     <div className="flex items-center justify-end gap-2">
-      <PremiumToggle userId={user.id} plan={user.plan} />
+      <PremiumToggle userId={user.id} plan={user.plan} email={user.email} />
       <DeleteUserButton
         userId={user.id}
         email={user.email}

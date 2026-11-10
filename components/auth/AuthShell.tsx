@@ -42,25 +42,31 @@ export const AuthShell = ({
         </Link>
 
         <div className="relative z-10">
-          <h2 className="text-4xl leading-tight font-bold text-white">
+          {/* A tagline, not a heading: it sits before the form's h1. */}
+          <p className="text-4xl leading-tight font-bold text-white">
             {t("auth.brandTitle")}
             <span className="mt-1 block text-lime-400">
               {t("auth.brandHighlight")}
             </span>
-          </h2>
+          </p>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/60">
             {t("auth.brandSubtitle")}
           </p>
         </div>
 
-        <p className="relative z-10 text-xs text-white/40">
+        <p className="relative z-10 text-xs text-ink-400">
           {t("footer.builtWith")}
         </p>
       </aside>
 
-      <main className="flex flex-1 flex-col bg-ink-900">
+      {/* The root layout already provides <main>; one per page. */}
+      <div className="flex flex-1 flex-col bg-ink-900">
         <div className="flex items-center justify-between px-5 py-4 sm:px-8">
-          <Link href={home} className="inline-flex lg:hidden">
+          <Link
+            href={home}
+            aria-label={`Metri · ${t("nav.home")}`}
+            className="inline-flex lg:hidden"
+          >
             <MetriMark className="h-7 w-7" />
           </Link>
           <Link
@@ -84,7 +90,7 @@ export const AuthShell = ({
             {children}
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };

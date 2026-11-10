@@ -96,9 +96,9 @@ export const Footer = () => {
         </div>
 
         <div>
-          <h3 className="text-xs font-semibold tracking-wider text-ink-400 uppercase">
+          <h2 className="text-xs font-semibold tracking-wider text-ink-400 uppercase">
             {t("footer.calculators")}
-          </h3>
+          </h2>
           <ul className="mt-4 space-y-3">
             {CALCULATORS.map((link) => (
               <li key={link.id}>
@@ -112,9 +112,9 @@ export const Footer = () => {
 
         {COLUMNS.map((col) => (
           <div key={col.heading}>
-            <h3 className="text-xs font-semibold tracking-wider text-ink-400 uppercase">
+            <h2 className="text-xs font-semibold tracking-wider text-ink-400 uppercase">
               {t(col.heading)}
-            </h3>
+            </h2>
             <ul className="mt-4 space-y-3">
               {col.links.map((link) => (
                 <li key={link.id}>

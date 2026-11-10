@@ -30,7 +30,7 @@ export const QuizView = ({
         share
       />
       <Container className="py-10 sm:py-14">
-        <Suspense fallback={<LoadingScreen />}>
+        <Suspense fallback={<LoadingScreen locale={locale} />}>
           <QuizSession searchParams={searchParams} />
         </Suspense>
       </Container>

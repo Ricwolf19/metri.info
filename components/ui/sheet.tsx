@@ -65,7 +65,7 @@ export const SheetContent = ({
         {children}
         <DialogPrimitive.Close
           aria-label={t("nav.close")}
-          className="absolute top-5 right-5 inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-300 transition-colors hover:bg-ink-800 hover:text-ink-50 focus-visible:ring-2 focus-visible:ring-ink-500/50 focus-visible:outline-none"
+          className="absolute top-5 right-5 inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-300 transition-colors hover:bg-ink-800 hover:text-ink-50 focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:outline-none"
         >
           <XIcon size={18} />
         </DialogPrimitive.Close>

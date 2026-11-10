@@ -38,6 +38,7 @@ export const TableOfContents = ({ items }: { items: TocItem[] }) => {
           <li key={item.id}>
             <a
               href={`#${item.id}`}
+              aria-current={activeId === item.id ? "location" : undefined}
               className={cn(
                 "-ml-px block border-l py-1 pl-4 text-sm transition-colors",
                 item.depth === 3 && "pl-7",

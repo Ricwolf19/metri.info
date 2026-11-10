@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { DownloadIcon, XIcon } from "@/components/icons";
 import { MetriMark } from "@/components/layout/MetriMark";
@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { track } from "@/lib/analytics/track";
 import { useT } from "@/lib/i18n";
 import { CONSENT_EVENT, readConsent } from "@/lib/legal/consent";
+import { useViewportReserve } from "@/lib/useViewportReserve";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -82,7 +83,11 @@ export const InstallPrompt = () => {
     };
   }, []);
 
-  if (!deferred || !consented || !ready || gone) return null;
+  const shown = Boolean(deferred && consented && ready && !gone);
+  const ref = useRef<HTMLDivElement>(null);
+  useViewportReserve("install", ref, shown);
+
+  if (!deferred || !shown) return null;
 
   const dismiss = () => {
     silence();
@@ -106,6 +111,7 @@ export const InstallPrompt = () => {
 
   return (
     <div
+      ref={ref}
       role="region"
       aria-labelledby="pwa-prompt-title"
       className="animate-rise fixed bottom-4 left-4 z-40 w-[calc(100vw-2rem)] max-w-sm rounded-card border border-ink-600 bg-ink-850 p-4 shadow-2xl"

@@ -50,7 +50,7 @@ export const UserMenu = ({ className }: { className?: string }) => {
       <DropdownMenuTrigger
         aria-label={user.name || user.email}
         className={cn(
-          "inline-flex h-9 w-9 items-center justify-center rounded-full border border-ink-600 bg-ink-800 text-sm font-semibold text-ink-100 transition-colors hover:bg-ink-700 hover:text-ink-50 focus-visible:ring-2 focus-visible:ring-ink-500/50 focus-visible:outline-none",
+          "inline-flex h-9 w-9 items-center justify-center rounded-full border border-ink-600 bg-ink-800 text-sm font-semibold text-ink-100 transition-colors hover:bg-ink-700 hover:text-ink-50 focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:outline-none",
           className,
         )}
       >

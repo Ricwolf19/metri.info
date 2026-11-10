@@ -138,7 +138,13 @@ export const ShareResultDialog = ({
         <div className="mt-5 flex flex-col items-center gap-3">
           <div className="rounded-xl bg-white p-3">
             {url && (
-              <QRCodeSVG value={url} size={148} fgColor="#18181b" level="M" />
+              <QRCodeSVG
+                value={url}
+                size={148}
+                fgColor="#18181b"
+                level="M"
+                aria-hidden
+              />
             )}
           </div>
           <p className="text-xs text-ink-400">{t("calc.shareQrHint")}</p>
@@ -185,10 +191,11 @@ export const ShareResultDialog = ({
               rel="noreferrer noopener"
               className="mt-2 block overflow-hidden rounded-xl border border-ink-600"
             >
+              {/* The image is the link's only content, so its alt names it. */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={imageUrl}
-                alt=""
+                alt={t("calc.cardTitle")}
                 className="aspect-[1200/630] w-full bg-ink-850 object-cover"
               />
             </a>

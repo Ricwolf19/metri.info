@@ -34,7 +34,13 @@ export const GlossaryView = ({
       const el = document.getElementById(id);
       if (!el) return;
       requestAnimationFrame(() => {
-        el.scrollIntoView({ block: "center", behavior: "smooth" });
+        // Smooth only for readers who haven't asked for less motion.
+        el.scrollIntoView({
+          block: "center",
+          behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+            ? "auto"
+            : "smooth",
+        });
         el.classList.remove("glossary-flash");
         void el.offsetWidth; // force reflow so the animation can restart
         el.classList.add("glossary-flash");
@@ -73,6 +79,9 @@ export const GlossaryView = ({
           className="h-11 w-full rounded-field border border-ink-600 bg-ink-900 pr-4 pl-11 text-sm text-ink-50 placeholder:text-ink-400 focus-visible:border-brand/60 focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:outline-none"
         />
       </div>
+      <p className="sr-only" aria-live="polite">
+        {query ? t("common.resultsCount", { count: filtered.length }) : ""}
+      </p>
 
       {filtered.length === 0 ? (
         <p className="mt-10 text-ink-400">{t("glossary.empty")}</p>
@@ -91,8 +100,9 @@ export const GlossaryView = ({
               <dd className="mt-1.5 text-sm leading-relaxed text-ink-300">
                 {localize(entry.def, locale)}
               </dd>
+              {/* A <dd> too: only dt/dd may sit in a dl's group. */}
               {entry.related && entry.related.length > 0 && (
-                <div className="mt-3 flex flex-wrap items-center gap-2">
+                <dd className="mt-3 flex flex-wrap items-center gap-2">
                   <span className="font-mono text-[10px] tracking-widest text-ink-500 uppercase">
                     {t("glossary.relatedLabel")}
                   </span>
@@ -107,7 +117,7 @@ export const GlossaryView = ({
                         {docTitles[slug]}
                       </Link>
                     ))}
-                </div>
+                </dd>
               )}
             </div>
           ))}

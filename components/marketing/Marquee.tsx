@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 import { CALC_ICONS } from "@/components/calculators/calcIcons";
 import { BookIcon } from "@/components/icons";
 import { useT } from "@/lib/i18n";
+import { useMotionPaused, usePrefersReducedMotion } from "@/lib/motion-prefs";
 import type { TranslationKey } from "@/lib/i18n/en";
 import type { CalcRouteId } from "@/lib/i18n/routes";
 import { cn } from "@/lib/utils";
@@ -26,7 +27,8 @@ const USER_HOLD_MS = 1600;
  * the content and wrapped at one copy's width, so wheel, trackpad and touch
  * scrolling just work, and the strip resumes from wherever the reader left it.
  * It rests while the pointer is anywhere over the band (the padding is the
- * "near" zone), while a chip has focus, and under reduced motion.
+ * "near" zone), while a chip has focus, under reduced motion (re-read live)
+ * and for as long as the reader has paused it (`MotionPauseButton`).
  */
 export const Marquee = ({
   items,
@@ -46,11 +48,17 @@ export const Marquee = ({
   const scrollerRef = useRef<HTMLDivElement>(null);
   const restingRef = useRef(false);
   const userUntilRef = useRef(0);
+  const reduceMotion = usePrefersReducedMotion();
+  const paused = useMotionPaused();
+  const pausedRef = useRef(paused);
+  useEffect(() => {
+    pausedRef.current = paused;
+  }, [paused]);
 
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (reduceMotion) return;
 
     const copyWidth = () => el.scrollWidth / 2;
     let pos = direction === "right" ? copyWidth() : 0;
@@ -65,7 +73,7 @@ export const Marquee = ({
       if (w > 0) {
         if (now < userUntilRef.current) {
           pos = el.scrollLeft;
-        } else if (!restingRef.current) {
+        } else if (!restingRef.current && !pausedRef.current) {
           pos += (direction === "left" ? 1 : -1) * speed * dt;
         }
         if (pos >= w) pos -= w;
@@ -91,11 +99,11 @@ export const Marquee = ({
       el.removeEventListener("touchmove", hold);
       el.removeEventListener("pointerdown", hold);
     };
-  }, [direction, speed]);
+  }, [direction, speed, reduceMotion]);
 
   return (
     <div
-      className={cn("py-2", className)}
+      className={cn("py-1", className)}
       onPointerEnter={() => {
         restingRef.current = true;
       }}
@@ -111,8 +119,11 @@ export const Marquee = ({
     >
       <div
         ref={scrollerRef}
+        role="group"
         aria-label={t(labelKey)}
-        className="marquee flex [scrollbar-width:none] gap-3 overflow-x-auto overscroll-x-contain px-6 [&::-webkit-scrollbar]:hidden"
+        // `py-1` keeps a focused chip's ring inside the scroller's clip, and
+        // the edge fade lifts while a chip has focus so it is never dimmed.
+        className="marquee flex [scrollbar-width:none] gap-3 overflow-x-auto overscroll-x-contain px-6 py-1 focus-within:[mask-image:none] [&::-webkit-scrollbar]:hidden"
       >
         {[0, 1].map((copy) =>
           items.map(({ href, label, calcId }) => {

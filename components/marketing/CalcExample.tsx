@@ -7,6 +7,7 @@ import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { C } from "@/lib/calculators/_shared";
 import type { CalcChart as Chart } from "@/lib/calculators/types";
 import { useT } from "@/lib/i18n";
+import { useMotionPaused, usePrefersReducedMotion } from "@/lib/motion-prefs";
 import type { TFunction } from "@/lib/i18n/config";
 import type { TranslationKey } from "@/lib/i18n/en";
 import { cn } from "@/lib/utils";
@@ -72,20 +73,27 @@ export const CalcExample = ({
 }) => {
   const t = useT();
   const [i, setI] = useState(0);
+  // Holds still under reduced motion, the reader's pause, and while pointed
+  // at, so the numbers can be read (WCAG 2.2.2).
+  const reduce = usePrefersReducedMotion();
+  const paused = useMotionPaused();
+  const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (reduce || paused || hovered) return;
     const timer = setInterval(
       () => setI((n) => (n + 1) % TDEE_TARGETS.length),
       CYCLE_MS,
     );
     return () => clearInterval(timer);
-  }, []);
+  }, [reduce, paused, hovered]);
 
   const target = TDEE_TARGETS[i];
 
   return (
     <div
+      onPointerEnter={() => setHovered(true)}
+      onPointerLeave={() => setHovered(false)}
       className={cn(
         "relative overflow-hidden rounded-card border border-brand/20 bg-ink-850 p-5 shadow-2xl sm:p-6",
         className,

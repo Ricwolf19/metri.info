@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { CalcChart } from "@/components/calculators/CalcChart";
 import { SaveCalcButton } from "@/components/calculators/SaveCalcButton";
@@ -88,6 +95,8 @@ const FieldInputs = ({
   columns?: boolean;
 }) => {
   const { t, locale } = useI18n();
+  // Per instance: compare mode renders the same field names twice.
+  const uid = useId();
   const toDisplay = (m: number, unit?: string) =>
     units === "imperial" && convertible(unit)
       ? r1(m * (unit === "kg" ? KG_TO_LB : CM_TO_IN))
@@ -158,16 +167,37 @@ const FieldInputs = ({
         };
         const atMin = dispMin !== undefined && dispVal <= dispMin;
         const atMax = dispMax !== undefined && dispVal >= dispMax;
+        const unit = displayUnit(f.unit);
+        // Out of range blanks the result; say why, next to the field.
+        const invalid =
+          !Number.isFinite(dispVal) ||
+          (dispMin !== undefined && dispVal < dispMin) ||
+          (dispMax !== undefined && dispVal > dispMax);
+        const inputId = `${uid}-${f.name}`;
+        const describedBy = [
+          unit ? `${inputId}-unit` : null,
+          invalid && hasRange ? `${inputId}-error` : null,
+        ]
+          .filter(Boolean)
+          .join(" ");
 
         return (
           <div key={f.name}>
             <div className="mb-1.5 flex items-baseline justify-between">
-              <span className="text-sm font-medium text-ink-200">{label}</span>
+              <label
+                htmlFor={inputId}
+                className="text-sm font-medium text-ink-200"
+              >
+                {label}
+              </label>
               <span className="font-mono text-sm text-ink-50">
                 {dispVal}
-                {displayUnit(f.unit) && (
-                  <span className="ml-0.5 text-xs text-ink-400">
-                    {displayUnit(f.unit)}
+                {unit && (
+                  <span
+                    id={`${inputId}-unit`}
+                    className="ml-0.5 text-xs text-ink-400"
+                  >
+                    {unit}
                   </span>
                 )}
               </span>
@@ -180,8 +210,11 @@ const FieldInputs = ({
                 onClick={() => nudge(-1)}
               />
               <Input
+                id={inputId}
                 type="number"
                 inputMode="decimal"
+                aria-describedby={describedBy || undefined}
+                aria-invalid={invalid || undefined}
                 value={String(dispVal)}
                 min={dispMin}
                 max={dispMax}
@@ -198,6 +231,17 @@ const FieldInputs = ({
                 onClick={() => nudge(1)}
               />
             </div>
+            {invalid && hasRange && (
+              <p
+                id={`${inputId}-error`}
+                className="mt-1.5 text-xs text-red-400"
+              >
+                {t("calc.outOfRange", {
+                  min: `${dispMin}${unit ? ` ${unit}` : ""}`,
+                  max: `${dispMax}${unit ? ` ${unit}` : ""}`,
+                })}
+              </p>
+            )}
             {hasRange && (
               <Slider
                 min={dispMin}
@@ -206,11 +250,16 @@ const FieldInputs = ({
                 value={[Number.isFinite(dispVal) ? dispVal : dispMin]}
                 onValueChange={([v]) => onChange(f.name, toMetric(v, f.unit))}
                 thumbLabel={label}
+                valueText={unit ? `${dispVal} ${unit}` : undefined}
                 className="mt-1"
               />
             )}
             {f.presets && f.presets.length > 0 && (
-              <div className="mt-2 flex flex-wrap gap-2">
+              <div
+                role="group"
+                aria-label={t("calc.presets", { field: label })}
+                className="mt-2 flex flex-wrap gap-2"
+              >
                 {f.presets.map((p) => {
                   const active = Number(values[f.name]) === p;
                   return (
@@ -228,6 +277,7 @@ const FieldInputs = ({
                       )}
                     >
                       {toDisplay(p, f.unit)}
+                      {unit && <span className="sr-only"> {unit}</span>}
                     </button>
                   );
                 })}
@@ -241,7 +291,7 @@ const FieldInputs = ({
                     {" "}
                     <Link
                       href={routePath(f.hint.route.id, locale)}
-                      className="font-medium text-brand underline-offset-2 hover:underline"
+                      className="font-medium text-brand underline underline-offset-2"
                     >
                       {t(f.hint.route.labelKey)}
                     </Link>
@@ -256,7 +306,7 @@ const FieldInputs = ({
                         onClick={() =>
                           onChange(f.hint!.set!.field, f.hint!.set!.value)
                         }
-                        className="font-medium text-brand underline-offset-2 hover:underline"
+                        className="font-medium text-brand underline underline-offset-2"
                       >
                         {t(f.hint.set.labelKey)}
                       </button>
@@ -489,14 +539,17 @@ const DeltaBar = ({
   );
 };
 
-const ScenarioBadge = ({ tag }: { tag: "A" | "B" }) => {
+const ScenarioBadge = ({ tag, id }: { tag: "A" | "B"; id: string }) => {
   const t = useT();
   return (
     <div className="flex items-center gap-2">
-      <span className="flex h-6 w-6 items-center justify-center rounded-md border border-ink-600 bg-ink-900 text-xs font-bold text-accent">
+      <span
+        aria-hidden
+        className="flex h-6 w-6 items-center justify-center rounded-md border border-ink-600 bg-ink-900 text-xs font-bold text-accent"
+      >
         {tag}
       </span>
-      <span className="text-sm font-medium text-ink-300">
+      <span id={id} className="text-sm font-medium text-ink-300">
         {tag === "A" ? t("calc.scenarioA") : t("calc.scenarioB")}
       </span>
     </div>
@@ -514,9 +567,43 @@ const useDebouncedValue = <T,>(value: T, delay: number): T => {
   return debounced;
 };
 
+/**
+ * The result, spoken: one persistent polite region per panel, so a screen
+ * reader hears the new number once the input settles (a slower debounce than
+ * the panel's, or a slider drag would read every stop). It sits beside the
+ * visual panel, never around the rolling digits.
+ */
+const ResultAnnouncer = ({
+  config,
+  values,
+  prefix,
+}: {
+  config: CalcConfig;
+  values: CalcValues;
+  prefix?: string;
+}) => {
+  const t = useT();
+  const result = useMemo(() => config.compute(values), [config, values]);
+  const text = result
+    ? [
+        `${t(result.primaryLabelKey)}: ${result.primaryValue}${result.primaryUnit ? ` ${result.primaryUnit}` : ""}`,
+        result.noteKey ? t(result.noteKey) : null,
+      ]
+        .filter(Boolean)
+        .join(". ")
+    : t("calc.noResult");
+  const spoken = useDebouncedValue(prefix ? `${prefix}. ${text}` : text, 700);
+  return (
+    <p className="sr-only" aria-live="polite" aria-atomic="true">
+      {spoken}
+    </p>
+  );
+};
+
 export const Calculator = ({ id }: { id: CalcId }) => {
   const config = CALCULATORS[id];
   const { t, locale } = useI18n();
+  const scenarioId = useId();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -666,7 +753,7 @@ export const Calculator = ({ id }: { id: CalcId }) => {
             type="button"
             onClick={() => setPrefilled(false)}
             aria-label={t("toast.dismiss")}
-            className="ml-auto shrink-0 text-ink-400 transition-colors hover:text-ink-100"
+            className="-m-1.5 ml-auto shrink-0 rounded-md p-1.5 text-ink-400 transition-colors hover:text-ink-100 focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:outline-none"
           >
             <XIcon size={14} />
           </button>
@@ -688,8 +775,14 @@ export const Calculator = ({ id }: { id: CalcId }) => {
       {compare ? (
         <div className="space-y-6">
           <div className="grid gap-x-6 gap-y-8 md:grid-cols-2">
-            <div className="space-y-4">
-              <ScenarioBadge tag="A" />
+            {/* Each column is a named group: both hold the same controls
+                ("Increase weight" twice), and the group says which is which. */}
+            <div
+              role="group"
+              aria-labelledby={`${scenarioId}-a`}
+              className="space-y-4"
+            >
+              <ScenarioBadge tag="A" id={`${scenarioId}-a`} />
               <FieldInputs
                 config={config}
                 values={a}
@@ -697,9 +790,18 @@ export const Calculator = ({ id }: { id: CalcId }) => {
                 onChange={updateA}
               />
               <ResultPanel config={config} values={aDebounced} compact />
+              <ResultAnnouncer
+                config={config}
+                values={aDebounced}
+                prefix={t("calc.scenarioA")}
+              />
             </div>
-            <div className="space-y-4">
-              <ScenarioBadge tag="B" />
+            <div
+              role="group"
+              aria-labelledby={`${scenarioId}-b`}
+              className="space-y-4"
+            >
+              <ScenarioBadge tag="B" id={`${scenarioId}-b`} />
               <FieldInputs
                 config={config}
                 values={b}
@@ -707,6 +809,11 @@ export const Calculator = ({ id }: { id: CalcId }) => {
                 onChange={updateB}
               />
               <ResultPanel config={config} values={bDebounced} compact />
+              <ResultAnnouncer
+                config={config}
+                values={bDebounced}
+                prefix={t("calc.scenarioB")}
+              />
             </div>
           </div>
           <DeltaBar config={config} a={aDebounced} b={bDebounced} />
@@ -716,6 +823,7 @@ export const Calculator = ({ id }: { id: CalcId }) => {
           {/* Result as a full-width band on top. Deliberately not sticky: a
               pinned panel covered the inputs on short viewports. */}
           <ResultPanel config={config} values={aDebounced} />
+          <ResultAnnouncer config={config} values={aDebounced} />
           <FieldInputs
             config={config}
             values={a}
@@ -732,7 +840,6 @@ export const Calculator = ({ id }: { id: CalcId }) => {
         <button
           type="button"
           onClick={toggleCompare}
-          aria-pressed={compare}
           className={cn(
             "inline-flex h-9 items-center gap-2 rounded-field border px-3.5 text-xs font-medium transition-colors",
             "focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:outline-none",

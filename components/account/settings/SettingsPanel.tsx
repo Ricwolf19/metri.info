@@ -35,25 +35,26 @@ export const SettingsPanel = ({
   </section>
 );
 
-/** Right-aligned status text shown next to a panel's submit button. */
+/** Right-aligned status text shown next to a panel's submit button. The
+ * region is always mounted (empty until there is news): a live region that
+ * appears together with its text is often not announced at all. */
 export const PanelStatus = ({
   message,
   tone,
 }: {
   message: string | null;
   tone: "success" | "error";
-}) =>
-  message ? (
-    <span
-      role={tone === "error" ? "alert" : "status"}
-      className={cn(
-        "mr-auto text-sm font-medium",
-        tone === "error" ? "text-red-500" : "text-accent",
-      )}
-    >
-      {message}
-    </span>
-  ) : null;
+}) => (
+  <span
+    role="status"
+    className={cn(
+      "mr-auto text-sm font-medium",
+      tone === "error" ? "text-red-500" : "text-accent",
+    )}
+  >
+    {message}
+  </span>
+);
 
 /** Two-column responsive field grid used inside panels. */
 export const FieldGrid = ({ children }: { children: React.ReactNode }) => (

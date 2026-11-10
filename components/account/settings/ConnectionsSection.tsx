@@ -172,6 +172,16 @@ export const ConnectionsSection = ({
                       ? t("settings.connected")
                       : t("settings.notConnected")}
                   </p>
+                  {/* Why Disconnect is off, in words anyone can reach (a
+                      `title` on a disabled button only shows to a mouse). */}
+                  {isLastMethod && (
+                    <p
+                      id={`last-method-${provider}`}
+                      className="mt-0.5 text-xs text-ink-400"
+                    >
+                      {t("settings.lastMethodNotice")}
+                    </p>
+                  )}
                 </div>
               </div>
               {connected ? (
@@ -182,8 +192,9 @@ export const ConnectionsSection = ({
                   disabled={busy !== null || isLastMethod}
                   loading={busy === provider}
                   onClick={() => unlink(provider)}
-                  title={
-                    isLastMethod ? t("settings.lastMethodNotice") : undefined
+                  aria-label={`${t("settings.disconnect")} ${t(meta.labelKey)}`}
+                  aria-describedby={
+                    isLastMethod ? `last-method-${provider}` : undefined
                   }
                 >
                   {t("settings.disconnect")}
@@ -196,6 +207,7 @@ export const ConnectionsSection = ({
                   disabled={busy !== null}
                   loading={busy === provider}
                   onClick={() => link(provider)}
+                  aria-label={`${t("settings.connect")} ${t(meta.labelKey)}`}
                 >
                   {t("settings.connect")}
                 </Button>

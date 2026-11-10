@@ -88,11 +88,15 @@ export const AboutFeatures = () => {
             <Term id="tdee" locale={locale}>
               TDEE
             </Term>
-            <span className="text-ink-600">·</span>
+            <span aria-hidden className="text-ink-600">
+              ·
+            </span>
             <Term id="rir" locale={locale}>
               RIR
             </Term>
-            <span className="text-ink-600">·</span>
+            <span aria-hidden className="text-ink-600">
+              ·
+            </span>
             <Term id="ffmi" locale={locale}>
               FFMI
             </Term>

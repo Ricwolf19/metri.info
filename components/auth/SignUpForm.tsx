@@ -12,6 +12,7 @@ import { authErrorMessage } from "@/lib/auth/errors";
 import { executeRecaptcha } from "@/lib/captcha/client";
 import { useI18n } from "@/lib/i18n";
 import { routePath } from "@/lib/i18n/routes";
+import { focusOnMount } from "@/lib/utils";
 
 /** Inbox deep-link for the most common providers. Gmail's `/mail/u/0/#inbox`
  * opens the default account straight in the inbox tab; for everything else we
@@ -75,8 +76,10 @@ export const SignUpForm = () => {
         </div>
 
         <p
+          ref={focusOnMount}
           role="status"
-          className="mx-auto mt-5 max-w-sm text-base font-medium text-balance text-ink-50"
+          tabIndex={-1}
+          className="mx-auto mt-5 max-w-sm text-base font-medium text-balance text-ink-50 focus:outline-none"
         >
           {t("auth.signUpCheckEmail")}
         </p>
@@ -142,6 +145,7 @@ export const SignUpForm = () => {
           autoComplete="new-password"
           required
           minLength={8}
+          hint={t("auth.passwordHint")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />

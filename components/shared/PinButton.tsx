@@ -77,7 +77,9 @@ export const PinButton = ({
     });
   };
 
-  const label = pinned ? t("favorites.unpin") : t("favorites.pin");
+  // One name, the state in `aria-pressed` ("Add to favorites, pressed"). The
+  // tooltip doubles as the description, so it only shows while it agrees.
+  const label = t("favorites.pin");
   const Icon = pinned ? StarSolidIcon : StarIcon;
 
   return (
@@ -88,9 +90,9 @@ export const PinButton = ({
       aria-label={label}
       aria-pressed={pinned}
       aria-busy={loading || pending || undefined}
-      title={label}
+      title={pinned ? undefined : label}
       className={cn(
-        "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-ink-600 bg-ink-800/60 transition-colors hover:bg-ink-700 focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:outline-none",
+        "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-ink-600 bg-ink-800/60 transition-colors hover:bg-ink-700 focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:outline-none",
         pinned ? "text-brand" : "text-ink-400 hover:text-ink-100",
         loading && "animate-pulse cursor-wait text-ink-500",
         className,

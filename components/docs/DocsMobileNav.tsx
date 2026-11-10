@@ -27,7 +27,7 @@ export const DocsMobileNav = (props: Props) => {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger className="mb-6 flex w-full items-center gap-3 rounded-card border border-ink-600 bg-ink-800 px-4 py-3 text-left text-sm text-ink-200 transition-colors hover:border-ink-500 hover:text-ink-50 focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:outline-none lg:hidden">
+      <SheetTrigger className="mb-6 flex w-full items-center gap-3 rounded-card border border-ink-600 bg-ink-800 px-4 py-3 text-left text-sm text-ink-200 transition-colors hover:border-ink-500/50 hover:text-ink-50 focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:outline-none lg:hidden">
         <BookIcon size={18} className="shrink-0 text-brand" />
         <span className="min-w-0 flex-1 truncate font-medium">
           {current?.title ?? t("docs.title")}

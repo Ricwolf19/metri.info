@@ -12,9 +12,12 @@ import { setUserPremium } from "@/lib/admin/actions";
 export const PremiumToggle = ({
   userId,
   plan,
+  email,
 }: {
   userId: string;
   plan: string;
+  /** Names the row's user in the button: every row's reads "Free"/"Premium". */
+  email?: string | null;
 }) => {
   const { toast } = useToast();
   const [isPremium, setIsPremium] = useState(plan === "premium");
@@ -49,6 +52,7 @@ export const PremiumToggle = ({
       loading={pending}
       onClick={toggle}
     >
+      {email ? <span className="sr-only">Plan for {email}: </span> : null}
       {isPremium ? "Premium" : "Free"}
     </Button>
   );

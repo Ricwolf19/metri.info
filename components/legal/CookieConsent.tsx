@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSyncExternalStore } from "react";
+import { useRef, useSyncExternalStore } from "react";
 
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
@@ -12,6 +12,7 @@ import {
   writeConsent,
 } from "@/lib/legal/consent";
 import { routePath } from "@/lib/i18n/routes";
+import { useViewportReserve } from "@/lib/useViewportReserve";
 
 /** Subscribe to consent changes (decision made anywhere in the tree). */
 const subscribe = (onChange: () => void) => {
@@ -37,12 +38,17 @@ export const CookieConsent = () => {
   );
 
   const decide = (value: ConsentValue) => writeConsent(value);
+  const ref = useRef<HTMLDivElement>(null);
+  useViewportReserve("consent", ref, consent === null);
 
   if (consent !== null) return null;
 
+  // A labelled region, not a dialog: it neither traps nor takes focus, and a
+  // `role="dialog"` that does neither misleads a screen reader.
   return (
     <div
-      role="dialog"
+      ref={ref}
+      role="region"
       aria-label={t("cookies.title")}
       className="animate-rise fixed right-4 bottom-4 z-50 max-w-[calc(100vw-2rem)] sm:max-w-sm"
     >

@@ -48,9 +48,12 @@ export const ToolsBrowser = ({ cards }: { cards: ToolCard[] }) => {
           onChange={(e) => setQuery(e.target.value)}
           placeholder={t("tools.searchPlaceholder")}
           aria-label={t("tools.searchPlaceholder")}
-          className="h-12 w-full rounded-xl border border-ink-600 bg-ink-800 pr-4 pl-11 text-ink-50 placeholder:text-ink-400 focus:border-ink-500 focus:ring-2 focus:ring-ink-500/40 focus:outline-none"
+          className="h-12 w-full rounded-xl border border-ink-600 bg-ink-800 pr-4 pl-11 text-ink-50 placeholder:text-ink-400 focus:border-brand/60 focus:ring-2 focus:ring-brand/30 focus:outline-none"
         />
       </div>
+      <p className="sr-only" aria-live="polite">
+        {query ? t("common.resultsCount", { count: filtered.length }) : ""}
+      </p>
 
       {filtered.length === 0 ? (
         <p className="mt-12 text-center text-ink-400">{t("tools.noResults")}</p>
@@ -59,57 +62,63 @@ export const ToolsBrowser = ({ cards }: { cards: ToolCard[] }) => {
           {filtered.map((c) => {
             const Icon = CALC_ICONS[c.id];
             return (
-              <Link key={c.id} href={c.href} className="block h-full">
-                <GlowCard className="flex h-full items-start gap-3.5 p-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-ink-700 text-accent">
-                    <Icon size={20} />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="flex items-center gap-2">
-                      <span className="block text-sm font-semibold text-ink-50">
-                        {c.title}
-                      </span>
-                      {c.popular && (
+              // One link per card, stretched over it (`after:inset-0`), with
+              // the tag filters and the pin above it: a card-wide <Link>
+              // wrapping buttons nested interactive content.
+              <GlowCard
+                key={c.id}
+                className="flex h-full items-start gap-3.5 p-4"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-ink-700 text-accent">
+                  <Icon size={20} />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-2">
+                    <Link
+                      href={c.href}
+                      className="block text-sm font-semibold text-ink-50 after:absolute after:inset-0 after:rounded-card focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-brand/55 focus-visible:after:ring-inset"
+                    >
+                      {c.title}
+                    </Link>
+                    {c.popular && (
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand/10 px-1.5 py-0.5 text-[10px] font-semibold tracking-wide text-brand">
                         <span
-                          className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand/10 px-1.5 py-0.5 text-[10px] font-semibold tracking-wide text-brand"
-                          aria-label={t("tools.popularAria")}
-                        >
-                          <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-                          {t("tools.popular")}
+                          aria-hidden
+                          className="h-1.5 w-1.5 rounded-full bg-brand"
+                        />
+                        <span aria-hidden>{t("tools.popular")}</span>
+                        <span className="sr-only">
+                          {t("tools.popularAria")}
                         </span>
-                      )}
-                    </span>
-                    <span className="mt-1 line-clamp-2 block text-xs leading-relaxed text-ink-300">
-                      {c.tagline}
-                    </span>
-                    {c.tags.length > 0 && (
-                      <span className="mt-2 flex flex-wrap gap-1.5">
-                        {c.tags.slice(0, 3).map((tag) => (
-                          <button
-                            key={tag}
-                            type="button"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              setQuery(tag);
-                            }}
-                            className="rounded-full bg-ink-800 px-2 py-0.5 font-mono text-[10px] text-ink-400 transition-colors hover:bg-ink-700 hover:text-ink-200"
-                          >
-                            #{tag}
-                          </button>
-                        ))}
                       </span>
                     )}
                   </span>
-                  <PinButton
-                    itemType="calculator"
-                    itemId={c.id}
-                    initialPinned={favorites.ids.has(c.id)}
-                    loading={!favorites.ready}
-                    className="-mt-1 -mr-1"
-                  />
-                </GlowCard>
-              </Link>
+                  <span className="mt-1 line-clamp-2 block text-xs leading-relaxed text-ink-300">
+                    {c.tagline}
+                  </span>
+                  {c.tags.length > 0 && (
+                    <span className="relative z-10 mt-2 flex flex-wrap gap-1.5">
+                      {c.tags.slice(0, 3).map((tag) => (
+                        <button
+                          key={tag}
+                          type="button"
+                          onClick={() => setQuery(tag)}
+                          className="min-h-6 rounded-full bg-ink-800 px-2 py-0.5 font-mono text-[10px] text-ink-400 transition-colors hover:bg-ink-700 hover:text-ink-200 focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:outline-none"
+                        >
+                          #{tag}
+                        </button>
+                      ))}
+                    </span>
+                  )}
+                </span>
+                <PinButton
+                  itemType="calculator"
+                  itemId={c.id}
+                  initialPinned={favorites.ids.has(c.id)}
+                  loading={!favorites.ready}
+                  className="relative z-10 -mt-1 -mr-1"
+                />
+              </GlowCard>
             );
           })}
         </div>

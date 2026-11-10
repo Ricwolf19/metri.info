@@ -76,10 +76,21 @@ export type IconProps = Omit<SVGProps<SVGSVGElement>, "ref"> & {
 
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
-/** Wrap an Iconoir icon so it accepts our `size` (px) prop. */
+/** Wrap an Iconoir icon so it accepts our `size` (px) prop. Icons are
+ * decorative by default (`aria-hidden`), since they sit beside text or inside
+ * a control that carries the name; one given an `aria-label` is announced as
+ * an image instead. */
 const sized = (Icon: IconComponent, name: string) => {
-  const Wrapped = ({ size = 24, ...props }: IconProps) =>
-    createElement(Icon, { width: size, height: size, ...props });
+  const Wrapped = ({ size = 24, ...props }: IconProps) => {
+    const named = Boolean(props["aria-label"] || props["aria-labelledby"]);
+    return createElement(Icon, {
+      width: size,
+      height: size,
+      "aria-hidden": named ? undefined : true,
+      role: named ? "img" : undefined,
+      ...props,
+    });
+  };
   Wrapped.displayName = name;
   return Wrapped;
 };

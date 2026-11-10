@@ -40,6 +40,14 @@ export const TourScreen = ({
       />
     );
   }
+  // The mock is a picture of the app, not page content: one image with the
+  // step's description, its fake UI ("9:41", tab labels) hidden from readers.
   const Mock = MOCKUPS[stepId];
-  return <Mock />;
+  return (
+    <div role="img" aria-label={alt} className="h-full">
+      <div aria-hidden className="h-full">
+        <Mock />
+      </div>
+    </div>
+  );
 };
