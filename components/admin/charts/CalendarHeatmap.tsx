@@ -1,5 +1,5 @@
 import { ScrollHint } from "@/components/ui/ScrollHint";
-import type { DayCount } from "@/lib/analytics/posthog";
+import type { DayCount } from "@/lib/analytics/behavior";
 
 const CELL = 13;
 const GAP = 3;

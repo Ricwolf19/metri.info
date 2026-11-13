@@ -5,6 +5,16 @@ import { cacheLife, cacheTag } from "next/cache";
 
 import { tags } from "@/lib/cache/tags";
 
+import { googleServiceAccount } from "./google-account";
+import { type AnalyticsWindow, fillDays } from "./range";
+import {
+  simGaBreakdown,
+  simGaDaily,
+  simGaRealtime,
+  simGaSummary,
+  simulating,
+} from "./simulate";
+
 /**
  * Google Analytics 4 reporting via the Data API (the read side of GA4 — distinct
  * from the `NEXT_PUBLIC_GA_ID` measurement tag that *sends* data). Every helper
@@ -17,23 +27,19 @@ import { tags } from "@/lib/cache/tags";
  *   GA4_CREDENTIALS_JSON   the service-account JSON key, inline (one env var)
  */
 const propertyId = process.env.GA4_PROPERTY_ID;
-const credentialsJson = process.env.GA4_CREDENTIALS_JSON;
 
-export const gaConfigured = () => Boolean(propertyId && credentialsJson);
+export const gaConfigured = () =>
+  Boolean(propertyId && process.env.GA4_CREDENTIALS_JSON);
 
 let client: BetaAnalyticsDataClient | null = null;
 
 /** Lazily build the Data API client from the inline JSON key. Returns null when
- * unconfigured or when the JSON can't be parsed (never throws). */
+ * unconfigured or when the key can't be read (never throws). */
 const getClient = (): BetaAnalyticsDataClient | null => {
-  if (!propertyId || !credentialsJson) return null;
   if (client) return client;
+  const credentials = googleServiceAccount();
+  if (!propertyId || !credentials) return null;
   try {
-    const credentials = JSON.parse(credentialsJson) as {
-      client_email: string;
-      private_key: string;
-      project_id?: string;
-    };
     client = new BetaAnalyticsDataClient({
       credentials,
       projectId: credentials.project_id,
@@ -44,55 +50,104 @@ const getClient = (): BetaAnalyticsDataClient | null => {
   }
 };
 
+/** No GA4 keys on a dev server: every reader answers with made-up data. */
+const simulated = () => simulating(gaConfigured());
+
 const property = () => `properties/${propertyId}`;
 const num = (v: string | null | undefined) => Number(v ?? 0) || 0;
 
-export type GaSplit = { last7: number; last30: number };
-export type GaSummary = {
-  activeUsers: GaSplit;
-  sessions: GaSplit;
-  pageviews: GaSplit;
-} | null;
+type Window = Pick<AnalyticsWindow, "startDate" | "endDate" | "days">;
+const dateRanges = (w: Window) => [
+  { startDate: w.startDate, endDate: w.endDate },
+];
 
-/** Active users, sessions and pageviews for the last 7 and 30 days. Two date
- * ranges in one report → GA adds a `dateRange` dimension (`date_range_0/1`). */
-export const getGaSummary = async (): Promise<GaSummary> => {
+export type GaSummary = {
+  activeUsers: number;
+  newUsers: number;
+  sessions: number;
+  pageviews: number;
+  /** 0..1: sessions that lasted 10 s+, saw 2+ pages or fired a key event. */
+  engagementRate: number;
+  /** Seconds of engagement per active user. */
+  engagementPerUser: number;
+};
+
+/** Headline numbers for the window, in one report. */
+export const getGaSummary = async (w: Window): Promise<GaSummary | null> => {
   "use cache";
   cacheTag(tags.metrics.ga);
   cacheLife("minutes");
+  if (simulated()) return simGaSummary(w);
   const c = getClient();
   if (!c) return null;
   try {
     const [res] = await c.runReport({
       property: property(),
-      dateRanges: [
-        { startDate: "7daysAgo", endDate: "today" },
-        { startDate: "30daysAgo", endDate: "today" },
+      dateRanges: dateRanges(w),
+      metrics: [
+        { name: "activeUsers" },
+        { name: "newUsers" },
+        { name: "sessions" },
+        { name: "screenPageViews" },
+        { name: "engagementRate" },
+        { name: "userEngagementDuration" },
       ],
+    });
+    const m = (i: number) => num(res.rows?.[0]?.metricValues?.[i]?.value);
+    const activeUsers = m(0);
+    return {
+      activeUsers,
+      newUsers: m(1),
+      sessions: m(2),
+      pageviews: m(3),
+      engagementRate: m(4),
+      engagementPerUser: activeUsers > 0 ? m(5) / activeUsers : 0,
+    };
+  } catch {
+    return null;
+  }
+};
+
+export type GaDaily = {
+  users: { date: string; value: number }[];
+  sessions: { date: string; value: number }[];
+  pageviews: { date: string; value: number }[];
+};
+
+/** GA4's `date` dimension is `YYYYMMDD`. */
+const isoDay = (v: string) =>
+  `${v.slice(0, 4)}-${v.slice(4, 6)}-${v.slice(6, 8)}`;
+
+/** Users, sessions and pageviews per day, every day of the window. */
+export const getGaDaily = async (w: Window): Promise<GaDaily | null> => {
+  "use cache";
+  cacheTag(tags.metrics.ga);
+  cacheLife("minutes");
+  if (simulated()) return simGaDaily(w);
+  const c = getClient();
+  if (!c) return null;
+  try {
+    const [res] = await c.runReport({
+      property: property(),
+      dateRanges: dateRanges(w),
+      dimensions: [{ name: "date" }],
       metrics: [
         { name: "activeUsers" },
         { name: "sessions" },
         { name: "screenPageViews" },
       ],
+      orderBys: [{ dimension: { dimensionName: "date" } }],
+      limit: w.days + 1,
     });
-    const pick = (rangeKey: string, metric: number) =>
-      num(
-        res.rows?.find((r) => r.dimensionValues?.[0]?.value === rangeKey)
-          ?.metricValues?.[metric]?.value,
-      );
+    const series = [new Map(), new Map(), new Map()] as Map<string, number>[];
+    for (const row of res.rows ?? []) {
+      const day = isoDay(row.dimensionValues?.[0]?.value ?? "");
+      series.forEach((s, i) => s.set(day, num(row.metricValues?.[i]?.value)));
+    }
     return {
-      activeUsers: {
-        last7: pick("date_range_0", 0),
-        last30: pick("date_range_1", 0),
-      },
-      sessions: {
-        last7: pick("date_range_0", 1),
-        last30: pick("date_range_1", 1),
-      },
-      pageviews: {
-        last7: pick("date_range_0", 2),
-        last30: pick("date_range_1", 2),
-      },
+      users: fillDays(w, series[0]),
+      sessions: fillDays(w, series[1]),
+      pageviews: fillDays(w, series[2]),
     };
   } catch {
     return null;
@@ -101,30 +156,56 @@ export const getGaSummary = async (): Promise<GaSummary> => {
 
 export type GaRow = { label: string; value: number };
 
-/** Generic single-dimension top list (pages, countries, devices, sources).
- * Cached: the Data API speaks gRPC, so it can't ride `fetch`'s `next.tags` like
- * the PostHog/Sentry clients — `use cache` is the only way to tag it. */
-const topByDimension = async (
-  dimension: string,
-  metric: string,
-  limit: number,
+const BREAKDOWNS = {
+  channels: {
+    dimension: "sessionDefaultChannelGroup",
+    metric: "sessions",
+    limit: 8,
+  },
+  sourceMedium: {
+    dimension: "sessionSourceMedium",
+    metric: "sessions",
+    limit: 10,
+  },
+  landingPages: { dimension: "landingPage", metric: "sessions", limit: 10 },
+  pages: { dimension: "pagePath", metric: "screenPageViews", limit: 10 },
+  countries: { dimension: "country", metric: "activeUsers", limit: 10 },
+  devices: { dimension: "deviceCategory", metric: "activeUsers", limit: 5 },
+  browsers: { dimension: "browser", metric: "activeUsers", limit: 8 },
+  newVsReturning: {
+    dimension: "newVsReturning",
+    metric: "activeUsers",
+    limit: 3,
+  },
+} as const;
+
+export type GaBreakdownId = keyof typeof BREAKDOWNS;
+
+/** One dimension, top rows by its metric. Cached: the Data API speaks gRPC,
+ * so it can't ride `fetch`'s `next.tags` like the PostHog/Sentry clients —
+ * `use cache` is the only way to tag it. */
+export const getGaBreakdown = async (
+  id: GaBreakdownId,
+  w: Window,
 ): Promise<GaRow[] | null> => {
   "use cache";
   cacheTag(tags.metrics.ga);
   cacheLife("minutes");
+  if (simulated()) return simGaBreakdown(id, w);
   const c = getClient();
   if (!c) return null;
+  const def = BREAKDOWNS[id];
   try {
     const [res] = await c.runReport({
       property: property(),
-      dateRanges: [{ startDate: "30daysAgo", endDate: "today" }],
-      dimensions: [{ name: dimension }],
-      metrics: [{ name: metric }],
-      orderBys: [{ metric: { metricName: metric }, desc: true }],
-      limit,
+      dateRanges: dateRanges(w),
+      dimensions: [{ name: def.dimension }],
+      metrics: [{ name: def.metric }],
+      orderBys: [{ metric: { metricName: def.metric }, desc: true }],
+      limit: def.limit,
     });
     return (res.rows ?? []).map((r) => ({
-      label: r.dimensionValues?.[0]?.value ?? "(not set)",
+      label: r.dimensionValues?.[0]?.value || "(not set)",
       value: num(r.metricValues?.[0]?.value),
     }));
   } catch {
@@ -132,29 +213,39 @@ const topByDimension = async (
   }
 };
 
-export const getGaTopPages = () =>
-  topByDimension("pagePath", "screenPageViews", 10);
-export const getGaTopCountries = () =>
-  topByDimension("country", "activeUsers", 10);
-export const getGaDeviceBreakdown = () =>
-  topByDimension("deviceCategory", "activeUsers", 5);
-export const getGaTopSources = () =>
-  topByDimension("sessionSource", "sessions", 10);
+export type GaRealtime = { activeUsers: number; pages: GaRow[] };
 
-/** Active users in the last 30 minutes (GA4 realtime). Short cache — the whole
- * point is freshness, but this still collapses a burst of panel loads. */
-export const getGaRealtime = async (): Promise<number | null> => {
+/** People on the site in the last 30 minutes, and the pages they're on.
+ * Short cache — the whole point is freshness, but this still collapses a
+ * burst of panel loads. */
+export const getGaRealtime = async (): Promise<GaRealtime | null> => {
   "use cache";
   cacheTag(tags.metrics.ga);
   cacheLife("seconds");
+  if (simulated()) return simGaRealtime();
   const c = getClient();
   if (!c) return null;
   try {
-    const [res] = await c.runRealtimeReport({
-      property: property(),
-      metrics: [{ name: "activeUsers" }],
-    });
-    return num(res.rows?.[0]?.metricValues?.[0]?.value);
+    const [[total], [pages]] = await Promise.all([
+      c.runRealtimeReport({
+        property: property(),
+        metrics: [{ name: "activeUsers" }],
+      }),
+      c.runRealtimeReport({
+        property: property(),
+        dimensions: [{ name: "unifiedScreenName" }],
+        metrics: [{ name: "activeUsers" }],
+        orderBys: [{ metric: { metricName: "activeUsers" }, desc: true }],
+        limit: 8,
+      }),
+    ]);
+    return {
+      activeUsers: num(total.rows?.[0]?.metricValues?.[0]?.value),
+      pages: (pages.rows ?? []).map((r) => ({
+        label: r.dimensionValues?.[0]?.value || "(not set)",
+        value: num(r.metricValues?.[0]?.value),
+      })),
+    };
   } catch {
     return null;
   }

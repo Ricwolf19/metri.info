@@ -8,18 +8,21 @@ const ACCENT = "#84cc16";
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 /**
- * Weekday × hour grid (UTC): when the site is actually used. Rows are days,
- * columns hours, intensity against the busiest cell. Server-rendered SVG that
- * scrolls sideways on a phone under `ScrollHint`.
+ * Weekday × hour grid: when the site is actually used. Rows are days, columns
+ * hours on `zone`'s clock, intensity against the busiest cell. Server-rendered
+ * SVG that scrolls sideways on a phone under `ScrollHint`.
  */
 export const HourHeatmap = ({
   cells,
   title,
+  zone,
   color = ACCENT,
 }: {
   /** `cells[weekday][hour]`, weekday 0 = Monday. */
   cells: number[][];
   title: string;
+  /** Short name of the clock the hours are on, e.g. "Mexico City". */
+  zone: string;
   color?: string;
 }) => {
   const max = Math.max(1, ...cells.flat());
@@ -42,7 +45,7 @@ export const HourHeatmap = ({
           viewBox={`0 0 ${width} ${height}`}
           className="block"
           role="img"
-          aria-label={`${title}: ${total.toLocaleString("en-US")} events by weekday and hour (UTC), peak ${max.toLocaleString("en-US")} in an hour`}
+          aria-label={`${title}: ${total.toLocaleString("en-US")} events by weekday and hour (${zone}), peak ${max.toLocaleString("en-US")} in an hour`}
         >
           <title>{title}</title>
           {Array.from({ length: 24 }, (_, h) =>
@@ -84,7 +87,7 @@ export const HourHeatmap = ({
                 // Floor at 0.55: the quietest hour still reads 3:1 on the card.
                 fillOpacity={n === 0 ? 1 : 0.55 + (n / max) * 0.45}
               >
-                <title>{`${DAYS[r]} ${String(h).padStart(2, "0")}:00 UTC: ${n.toLocaleString("en-US")}`}</title>
+                <title>{`${DAYS[r]} ${String(h).padStart(2, "0")}:00 ${zone}: ${n.toLocaleString("en-US")}`}</title>
               </rect>
             )),
           )}

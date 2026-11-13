@@ -16,6 +16,23 @@ export type ApiClient = {
   request: <T>(path: string, init?: RequestInit) => Promise<T | null>;
 };
 
+/** A slow upstream must not hold a dashboard render hostage. */
+export const UPSTREAM_TIMEOUT_MS = 20_000;
+const RETRY_AFTER_MS = 1_000;
+
+/** `send`, and once more a second later if the answer was a 429: a
+ * dashboard fires several reads at once, and one rate-limited answer
+ * shouldn't blank a card. */
+export const retryOnRateLimit = async (
+  send: () => Promise<Response>,
+): Promise<Response> => {
+  const res = await send();
+  if (res.status !== 429) return res;
+  await res.body?.cancel();
+  await new Promise((r) => setTimeout(r, RETRY_AFTER_MS));
+  return send();
+};
+
 export const createApiClient = ({
   baseUrl,
   tag,
@@ -35,12 +52,15 @@ export const createApiClient = ({
   request: async <T>(path: string, init?: RequestInit): Promise<T | null> => {
     const auth = headers();
     if (!auth) return null;
-    try {
-      const res = await fetch(`${baseUrl}${path}`, {
+    const send = () =>
+      fetch(`${baseUrl}${path}`, {
         ...init,
         headers: { ...auth, ...init?.headers },
         next: { revalidate, tags: [tag] },
+        signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
       });
+    try {
+      const res = await retryOnRateLimit(send);
       if (!res.ok) return null;
       return (await res.json()) as T;
     } catch {

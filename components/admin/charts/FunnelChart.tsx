@@ -1,4 +1,4 @@
-import type { FunnelStep } from "@/lib/analytics/posthog";
+import type { FunnelStep } from "@/lib/analytics/behavior";
 
 const fmt = (n: number) => n.toLocaleString("en-US");
 const pct = (part: number, whole: number) =>

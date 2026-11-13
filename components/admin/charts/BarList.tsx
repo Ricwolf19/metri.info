@@ -1,6 +1,12 @@
 const fmt = (n: number) => n.toLocaleString("en-US");
 
-export type BarItem = { label: string; value: number; color?: string };
+export type BarItem = {
+  label: string;
+  value: number;
+  color?: string;
+  /** A quieter second line, e.g. "41 people". */
+  hint?: string;
+};
 
 const ACCENT = "#84cc16";
 
@@ -22,8 +28,15 @@ export const BarList = ({
     <ul className="space-y-2.5">
       {items.map((it) => (
         <li key={it.label} className="flex items-center gap-3">
-          <span className="w-28 shrink-0 truncate text-xs text-ink-300">
-            {it.label}
+          <span className="w-32 shrink-0 sm:w-40" title={it.label}>
+            <span className="block truncate text-xs text-ink-300">
+              {it.label}
+            </span>
+            {it.hint ? (
+              <span className="block truncate font-mono text-[10px] text-ink-500">
+                {it.hint}
+              </span>
+            ) : null}
           </span>
           <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-ink-700">
             <div

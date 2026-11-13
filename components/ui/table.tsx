@@ -11,9 +11,15 @@ import { cn } from "@/lib/utils";
  */
 export const Table = ({
   className,
+  frameClassName,
   ...props
-}: React.ComponentProps<"table">) => (
-  <ScrollHint className="my-6 rounded-card border border-ink-600">
+}: React.ComponentProps<"table"> & {
+  /** The scroller around the table (margin, border), e.g. flush in a card. */
+  frameClassName?: string;
+}) => (
+  <ScrollHint
+    className={cn("my-6 rounded-card border border-ink-600", frameClassName)}
+  >
     <div
       tabIndex={0}
       className="overflow-x-auto rounded-card focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:outline-none"

@@ -16,6 +16,8 @@ export const tags = {
     sentry: "metrics:sentry",
     /** GA4 Data API reports. */
     ga: "metrics:ga",
+    /** Search Console analytics, sitemaps and URL inspections. */
+    gsc: "metrics:gsc",
   },
   /** `getLatestRelease` — expired by the release webhook. */
   appRelease: "app-release",

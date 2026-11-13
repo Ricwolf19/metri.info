@@ -1,13 +1,22 @@
-import { AnalyticsTabs } from "@/components/admin/AnalyticsTabs";
+import { Suspense } from "react";
+
+import {
+  AnalyticsTabs,
+  AnalyticsTabStrip,
+} from "@/components/admin/AnalyticsTabs";
 import { PageHeader } from "@/components/admin/ui";
 
 const AnalyticsLayout = ({ children }: { children: React.ReactNode }) => (
   <>
     <PageHeader
       title="Analytics"
-      description="Three sources, one per tab. PostHog (events, funnels) via its Query API; Google Analytics via the GA4 Data API; Sentry (errors, issues) via the Sentry API. Each card prompts to connect when its keys aren't set."
+      description="What people do (PostHog), where they click and how far they scroll (PostHog heatmaps), where they come from (GA4), how Google sees the site (Search Console) and what breaks (Sentry). Every tab reads the same date range; each card says what to connect when its keys aren't set."
     />
-    <AnalyticsTabs />
+    {/* The range lives in the URL, which is request data; until it's read
+        the same tabs render without it. */}
+    <Suspense fallback={<AnalyticsTabStrip />}>
+      <AnalyticsTabs />
+    </Suspense>
     {children}
   </>
 );
