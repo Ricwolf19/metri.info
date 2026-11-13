@@ -48,7 +48,7 @@
   --color-brand-contrast: rgb(var(--brand-contrast));
 
   /* Secondary "PR" orange (used sparingly for highlights). */
-  --color-flame: #ff6b35;
+  --color-flame: rgb(var(--flame));
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   /* JetBrains Mono carries the "machine" voice: nav, kickers, labels,
@@ -86,6 +86,7 @@
   --accent-fill: 244 244 245; /* near-white — mono button fills */
   --brand: 190 248 43; /* lime-400 */
   --brand-contrast: 8 9 13; /* ink-950 — dark text on brand fills */
+  --flame: 255 107 53; /* #ff6b35 — PR orange, errors */
 }
 
 /* The default border colour lives in the base layer, after preflight. As an
