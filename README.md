@@ -76,8 +76,10 @@ The scope is deliberate and it binds this backend too:
   localized slugs and reciprocal hreflang.
 - **Advanced SEO** — server-first rendering, the Metadata API, JSON-LD,
   file-based sitemap/robots/manifest and dynamic OG images.
-- **Admin dashboard** — a role-gated `/admin` area with in-app analytics drawn
-  from Postgres and PostHog (mobile sync from the app is planned).
+- **Admin dashboard** — a role-gated `/admin` area: an overview, then one
+  analytics tab per source over a shared date range — behavior and funnels
+  (PostHog), click/scroll heatmaps drawn over the live page (PostHog), traffic
+  (GA4), search and per-URL index coverage (Search Console) and errors (Sentry).
 
 ## Tech stack
 

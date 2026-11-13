@@ -118,7 +118,8 @@ critical flows on a real iPhone before a release.
 - **Admin** (`/admin`) is EN-only and gated by `requireAdmin`. The overview opens with one number
   per upstream (Postgres, PostHog, Sentry, GA4) so a missing key shows there, then first-party
   series, the PostHog traffic calendar and weekday/hour heatmaps (`components/admin/charts`, plain
-  SVG, no chart package) and the top lists; every card degrades on its own. It has no sidebar: the site header
+  SVG, no chart package) and the top lists; every card degrades on its own. Drilldowns are the
+  analytics tabs (see Admin analytics below). It has no sidebar: the site header
   swaps its sections for `ADMIN_NAV_GROUPS` on admin paths (`isAdminPath`), and the footer and
   launcher stay off (`isChromelessPath`). Admin grids always declare `grid-cols-1` below their
   breakpoint and `Card` is `min-w-0`: an implicit `auto` column grows to its widest child (the
@@ -227,6 +228,50 @@ verified accounts with `user.monthly_report_emails = true`. Code lives in `lib/r
   `monthly_report` (user, period) row plus the idempotency key `monthly-<period>-<user>` make any
   rerun safe; a failed person is retried on the next day's run. Preview everything (both
   editions and the PDF) with `bun run email:preview`.
+
+## Admin analytics
+
+`/admin/analytics` is one tab per source, all over the same date window: Behavior (PostHog,
+`lib/analytics/behavior.ts`), Heatmaps (PostHog, `heatmaps.ts` + `heatmap-queries.ts` + `heat.ts`),
+Traffic (GA4, `ga.ts`), Search (Search Console, `search.ts` + `search-console.ts`) and Errors
+(Sentry, `errors.ts` + `sentry.ts`). Panels live in `components/admin/analytics`.
+
+- **The window** is `lib/analytics/range.ts`: `?range=7d|30d|90d|365d` or `?from=&to=`, inclusive
+  days on `ANALYTICS_TIME_ZONE` (the operator's clock). A page awaits `searchParams`, calls
+  `readAnalyticsRequest` (it reads the clock, so never before), renders `RangeBar`, and wraps the
+  panel in a Suspense keyed by `windowKey` so a new range shows the loader, not stale numbers.
+  Sources with less history clamp and say so (heatmaps 90 days, Sentry 90, Search Console ends 3
+  days back on final data).
+- **Every card is a `SourceCard`**: not configured → which keys to set; `null` → the source didn't
+  answer; empty → nothing in the range. Readers keep that contract: null only on failure, `[]` for
+  an answer with no rows. Each tab opens with `SourceNotice`: one connect card when its source is
+  off (and nothing else), a banner when it's simulated.
+- **Simulated mode** (`lib/analytics/simulate.ts`): on `next dev` without a source's keys, every
+  reader of that source answers with seeded made-up data in the live shapes, and every card and
+  pulse says "Simulated". `sourceMode()` is the one switch; `simulating()` only ever returns true
+  when `NODE_ENV === "development"`, so a deployed or test build never invents a number. Values are
+  seeded per metric and day, so ranges agree with each other and totals match their trends. A new
+  reader gets a simulator next to the others, checked first (`if (simulated()) return sim…`).
+- **HogQL never holds request data.** Windows, types, viewport bounds and URL patterns go in
+  `runHogQL`'s `values` as `{name}`; only code constants are inlined (`lit`). Instants are bound in
+  UTC with a trailing `Z`. `behavior.test.ts` checks it. PostHog runs at most three queries at once
+  (`createLimiter`), and `createApiClient` retries a 429 once.
+- **Heatmaps** read PostHog's `heatmaps` table in HogQL (the `query:read` key, no extra scope): x as
+  a share of the viewport width, y in CSS px, devices filtered on the stored `viewport_width` (CSS
+  px / 16). Capture needs `enable_heatmaps` and `capture_dead_clicks` in `PostHogProvider`, cookie
+  consent, and heatmaps switched on in the PostHog project settings. The preview is a same-origin
+  iframe of the live English page in the admin's own session, scaled, with the heat drawn on a
+  canvas over it (`components/admin/heatmaps`). Two things keep it honest: a framed page reads
+  consent as declined (`readConsent`), so the preview never tracks the admin or shows the banner;
+  and nothing may send `X-Frame-Options: DENY` or `frame-ancestors 'none'` for public pages
+  (`SAMEORIGIN` / `'self'` is fine), or the preview falls back to a blank sheet.
+- **Search Console** uses the GA4 service account (`GA4_CREDENTIALS_JSON`, added as a user on the
+  property) and `GSC_SITE_URL`. It caches with `use cache: remote`, never `fetch`'s data cache: the
+  hourly access token is part of a fetch cache key, which would re-inspect every sitemap URL each
+  hour. Index coverage runs URL Inspection on every sitemap URL, once a day per URL (quota 2,000 a
+  day per property), five at a time; a failure throws inside the cache scope so it is never cached.
+- **GA4** goes through the gRPC SDK, so its reads cache with `use cache` + `cacheTag(metrics.ga)`.
+  **Sentry** counts `outcome=accepted` error events and filters org endpoints by numeric project id.
 
 ## Layout
 
