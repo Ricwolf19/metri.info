@@ -26,7 +26,10 @@ const start = () => {
     api_host: "/relay",
     ui_host: "https://us.posthog.com",
     autocapture: true,
+    // Click, movement and scroll positions for /admin/analytics/heatmaps.
     enable_heatmaps: true,
+    // Clicks that changed nothing on the page: the "Dead clicks" map.
+    capture_dead_clicks: true,
     disable_session_recording: false,
     session_recording: { maskAllInputs: true },
     capture_pageview: false,

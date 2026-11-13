@@ -13,8 +13,24 @@ export const CONSENT_EVENT = "metri:consent";
 
 export type ConsentValue = "granted" | "denied";
 
+/** Inside a frame — in practice the admin's heatmap preview, which loads the
+ * live page in the operator's own session. */
+const isFramed = () => {
+  try {
+    return window.self !== window.top;
+  } catch {
+    return true;
+  }
+};
+
+/**
+ * The visitor's choice. A framed page reads as declined: it never shows the
+ * banner and never starts analytics, so the heatmap preview can't record the
+ * admin looking at it (and a page embedded elsewhere tracks nobody).
+ */
 export const readConsent = (): ConsentValue | null => {
   if (typeof document === "undefined") return null;
+  if (isFramed()) return "denied";
   const match = document.cookie.match(/(?:^|; )metri_consent=([^;]+)/);
   const value = match?.[1];
   return value === "granted" || value === "denied" ? value : null;
