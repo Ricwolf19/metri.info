@@ -10,20 +10,32 @@ Los macros (proteína, carbohidratos y grasa) son de donde salen tus calorías
 diarias. Acierta el reparto y la composición corporal mejora; obsesiónate con
 qué comes ignorando los totales y darás vueltas sin avanzar.
 
+Cada gramo lleva una cantidad fija de energía: **4 kcal** la proteína, **4** los
+carbohidratos, **9** la grasa. Si llegas a tus gramos de macros, llegas a tus
+calorías por definición.
+
 ## Empieza por las calorías
 
 Tu plan de macros se apoya en un objetivo calórico. Usa la
 [calculadora de TDEE](/es/herramientas/calculadora-tdee) para estimar
 mantenimiento y luego ajusta:
 
-- **Definición:** ~10–20% por debajo de mantenimiento
+- **Definición:** ~10% por debajo de mantenimiento
 - **Mantenimiento:** en mantenimiento
 - **Volumen limpio:** ~10% por encima de mantenimiento
+
+Cuál de las tres, y a qué ritmo, depende de tu grasa corporal; mira
+[¿Definir, volumen o mantener?](/es/docs/choosing-your-phase).
+[BMR y TDEE explicados](/es/docs/tdee) explica de dónde sale el número de
+mantenimiento.
 
 ## Fija la proteína primero
 
 La proteína es el macro prioritario: conserva músculo en déficit y lo construye
-en superávit.
+en superávit. Puedes dimensionarla de dos formas.
+
+**Por kilo de peso corporal**: sencillo, y suficiente si tu % de grasa es
+normal.
 
 | Meta          | Proteína           |
 | ------------- | ------------------ |
@@ -31,26 +43,81 @@ en superávit.
 | Mantenimiento | 2.0 g / kg         |
 | Volumen       | 1.8 g / kg         |
 
-## Luego grasa, luego carbohidratos
-
-Pon la grasa en **0.7–0.9 g por kg de peso** (nunca menos de 0.5 g/kg) para apoyar
-las hormonas, y rellena el resto con carbohidratos, tu principal combustible de
-entrenamiento, y el único macro que mueves cuando las calorías deben cambiar.
+**Por kilo de masa magra**: mejor si cargas bastante grasa, porque el tejido
+graso no necesita proteína para mantenerse. Usa **1.8–2.5 g por kg de masa
+magra**, con 2.2 como valor por defecto. Ejemplo: 100 kg con 20% de grasa cargan
+20 kg de grasa, así que la masa magra es de 80 kg y 80 × 2.2 = **176 g** al día.
 
 ```
-kcal_proteína = proteína_g × 4
-kcal_grasa    = grasa_g × 9      (grasa_g = 0.7–0.9 × kg)
-kcal_carbos   = calorías − kcal_proteína − kcal_grasa
-carbos_g      = kcal_carbos / 4
+kg_magros  = peso_kg × (1 − grasa_corporal)
+proteína_g = kg_magros × 2.2
 ```
 
 <Callout type="tip">
-  La [calculadora de macros](/es/herramientas/calculadora-macros) hace todo esto
-  por ti: introduce calorías, peso y meta y te devuelve gramos por macro.
+  176 g de proteína no son 176 g de pollo: la carne y el pescado aportan unos
+  20–25 g por cada 100 g. Introduce tu % de grasa en la
+  [calculadora de macros](/es/herramientas/calculadora-macros) y pasa sola al
+  método de masa magra.
 </Callout>
+
+## Luego la grasa
+
+La grasa sostiene las hormonas y la absorción de vitaminas. Fíjala en gramos por
+kilo de peso, no en porcentaje de las calorías.
+
+| Grasa (g / kg) | Cuándo                                                    |
+| -------------- | --------------------------------------------------------- |
+| 0.5            | El suelo: nunca menos, ni en definición                   |
+| 0.7            | Definición, para que más presupuesto vaya a carbohidratos |
+| 0.8            | Mantenimiento o recomposición                             |
+| 0.9–1          | Volumen                                                   |
+| 1.2–1.5        | Hard-gainers a los que les cuesta comer tanto             |
+| 1.5–2          | Dietas bajas en carbohidratos, donde la grasa rellena     |
+
+Las cuatro primeras filas son las que usa la calculadora de macros. Si cargas
+bastante grasa, calcular la grasa sobre la masa magra también funciona; solo
+deja algo más de margen para los carbohidratos.
+
+## Después los carbohidratos rellenan
+
+Lo que sobra tras proteína y grasa son carbohidratos. En definición, mantener la
+grasa en el extremo bajo hace que más presupuesto caiga aquí, y los
+carbohidratos alimentan las sesiones duras.
+
+| Carbohidratos (g / kg) | Perfil                                          |
+| ---------------------- | ----------------------------------------------- |
+| 2 o menos              | Cetogénica / low-carb                           |
+| 2–3                    | Bajo                                            |
+| 3–5                    | Moderado: la mayoría de quienes entrenan fuerza |
+| 5–8                    | Alto: resistencia intensa                       |
+| 8–10                   | Pruebas de ultrarresistencia                    |
+
+## Ejemplo completo: 2.500 kcal
+
+100 kg, 20% de grasa (80 kg magros), definición a 2.500 kcal:
+
+```
+proteína = 80 × 2.2  = 176 g → 704 kcal
+grasa    = 100 × 0.7 = 70 g  → 630 kcal
+carbos   = (2500 − 704 − 630) ÷ 4 ≈ 292 g
+```
+
+Es el reparto que devuelve la
+[calculadora de macros](/es/herramientas/calculadora-macros) con los mismos
+datos.
 
 ## La constancia gana a la precisión
 
 No necesitas clavar los gramos. Si te quedas a ~5–10 g de proteína y mantienes
 las calorías en rango la mayoría de los días, progresarás. Cuenta unas semanas
-para crear intuición, no para siempre.
+para crear intuición, no para siempre;
+[registrar la comida](/es/docs/tracking-food) explica el peso crudo o cocido y
+cómo leer etiquetas.
+
+## Relacionado
+
+- [BMR y TDEE explicados](/es/docs/tdee): de dónde sale el objetivo calórico.
+- [Personaliza tu dieta](/es/docs/personalizing-your-diet): cómo ajustar cuando
+  el plan ya está en marcha.
+- [Registrar la comida](/es/docs/tracking-food): pesar y anotar para que los
+  gramos signifiquen algo.

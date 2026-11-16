@@ -1,0 +1,78 @@
+---
+title: "Food swaps"
+description: "Vary a meal plan without re-weighing everything: which foods trade at equal grams, and the multipliers between food families."
+category: "nutrition"
+tags: ["swaps", "equivalences", "meal plan", "substitutions", "variety"]
+order: 8
+updatedAt: "2026-11-16"
+---
+
+A plan you can vary is a plan you keep. Most foods come in families that share
+the same macro profile, so you can trade inside a family at equal grams. Across
+families the water content differs, and that is where a multiplier is needed.
+
+## Multipliers between families
+
+| Swap                                       | Multiply grams by            |
+| ------------------------------------------ | ---------------------------- |
+| Grains (rice, pasta, oats, quinoa) → bread | ×2 (50 g rice = 100 g bread) |
+| Grains → potato or sweet potato            | ×4                           |
+| Grains → legumes                           | ×3                           |
+| Nuts → avocado                             | ×3                           |
+| White fish → white fish, oily → oily       | ×1                           |
+
+Going the other way, divide: 200 g of potato replaces 50 g of dry rice.
+
+```
+bread_g   = grain_g × 2
+potato_g  = grain_g × 4
+legumes_g = grain_g × 3
+avocado_g = nuts_g × 3
+```
+
+The multipliers exist because grains are logged dry while potato, legumes and
+avocado carry water; the calories per 100 g are lower, so you need more grams
+for the same energy. (See [tracking food](/docs/tracking-food) for why grains
+log dry.)
+
+## Interchange groups (equal grams)
+
+| Group            | Members                                                                                    |
+| ---------------- | ------------------------------------------------------------------------------------------ |
+| Bread            | Toast, loaf bread, corn or flour tortillas, arepas                                         |
+| Grains           | Basmati, jasmine or brown rice, whole-wheat pasta, quinoa, oats, whole-wheat bread         |
+| White meat       | Chicken breast, turkey breast, trimmed pork loin, rabbit                                   |
+| Lean red meat    | Beef and other lean cuts, no visible fat or bone                                           |
+| White fish       | Cod, hake, sole, sea bream, sea bass, monkfish, cuttlefish, shrimp                         |
+| Oily fish        | Salmon, tuna, sardines, mackerel, trout, anchovies                                         |
+| Fruit            | Apple, pear, orange, banana, kiwi, peach, berries, melon, grapes                           |
+| Vegetables       | Leafy greens, broccoli, cauliflower, zucchini, peppers, tomato, onion, carrot, green beans |
+| Nuts and seeds   | Almonds, walnuts, cashews, hazelnuts, pistachios, peanuts, pumpkin seeds                   |
+| Low-fat dairy    | 0% cottage or fresh cheese, 0% Greek yogurt, 0% quark, high-protein 0% yogurt              |
+| Higher-fat dairy | Greek yogurt, mozzarella, burrata, aged cheese, brie, whole milk                           |
+
+Keep fish inside its own group: swapping oily for white changes the fat count,
+not just the flavor. Red meat trades for red meat and white for white for the
+same reason.
+
+## Rules that keep a plan flexible
+
+- Meal times do not matter; what you have eaten by the end of the day does.
+- Meals of similar calories can be shuffled: a snack option at breakfast, a
+  lunch option at dinner.
+- If you cannot fit a meal, merge it with the previous or the next one.
+- An extra piece of fruit or serving of vegetables is always allowed.
+- Nuts raw or toasted, not fried.
+
+<Callout type="tip">
+  Vary preparation before varying ingredients: eggs boiled, poached or
+  scrambled; potato baked, boiled or mashed; rice steamed or in a salad. Same
+  macros, less boredom.
+</Callout>
+
+## Related
+
+- [Tracking food](/docs/tracking-food): why grains log dry and what a label
+  says.
+- [Diet quality](/docs/diet-quality): choosing within a group.
+- [How to track macros](/docs/macros): the targets the swaps must respect.

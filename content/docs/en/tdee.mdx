@@ -14,8 +14,9 @@ you do: moving, digesting, training. TDEE is your maintenance calories.
 
 Metri supports three established formulas:
 
-- **Harris–Benedict**: the classic default.
-- **Mifflin–St Jeor**: often more accurate for modern populations.
+- **Mifflin–St Jeor**: the calculator's default, often the most accurate for
+  modern populations.
+- **Harris–Benedict**: the classic; good for cross-checking.
 - **Katch–McArdle**: uses lean body mass, best if you know your body fat %.
 
 For example, Mifflin–St Jeor:
@@ -37,20 +38,77 @@ Multiply BMR by an activity factor:
 | Active      | 1.725      |
 | Very active | 1.9        |
 
-<Callout type="info">
-  These are estimates. Treat the result as a starting point, then adjust based
-  on 3–4 weeks of real weight data.
-</Callout>
+Three to five lifting sessions a week plus a couple of cardio days and
+7,000–10,000 daily steps usually lands between "moderate" and "active". When in
+doubt, start at moderate and let the scale correct you.
+
+## Quick cross-check: bodyweight × 22
+
+For a sanity check that needs no formula, multiply your weight in kilograms by
+22, then by the same activity factor. For 92 kg and moderate activity:
+
+```
+92 × 22 = 2,024 kcal
+2,024 × 1.55 = 3,137 kcal
+```
+
+When this lands close to your formula result you have a solid starting point.
+When it doesn't, take the lower number: it is easier to add food later than to
+undo two weeks of unintended gain.
+
+## Correct for high body fat
+
+Fat tissue burns far less energy than muscle, so every weight-based formula
+overestimates at a high body-fat percentage. Calculate on a leaner reference
+weight instead: someone at 100 kg and 30% body fat would run the numbers on
+about **80 kg**, roughly what they would weigh near 10%. It does not need to be
+exact. Katch–McArdle handles this on its own because it starts from lean mass,
+so if you know your body fat, prefer it.
 
 ## Using the number
 
 - Eat at TDEE to maintain.
-- Subtract ~300–500 kcal to lose fat.
-- Add ~200–300 kcal to gain lean mass.
+- Subtract **~10%** to lose fat.
+- Add **~10%** to gain lean mass.
+
+At a maintenance of 2,000–3,000 kcal, 10% is 200–300 kcal. The
+[TDEE calculator](/tools/tdee-calculator) also shows a fixed −500 kcal cut and
++300 kcal bulk as a quick reference; −500 suits a high maintenance or plenty of
+fat to lose, so on a smaller budget start from the 10%. Which direction fits
+you depends on your body fat; see
+[Cut, bulk or maintain?](/docs/choosing-your-phase).
 
 Then feed your target into the [macro calculator](/tools/macro-calculator) to
 split it into protein, carbs and fat.
 
+## Adjust after 1–2 weeks
+
+The formula is a starting point; the weekly fasted average is the truth. Weigh
+yourself fasted, average the week, and compare after one to two weeks:
+
+| Weekly average shows…                | Action               |
+| ------------------------------------ | -------------------- |
+| Weight holds but you want to lose    | Cut calories by ~10% |
+| Weight rises and you did not want it | Cut by 15–20%        |
+| Moving in the planned direction      | Change nothing       |
+
+Take any reduction from carbs or fat, never from protein. Over months your
+maintenance drifts as your weight changes;
+[adaptive thermogenesis](/docs/adaptive-thermogenesis) explains why.
+
+<Callout type="info">
+  These are estimates built from population averages. Treat the result as a
+  hypothesis and let three to four weeks of real weight data confirm or correct
+  it.
+</Callout>
+
 <Callout type="tip">
   Run your own numbers in the [TDEE calculator](/tools/tdee-calculator).
 </Callout>
+
+## Related
+
+- [How to track macros](/docs/macros): splitting the target into grams.
+- [Personalizing your diet](/docs/personalizing-your-diet): the ±10% loop,
+  step by step.
+- [Breaking a plateau](/docs/breaking-a-plateau): when the scale stops moving.

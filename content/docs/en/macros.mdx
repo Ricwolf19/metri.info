@@ -10,19 +10,31 @@ Macros (protein, carbohydrate and fat) are where your daily calories come
 from. Get the split right and body composition follows; obsess over food choice
 while ignoring totals and you'll spin your wheels.
 
+Every gram carries a fixed amount of energy: **4 kcal** for protein, **4** for
+carbs, **9** for fat. Hit your macro grams and you hit your calories by
+definition.
+
 ## Start with calories
 
 Your macro plan sits on top of a calorie target. Use the
 [TDEE calculator](/tools/tdee-calculator) to estimate maintenance, then adjust:
 
-- **Cut:** ~10–20% below maintenance
+- **Cut:** ~10% below maintenance
 - **Maintain:** at maintenance
 - **Lean bulk:** ~10% above maintenance
+
+Which of the three, and how fast, depends on your body fat; see
+[Cut, bulk or maintain?](/docs/choosing-your-phase).
+[BMR & TDEE explained](/docs/tdee) covers where the maintenance number comes
+from.
 
 ## Set protein first
 
 Protein is the priority macro: it preserves muscle in a deficit and builds it
-in a surplus.
+in a surplus. Size it one of two ways.
+
+**Per kilogram of bodyweight**: simple, and accurate enough at a normal
+body-fat level.
 
 | Goal     | Protein               |
 | -------- | --------------------- |
@@ -30,26 +42,79 @@ in a surplus.
 | Maintain | 2.0 g / kg            |
 | Bulk     | 1.8 g / kg            |
 
-## Then fat, then carbs
-
-Set fat at **0.7–0.9 g per kg of bodyweight** (never under 0.5 g/kg) to support
-hormones, then fill the rest with carbs, your main training fuel, and the one
-macro you move when calories need to change.
+**Per kilogram of lean mass**: better when you carry a lot of fat, because fat
+tissue doesn't need protein to maintain itself. Use **1.8–2.5 g per kg of lean
+mass**, with 2.2 as the default. Example: 100 kg at 20% body fat carries 20 kg
+of fat, so lean mass is 80 kg and 80 × 2.2 = **176 g** a day.
 
 ```
-protein_kcal = protein_g × 4
-fat_kcal     = fat_g × 9        (fat_g = 0.7–0.9 × kg)
-carb_kcal    = calories − protein_kcal − fat_kcal
-carbs_g      = carb_kcal / 4
+lean_kg   = weight_kg × (1 − body_fat)
+protein_g = lean_kg × 2.2
 ```
 
 <Callout type="tip">
-  The [macro calculator](/tools/macro-calculator) does all of this for you:
-  enter your calories, weight and goal and it returns grams per macro.
+  176 g of protein is not 176 g of chicken: meat and fish hold roughly 20–25 g
+  per 100 g. Enter your body fat in the
+  [macro calculator](/tools/macro-calculator) and it switches to the lean-mass
+  method on its own.
 </Callout>
+
+## Then fat
+
+Fat supports hormones and vitamin absorption. Set it in grams per kg of
+bodyweight, not as a percentage of calories.
+
+| Fat (g / kg) | When                                               |
+| ------------ | -------------------------------------------------- |
+| 0.5          | The floor: never lower, not even in a cut          |
+| 0.7          | Cutting, so more of the budget goes to carbs       |
+| 0.8          | Maintaining or recomposing                         |
+| 0.9–1        | Bulking                                            |
+| 1.2–1.5      | Hard-gainers who struggle to eat enough            |
+| 1.5–2        | Low-carb diets, where fat has to fill the calories |
+
+The first four rows are what the macro calculator uses. If you carry a lot of
+fat, sizing fat on lean mass instead works too; it just leaves a little more
+room for carbs.
+
+## Then carbs fill the rest
+
+Whatever calories remain after protein and fat become carbohydrate. Keeping fat
+toward the low end when cutting lands more of the budget here, and carbs are
+what fuel hard sessions.
+
+| Carbs (g / kg) | Profile                 |
+| -------------- | ----------------------- |
+| 2 or less      | Keto / low-carb         |
+| 2–3            | Low                     |
+| 3–5            | Moderate: most lifters  |
+| 5–8            | High: intense endurance |
+| 8–10           | Ultra-endurance events  |
+
+## Worked example: 2,500 kcal
+
+100 kg, 20% body fat (80 kg lean), cutting on 2,500 kcal:
+
+```
+protein = 80 × 2.2  = 176 g → 704 kcal
+fat     = 100 × 0.7 = 70 g  → 630 kcal
+carbs   = (2500 − 704 − 630) ÷ 4 ≈ 292 g
+```
+
+That is the split the [macro calculator](/tools/macro-calculator) returns for
+the same inputs.
 
 ## Consistency beats precision
 
 You don't need to hit grams exactly. Land within ~5–10 g of protein and keep
 calories in range most days, and you'll progress. Track for a few weeks to build
-intuition, not forever.
+intuition, not forever; [tracking food](/docs/tracking-food) covers raw versus
+cooked weights and reading labels.
+
+## Related
+
+- [BMR & TDEE explained](/docs/tdee): where the calorie target comes from.
+- [Personalizing your diet](/docs/personalizing-your-diet): adjusting once the
+  plan is running.
+- [Tracking food](/docs/tracking-food): logging so the grams actually mean
+  something.

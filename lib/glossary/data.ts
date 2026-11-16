@@ -67,6 +67,15 @@ export const GLOSSARY: GlossaryTerm[] = [
     related: ["personalizing-your-diet"],
   },
   {
+    id: "adaptive-thermogenesis",
+    term: { en: "Adaptive thermogenesis", es: "Termogénesis adaptativa" },
+    def: {
+      en: "Expenditure falling as you lose weight and rising as you gain, beyond what the size change alone explains: yesterday's deficit becomes today's maintenance.",
+      es: "El gasto que baja al perder peso y sube al ganarlo, más allá de lo que explica el cambio de tamaño: el déficit de ayer se vuelve el mantenimiento de hoy.",
+    },
+    related: ["adaptive-thermogenesis", "tdee"],
+  },
+  {
     id: "macros",
     term: { en: "Macros", es: "Macros" },
     def: {
@@ -83,6 +92,15 @@ export const GLOSSARY: GlossaryTerm[] = [
       es: "El macronutriente que construye y repara músculo. Quienes entrenan apuntan a ~1.6–2.2 g por kg de peso.",
     },
     related: ["macros"],
+  },
+  {
+    id: "insulin-sensitivity",
+    term: { en: "Insulin sensitivity", es: "Sensibilidad a la insulina" },
+    def: {
+      en: "How strongly your cells respond to insulin. Training, muscle, sleep and losing excess fat raise it.",
+      es: "Qué tan fuerte responden tus células a la insulina. Entrenar, el músculo, dormir y perder la grasa que sobra la suben.",
+    },
+    related: ["insulin-sensitivity", "diet-quality"],
   },
   {
     id: "bmi",
@@ -128,6 +146,15 @@ export const GLOSSARY: GlossaryTerm[] = [
       es: "Todo en tu cuerpo que no es grasa: músculo, hueso, órganos y agua.",
     },
     related: ["ffmi-guide", "body-fat-guide"],
+  },
+  {
+    id: "somatotype",
+    term: { en: "Somatotype", es: "Somatotipo" },
+    def: {
+      en: "The ectomorph, mesomorph or endomorph label: a snapshot of fat, muscle and frame that changes as you train, not a plan.",
+      es: "La etiqueta de ectomorfo, mesomorfo o endomorfo: una foto de grasa, músculo y complexión que cambia al entrenar, no un plan.",
+    },
+    related: ["somatotypes"],
   },
   {
     id: "one-rep-max",
@@ -227,5 +254,14 @@ export const GLOSSARY: GlossaryTerm[] = [
       es: "Puntuaciones que comparan totales de powerlifting entre pesos corporales, para clasificar de forma justa a personas de distinto tamaño.",
     },
     related: ["one-rep-max-guide"],
+  },
+  {
+    id: "sleep-hygiene",
+    term: { en: "Sleep hygiene", es: "Higiene del sueño" },
+    def: {
+      en: "The daily habits that set up good sleep: a fixed wake time, morning light, caffeine and alcohol cut-offs, a cool dark room.",
+      es: "Los hábitos diarios que preparan un buen sueño: hora fija de despertar, luz por la mañana, límites para la cafeína y el alcohol, un cuarto fresco y oscuro.",
+    },
+    related: ["sleep-quality", "sleep"],
   },
 ];

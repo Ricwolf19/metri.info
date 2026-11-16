@@ -51,6 +51,14 @@ const nextConfig: NextConfig = {
         destination: "/es/descargar",
         permanent: true,
       },
+      // The app's guide on the same topic is `metabolic-adaptation`; its
+      // links to the web land on the web's one guide for it. Temporary, so
+      // either side can still adopt the other's slug.
+      ...(["/docs", "/es/docs"] as const).map((docs) => ({
+        source: `${docs}/metabolic-adaptation`,
+        destination: `${docs}/adaptive-thermogenesis`,
+        permanent: false,
+      })),
     ];
   },
   async rewrites() {
