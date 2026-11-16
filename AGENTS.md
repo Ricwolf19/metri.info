@@ -110,6 +110,27 @@ critical flows on a real iPhone before a release.
   "history")` is the one switch if that ever narrows). It recommends guides, it never locks one.
   Writing rule, held by `content.test.ts`: the right answer must not be the longest option more
   often than chance, and never by a wide margin.
+- **Calculator inputs**: a field a formula ignores declares `usedWhen` (`lib/calculators/types.ts`;
+  TDEE body fat is Katch-McArdle only, Navy hip is women only) and renders disabled with its reason,
+  never as an error. Share / Save / Compare sit at the top of the calculator with fixed-width labels
+  (`StableLabel`), so nothing above the inputs moves while they change. Signed-in prefill is
+  `PREFILL` (field → fact, `lib/calculators/prefill.ts`) over `buildCalcFacts` (`facts.ts`): a
+  synced reading beats the profile, the profile beats the user's last saved calculation, and a fact
+  only lands if the field accepts it.
+- **Forms** use react-hook-form: Save stays disabled until `isDirty`, a successful save calls
+  `reset(values)` so the same values are never written twice, `isSubmitting` is the only pending
+  flag, and server errors go through `setError` (`root.server` for the form, the field otherwise).
+  Live calculators are not forms: their state is the URL.
+- **Roadmap** (`/roadmap`, `lib/roadmap`): a ten-question diagnostic → `recommend()` (phase, pace,
+  block length from the `choosing-your-phase` tables: body fat sets the direction, experience the
+  pace, a long diet earns a maintenance block first) → ordered steps in four stages, each linking a
+  guide or calculator. Steps are ticked by hand or by `Evidence` the account shows (saved calcs,
+  quiz attempts, synced weigh-ins and tape). A visitor's plan lives in localStorage; an account's
+  only in the `roadmap` row (a shared browser never hands one person's plan to the next), and a
+  visitor's plan moves to the account once at sign-in. A failed read is never treated as "no
+  plan", or the next save would overwrite it. `parseRoadmap` guards both stores; answers, step ids
+  and phases are a stored format, so add values, never rename them. Guides a step links must exist in both
+  locales (`ROADMAP_DOCS`).
 - **Entitlements**: gate with `can(plan, feature)` (`lib/entitlements.ts`), never
   `plan === "premium"`. `subscription` is the billing source of truth; `user.plan` is a denormalized
   cache the client can never write (`input: false`).
