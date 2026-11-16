@@ -40,6 +40,7 @@ const COLUMNS: Column[] = [
       { id: "docs", key: "nav.docs" },
       { id: "download", key: "nav.download" },
       { id: "quiz", key: "quiz.title" },
+      { id: "roadmap", key: "roadmap.title" },
     ],
   },
   {

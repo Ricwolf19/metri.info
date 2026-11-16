@@ -263,6 +263,7 @@ export const en = {
   "plans.ctaCreate": "Create a free account",
   "plans.ctaPremium": "Request Premium access",
 
+  "quiz.roadmapCta": "Turn this into a plan: build your roadmap",
   "quiz.title": "Knowledge check",
   "quiz.eyebrow": "Free · 32 questions · about 15 minutes",
   "quiz.seoDescription":
@@ -1298,6 +1299,219 @@ export const en = {
   "monthlyTips.diet.title": "Keep your diet simple",
   "monthlyTips.diet.body":
     "Two levers matter most: total calories and total protein. Get those right before worrying about the rest.",
+  "nav.roadmap": "Roadmap",
+  "roadmap.title": "Your fitness roadmap",
+  "roadmap.eyebrow": "Free · 10 questions · 3 minutes",
+  "roadmap.seoDescription":
+    "Cut, bulk or recomp? Answer ten questions and get a step-by-step plan: your phase, how fast to go, what to do this week and what comes after.",
+  "roadmap.intro.title": "Start from where you are",
+  "roadmap.intro.body":
+    "Ten quick questions. Your body fat sets the direction, your experience sets the pace and your habits decide what to fix first. Every step links the guide or calculator that does the work.",
+  "roadmap.intro.start": "Start",
+  "roadmap.intro.guest":
+    "Your answers stay in this browser. Sign in to keep your roadmap on every device.",
+  "roadmap.q.progress": "Question {n} of {total}",
+  "roadmap.q.required": "Pick one to continue.",
+  "roadmap.q.back": "Back",
+  "roadmap.q.next": "Next",
+  "roadmap.q.finish": "See my plan",
+  "roadmap.q.prefilled":
+    "Filled in from your account. Change it if it's out of date.",
+  "roadmap.q.goal": "What do you want most right now?",
+  "roadmap.q.goal.lose_fat": "Lose fat",
+  "roadmap.q.goal.lose_fat.desc": "Get leaner and keep the muscle",
+  "roadmap.q.goal.build_muscle": "Build muscle",
+  "roadmap.q.goal.build_muscle.desc": "Get bigger and stronger",
+  "roadmap.q.goal.both": "Both",
+  "roadmap.q.goal.both.desc": "Lose fat and build muscle",
+  "roadmap.q.goal.maintain": "Maintain and perform",
+  "roadmap.q.goal.maintain.desc": "Hold my weight and train better",
+  "roadmap.q.goal.unsure": "Not sure",
+  "roadmap.q.goal.unsure.desc": "Tell me where to start",
+  "roadmap.q.sex": "Which body-fat ranges apply to you?",
+  "roadmap.q.sex.hint":
+    "Healthy ranges differ: women carry more essential fat.",
+  "roadmap.q.sex.male": "Male",
+  "roadmap.q.sex.female": "Female",
+  "roadmap.q.bodyFat": "What's your body fat?",
+  "roadmap.q.bodyFat.hint": "Body fat decides the phase, not your body type.",
+  "roadmap.q.bodyFat.somatotypes": "Why not ecto, meso or endo?",
+  "roadmap.q.bodyFat.known": "I know my number",
+  "roadmap.q.bodyFat.estimate": "Estimate it for me",
+  "roadmap.q.bodyFat.label": "Body fat",
+  "roadmap.q.bodyFat.range": "Enter a value from {min} to {max}%.",
+  "roadmap.q.bodyFat.measure": "Measure it with the body-fat calculator",
+  "roadmap.q.band.lean": "Lean",
+  "roadmap.q.band.lean.desc": "Abs show, veins on the arms",
+  "roadmap.q.band.athletic": "Athletic",
+  "roadmap.q.band.athletic.desc": "An outline of abs, a flat waist",
+  "roadmap.q.band.average": "Average",
+  "roadmap.q.band.average.desc": "No abs, a soft waist",
+  "roadmap.q.band.above": "Above average",
+  "roadmap.q.band.above.desc": "Fat gathers at the waist and hips",
+  "roadmap.q.band.high": "High",
+  "roadmap.q.band.high.desc": "A noticeable belly or hips",
+  "roadmap.q.weight": "What do you weigh?",
+  "roadmap.q.weight.hint":
+    "Optional. With it, the plan speaks in kilograms and calories instead of percentages.",
+  "roadmap.q.weight.label": "Body weight",
+  "roadmap.q.weight.range":
+    "Enter a value from {min} to {max} {unit}, or leave it empty.",
+  "roadmap.q.experience": "How long have you trained consistently?",
+  "roadmap.q.experience.none": "Never",
+  "roadmap.q.experience.beginner": "Less than a year",
+  "roadmap.q.experience.intermediate": "One to three years",
+  "roadmap.q.experience.advanced": "More than three years",
+  "roadmap.q.trainingNow": "How are you training right now?",
+  "roadmap.q.trainingNow.none": "I'm not training",
+  "roadmap.q.trainingNow.irregular": "On and off",
+  "roadmap.q.trainingNow.consistent": "Three or more days a week",
+  "roadmap.q.tracking": "Do you track what you eat?",
+  "roadmap.q.tracking.never": "Never",
+  "roadmap.q.tracking.sometimes": "Sometimes",
+  "roadmap.q.tracking.now": "Yes, right now",
+  "roadmap.q.sleep": "How much do you sleep most nights?",
+  "roadmap.q.sleep.under6": "Under six hours",
+  "roadmap.q.sleep.six_seven": "Six to seven hours",
+  "roadmap.q.sleep.seven_plus": "Seven hours or more",
+  "roadmap.q.dietHistory": "Have you been dieting lately?",
+  "roadmap.q.dietHistory.none": "No",
+  "roadmap.q.dietHistory.short": "Yes, for less than three months",
+  "roadmap.q.dietHistory.long": "Yes, three months or more without a break",
+  "roadmap.q.caution": "Does any of this apply to you?",
+  "roadmap.q.caution.hint":
+    "A medical condition such as diabetes or heart disease, pregnancy or breastfeeding, being under 18, or a history of disordered eating.",
+  "roadmap.q.caution.yes": "Yes",
+  "roadmap.q.caution.no": "No",
+  "roadmap.phase.cut": "Cut",
+  "roadmap.phase.bulk": "Lean bulk",
+  "roadmap.phase.recomp": "Recomposition",
+  "roadmap.phase.maintain": "Maintenance",
+  "roadmap.phase.cut.line":
+    "Lose fat at a steady pace while you keep training hard.",
+  "roadmap.phase.bulk.line": "Eat a small surplus and push your lifts up.",
+  "roadmap.phase.recomp.line":
+    "Eat at maintenance and train hard: less fat, more muscle, same weight.",
+  "roadmap.phase.maintain.line":
+    "Hold your weight and put the effort into training and habits.",
+  "roadmap.reason.bfHigh":
+    "At about {bf}% body fat a deficit comes first: a surplus from here goes mostly to fat.",
+  "roadmap.reason.bfModerate":
+    "At about {bf}% you're above the band where a surplus builds muscle well. Cut back into it; you'll still gain strength on the way.",
+  "roadmap.reason.optimalCut":
+    "At about {bf}% you're inside the healthy band, so the cut is short and gentle, down to the band's floor.",
+  "roadmap.reason.optimalRecomp":
+    "At about {bf}% you're inside the healthy band. Eating at maintenance and training hard swaps fat for muscle without picking a direction.",
+  "roadmap.reason.leanBulk":
+    "At about {bf}% you have room to gain: a slow surplus turns into muscle, not fat.",
+  "roadmap.reason.leanMaintain":
+    "At about {bf}% you're already lean. Cutting further costs recovery, strength and sleep, so hold here and train.",
+  "roadmap.reason.notTraining":
+    "You're not training yet, so the first four weeks are training at maintenance: food without the stimulus builds nothing.",
+  "roadmap.reason.longDiet":
+    "After months in a deficit your expenditure has drifted down. Two weeks at maintenance first makes the next block work.",
+  "roadmap.reason.caution":
+    "Because of your answer to the last question, the plan stays conservative. Check it with your doctor or a registered dietitian before you start.",
+  "roadmap.stat.bodyFat": "Body fat",
+  "roadmap.stat.pace": "Pace",
+  "roadmap.stat.paceKg": "{kg} kg a week",
+  "roadmap.stat.pacePct": "{pct}% of body weight a week",
+  "roadmap.stat.paceHold": "Hold your weight",
+  "roadmap.stat.calories": "Calories",
+  "roadmap.stat.kcal": "≈ {kcal} kcal a day",
+  "roadmap.stat.kcalFrom": "Maintenance {maintenance} kcal, {delta}",
+  "roadmap.stat.kcalDelta": "{delta} kcal a day from maintenance",
+  "roadmap.stat.kcalHold": "At maintenance",
+  "roadmap.stat.block": "Block",
+  "roadmap.stat.weeks": "{weeks} weeks",
+  "roadmap.stat.dates": "{start} to {end}",
+  "roadmap.totalWeeks":
+    "Getting to about {target}% takes around {weeks} weeks. Run it in blocks of {block} with two weeks at maintenance between them.",
+  "roadmap.lead.foundations":
+    "First: four weeks of training at maintenance, until {date}.",
+  "roadmap.lead.dietBreak": "First: two weeks at maintenance, until {date}.",
+  "roadmap.why": "Why this plan",
+  "roadmap.whyLinks": "Read more:",
+  "roadmap.link.phase": "How the phase is chosen",
+  "roadmap.weekOf": "Week {week} of {total}",
+  "roadmap.progress": "{done} of {total} steps",
+  "roadmap.next": "Next step",
+  "roadmap.allDone":
+    "Every step is done. Retake the diagnostic to plan your next phase.",
+  "roadmap.youAreHere": "You are here",
+  "roadmap.stage.baseline": "Know where you start",
+  "roadmap.stage.setup": "Set up your phase",
+  "roadmap.stage.run": "Run it week by week",
+  "roadmap.stage.finish": "Finish and decide what's next",
+  "roadmap.markDone": "Mark as done",
+  "roadmap.undo": "Undo",
+  "roadmap.doneOn": "Done {date}",
+  "roadmap.detectedOn": "Seen in your account {date}",
+  "roadmap.retake": "Retake the diagnostic",
+  "roadmap.retakeConfirm": "Start a new plan",
+  "roadmap.retakeHint": "This plan moves to your history.",
+  "roadmap.cancel": "Cancel",
+  "roadmap.history.title": "What you've done",
+  "roadmap.history.empty":
+    "Nothing yet. Tick a step when you've done it; with an account, saved calculations, the knowledge check and synced weigh-ins tick steps for you.",
+  "roadmap.history.started": "Started this plan",
+  "roadmap.history.past": "Earlier plans",
+  "roadmap.history.pastLine": "{done} of {total} steps",
+  "roadmap.guestNote": "Saved in this browser.",
+  "roadmap.guestSignIn": "Sign in to keep it on every device.",
+  "roadmap.loadError":
+    "Couldn't load your roadmap. Check your connection and try again.",
+  "roadmap.retry": "Try again",
+  "roadmap.saveError":
+    "Couldn't save that change to your account. Check your connection and try again.",
+  "roadmap.step.measure": "Take your starting measurements",
+  "roadmap.step.measure.body":
+    "Weigh in every morning for a week and use the average, measure your waist (and hips) and take photos in the same light. Every later decision is compared against this.",
+  "roadmap.step.maintenance": "Find your maintenance calories",
+  "roadmap.step.maintenance.body":
+    "Estimate your TDEE, then check it against two weeks of eating and weighing: if your weight holds, that intake is your maintenance.",
+  "roadmap.step.knowledge": "Take the knowledge check",
+  "roadmap.step.knowledge.body":
+    "Thirty-two questions find the gaps that would trip up this phase and point to the guides that close them.",
+  "roadmap.step.sleep": "Fix your sleep first",
+  "roadmap.step.sleep.body":
+    "Under seven hours, hunger rises, recovery drops and more of the weight you lose is muscle. Start with a fixed wake time.",
+  "roadmap.step.tracking": "Learn to track your food",
+  "roadmap.step.tracking.body":
+    "Two weeks of weighing and logging everything teaches you portions for good and makes every later adjustment precise.",
+  "roadmap.step.dietBreak": "Two weeks at maintenance",
+  "roadmap.step.dietBreak.body":
+    "After a long diet, eat at maintenance for two weeks before the next block: hunger settles, training recovers and the deficit works again.",
+  "roadmap.step.foundations": "Train for four weeks at maintenance",
+  "roadmap.step.foundations.body":
+    "Pick a program, learn the lifts and log every session. Food only builds what training asks for.",
+  "roadmap.step.calories": "Set your phase calories",
+  "roadmap.step.calories.body":
+    "Set your daily calories from your maintenance and the pace in your plan, then hold them for two weeks before judging.",
+  "roadmap.step.protein": "Set your protein target",
+  "roadmap.step.protein.body":
+    "Protein protects muscle in a cut and builds it in a surplus. Hit it every day before anything else.",
+  "roadmap.step.training": "Follow a program with progressive overload",
+  "roadmap.step.training.body":
+    "Train each muscle about twice a week, add reps or load over time and log it, so you can tell real progress from noise.",
+  "roadmap.step.quality": "Keep the surplus clean",
+  "roadmap.step.quality.body":
+    "Mostly whole foods, with the carbs around training, keep a surplus going to muscle instead of fat.",
+  "roadmap.step.weighins": "Weigh in daily, judge weekly",
+  "roadmap.step.weighins.body":
+    "Same time, same conditions. Compare weekly averages, never single days.",
+  "roadmap.step.checkins": "Measure every two weeks",
+  "roadmap.step.checkins.body":
+    "The tape and photos tell fat from water. Read the scale and the tape together.",
+  "roadmap.step.adjust": "Adjust when the trend stalls",
+  "roadmap.step.adjust.body":
+    "Two flat weeks in a row: change one thing by about 10% and give it two more weeks.",
+  "roadmap.step.transition": "End the phase on purpose",
+  "roadmap.step.transition.body":
+    "Finish a cut with two weeks at maintenance; finish a bulk when your waist grows faster than your lifts.",
+  "roadmap.step.reassess": "Reassess and plan the next phase",
+  "roadmap.step.reassess.body":
+    "Retake the diagnostic with your new numbers. This plan moves to your history and the next one starts.",
 } as const;
 
 export type TranslationKey = keyof typeof en;

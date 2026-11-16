@@ -278,6 +278,7 @@ export const es: Record<TranslationKey, string> = {
   "plans.ctaCreate": "Crear una cuenta gratis",
   "plans.ctaPremium": "Solicitar acceso Premium",
 
+  "quiz.roadmapCta": "Conviértelo en un plan: arma tu ruta",
   "quiz.title": "Test de conocimientos",
   "quiz.eyebrow": "Gratis · 32 preguntas · unos 15 minutos",
   "quiz.seoDescription":
@@ -1330,4 +1331,221 @@ export const es: Record<TranslationKey, string> = {
   "monthlyTips.diet.title": "Mantén simple tu dieta",
   "monthlyTips.diet.body":
     "Dos palancas importan más: calorías totales y proteína total. Ajústalas antes de preocuparte por lo demás.",
+  "nav.roadmap": "Mi ruta",
+  "roadmap.title": "Tu ruta fitness",
+  "roadmap.eyebrow": "Gratis · 10 preguntas · 3 minutos",
+  "roadmap.seoDescription":
+    "¿Definición, volumen o recomposición? Responde diez preguntas y obtén un plan paso a paso: tu fase, a qué ritmo ir, qué hacer esta semana y qué sigue después.",
+  "roadmap.intro.title": "Empieza desde donde estás",
+  "roadmap.intro.body":
+    "Diez preguntas rápidas. Tu grasa corporal marca la dirección, tu experiencia marca el ritmo y tus hábitos deciden qué corregir primero. Cada paso enlaza la guía o la calculadora que hace el trabajo.",
+  "roadmap.intro.start": "Empezar",
+  "roadmap.intro.guest":
+    "Tus respuestas se quedan en este navegador. Inicia sesión para tener tu ruta en todos tus dispositivos.",
+  "roadmap.q.progress": "Pregunta {n} de {total}",
+  "roadmap.q.required": "Elige una opción para continuar.",
+  "roadmap.q.back": "Atrás",
+  "roadmap.q.next": "Siguiente",
+  "roadmap.q.finish": "Ver mi plan",
+  "roadmap.q.prefilled":
+    "Rellenado desde tu cuenta. Cámbialo si ya no está al día.",
+  "roadmap.q.goal": "¿Qué quieres más ahora mismo?",
+  "roadmap.q.goal.lose_fat": "Perder grasa",
+  "roadmap.q.goal.lose_fat.desc": "Definir y conservar el músculo",
+  "roadmap.q.goal.build_muscle": "Ganar músculo",
+  "roadmap.q.goal.build_muscle.desc": "Crecer y ser más fuerte",
+  "roadmap.q.goal.both": "Ambas",
+  "roadmap.q.goal.both.desc": "Perder grasa y ganar músculo",
+  "roadmap.q.goal.maintain": "Mantener y rendir",
+  "roadmap.q.goal.maintain.desc": "Conservar mi peso y entrenar mejor",
+  "roadmap.q.goal.unsure": "No lo sé",
+  "roadmap.q.goal.unsure.desc": "Dime por dónde empezar",
+  "roadmap.q.sex": "¿Qué rangos de grasa corporal te aplican?",
+  "roadmap.q.sex.hint":
+    "Los rangos sanos cambian: las mujeres tienen más grasa esencial.",
+  "roadmap.q.sex.male": "Hombre",
+  "roadmap.q.sex.female": "Mujer",
+  "roadmap.q.bodyFat": "¿Cuál es tu grasa corporal?",
+  "roadmap.q.bodyFat.hint":
+    "La grasa corporal decide la fase, no tu tipo de cuerpo.",
+  "roadmap.q.bodyFat.somatotypes": "¿Por qué no ecto, meso o endo?",
+  "roadmap.q.bodyFat.known": "Conozco mi número",
+  "roadmap.q.bodyFat.estimate": "Estímalo por mí",
+  "roadmap.q.bodyFat.label": "Grasa corporal",
+  "roadmap.q.bodyFat.range": "Escribe un valor entre {min} y {max} %.",
+  "roadmap.q.bodyFat.measure": "Mídela con la calculadora de grasa corporal",
+  "roadmap.q.band.lean": "Definido",
+  "roadmap.q.band.lean.desc":
+    "Se marcan los abdominales y las venas de los brazos",
+  "roadmap.q.band.athletic": "Atlético",
+  "roadmap.q.band.athletic.desc": "Un contorno de abdominales, cintura plana",
+  "roadmap.q.band.average": "Promedio",
+  "roadmap.q.band.average.desc": "Sin abdominales marcados, cintura suave",
+  "roadmap.q.band.above": "Arriba del promedio",
+  "roadmap.q.band.above.desc": "La grasa se acumula en cintura y cadera",
+  "roadmap.q.band.high": "Alto",
+  "roadmap.q.band.high.desc": "Abdomen o cadera notables",
+  "roadmap.q.weight": "¿Cuánto pesas?",
+  "roadmap.q.weight.hint":
+    "Opcional. Con tu peso, el plan habla en kilos y calorías en vez de porcentajes.",
+  "roadmap.q.weight.label": "Peso corporal",
+  "roadmap.q.weight.range":
+    "Escribe un valor entre {min} y {max} {unit}, o déjalo vacío.",
+  "roadmap.q.experience": "¿Cuánto tiempo llevas entrenando con constancia?",
+  "roadmap.q.experience.none": "Nunca he entrenado",
+  "roadmap.q.experience.beginner": "Menos de un año",
+  "roadmap.q.experience.intermediate": "De uno a tres años",
+  "roadmap.q.experience.advanced": "Más de tres años",
+  "roadmap.q.trainingNow": "¿Cómo estás entrenando ahora?",
+  "roadmap.q.trainingNow.none": "No estoy entrenando",
+  "roadmap.q.trainingNow.irregular": "A ratos",
+  "roadmap.q.trainingNow.consistent": "Tres días o más por semana",
+  "roadmap.q.tracking": "¿Registras lo que comes?",
+  "roadmap.q.tracking.never": "Nunca",
+  "roadmap.q.tracking.sometimes": "A veces",
+  "roadmap.q.tracking.now": "Sí, ahora mismo",
+  "roadmap.q.sleep": "¿Cuánto duermes la mayoría de las noches?",
+  "roadmap.q.sleep.under6": "Menos de seis horas",
+  "roadmap.q.sleep.six_seven": "De seis a siete horas",
+  "roadmap.q.sleep.seven_plus": "Siete horas o más",
+  "roadmap.q.dietHistory": "¿Has estado a dieta últimamente?",
+  "roadmap.q.dietHistory.none": "No",
+  "roadmap.q.dietHistory.short": "Sí, menos de tres meses",
+  "roadmap.q.dietHistory.long": "Sí, tres meses o más sin descanso",
+  "roadmap.q.caution": "¿Te aplica algo de esto?",
+  "roadmap.q.caution.hint":
+    "Una condición médica como diabetes o enfermedad del corazón, embarazo o lactancia, tener menos de 18 años, o antecedentes de trastornos de la conducta alimentaria.",
+  "roadmap.q.caution.yes": "Sí",
+  "roadmap.q.caution.no": "No",
+  "roadmap.phase.cut": "Definición",
+  "roadmap.phase.bulk": "Volumen limpio",
+  "roadmap.phase.recomp": "Recomposición",
+  "roadmap.phase.maintain": "Mantenimiento",
+  "roadmap.phase.cut.line":
+    "Pierde grasa a un ritmo constante mientras sigues entrenando fuerte.",
+  "roadmap.phase.bulk.line": "Come un superávit pequeño y sube tus marcas.",
+  "roadmap.phase.recomp.line":
+    "Come en mantenimiento y entrena fuerte: menos grasa, más músculo, el mismo peso.",
+  "roadmap.phase.maintain.line":
+    "Conserva tu peso y pon el esfuerzo en el entrenamiento y los hábitos.",
+  "roadmap.reason.bfHigh":
+    "Con cerca de {bf} % de grasa, primero va un déficit: un superávit desde aquí se va sobre todo a grasa.",
+  "roadmap.reason.bfModerate":
+    "Con cerca de {bf} % estás por encima del rango donde un superávit construye músculo bien. Vuelve a él con una definición; seguirás ganando fuerza en el camino.",
+  "roadmap.reason.optimalCut":
+    "Con cerca de {bf} % ya estás dentro del rango sano, así que la definición es corta y suave, hasta el piso del rango.",
+  "roadmap.reason.optimalRecomp":
+    "Con cerca de {bf} % ya estás dentro del rango sano. Comer en mantenimiento y entrenar fuerte cambia grasa por músculo sin elegir una dirección.",
+  "roadmap.reason.leanBulk":
+    "Con cerca de {bf} % tienes margen para ganar: un superávit lento se vuelve músculo, no grasa.",
+  "roadmap.reason.leanMaintain":
+    "Con cerca de {bf} % ya estás definido. Bajar más cuesta recuperación, fuerza y sueño, así que mantente y entrena.",
+  "roadmap.reason.notTraining":
+    "Todavía no entrenas, así que las primeras cuatro semanas son entrenamiento en mantenimiento: la comida sin el estímulo no construye nada.",
+  "roadmap.reason.longDiet":
+    "Tras meses en déficit, tu gasto bajó. Dos semanas en mantenimiento primero hacen que el siguiente bloque funcione.",
+  "roadmap.reason.caution":
+    "Por tu respuesta a la última pregunta, el plan es conservador. Revísalo con tu médico o con un nutriólogo antes de empezar.",
+  "roadmap.stat.bodyFat": "Grasa corporal",
+  "roadmap.stat.pace": "Ritmo",
+  "roadmap.stat.paceKg": "{kg} kg por semana",
+  "roadmap.stat.pacePct": "{pct} % del peso por semana",
+  "roadmap.stat.paceHold": "Mantén tu peso",
+  "roadmap.stat.calories": "Calorías",
+  "roadmap.stat.kcal": "≈ {kcal} kcal al día",
+  "roadmap.stat.kcalFrom": "Mantenimiento {maintenance} kcal, {delta}",
+  "roadmap.stat.kcalDelta": "{delta} kcal al día respecto a tu mantenimiento",
+  "roadmap.stat.kcalHold": "En mantenimiento",
+  "roadmap.stat.block": "Bloque",
+  "roadmap.stat.weeks": "{weeks} semanas",
+  "roadmap.stat.dates": "Del {start} al {end}",
+  "roadmap.totalWeeks":
+    "Llegar a cerca de {target} % toma unas {weeks} semanas. Hazlo en bloques de {block} con dos semanas en mantenimiento entre ellos.",
+  "roadmap.lead.foundations":
+    "Primero: cuatro semanas entrenando en mantenimiento, hasta el {date}.",
+  "roadmap.lead.dietBreak":
+    "Primero: dos semanas en mantenimiento, hasta el {date}.",
+  "roadmap.why": "Por qué este plan",
+  "roadmap.whyLinks": "Lee más:",
+  "roadmap.link.phase": "Cómo se elige la fase",
+  "roadmap.weekOf": "Semana {week} de {total}",
+  "roadmap.progress": "{done} de {total} pasos",
+  "roadmap.next": "Siguiente paso",
+  "roadmap.allDone":
+    "Completaste todos los pasos. Repite el diagnóstico para planear tu siguiente fase.",
+  "roadmap.youAreHere": "Estás aquí",
+  "roadmap.stage.baseline": "Conoce tu punto de partida",
+  "roadmap.stage.setup": "Prepara tu fase",
+  "roadmap.stage.run": "Llévala semana a semana",
+  "roadmap.stage.finish": "Ciérrala y decide qué sigue",
+  "roadmap.markDone": "Marcar como hecho",
+  "roadmap.undo": "Deshacer",
+  "roadmap.doneOn": "Hecho el {date}",
+  "roadmap.detectedOn": "Visto en tu cuenta el {date}",
+  "roadmap.retake": "Repetir el diagnóstico",
+  "roadmap.retakeConfirm": "Empezar un plan nuevo",
+  "roadmap.retakeHint": "Este plan pasa a tu historial.",
+  "roadmap.cancel": "Cancelar",
+  "roadmap.history.title": "Lo que has hecho",
+  "roadmap.history.empty":
+    "Nada todavía. Marca un paso cuando lo hagas; con una cuenta, tus cálculos guardados, el test de conocimientos y los pesajes sincronizados marcan pasos por ti.",
+  "roadmap.history.started": "Empezaste este plan",
+  "roadmap.history.past": "Planes anteriores",
+  "roadmap.history.pastLine": "{done} de {total} pasos",
+  "roadmap.guestNote": "Guardado en este navegador.",
+  "roadmap.guestSignIn":
+    "Inicia sesión para tenerlo en todos tus dispositivos.",
+  "roadmap.loadError":
+    "No pudimos cargar tu ruta. Revisa tu conexión e inténtalo de nuevo.",
+  "roadmap.retry": "Reintentar",
+  "roadmap.saveError":
+    "No pudimos guardar ese cambio en tu cuenta. Revisa tu conexión e inténtalo de nuevo.",
+  "roadmap.step.measure": "Toma tus medidas de inicio",
+  "roadmap.step.measure.body":
+    "Pésate cada mañana durante una semana y usa el promedio, mide tu cintura (y cadera) y toma fotos con la misma luz. Cada decisión posterior se compara contra esto.",
+  "roadmap.step.maintenance": "Encuentra tus calorías de mantenimiento",
+  "roadmap.step.maintenance.body":
+    "Estima tu TDEE y compruébalo con dos semanas comiendo y pesándote: si tu peso se mantiene, esa ingesta es tu mantenimiento.",
+  "roadmap.step.knowledge": "Haz el test de conocimientos",
+  "roadmap.step.knowledge.body":
+    "Treinta y dos preguntas encuentran los huecos que frenarían esta fase y te llevan a las guías que los cierran.",
+  "roadmap.step.sleep": "Arregla tu sueño primero",
+  "roadmap.step.sleep.body":
+    "Con menos de siete horas sube el hambre, baja la recuperación y más del peso que pierdes es músculo. Empieza con una hora fija para despertar.",
+  "roadmap.step.tracking": "Aprende a registrar tu comida",
+  "roadmap.step.tracking.body":
+    "Dos semanas pesando y registrando todo te enseñan las porciones para siempre y hacen precisos los ajustes que vengan.",
+  "roadmap.step.dietBreak": "Dos semanas en mantenimiento",
+  "roadmap.step.dietBreak.body":
+    "Después de una dieta larga, come en mantenimiento dos semanas antes del siguiente bloque: el hambre se calma, el entrenamiento se recupera y el déficit vuelve a funcionar.",
+  "roadmap.step.foundations": "Entrena cuatro semanas en mantenimiento",
+  "roadmap.step.foundations.body":
+    "Elige un programa, aprende los ejercicios y registra cada sesión. La comida solo construye lo que el entrenamiento pide.",
+  "roadmap.step.calories": "Fija las calorías de tu fase",
+  "roadmap.step.calories.body":
+    "Fija tus calorías diarias a partir de tu mantenimiento y el ritmo de tu plan, y mantenlas dos semanas antes de juzgar.",
+  "roadmap.step.protein": "Fija tu meta de proteína",
+  "roadmap.step.protein.body":
+    "La proteína protege el músculo en definición y lo construye en superávit. Cúmplela cada día antes que cualquier otra cosa.",
+  "roadmap.step.training": "Sigue un programa con sobrecarga progresiva",
+  "roadmap.step.training.body":
+    "Entrena cada músculo unas dos veces por semana, suma repeticiones o peso con el tiempo y regístralo, para distinguir el progreso real del ruido.",
+  "roadmap.step.quality": "Mantén limpio el superávit",
+  "roadmap.step.quality.body":
+    "Comida casi siempre poco procesada, con los carbohidratos alrededor del entrenamiento, para que el superávit vaya a músculo y no a grasa.",
+  "roadmap.step.weighins": "Pésate a diario, juzga por semana",
+  "roadmap.step.weighins.body":
+    "A la misma hora y en las mismas condiciones. Compara promedios semanales, nunca días sueltos.",
+  "roadmap.step.checkins": "Mídete cada dos semanas",
+  "roadmap.step.checkins.body":
+    "La cinta y las fotos distinguen grasa de agua. Lee la báscula y la cinta juntas.",
+  "roadmap.step.adjust": "Ajusta cuando la tendencia se estanque",
+  "roadmap.step.adjust.body":
+    "Dos semanas planas seguidas: cambia una sola cosa, alrededor de un 10 %, y dale dos semanas más.",
+  "roadmap.step.transition": "Cierra la fase a propósito",
+  "roadmap.step.transition.body":
+    "Termina una definición con dos semanas en mantenimiento; termina un volumen cuando tu cintura crezca más rápido que tus marcas.",
+  "roadmap.step.reassess": "Reevalúa y planea la siguiente fase",
+  "roadmap.step.reassess.body":
+    "Repite el diagnóstico con tus números nuevos. Este plan pasa a tu historial y empieza el siguiente.",
 };

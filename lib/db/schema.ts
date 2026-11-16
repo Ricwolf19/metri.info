@@ -231,6 +231,25 @@ export const quizAttempt = pgTable(
 );
 
 /**
+ * An account's roadmap (`lib/roadmap`): the diagnostic answers the plan is
+ * derived from, when it started, the steps ticked (`{ stepId: iso }`) and the
+ * plans before it. One row per account; visitors keep the same shape in the
+ * browser. Every column is parsed by `parseRoadmap` on the way in and out.
+ */
+export const roadmap = pgTable("roadmap", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => user.id, { onDelete: "cascade" }),
+  answers: jsonb("answers").notNull(),
+  startedAt: timestamp("started_at", { withTimezone: true }).notNull(),
+  done: jsonb("done").notNull(),
+  history: jsonb("history").notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+/**
  * One row per account per month that was emailed: what makes the monthly job
  * safe to repeat. Vercel Cron can miss or duplicate a run, so the schedule runs
  * on several days and each run skips whoever already has a row.

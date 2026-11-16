@@ -5,12 +5,18 @@ import { metaAlternates, ROUTES } from "@/lib/i18n/routes";
 import { absoluteUrl } from "@/lib/utils";
 
 /** Section pages with their own Open Graph card. */
-export type SectionId = "tools" | "docs" | "download" | "contact" | "quiz";
+export type SectionId =
+  | "tools"
+  | "docs"
+  | "download"
+  | "contact"
+  | "quiz"
+  | "roadmap";
 
 type SectionCopy = { title: string; description: string; eyebrow: string };
 
 const COPY: Record<
-  Exclude<SectionId, "contact" | "quiz">,
+  Exclude<SectionId, "contact" | "quiz" | "roadmap">,
   Record<Locale, SectionCopy>
 > = {
   tools: {
@@ -70,6 +76,12 @@ export const sectionCopy = (id: SectionId, locale: Locale): SectionCopy => {
       title: translate(locale, "quiz.title"),
       description: translate(locale, "quiz.seoDescription"),
       eyebrow: translate(locale, "quiz.eyebrow"),
+    };
+  if (id === "roadmap")
+    return {
+      title: translate(locale, "roadmap.title"),
+      description: translate(locale, "roadmap.seoDescription"),
+      eyebrow: translate(locale, "roadmap.eyebrow"),
     };
   return COPY[id][locale];
 };

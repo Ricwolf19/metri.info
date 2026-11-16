@@ -19,6 +19,7 @@ const PUBLIC_PAGES: RouteId[] = [
   "terms",
   "contact",
   "quiz",
+  "roadmap",
   "signIn",
   "signUp",
   ...CALC_IDS,

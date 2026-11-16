@@ -11,6 +11,7 @@ import {
   BookmarkIcon,
   CalculatorIcon,
   ChevronRightIcon,
+  CompassIcon,
   DownloadIcon,
   GearIcon,
   GithubIcon,
@@ -55,6 +56,7 @@ const NAV: {
 }[] = [
   { id: "tools", key: "nav.tools", icon: CalculatorIcon },
   { id: "docs", key: "nav.docs", icon: BookIcon },
+  { id: "roadmap", key: "nav.roadmap", icon: CompassIcon },
   { id: "download", key: "nav.download", icon: DownloadIcon },
   { id: "about", key: "footer.about", icon: InfoIcon },
   { id: "contact", key: "nav.contact", icon: MailIcon },

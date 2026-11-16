@@ -42,7 +42,14 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   cacheLife("max");
   const now = new Date();
 
-  const sections: RouteId[] = ["home", "tools", "docs", "download", "quiz"];
+  const sections: RouteId[] = [
+    "home",
+    "tools",
+    "docs",
+    "download",
+    "quiz",
+    "roadmap",
+  ];
   const staticEntries = sections.flatMap((id) =>
     entry(ROUTES[id].en, ROUTES[id].es, id === "home" ? 1 : 0.7, "weekly", now),
   );

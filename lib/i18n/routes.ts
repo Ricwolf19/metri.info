@@ -19,6 +19,7 @@ export type RouteId =
   | "contact"
   | "quiz"
   | "quizResult"
+  | "roadmap"
   | "signIn"
   | "signUp"
   | "forgotPassword"
@@ -58,6 +59,7 @@ export const ROUTES: Record<RouteId, RouteEntry> = {
   contact: { en: "/contact", es: "/es/contacto" },
   quiz: { en: "/quiz", es: "/es/test" },
   quizResult: { en: "/quiz/result", es: "/es/test/resultado" },
+  roadmap: { en: "/roadmap", es: "/es/ruta" },
   signIn: { en: "/sign-in", es: "/es/iniciar-sesion" },
   signUp: { en: "/sign-up", es: "/es/registrarse" },
   forgotPassword: {

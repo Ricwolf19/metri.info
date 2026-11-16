@@ -127,6 +127,13 @@ export const QuizResult = ({
             })}
           </ul>
         )}
+        <Link
+          href={routePath("roadmap", locale)}
+          className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-accent hover:underline"
+        >
+          {t("quiz.roadmapCta")}
+          <ArrowRightIcon size={12} />
+        </Link>
       </div>
 
       {review.length > 0 && (
