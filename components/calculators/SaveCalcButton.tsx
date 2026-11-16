@@ -6,6 +6,7 @@ import { useState } from "react";
 import { BookmarkIcon, CheckIcon } from "@/components/icons";
 import { BenefitsPanel } from "@/components/marketing/BenefitsPanel";
 import { Spinner } from "@/components/ui/Spinner";
+import { StableLabel } from "@/components/ui/StableLabel";
 import { useToast } from "@/components/ui/toast";
 import {
   Dialog,
@@ -105,11 +106,16 @@ export const SaveCalcButton = ({
           ) : (
             <BookmarkIcon size={14} />
           )}
-          {saved
-            ? t("calc.saved")
-            : state === "saving"
-              ? t("calc.saving")
-              : t("calc.saveCta")}
+          <StableLabel
+            labels={[t("calc.saveCta"), t("calc.saving"), t("calc.saved")]}
+            current={
+              saved
+                ? t("calc.saved")
+                : state === "saving"
+                  ? t("calc.saving")
+                  : t("calc.saveCta")
+            }
+          />
         </button>
       </div>
 

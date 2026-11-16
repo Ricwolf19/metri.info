@@ -1,25 +1,16 @@
 "use server";
 
-import { getUserProfile } from "@/lib/account/settings";
 import { getSession } from "@/lib/auth/session";
-import type { CalcProfile } from "@/lib/calculators/prefill";
+import type { CalcFacts } from "@/lib/calculators/prefill";
+import { readCalcFacts } from "@/lib/calculators/read-facts";
 
 /**
- * Client-callable: the signed-in user's profile values used to seed calculator
- * inputs. Returns null for guests (or when no profile row exists). Fetched
- * client-side on purpose — the calculator pages are statically generated, and
- * reading per-user data on the server would make them dynamic and slow.
+ * Client-callable: what we know about the signed-in user, to seed calculator
+ * inputs. Null for guests. Fetched client-side on purpose: the calculator
+ * pages are statically generated, and reading per-user data on the server
+ * would make them dynamic.
  */
-export const getCalcProfile = async (): Promise<CalcProfile | null> => {
+export const getCalcFacts = async (): Promise<CalcFacts | null> => {
   const session = await getSession();
-  if (!session) return null;
-  const p = await getUserProfile(session.user.id);
-  if (!p) return null;
-  return {
-    sex: p.sex,
-    bodyWeightKg: p.bodyWeightKg,
-    bodyHeightCm: p.bodyHeightCm,
-    activityLevel: p.activityLevel,
-    unitsPreference: p.unitsPreference,
-  };
+  return session ? readCalcFacts(session.user.id) : null;
 };

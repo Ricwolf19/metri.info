@@ -26,18 +26,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { StableLabel } from "@/components/ui/StableLabel";
 import { track } from "@/lib/analytics/track";
 import { useI18n, useT } from "@/lib/i18n";
 import { routePath } from "@/lib/i18n/routes";
-import { applyProfileToValues } from "@/lib/calculators/prefill";
-import { getCalcProfile } from "@/lib/calculators/profile";
+import { applyFactsToValues } from "@/lib/calculators/prefill";
+import { getCalcFacts } from "@/lib/calculators/profile";
 import { CALCULATORS } from "@/lib/calculators/registry";
 import { buildSearch, decodeValues, readValues } from "@/lib/calculators/share";
-import type {
-  CalcConfig,
-  CalcId,
-  CalcResult,
-  CalcValues,
+import {
+  type CalcConfig,
+  type CalcId,
+  type CalcResult,
+  type CalcValues,
+  fieldInUse,
 } from "@/lib/calculators/types";
 import { cn } from "@/lib/utils";
 
@@ -119,15 +121,29 @@ const FieldInputs = ({
       )}
     >
       {config.fields.map((f) => {
+        // A field the current formula ignores stays visible but disabled.
+        const inUse = fieldInUse(f, values);
+        const reason =
+          !inUse && f.usedWhen?.reasonKey ? (
+            <p className="mt-2 text-xs leading-relaxed text-ink-400">
+              {t(f.usedWhen.reasonKey)}
+            </p>
+          ) : null;
         if (f.kind === "select") {
           return (
             <div key={f.name} className="block">
-              <span className="mb-1.5 block text-sm font-medium text-ink-200">
+              <span
+                className={cn(
+                  "mb-1.5 block text-sm font-medium",
+                  inUse ? "text-ink-200" : "text-ink-400",
+                )}
+              >
                 {t(f.labelKey)}
               </span>
               <Select
                 value={String(values[f.name] ?? "")}
                 onValueChange={(v) => onChange(f.name, v)}
+                disabled={!inUse}
               >
                 <SelectTrigger aria-label={t(f.labelKey)}>
                   <SelectValue />
@@ -140,6 +156,7 @@ const FieldInputs = ({
                   ))}
                 </SelectContent>
               </Select>
+              {reason}
             </div>
           );
         }
@@ -168,11 +185,13 @@ const FieldInputs = ({
         const atMin = dispMin !== undefined && dispVal <= dispMin;
         const atMax = dispMax !== undefined && dispVal >= dispMax;
         const unit = displayUnit(f.unit);
-        // Out of range blanks the result; say why, next to the field.
+        // Out of range blanks the result; say why, next to the field. An
+        // unused field can't blank it, so it never reads as an error.
         const invalid =
-          !Number.isFinite(dispVal) ||
-          (dispMin !== undefined && dispVal < dispMin) ||
-          (dispMax !== undefined && dispVal > dispMax);
+          inUse &&
+          (!Number.isFinite(dispVal) ||
+            (dispMin !== undefined && dispVal < dispMin) ||
+            (dispMax !== undefined && dispVal > dispMax));
         const inputId = `${uid}-${f.name}`;
         const describedBy = [
           unit ? `${inputId}-unit` : null,
@@ -186,11 +205,19 @@ const FieldInputs = ({
             <div className="mb-1.5 flex items-baseline justify-between">
               <label
                 htmlFor={inputId}
-                className="text-sm font-medium text-ink-200"
+                className={cn(
+                  "text-sm font-medium",
+                  inUse ? "text-ink-200" : "text-ink-400",
+                )}
               >
                 {label}
               </label>
-              <span className="font-mono text-sm text-ink-50">
+              <span
+                className={cn(
+                  "font-mono text-sm",
+                  inUse ? "text-ink-50" : "text-ink-400",
+                )}
+              >
                 {dispVal}
                 {unit && (
                   <span
@@ -206,7 +233,7 @@ const FieldInputs = ({
               <StepButton
                 symbol="−"
                 label={t("calc.decrease", { field: label })}
-                disabled={atMin}
+                disabled={atMin || !inUse}
                 onClick={() => nudge(-1)}
               />
               <Input
@@ -215,6 +242,7 @@ const FieldInputs = ({
                 inputMode="decimal"
                 aria-describedby={describedBy || undefined}
                 aria-invalid={invalid || undefined}
+                disabled={!inUse}
                 value={String(dispVal)}
                 min={dispMin}
                 max={dispMax}
@@ -227,7 +255,7 @@ const FieldInputs = ({
               <StepButton
                 symbol="+"
                 label={t("calc.increase", { field: label })}
-                disabled={atMax}
+                disabled={atMax || !inUse}
                 onClick={() => nudge(1)}
               />
             </div>
@@ -251,6 +279,7 @@ const FieldInputs = ({
                 onValueChange={([v]) => onChange(f.name, toMetric(v, f.unit))}
                 thumbLabel={label}
                 valueText={unit ? `${dispVal} ${unit}` : undefined}
+                disabled={!inUse}
                 className="mt-1"
               />
             )}
@@ -267,9 +296,10 @@ const FieldInputs = ({
                       key={p}
                       type="button"
                       aria-pressed={active}
+                      disabled={!inUse}
                       onClick={() => onChange(f.name, p)}
                       className={cn(
-                        "h-9 rounded-full border px-3.5 font-mono text-sm transition-colors",
+                        "h-9 rounded-full border px-3.5 font-mono text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-40",
                         "focus-visible:border-brand/60 focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:outline-none",
                         active
                           ? "border-brand/40 bg-brand/10 font-semibold text-brand"
@@ -283,6 +313,7 @@ const FieldInputs = ({
                 })}
               </div>
             )}
+            {reason}
             {f.hint && (
               <p className="mt-2 text-xs leading-relaxed text-ink-400">
                 {t(f.hint.key)}
@@ -692,9 +723,10 @@ export const Calculator = ({ id }: { id: CalcId }) => {
     [],
   );
 
-  // One-time prefill from the signed-in user's saved profile — only on a fresh
-  // visit (no shared/edited state in the URL). Runs client-side so the page
-  // stays statically generated. Values stay fully editable afterwards.
+  // One-time prefill from what we know about the signed-in user (profile,
+  // synced logs, saved calculations), only on a fresh visit (no shared or
+  // edited state in the URL). Runs client-side so the page stays statically
+  // generated. Values stay fully editable afterwards.
   const prefillRan = useRef(false);
   useEffect(() => {
     if (prefillRan.current) return;
@@ -706,16 +738,16 @@ export const Calculator = ({ id }: { id: CalcId }) => {
     if (urlHasState) return;
 
     let active = true;
-    void getCalcProfile().then((profile) => {
-      if (!active || !profile) return;
-      const { values, changed } = applyProfileToValues(id, a, profile);
+    void getCalcFacts().then((facts) => {
+      if (!active || !facts) return;
+      const { values, changed } = applyFactsToValues(config, a, facts);
       if (changed) {
         setA(values);
         setPrefilled(true);
         commit(values, b, compare);
       }
       if (hasUnits) {
-        setUnits(profile.unitsPreference === "lb" ? "imperial" : "metric");
+        setUnits(facts.unitsPreference === "lb" ? "imperial" : "metric");
       }
     });
     return () => {
@@ -745,6 +777,47 @@ export const Calculator = ({ id }: { id: CalcId }) => {
 
   return (
     <div className="rounded-card border border-ink-600 bg-ink-800 p-4 sm:p-6">
+      {/* The actions sit on top, ahead of anything whose height depends on
+          the inputs (prefill notice, out-of-range errors, compare columns),
+          so they never move while you use the calculator. */}
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        {hasUnits ? (
+          <Segmented
+            value={units}
+            onValueChange={setUnitsPersist}
+            options={[
+              { value: "metric", label: t("calc.metric") },
+              { value: "imperial", label: t("calc.imperial") },
+            ]}
+            aria-label={t("settings.units")}
+            className="w-full max-w-xs"
+          />
+        ) : null}
+        <div
+          role="group"
+          aria-label={t("calc.actions")}
+          className="flex flex-wrap items-center gap-2 sm:ml-auto"
+        >
+          <ShareDialog calcId={id} locale={locale} search={search} />
+          <SaveCalcButton id={id} values={a} canSave={canSave} />
+          <button
+            type="button"
+            onClick={toggleCompare}
+            className={cn(
+              "inline-flex h-9 items-center gap-2 rounded-field border px-3.5 text-xs font-medium transition-colors",
+              "focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:outline-none",
+              compare
+                ? "border-transparent bg-brand text-brand-contrast hover:bg-brand/90"
+                : "border-brand/40 text-brand hover:bg-brand/10",
+            )}
+          >
+            <StableLabel
+              labels={[t("calc.compare"), t("calc.compareExit")]}
+              current={compare ? t("calc.compareExit") : t("calc.compare")}
+            />
+          </button>
+        </div>
+      </div>
       {prefilled && (
         <div className="mb-5 flex items-center gap-2 rounded-field border border-brand/25 bg-brand/5 px-3 py-2 text-xs text-ink-300">
           <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
@@ -758,18 +831,6 @@ export const Calculator = ({ id }: { id: CalcId }) => {
             <XIcon size={14} />
           </button>
         </div>
-      )}
-      {hasUnits && (
-        <Segmented
-          value={units}
-          onValueChange={setUnitsPersist}
-          options={[
-            { value: "metric", label: t("calc.metric") },
-            { value: "imperial", label: t("calc.imperial") },
-          ]}
-          aria-label={t("settings.units")}
-          className="mb-6 w-full max-w-xs"
-        />
       )}
 
       {compare ? (
@@ -833,24 +894,6 @@ export const Calculator = ({ id }: { id: CalcId }) => {
           />
         </div>
       )}
-
-      <div className="mt-6 flex flex-wrap items-center gap-2 border-t border-ink-700 pt-5">
-        <ShareDialog calcId={id} locale={locale} search={search} />
-        <SaveCalcButton id={id} values={a} canSave={canSave} />
-        <button
-          type="button"
-          onClick={toggleCompare}
-          className={cn(
-            "inline-flex h-9 items-center gap-2 rounded-field border px-3.5 text-xs font-medium transition-colors",
-            "focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:outline-none",
-            compare
-              ? "border-transparent bg-brand text-brand-contrast hover:bg-brand/90"
-              : "border-brand/40 text-brand hover:bg-brand/10",
-          )}
-        >
-          {compare ? t("calc.compareExit") : t("calc.compare")}
-        </button>
-      </div>
     </div>
   );
 };

@@ -413,6 +413,7 @@ export const es: Record<TranslationKey, string> = {
   "calc.shareNative": "Compartir…",
   "calc.cardTitle": "Tarjeta de resultado",
   "calc.saveImage": "Descargar imagen",
+  "calc.actions": "Acciones de la calculadora",
   "calc.compare": "Comparar",
   "calc.compareExit": "Vista simple",
   "calc.scenarioA": "Escenario A",
@@ -445,10 +446,14 @@ export const es: Record<TranslationKey, string> = {
   "calc.metric": "Métrico",
   "calc.imperial": "Imperial",
   "calc.profilePrefilled":
-    "Rellenado desde tu perfil. Edita lo que quieras abajo.",
+    "Rellenado con tu perfil y tus últimos registros. Edita lo que quieras abajo.",
   "calc.hint.bodyFatKatch":
     "Solo la fórmula Katch-McArdle usa la grasa corporal; Mifflin y Harris la ignoran.",
   "calc.hint.useKatch": "Usar Katch-McArdle",
+  "calc.hint.katchSkips":
+    "Katch-McArdle parte de la masa magra, así que no usa este dato.",
+  "calc.hint.hipFemaleOnly":
+    "Solo la fórmula Navy para mujeres usa la circunferencia de cadera.",
   "calc.hint.caloriesTdee": "Tus calorías diarias de mantenimiento (TDEE).",
   "calc.hint.caloriesTdeeLink": "Calcúlalas con la calculadora de TDEE.",
   "calc.perSideEach": "por lado",

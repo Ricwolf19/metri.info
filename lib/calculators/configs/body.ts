@@ -75,6 +75,11 @@ export const bodyfat: CalcConfig = {
       max: 200,
       step: 0.1,
       default: 95,
+      usedWhen: {
+        field: "sex",
+        values: ["female"],
+        reasonKey: "calc.hint.hipFemaleOnly",
+      },
     },
   ],
   compute: (v) => {

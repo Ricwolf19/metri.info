@@ -1,79 +1,121 @@
-import type { CalcId, CalcValues } from "./types";
+import type { CalcConfig, CalcId, CalcValues } from "./types";
 
 /**
- * Maps each calculator's input fields to the saved-profile value that should
- * seed them. Centralised (rather than per-config) so it's easy to audit which
- * field means what — critically, a calculator's `weight` is only ever mapped to
- * body weight when that's the actual meaning. 1RM/plate `weight`/`target` are
- * *lifted* loads, so they are deliberately absent here.
+ * What we know about a signed-in user, in calculator units (kg, cm, %, kcal,
+ * years), assembled server-side by `getCalcFacts` from their profile, the
+ * latest readings the phone synced and their own saved calculations. Every
+ * fact is null when unknown.
  */
-export type CalcProfile = {
+export type CalcFacts = {
   sex: string | null;
-  bodyWeightKg: number | null;
-  bodyHeightCm: number | null;
-  activityLevel: string | null;
+  age: number | null;
+  heightCm: number | null;
+  weightKg: number | null;
+  bodyFatPct: number | null;
+  activity: string | null;
+  /** Calculator formula id (`mifflin` | `harris` | `katch`). */
+  bmrFormula: string | null;
+  maintenanceKcal: number | null;
+  restingHr: number | null;
+  waistCm: number | null;
+  neckCm: number | null;
+  hipsCm: number | null;
+  /** The phone's active phase, when it maps onto a calculator goal. */
+  goal: string | null;
+  targetWeightKg: number | null;
+  rateKgPerWeek: number | null;
   unitsPreference: string;
 };
 
-type ProfileKey = "sex" | "bodyWeight" | "bodyHeight" | "activity";
+export type FactKey = Exclude<keyof CalcFacts, "unitsPreference">;
 
-const PREFILL: Partial<Record<CalcId, Record<string, ProfileKey>>> = {
+/**
+ * Which fact seeds which input, per calculator. Centralised so it's easy to
+ * audit what a field means: a calculator's `weight` maps to body weight only
+ * when that's what it is. 1RM/plate `weight`/`target` are *lifted* loads and
+ * `calsburned.activity` is an exercise, so they're deliberately absent.
+ */
+export const PREFILL: Partial<Record<CalcId, Record<string, FactKey>>> = {
   tdee: {
     sex: "sex",
-    height: "bodyHeight",
-    weight: "bodyWeight",
+    age: "age",
+    height: "heightCm",
+    weight: "weightKg",
+    bodyFat: "bodyFatPct",
     activity: "activity",
+    formula: "bmrFormula",
   },
-  macros: { weight: "bodyWeight" },
-  deficit: { current: "bodyWeight" },
-  protein: { weight: "bodyWeight" },
-  calsburned: { weight: "bodyWeight" },
-  bodyfat: { sex: "sex", height: "bodyHeight" },
-  bmi: { height: "bodyHeight", weight: "bodyWeight" },
-  ffmi: { weight: "bodyWeight", height: "bodyHeight" },
-  idealweight: { sex: "sex", height: "bodyHeight" },
-  leanmass: { sex: "sex", weight: "bodyWeight", height: "bodyHeight" },
-  whtr: { height: "bodyHeight" },
-  water: { weight: "bodyWeight", activity: "activity" },
-  wilks: { sex: "sex", bodyweight: "bodyWeight" },
+  macros: {
+    calories: "maintenanceKcal",
+    weight: "weightKg",
+    goal: "goal",
+    bodyFat: "bodyFatPct",
+  },
+  deficit: {
+    current: "weightKg",
+    goal: "targetWeightKg",
+    rate: "rateKgPerWeek",
+  },
+  protein: { weight: "weightKg", goal: "goal" },
+  calsburned: { weight: "weightKg" },
+  bodyfat: {
+    sex: "sex",
+    height: "heightCm",
+    neck: "neckCm",
+    waist: "waistCm",
+    hip: "hipsCm",
+  },
+  bmi: { height: "heightCm", weight: "weightKg" },
+  ffmi: { weight: "weightKg", height: "heightCm", bodyFat: "bodyFatPct" },
+  idealweight: { sex: "sex", height: "heightCm" },
+  leanmass: {
+    sex: "sex",
+    weight: "weightKg",
+    height: "heightCm",
+    bodyFat: "bodyFatPct",
+  },
+  whtr: { waist: "waistCm", height: "heightCm" },
+  water: { weight: "weightKg", activity: "activity" },
+  heartrate: { age: "age", resting: "restingHr" },
+  wilks: { sex: "sex", bodyweight: "weightKg" },
 };
 
-const valueFor = (
-  key: ProfileKey,
-  profile: CalcProfile,
-): number | string | null => {
-  switch (key) {
-    case "sex":
-      return profile.sex && profile.sex !== "unset" ? profile.sex : null;
-    case "bodyWeight":
-      return profile.bodyWeightKg;
-    case "bodyHeight":
-      return profile.bodyHeightCm;
-    case "activity":
-      return profile.activityLevel && profile.activityLevel !== "unset"
-        ? profile.activityLevel
-        : null;
-  }
+/** Round to the field's step without float dust (85.3, not 85.30000000001). */
+const snap = (value: number, step: number) => {
+  const decimals = (String(step).split(".")[1] ?? "").length;
+  return Number((Math.round(value / step) * step).toFixed(decimals));
 };
 
-/** Seed `values` (metric base units) from the user's profile. Returns the new
- * values and whether anything actually changed. */
-export const applyProfileToValues = (
-  id: CalcId,
+/** Seed `values` (metric base units) from the user's facts. A fact only lands
+ * when the field would accept it — inside its range, or one of its options —
+ * so a prefill never opens a calculator on an error. */
+export const applyFactsToValues = (
+  config: CalcConfig,
   values: CalcValues,
-  profile: CalcProfile,
+  facts: CalcFacts,
 ): { values: CalcValues; changed: boolean } => {
-  const map = PREFILL[id];
+  const map = PREFILL[config.id];
   if (!map) return { values, changed: false };
 
   const next = { ...values };
   let changed = false;
-  for (const [field, key] of Object.entries(map)) {
-    const v = valueFor(key, profile);
-    if (v !== null && v !== undefined && v !== "") {
-      next[field] = v;
-      changed = true;
-    }
+  for (const field of config.fields) {
+    const key = map[field.name];
+    const fact = key ? facts[key] : null;
+    if (fact === null || fact === undefined) continue;
+    const fits =
+      field.kind === "select"
+        ? field.options.some((o) => o.value === fact)
+        : typeof fact === "number" &&
+          Number.isFinite(fact) &&
+          (field.min === undefined || fact >= field.min) &&
+          (field.max === undefined || fact <= field.max);
+    if (!fits || next[field.name] === fact) continue;
+    next[field.name] =
+      typeof fact === "number" && field.kind === "number" && field.step
+        ? snap(fact, field.step)
+        : fact;
+    changed = true;
   }
   return { values: next, changed };
 };

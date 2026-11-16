@@ -399,6 +399,7 @@ export const en = {
   "calc.shareNative": "Share…",
   "calc.cardTitle": "Result card",
   "calc.saveImage": "Download image",
+  "calc.actions": "Calculator actions",
   "calc.compare": "Compare",
   "calc.compareExit": "Single view",
   "calc.scenarioA": "Scenario A",
@@ -430,10 +431,15 @@ export const en = {
     "Computed instantly in your browser. Open it to change the inputs.",
   "calc.metric": "Metric",
   "calc.imperial": "Imperial",
-  "calc.profilePrefilled": "Prefilled from your profile. Edit anything below.",
+  "calc.profilePrefilled":
+    "Filled in from your profile and latest logs. Edit anything below.",
   "calc.hint.bodyFatKatch":
     "Only the Katch-McArdle formula uses body fat; Mifflin and Harris ignore it.",
   "calc.hint.useKatch": "Use Katch-McArdle",
+  "calc.hint.katchSkips":
+    "Katch-McArdle works from lean mass, so it doesn't use this.",
+  "calc.hint.hipFemaleOnly":
+    "Only the women's Navy formula uses hip circumference.",
   "calc.hint.caloriesTdee": "Your daily maintenance calories (TDEE).",
   "calc.hint.caloriesTdeeLink": "Find yours with the TDEE calculator.",
   "calc.perSideEach": "per side",
