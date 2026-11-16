@@ -116,9 +116,18 @@ const ToastCard = ({
         <Icon size={18} />
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium">{toast.title}</p>
+        {/* `overflow-wrap: anywhere` breaks tokens with no spaces (a copied
+            URL); the description stops at two lines, the full text on hover. */}
+        <p className="text-sm font-medium [overflow-wrap:anywhere]">
+          {toast.title}
+        </p>
         {toast.description ? (
-          <p className="mt-0.5 text-xs text-ink-300">{toast.description}</p>
+          <p
+            title={toast.description}
+            className="mt-0.5 line-clamp-2 text-xs [overflow-wrap:anywhere] text-ink-300"
+          >
+            {toast.description}
+          </p>
         ) : null}
       </div>
       <button
