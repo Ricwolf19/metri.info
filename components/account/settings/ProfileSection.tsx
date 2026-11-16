@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { type Control, Controller, useForm } from "react-hook-form";
 
 import {
   FieldGrid,
@@ -109,40 +110,101 @@ const Field = ({
   </div>
 );
 
-const OptionSelect = <T extends string>({
+type ProfileForm = {
+  name: string;
+  displayName: string;
+  bio: string;
+  units: "kg" | "lb";
+  sex: string;
+  age: string;
+  activity: string;
+  weight: string;
+  height: string;
+  bodyFat: string;
+  formula: string;
+  clock: "24" | "12";
+  appLocale: "en" | "es";
+};
+
+/** The stored profile as form values: empty strings and `unset` for what
+ * was never answered, so "unchanged" compares like with like. */
+const toForm = (
+  initialName: string,
+  profile: AccountProfile | null,
+): ProfileForm => ({
+  name: initialName,
+  displayName: profile?.displayName ?? "",
+  bio: profile?.bio ?? "",
+  units: profile?.unitsPreference === "lb" ? "lb" : "kg",
+  sex: profile?.sex ?? UNSET,
+  age: numStr(profile?.age),
+  activity:
+    profile?.activityLevel === "athlete"
+      ? "very_active"
+      : (profile?.activityLevel ?? UNSET),
+  weight: numStr(profile?.bodyWeightKg),
+  height: numStr(profile?.bodyHeightCm),
+  bodyFat: numStr(profile?.bodyFatPct),
+  formula: profile?.bmrFormula ?? UNSET,
+  clock: profile?.clockFormat === "12" ? "12" : "24",
+  appLocale: profile?.locale === "es" ? "es" : "en",
+});
+
+const unsetToNull = (v: string) => (v === UNSET ? null : v);
+
+/** Form values → the save action's input (it validates and normalises). */
+const toInput = (v: ProfileForm): ProfileInput => ({
+  name: v.name,
+  displayName: v.displayName,
+  bio: v.bio,
+  unitsPreference: v.units,
+  sex: unsetToNull(v.sex),
+  age: v.age,
+  activityLevel: unsetToNull(v.activity),
+  bodyWeightKg: v.weight,
+  bodyHeightCm: v.height,
+  bodyFatPct: v.bodyFat,
+  bmrFormula: unsetToNull(v.formula),
+  clockFormat: v.clock,
+  locale: v.appLocale,
+});
+
+const ControlledSelect = ({
+  control,
+  name,
   label,
-  value,
-  onChange,
   options,
 }: {
+  control: Control<ProfileForm>;
+  name: "sex" | "activity" | "formula";
   /** The trigger is a button: its name, since a <label> can't point at it. */
   label: string;
-  value: T;
-  onChange: (v: T) => void;
-  options: readonly {
-    value: T;
-    key: TranslationKey;
-    descKey?: TranslationKey;
-  }[];
+  options: readonly Option[];
 }) => {
   const t = useT();
   return (
-    <Select value={value} onValueChange={(v) => onChange(v as T)}>
-      <SelectTrigger aria-label={label}>
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
-        {options.map((o) => (
-          <SelectItem
-            key={o.value}
-            value={o.value}
-            description={o.descKey ? t(o.descKey) : undefined}
-          >
-            {t(o.key)}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <Controller
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <Select value={field.value} onValueChange={field.onChange}>
+          <SelectTrigger aria-label={label} onBlur={field.onBlur}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {options.map((o) => (
+              <SelectItem
+                key={o.value}
+                value={o.value}
+                description={o.descKey ? t(o.descKey) : undefined}
+              >
+                {t(o.key)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
+    />
   );
 };
 
@@ -163,59 +225,27 @@ export const ProfileSection = ({
   const t = useT();
   const { toast } = useToast();
 
-  const [name, setName] = useState(initialName);
-  const [displayName, setDisplayName] = useState(profile?.displayName ?? "");
-  const [bio, setBio] = useState(profile?.bio ?? "");
-  const [units, setUnits] = useState<"kg" | "lb">(
-    profile?.unitsPreference === "lb" ? "lb" : "kg",
-  );
-  const [sex, setSex] = useState(profile?.sex ?? UNSET);
-  const [age, setAge] = useState(numStr(profile?.age));
-  const [activity, setActivity] = useState(
-    profile?.activityLevel === "athlete"
-      ? "very_active"
-      : (profile?.activityLevel ?? UNSET),
-  );
-  const [weight, setWeight] = useState(numStr(profile?.bodyWeightKg));
-  const [height, setHeight] = useState(numStr(profile?.bodyHeightCm));
-  const [bodyFat, setBodyFat] = useState(numStr(profile?.bodyFatPct));
-  const [formula, setFormula] = useState(profile?.bmrFormula ?? UNSET);
-  const [clock, setClock] = useState<"24" | "12">(
-    profile?.clockFormat === "12" ? "12" : "24",
-  );
-  const [appLocale, setAppLocale] = useState<"en" | "es">(
-    profile?.locale === "es" ? "es" : "en",
-  );
-
-  const [pending, setPending] = useState(false);
+  const defaultValues = toForm(initialName, profile);
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { isDirty, isSubmitting },
+  } = useForm({ defaultValues });
   const [status, setStatus] = useState<{
     tone: "success" | "error";
     message: string;
   } | null>(null);
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Save stays off until a value really differs from what's stored (typing
+  // and undoing counts as unchanged), and a successful save becomes the new
+  // baseline, so the same values are never written twice.
+  const onSubmit = handleSubmit(async (values) => {
     setStatus(null);
-    setPending(true);
-    const unsetToNull = (v: string) => (v === UNSET ? null : v);
-    const input: ProfileInput = {
-      name,
-      displayName,
-      bio,
-      unitsPreference: units,
-      sex: unsetToNull(sex),
-      age,
-      activityLevel: unsetToNull(activity),
-      bodyWeightKg: weight,
-      bodyHeightCm: height,
-      bodyFatPct: bodyFat,
-      bmrFormula: unsetToNull(formula),
-      clockFormat: clock,
-      locale: appLocale,
-    };
-    const res = await saveProfile(input);
-    setPending(false);
+    const res = await saveProfile(toInput(values));
     if (res.ok) {
+      reset(values);
       setStatus({ tone: "success", message: t("settings.profileSaved") });
       toast({ title: t("toast.profileSaved"), variant: "success" });
     } else {
@@ -226,7 +256,7 @@ export const ProfileSection = ({
         variant: "error",
       });
     }
-  };
+  });
 
   const energy =
     profile?.latestTdee || profile?.latestBmr
@@ -248,8 +278,13 @@ export const ProfileSection = ({
               message={status?.message ?? null}
               tone={status?.tone ?? "success"}
             />
-            <Button type="submit" size="sm" loading={pending}>
-              {pending ? t("settings.saving") : t("settings.save")}
+            <Button
+              type="submit"
+              size="sm"
+              loading={isSubmitting}
+              disabled={!isDirty}
+            >
+              {isSubmitting ? t("settings.saving") : t("settings.save")}
             </Button>
           </>
         }
@@ -260,21 +295,18 @@ export const ProfileSection = ({
               <AuthInput
                 label={t("settings.name")}
                 required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                {...register("name", { required: true })}
               />
               <AuthInput
                 label={t("settings.displayName")}
                 placeholder={t("settings.displayNamePlaceholder")}
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
+                {...register("displayName")}
               />
             </FieldGrid>
             <AuthInput
               label={t("settings.bio")}
               placeholder={t("settings.bioPlaceholder")}
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
+              {...register("bio")}
             />
           </section>
 
@@ -289,10 +321,10 @@ export const ProfileSection = ({
             </div>
             <FieldGrid>
               <Field label={t("settings.sex")}>
-                <OptionSelect
+                <ControlledSelect
+                  control={control}
+                  name="sex"
                   label={t("settings.sex")}
-                  value={sex}
-                  onChange={setSex}
                   options={SEX_OPTIONS}
                 />
               </Field>
@@ -303,8 +335,7 @@ export const ProfileSection = ({
                 min={10}
                 max={120}
                 step="1"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
+                {...register("age")}
               />
             </FieldGrid>
             <FieldGrid>
@@ -314,8 +345,7 @@ export const ProfileSection = ({
                 inputMode="decimal"
                 min={0}
                 step="0.1"
-                value={weight}
-                onChange={(e) => setWeight(e.target.value)}
+                {...register("weight")}
               />
               <AuthInput
                 label={t("settings.bodyHeight")}
@@ -323,8 +353,7 @@ export const ProfileSection = ({
                 inputMode="decimal"
                 min={0}
                 step="0.1"
-                value={height}
-                onChange={(e) => setHeight(e.target.value)}
+                {...register("height")}
               />
             </FieldGrid>
             <FieldGrid>
@@ -335,23 +364,22 @@ export const ProfileSection = ({
                 min={2}
                 max={70}
                 step="0.1"
-                value={bodyFat}
-                onChange={(e) => setBodyFat(e.target.value)}
+                {...register("bodyFat")}
               />
               <Field label={t("settings.activityLevel")}>
-                <OptionSelect
+                <ControlledSelect
+                  control={control}
+                  name="activity"
                   label={t("settings.activityLevel")}
-                  value={activity}
-                  onChange={setActivity}
                   options={ACTIVITY_OPTIONS}
                 />
               </Field>
             </FieldGrid>
             <Field label={t("settings.bmrFormula")}>
-              <OptionSelect
+              <ControlledSelect
+                control={control}
+                name="formula"
                 label={t("settings.bmrFormula")}
-                value={formula}
-                onChange={setFormula}
                 options={FORMULA_OPTIONS}
               />
             </Field>
@@ -393,38 +421,56 @@ export const ProfileSection = ({
             </div>
             <FieldGrid>
               <Field label={t("settings.units")}>
-                <Segmented
-                  value={units}
-                  onValueChange={setUnits}
-                  options={[
-                    { value: "kg", label: t("settings.unitsKg") },
-                    { value: "lb", label: t("settings.unitsLb") },
-                  ]}
-                  aria-label={t("settings.units")}
+                <Controller
+                  control={control}
+                  name="units"
+                  render={({ field }) => (
+                    <Segmented
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      options={[
+                        { value: "kg", label: t("settings.unitsKg") },
+                        { value: "lb", label: t("settings.unitsLb") },
+                      ]}
+                      aria-label={t("settings.units")}
+                    />
+                  )}
                 />
               </Field>
               <Field label={t("settings.clockFormat")}>
-                <Segmented
-                  value={clock}
-                  onValueChange={setClock}
-                  options={[
-                    { value: "24", label: t("settings.clock24") },
-                    { value: "12", label: t("settings.clock12") },
-                  ]}
-                  aria-label={t("settings.clockFormat")}
+                <Controller
+                  control={control}
+                  name="clock"
+                  render={({ field }) => (
+                    <Segmented
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      options={[
+                        { value: "24", label: t("settings.clock24") },
+                        { value: "12", label: t("settings.clock12") },
+                      ]}
+                      aria-label={t("settings.clockFormat")}
+                    />
+                  )}
                 />
               </Field>
             </FieldGrid>
             <Field label={t("settings.appLanguage")}>
-              <Segmented
-                value={appLocale}
-                onValueChange={setAppLocale}
-                options={[
-                  { value: "en", label: t("lang.en") },
-                  { value: "es", label: t("lang.es") },
-                ]}
-                aria-label={t("settings.appLanguage")}
-                className="max-w-xs"
+              <Controller
+                control={control}
+                name="appLocale"
+                render={({ field }) => (
+                  <Segmented
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    options={[
+                      { value: "en", label: t("lang.en") },
+                      { value: "es", label: t("lang.es") },
+                    ]}
+                    aria-label={t("settings.appLanguage")}
+                    className="max-w-xs"
+                  />
+                )}
               />
             </Field>
           </section>

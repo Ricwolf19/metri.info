@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 import { AuthDivider, AuthInput } from "@/components/auth/AuthInput";
+import { FormError } from "@/components/auth/FormError";
 import { SocialButtons } from "@/components/auth/SocialButtons";
 import { GmailIcon, MailIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/client";
-import { authErrorMessage } from "@/lib/auth/errors";
+import { authErrorMessage, thrownAuthError } from "@/lib/auth/errors";
 import { executeRecaptcha } from "@/lib/captcha/client";
 import { useI18n } from "@/lib/i18n";
 import { routePath } from "@/lib/i18n/routes";
@@ -30,17 +32,16 @@ export const SignUpForm = () => {
   const { t, locale } = useI18n();
   const home = routePath("home", locale);
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({ defaultValues: { name: "", email: "", password: "" } });
+  const error = errors.root?.server?.message ?? null;
   const [pendingEmail, setPendingEmail] = useState<string | null>(null);
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
+  const onSubmit = handleSubmit(async ({ name, email, password }) => {
     try {
       // Returns null when NEXT_PUBLIC_RECAPTCHA_SITE_KEY is unset, so local dev still works.
       const captchaToken = await executeRecaptcha("signup");
@@ -52,21 +53,15 @@ export const SignUpForm = () => {
         },
       );
       if (res.error) {
-        setError(authErrorMessage(t, res.error));
+        setError("root.server", { message: authErrorMessage(t, res.error) });
         return;
       }
       // Better Auth's `requireEmailVerification` blocks sign-in; show the check-inbox state instead of routing home.
       setPendingEmail(email);
     } catch (err) {
-      setError(
-        err instanceof Error && /network|fetch|offline/i.test(err.message)
-          ? t("auth.errorNetwork")
-          : t("auth.errorGeneric"),
-      );
-    } finally {
-      setLoading(false);
+      setError("root.server", { message: thrownAuthError(t, err) });
     }
-  };
+  });
 
   if (pendingEmail) {
     return (
@@ -84,7 +79,10 @@ export const SignUpForm = () => {
           {t("auth.signUpCheckEmail")}
         </p>
 
-        <p className="mt-3 inline-flex items-center rounded-full border border-ink-600 bg-ink-800/70 px-3 py-1 font-mono text-sm text-ink-200">
+        <p
+          title={pendingEmail}
+          className="mt-3 inline-block max-w-full truncate rounded-full border border-ink-600 bg-ink-800/70 px-3 py-1 align-middle font-mono text-sm text-ink-200"
+        >
           {pendingEmail}
         </p>
 
@@ -128,16 +126,14 @@ export const SignUpForm = () => {
           label={t("auth.name")}
           autoComplete="name"
           required
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          {...register("name", { required: true })}
         />
         <AuthInput
           label={t("auth.email")}
           type="email"
           autoComplete="email"
           required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          {...register("email", { required: true })}
         />
         <AuthInput
           label={t("auth.password")}
@@ -146,16 +142,11 @@ export const SignUpForm = () => {
           required
           minLength={8}
           hint={t("auth.passwordHint")}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          {...register("password", { required: true, minLength: 8 })}
         />
-        {error && (
-          <p role="alert" className="text-sm font-medium text-red-500">
-            {error}
-          </p>
-        )}
-        <Button type="submit" loading={loading} className="w-full">
-          {loading ? t("common.loading") : t("auth.signUp")}
+        <FormError message={error} />
+        <Button type="submit" loading={isSubmitting} className="w-full">
+          {isSubmitting ? t("common.loading") : t("auth.signUp")}
         </Button>
       </form>
 

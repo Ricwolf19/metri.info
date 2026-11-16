@@ -58,3 +58,8 @@ export const authErrorMessage = (t: TFunction, err: AuthErrorLike): string => {
   }
   return t("auth.errorGeneric");
 };
+
+/** The message for an auth call that threw instead of answering (offline, a
+ * dropped connection): the same mapping, fed the thrown error's message. */
+export const thrownAuthError = (t: TFunction, err: unknown): string =>
+  authErrorMessage(t, err instanceof Error ? { message: err.message } : null);

@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { Controller, useForm, useWatch } from "react-hook-form";
 
 import { CheckIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
@@ -29,8 +30,13 @@ import { useI18n } from "@/lib/i18n";
 import type { TranslationKey } from "@/lib/i18n/en";
 import { cn, focusOnMount } from "@/lib/utils";
 
-type Fields = { name: string; email: string; message: string };
-const EMPTY: Fields = { name: "", email: "", message: "" };
+type Fields = {
+  name: string;
+  email: string;
+  message: string;
+  topic: ContactTopic;
+};
+const FIELD_NAMES = ["name", "email", "message"] as const;
 
 const TOPIC_KEY: Record<ContactTopic, TranslationKey> = {
   feedback: "contact.topicFeedback",
@@ -65,41 +71,48 @@ export const ContactForm = () => {
   const searchParams = useSearchParams();
   const seeded = searchParams.get("topic");
 
-  const [values, setValues] = useState<Fields>(EMPTY);
-  const [topic, setTopic] = useState<ContactTopic>(
-    isContactTopic(seeded) ? seeded : "feedback",
-  );
-  const [fieldErrors, setFieldErrors] = useState<Partial<Fields>>({});
-  const [formError, setFormError] = useState<string | null>(null);
+  // The server validates (and localises) every rule, so the form has none of
+  // its own: its field errors come back through `setError`.
+  const {
+    register,
+    control,
+    handleSubmit,
+    setError,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<Fields>({
+    defaultValues: {
+      name: "",
+      email: "",
+      message: "",
+      topic: isContactTopic(seeded) ? seeded : "feedback",
+    },
+  });
+  const [topic, message] = useWatch({ control, name: ["topic", "message"] });
   const [sent, setSent] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const formError = errors.root?.server?.message ?? null;
 
-  const set = (key: keyof Fields, value: string) =>
-    setValues((v) => ({ ...v, [key]: value }));
-
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormError(null);
-    setFieldErrors({});
-    setLoading(true);
+  const onSubmit = handleSubmit(async (values) => {
     try {
       const token = await executeRecaptcha("contact").catch(() => null);
-      const res = await sendContactMessage({ ...values, topic, token, locale });
+      const res = await sendContactMessage({ ...values, token, locale });
       if (res.ok) {
         setSent(true);
-        setValues(EMPTY);
-        track("contact_sent", { topic });
+        // Keep the topic: "send another" is usually about the same thing.
+        reset({ name: "", email: "", message: "", topic: values.topic });
+        track("contact_sent", { topic: values.topic });
         toast({ title: t("contact.success"), variant: "success" });
         return;
       }
-      if (res.error.fieldErrors) setFieldErrors(res.error.fieldErrors);
-      setFormError(res.error.message);
+      for (const name of FIELD_NAMES) {
+        const message = res.error.fieldErrors?.[name];
+        if (message) setError(name, { message });
+      }
+      setError("root.server", { message: res.error.message });
     } catch {
-      setFormError(t("contact.errorGeneric"));
-    } finally {
-      setLoading(false);
+      setError("root.server", { message: t("contact.errorGeneric") });
     }
-  };
+  });
 
   if (sent) {
     return (
@@ -132,7 +145,7 @@ export const ContactForm = () => {
     );
   }
 
-  const remaining = MESSAGE_MAX - values.message.length;
+  const remaining = MESSAGE_MAX - message.length;
 
   return (
     <form onSubmit={onSubmit} className="space-y-5" noValidate>
@@ -143,15 +156,14 @@ export const ContactForm = () => {
             id="contact-name"
             autoComplete="name"
             required
-            value={values.name}
-            aria-invalid={Boolean(fieldErrors.name)}
+            aria-invalid={Boolean(errors.name)}
             aria-describedby={describedBy(
-              Boolean(fieldErrors.name) && "contact-name-error",
+              Boolean(errors.name) && "contact-name-error",
             )}
             placeholder={t("contact.namePlaceholder")}
-            onChange={(e) => set("name", e.target.value)}
+            {...register("name")}
           />
-          <FieldError id="contact-name-error" message={fieldErrors.name} />
+          <FieldError id="contact-name-error" message={errors.name?.message} />
         </div>
 
         <div className="space-y-1.5">
@@ -161,41 +173,50 @@ export const ContactForm = () => {
             type="email"
             autoComplete="email"
             required
-            value={values.email}
-            aria-invalid={Boolean(fieldErrors.email)}
+            aria-invalid={Boolean(errors.email)}
             aria-describedby={describedBy(
-              Boolean(fieldErrors.email) && "contact-email-error",
+              Boolean(errors.email) && "contact-email-error",
             )}
             placeholder={t("contact.emailPlaceholder")}
-            onChange={(e) => set("email", e.target.value)}
+            {...register("email")}
           />
-          <FieldError id="contact-email-error" message={fieldErrors.email} />
+          <FieldError
+            id="contact-email-error"
+            message={errors.email?.message}
+          />
         </div>
       </div>
 
       <div className="space-y-1.5">
         <Label htmlFor="contact-topic">{t("contact.topicLabel")}</Label>
-        <Select
-          value={topic}
-          onValueChange={(v) => setTopic(v as ContactTopic)}
-        >
-          <SelectTrigger
-            id="contact-topic"
-            aria-label={t("contact.topicLabel")}
-            aria-describedby={describedBy(
-              topic === "premium" && "contact-premium-hint",
-            )}
-          >
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {CONTACT_TOPICS.map((value) => (
-              <SelectItem key={value} value={value}>
-                {t(TOPIC_KEY[value])}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Controller
+          control={control}
+          name="topic"
+          render={({ field }) => (
+            <Select
+              value={field.value}
+              onValueChange={(v) => field.onChange(v as ContactTopic)}
+            >
+              <SelectTrigger
+                id="contact-topic"
+                aria-label={t("contact.topicLabel")}
+                aria-describedby={describedBy(
+                  topic === "premium" && "contact-premium-hint",
+                )}
+                onBlur={field.onBlur}
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {CONTACT_TOPICS.map((value) => (
+                  <SelectItem key={value} value={value}>
+                    {t(TOPIC_KEY[value])}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
         {topic === "premium" && (
           <p
             id="contact-premium-hint"
@@ -218,8 +239,7 @@ export const ContactForm = () => {
               remaining < 0 ? "text-red-500" : "text-ink-500",
             )}
           >
-            {values.message.length.toLocaleString()} /{" "}
-            {MESSAGE_MAX.toLocaleString()}
+            {message.length.toLocaleString()} / {MESSAGE_MAX.toLocaleString()}
           </span>
         </div>
         <Textarea
@@ -227,16 +247,18 @@ export const ContactForm = () => {
           required
           rows={6}
           maxLength={MESSAGE_MAX + 100}
-          value={values.message}
-          aria-invalid={Boolean(fieldErrors.message) || remaining < 0}
+          aria-invalid={Boolean(errors.message) || remaining < 0}
           aria-describedby={describedBy(
             "contact-count",
-            Boolean(fieldErrors.message) && "contact-message-error",
+            Boolean(errors.message) && "contact-message-error",
           )}
           placeholder={t("contact.messagePlaceholder")}
-          onChange={(e) => set("message", e.target.value)}
+          {...register("message")}
         />
-        <FieldError id="contact-message-error" message={fieldErrors.message} />
+        <FieldError
+          id="contact-message-error"
+          message={errors.message?.message}
+        />
       </div>
 
       {formError && (
@@ -252,10 +274,10 @@ export const ContactForm = () => {
         type="submit"
         disabled={remaining < 0}
         variant="brand"
-        loading={loading}
+        loading={isSubmitting}
         className="w-full"
       >
-        {loading ? t("contact.sending") : t("contact.submit")}
+        {isSubmitting ? t("contact.sending") : t("contact.submit")}
       </Button>
 
       <p className="text-xs leading-relaxed text-ink-400">

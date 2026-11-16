@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 import { AuthInput } from "@/components/auth/AuthInput";
+import { FormError } from "@/components/auth/FormError";
 import { Button } from "@/components/ui/button";
 import { track } from "@/lib/analytics/track";
 import { authClient } from "@/lib/auth/client";
-import { authErrorMessage } from "@/lib/auth/errors";
+import { authErrorMessage, thrownAuthError } from "@/lib/auth/errors";
 import { useI18n } from "@/lib/i18n";
 import { routePath } from "@/lib/i18n/routes";
 import { focusOnMount } from "@/lib/utils";
@@ -19,14 +20,15 @@ export const ForgotPasswordForm = () => {
   const { t, locale } = useI18n();
   const signIn = routePath("signIn", locale);
 
-  const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting, isSubmitSuccessful },
+  } = useForm({ defaultValues: { email: "" } });
+  const error = errors.root?.server?.message ?? null;
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  const onSubmit = handleSubmit(async ({ email }) => {
     try {
       const res = await authClient.requestPasswordReset({
         email,
@@ -36,24 +38,18 @@ export const ForgotPasswordForm = () => {
         // Better Auth returns "User not found" for unknown emails; per the
         // design we always show the neutral confirmation, so ignore that path
         // and surface anything else.
-        setError(authErrorMessage(t, res.error));
-        setLoading(false);
+        setError("root.server", { message: authErrorMessage(t, res.error) });
         return;
       }
       track("password_reset_requested");
-      setSent(true);
     } catch (err) {
-      setError(
-        err instanceof Error && /network|fetch|offline/i.test(err.message)
-          ? t("auth.errorNetwork")
-          : t("auth.errorGeneric"),
-      );
-    } finally {
-      setLoading(false);
+      setError("root.server", { message: thrownAuthError(t, err) });
     }
-  };
+  });
 
-  if (sent) {
+  // A submit that set no error is a sent email (RHF counts a handler that
+  // called `setError` as unsuccessful).
+  if (isSubmitSuccessful) {
     return (
       <div className="space-y-5 text-center">
         <p
@@ -76,21 +72,16 @@ export const ForgotPasswordForm = () => {
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
-      {error && (
-        <p role="alert" className="text-sm font-medium text-red-500">
-          {error}
-        </p>
-      )}
+      <FormError message={error} />
       <AuthInput
         label={t("auth.email")}
         type="email"
         autoComplete="email"
         required
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        {...register("email", { required: true })}
       />
-      <Button type="submit" loading={loading} className="w-full">
-        {loading ? t("common.loading") : t("auth.forgotSubmit")}
+      <Button type="submit" loading={isSubmitting} className="w-full">
+        {isSubmitting ? t("common.loading") : t("auth.forgotSubmit")}
       </Button>
       <p className="text-center text-sm text-ink-300">
         <Link href={signIn} className="font-medium text-accent hover:underline">

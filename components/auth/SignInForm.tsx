@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 import { AuthDivider, AuthInput } from "@/components/auth/AuthInput";
+import { FormError } from "@/components/auth/FormError";
 import { SocialButtons } from "@/components/auth/SocialButtons";
 import { Button } from "@/components/ui/button";
 import { track } from "@/lib/analytics/track";
 import { authClient } from "@/lib/auth/client";
-import { authErrorMessage } from "@/lib/auth/errors";
+import { authErrorMessage, thrownAuthError } from "@/lib/auth/errors";
 import { useI18n } from "@/lib/i18n";
 import { routePath } from "@/lib/i18n/routes";
 
@@ -20,34 +21,28 @@ export const SignInForm = () => {
   const home = routePath("home", locale);
   const justReset = params.get("reset") === "1";
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({ defaultValues: { email: "", password: "" } });
+  const error = errors.root?.server?.message ?? null;
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
+  const onSubmit = handleSubmit(async ({ email, password }) => {
     try {
       const res = await authClient.signIn.email({ email, password });
       if (res.error) {
-        setError(authErrorMessage(t, res.error));
+        setError("root.server", { message: authErrorMessage(t, res.error) });
         return;
       }
       track("login_completed", { method: "email" });
       router.push(home);
       router.refresh();
     } catch (err) {
-      setError(
-        err instanceof Error && /network|fetch|offline/i.test(err.message)
-          ? t("auth.errorNetwork")
-          : t("auth.errorGeneric"),
-      );
-    } finally {
-      setLoading(false);
+      setError("root.server", { message: thrownAuthError(t, err) });
     }
-  };
+  });
 
   return (
     <div className="space-y-5">
@@ -68,8 +63,7 @@ export const SignInForm = () => {
           type="email"
           autoComplete="email"
           required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          {...register("email", { required: true })}
         />
         <div>
           <AuthInput
@@ -77,8 +71,7 @@ export const SignInForm = () => {
             type="password"
             autoComplete="current-password"
             required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            {...register("password", { required: true })}
           />
           <div className="mt-1.5 text-right">
             <Link
@@ -89,13 +82,9 @@ export const SignInForm = () => {
             </Link>
           </div>
         </div>
-        {error && (
-          <p role="alert" className="text-sm font-medium text-red-500">
-            {error}
-          </p>
-        )}
-        <Button type="submit" loading={loading} className="w-full">
-          {loading ? t("common.loading") : t("auth.signIn")}
+        <FormError message={error} />
+        <Button type="submit" loading={isSubmitting} className="w-full">
+          {isSubmitting ? t("common.loading") : t("auth.signIn")}
         </Button>
       </form>
 

@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 import { AuthInput } from "@/components/auth/AuthInput";
+import { FormError } from "@/components/auth/FormError";
 import { Button } from "@/components/ui/button";
 import { track } from "@/lib/analytics/track";
 import { authClient } from "@/lib/auth/client";
@@ -27,14 +28,14 @@ export const ResetPasswordForm = () => {
   const token = params.get("token");
   const tokenError = params.get("error");
 
-  const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [error, setError] = useState<string | null>(null);
   // A rule a field broke is shown on that field; a server error stays below.
-  const [errorField, setErrorField] = useState<"password" | "confirm" | null>(
-    null,
-  );
-  const [loading, setLoading] = useState(false);
+  // Checked on submit only, like before: no red text while still typing.
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({ defaultValues: { password: "", confirm: "" } });
 
   if (tokenError || !token) {
     return (
@@ -52,21 +53,7 @@ export const ResetPasswordForm = () => {
     );
   }
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setErrorField(null);
-    if (password.length < MIN_PASSWORD) {
-      setError(t("auth.errorPasswordShort"));
-      setErrorField("password");
-      return;
-    }
-    if (password !== confirm) {
-      setError(t("auth.errorPasswordMatch"));
-      setErrorField("confirm");
-      return;
-    }
-    setLoading(true);
+  const onSubmit = handleSubmit(async ({ password }) => {
     try {
       const res = await authClient.resetPassword({
         newPassword: password,
@@ -74,18 +61,16 @@ export const ResetPasswordForm = () => {
       });
       if (res.error) {
         // Mapped, never `res.error.message`: that is English on /es.
-        setError(authErrorMessage(t, res.error));
+        setError("root.server", { message: authErrorMessage(t, res.error) });
         return;
       }
       track("password_reset_completed");
       router.push(`${signIn}?reset=1`);
       router.refresh();
     } catch {
-      setError(t("auth.errorGeneric"));
-    } finally {
-      setLoading(false);
+      setError("root.server", { message: t("auth.errorGeneric") });
     }
-  };
+  });
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
@@ -95,26 +80,28 @@ export const ResetPasswordForm = () => {
         autoComplete="new-password"
         required
         hint={t("auth.passwordHint")}
-        error={errorField === "password" ? error : null}
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        error={errors.password?.message}
+        {...register("password", {
+          minLength: {
+            value: MIN_PASSWORD,
+            message: t("auth.errorPasswordShort"),
+          },
+        })}
       />
       <AuthInput
         label={t("auth.confirmPassword")}
         type="password"
         autoComplete="new-password"
         required
-        error={errorField === "confirm" ? error : null}
-        value={confirm}
-        onChange={(e) => setConfirm(e.target.value)}
+        error={errors.confirm?.message}
+        {...register("confirm", {
+          validate: (confirm, { password }) =>
+            confirm === password || t("auth.errorPasswordMatch"),
+        })}
       />
-      {error && !errorField && (
-        <p role="alert" className="text-sm font-medium text-red-500">
-          {error}
-        </p>
-      )}
-      <Button type="submit" loading={loading} className="w-full">
-        {loading ? t("common.loading") : t("auth.resetSubmit")}
+      <FormError message={errors.root?.server?.message} />
+      <Button type="submit" loading={isSubmitting} className="w-full">
+        {isSubmitting ? t("common.loading") : t("auth.resetSubmit")}
       </Button>
     </form>
   );

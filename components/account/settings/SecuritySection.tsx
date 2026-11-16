@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 import {
   PanelStatus,
@@ -30,33 +31,18 @@ export const SecuritySection = ({
   const t = useT();
   const { toast } = useToast();
 
-  const [current, setCurrent] = useState("");
-  const [next, setNext] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [pending, setPending] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({ defaultValues: { current: "", next: "", confirm: "" } });
   const [status, setStatus] = useState<Status>(null);
 
-  const validate = (): string | null => {
-    if (next.length < MIN_PASSWORD) return t("settings.errorPasswordShort");
-    if (next !== confirm) return t("settings.errorPasswordMatch");
-    return null;
-  };
-
-  const reset = () => {
-    setCurrent("");
-    setNext("");
-    setConfirm("");
-  };
-
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // The rules a field breaks show on that field, on submit; the server's
+  // answer goes to the panel status.
+  const onSubmit = handleSubmit(async ({ current, next }) => {
     setStatus(null);
-    const invalid = validate();
-    if (invalid) {
-      setStatus({ tone: "error", message: invalid });
-      return;
-    }
-    setPending(true);
     try {
       if (hasPassword) {
         const res = await authClient.changePassword({
@@ -107,10 +93,8 @@ export const SecuritySection = ({
     } catch {
       setStatus({ tone: "error", message: t("settings.errorGeneric") });
       toast({ title: t("toast.genericError"), variant: "error" });
-    } finally {
-      setPending(false);
     }
-  };
+  });
 
   return (
     <form onSubmit={onSubmit}>
@@ -128,8 +112,8 @@ export const SecuritySection = ({
               message={status?.message ?? null}
               tone={status?.tone ?? "success"}
             />
-            <Button type="submit" size="sm" loading={pending}>
-              {pending
+            <Button type="submit" size="sm" loading={isSubmitting}>
+              {isSubmitting
                 ? t("settings.saving")
                 : hasPassword
                   ? t("settings.changePassword")
@@ -145,8 +129,7 @@ export const SecuritySection = ({
               type="password"
               autoComplete="current-password"
               required
-              value={current}
-              onChange={(e) => setCurrent(e.target.value)}
+              {...register("current", { required: hasPassword })}
             />
           )}
           <AuthInput
@@ -155,16 +138,24 @@ export const SecuritySection = ({
             autoComplete="new-password"
             required
             hint={t("auth.passwordHint")}
-            value={next}
-            onChange={(e) => setNext(e.target.value)}
+            error={errors.next?.message}
+            {...register("next", {
+              minLength: {
+                value: MIN_PASSWORD,
+                message: t("settings.errorPasswordShort"),
+              },
+            })}
           />
           <AuthInput
             label={t("settings.confirmPassword")}
             type="password"
             autoComplete="new-password"
             required
-            value={confirm}
-            onChange={(e) => setConfirm(e.target.value)}
+            error={errors.confirm?.message}
+            {...register("confirm", {
+              validate: (confirm, { next }) =>
+                confirm === next || t("settings.errorPasswordMatch"),
+            })}
           />
         </div>
       </SettingsPanel>
