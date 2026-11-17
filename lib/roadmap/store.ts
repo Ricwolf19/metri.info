@@ -152,7 +152,7 @@ export const readEvidence = async (
       Object.entries(evidence).filter(([, v]) => v !== undefined),
     );
   } catch (error) {
-    event.warn("roadmap.evidence-failed", { userId, error: String(error) });
+    event.warn("roadmap.evidence-failed", { userId, error });
     return {};
   }
 };

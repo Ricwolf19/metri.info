@@ -120,7 +120,7 @@ export const getLatestBodyLogs = async (
     ]);
     return { ...metrics, tape, goal };
   } catch (error) {
-    event.warn("sync.latest-failed", { userId, error: String(error) });
+    event.warn("sync.latest-failed", { userId, error });
     return EMPTY;
   }
 };

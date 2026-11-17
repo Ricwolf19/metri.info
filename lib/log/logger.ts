@@ -18,6 +18,27 @@ import "server-only";
 
 type Fields = Record<string, unknown>;
 
+/** An error as plain fields, down its `cause` chain: a database driver wraps
+ * the real reason (`relation "roadmap" does not exist`, code `42P01`) in a
+ * generic "Failed query", and only the cause says what went wrong. */
+const describeError = (e: Error, depth = 0): Fields => {
+  const code = (e as { code?: unknown }).code;
+  return {
+    name: e.name,
+    message: e.message,
+    ...(typeof code === "string" || typeof code === "number" ? { code } : {}),
+    stack: e.stack,
+    ...(e.cause === undefined || depth >= 3
+      ? {}
+      : {
+          cause:
+            e.cause instanceof Error
+              ? describeError(e.cause, depth + 1)
+              : String(e.cause),
+        }),
+  };
+};
+
 const emit = (
   level: "info" | "warn" | "error",
   prefix: string,
@@ -30,7 +51,7 @@ const emit = (
   const safeFields: Fields = {};
   for (const [k, v] of Object.entries(fields)) {
     if (v instanceof Error) {
-      safeFields[k] = { name: v.name, message: v.message, stack: v.stack };
+      safeFields[k] = describeError(v);
     } else if (typeof v !== "function") {
       safeFields[k] = v;
     }

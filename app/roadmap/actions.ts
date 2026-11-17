@@ -35,7 +35,7 @@ export const loadRoadmap = async (): Promise<RoadmapLoad> => {
     readRoadmap(userId).then(
       (roadmap) => ({ roadmap, readFailed: false }),
       (error) => {
-        event.warn("roadmap.read-failed", { userId, error: String(error) });
+        event.warn("roadmap.read-failed", { userId, error });
         return { roadmap: null, readFailed: true };
       },
     ),
