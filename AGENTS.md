@@ -58,9 +58,29 @@ critical flows on a real iPhone before a release.
   (the full component) — `LazyMotion` is `strict`. One side navigation: `components/ui/SideNav.tsx`
   (docs, account). Section pages open with `components/shared/PageHero.tsx`. Glows behind
   centred objects use `.glow-orb` (fades on every side); `.glow-brand` is top-anchored and shows a
-  hard edge if its box starts inside the viewport. Every loading state is `LoadingScreen` (the mobile
-  `AppLoader` port: the mark breathing inside a lime arc, always centred); there are no grey
-  skeleton blocks anywhere.
+  hard edge if its box starts inside the viewport.
+- **Loading**: a page or a whole form that is loading shows its skeleton (`components/skeletons`,
+  built from `components/ui/Skeleton.tsx`): the page's own layout in grey shapes, so nothing jumps
+  when the data lands. This covers every `loading.tsx` and every Suspense fallback, down to a single
+  admin panel (`AdminSkeleton` with `header={false}`); the calculator, quiz, roadmap and contact
+  fallbacks are also what the prerendered HTML shows. A button that is waiting shows `Button
+  loading`: the spinner takes the label's place at the same size.
+- **Footer stays out of the way**: `main` is at least a screen tall, a flow whose height changes step
+  to step (roadmap, quiz, contact) sits in `components/shared/Stage.tsx` (reserves a full screen,
+  so a shorter step never pulls the footer into view), and a page with little to say (404, offline,
+  unsubscribe) centres itself in the first screen with `CenteredScreen`.
+- **Site menu**: one model, `components/layout/site-nav.ts`: Tools, Learn and App open a panel
+  (`DesktopNav`, Radix Navigation Menu, from `md` up) or an accordion in the phone drawer
+  (`MobileNav`); the roadmap is a direct link. Contact sits in App; About and GitHub live in the footer
+  and the drawer's chips. A new calculator goes in `CALC_GROUPS` (`lib/calculators/groups.ts`, held by its
+  test); its menu name is the calculator's `h1`, passed from the root layout so the content module
+  never ships to the client. Learn mirrors Tools: a recommended column (glossary, knowledge check),
+  then the guides in `FEATURED_DOCS` (`lib/docs/featured.ts`, each held to both locales by its test,
+  titles from the docs index via the root layout) and "All guides". `/admin` keeps its own flat
+  section list.
+- **Narrow screens never spill text**: a `Segmented` label wraps to two lines, then ends in an
+  ellipsis; a `Select` value truncates and its list scrolls within the space left; choice cards and
+  quiz options wrap (`[overflow-wrap:anywhere]`).
 - **Type**: Geist Sans for everything meant to be read — headings, paragraphs, buttons, form
   labels. JetBrains Mono (`font-mono`) is the machine voice — nav links, kickers/eyebrows, section
   numbers, numeric values, badges, tab labels, hashes. Never set a paragraph or a button in mono.
@@ -101,8 +121,9 @@ critical flows on a real iPhone before a release.
   numbers for the same body. `lib/calculations/{energy,strength}.test.ts` guard this side. The
   plate calculator's racks (`PLATE_SETS`, kg and lb) come from the app's training `plate-math.ts`.
 - **Knowledge check** (`lib/quiz`): `areas.ts` and the first sixteen questions of `content.ts` came
-  from the app's former `src/features/quiz` (area ids and `REVEAL_MS` are still shared contracts;
-  the web is the quiz's home now). The engine is a full diagnostic: every (area, level) cell is asked
+  from the app's former `src/features/quiz` (area ids are still a shared contract; the web is the
+  quiz's home now). It never moves on by itself: after each answer the explanation stays until the
+  reader presses Next. The engine is a full diagnostic: every (area, level) cell is asked
   twice with two different questions (thirty-two in all, `QUIZ_LENGTH`), level by level with the
   areas rotated and the option order shuffled per attempt; a level counts only when both answers
   are right. Results keep the app's `Record<QuizArea, 0..4>` shape and add every miss: the
@@ -125,10 +146,13 @@ critical flows on a real iPhone before a release.
   block length from the `choosing-your-phase` tables: body fat sets the direction, experience the
   pace, a long diet earns a maintenance block first) → ordered steps in four stages, each linking a
   guide or calculator. Steps are ticked by hand or by `Evidence` the account shows (saved calcs,
-  quiz attempts, synced weigh-ins and tape). A visitor's plan lives in localStorage; an account's
-  only in the `roadmap` row (a shared browser never hands one person's plan to the next), and a
-  visitor's plan moves to the account once at sign-in. A failed read is never treated as "no
-  plan", or the next save would overwrite it. `parseRoadmap` guards both stores; answers, step ids
+  quiz attempts, synced weigh-ins and tape). The test can be retaken at any time and every result
+  starts as a draft (`RoadmapStatus` says where it lives): a visitor's lives in localStorage and is
+  labelled temporary; a signed-in result lives on the page only (a shared browser never hands one
+  person's answers to the next) until the person presses "Keep this plan" (`keepRoadmap`), which
+  writes it to the `roadmap` row and moves the plan it replaces into the history. A visitor's plan
+  still in the browser at sign-in is offered as that draft, never saved on its own. A failed read is
+  never treated as "no plan", or the next save would overwrite it. `parseRoadmap` guards both stores; answers, step ids
   and phases are a stored format, so add values, never rename them. Guides a step links must exist in both
   locales (`ROADMAP_DOCS`).
 - **Entitlements**: gate with `can(plan, feature)` (`lib/entitlements.ts`), never
