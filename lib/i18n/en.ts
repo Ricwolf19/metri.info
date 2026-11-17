@@ -21,6 +21,9 @@ export const en = {
   "pwa.offlineBody":
     "We couldn't reach the network. Calculators you've already opened still work offline: everything is computed on your device.",
   "pwa.offlineHome": "Back to home",
+  "notFound.title": "This page doesn't exist",
+  "notFound.body":
+    "The link may be old or mistyped. The calculators and the guides are one click away.",
 
   "lang.en": "English",
   "lang.es": "Spanish",
@@ -59,6 +62,21 @@ export const en = {
   "cmd.group.account": "Account",
 
   "nav.close": "Close",
+  "nav.learn": "Learn",
+  "nav.app": "App",
+  "nav.allTools": "All tools",
+  "nav.group.energy": "Energy & nutrition",
+  "nav.group.body": "Body",
+  "nav.group.training": "Training",
+  "nav.allDocs": "All guides",
+  "nav.recommended": "Recommended",
+  "nav.quiz.desc": "Thirty-two questions and a map of what to study next.",
+  "nav.glossary": "Glossary",
+  "nav.glossary.desc": "Every term, in plain words.",
+  "nav.download.desc": "The offline-first Android app.",
+  "nav.changelog.desc": "What's new in each release.",
+  "nav.contact.desc": "Questions, bugs or ideas: write to us.",
+  "nav.roadmap.desc": "Ten questions, a step-by-step plan.",
 
   "auth.signIn": "Sign in",
   "auth.signUp": "Create account",
@@ -290,15 +308,10 @@ export const en = {
   "quiz.rightAnswer": "Correct answer",
   "quiz.yourAnswer": "Your answer",
   "quiz.why": "Why",
-  "quiz.autoNext":
-    "The next question comes on its own. Pause it with the button.",
-  "quiz.autoAdvance":
-    "Move to the next question on its own, {seconds} seconds after each answer",
   "quiz.cardTitle": "Knowledge check",
   "quiz.cardBody":
     "Find your level in nutrition, training, body composition and the fundamentals.",
   "quiz.cardCta": "Take the test",
-  "quiz.heroCta": "Take the knowledge check",
   "quiz.area.nutrition": "Nutrition",
   "quiz.area.training": "Training",
   "quiz.area.body": "Body composition",
@@ -331,7 +344,6 @@ export const en = {
   "quiz.historyEmpty":
     "No attempts yet. Take the check and your map appears here.",
   "quiz.remaining": "{n} more",
-  "quiz.pause": "Pause the countdown",
   "quiz.review": "Review these",
   "quiz.reviewHint":
     "The questions you missed, with the explanation and where to read more.",
@@ -1300,6 +1312,8 @@ export const en = {
   "monthlyTips.diet.body":
     "Two levers matter most: total calories and total protein. Get those right before worrying about the rest.",
   "nav.roadmap": "Roadmap",
+  "quiz.heroCta": "Take the knowledge check",
+  "roadmap.heroCta": "Get your free roadmap",
   "roadmap.title": "Your fitness roadmap",
   "roadmap.eyebrow": "Free · 10 questions · 3 minutes",
   "roadmap.seoDescription":
@@ -1309,7 +1323,7 @@ export const en = {
     "Ten quick questions. Your body fat sets the direction, your experience sets the pace and your habits decide what to fix first. Every step links the guide or calculator that does the work.",
   "roadmap.intro.start": "Start",
   "roadmap.intro.guest":
-    "Your answers stay in this browser. Sign in to keep your roadmap on every device.",
+    "Your result stays only in this browser until you sign in and keep it.",
   "roadmap.q.progress": "Question {n} of {total}",
   "roadmap.q.required": "Pick one to continue.",
   "roadmap.q.back": "Back",
@@ -1457,8 +1471,22 @@ export const en = {
   "roadmap.history.started": "Started this plan",
   "roadmap.history.past": "Earlier plans",
   "roadmap.history.pastLine": "{done} of {total} steps",
-  "roadmap.guestNote": "Saved in this browser.",
-  "roadmap.guestSignIn": "Sign in to keep it on every device.",
+  "roadmap.status.guestTitle": "This plan is temporary",
+  "roadmap.status.guestBody":
+    "It lives only in this browser: clearing it or switching devices loses it. Take the test as often as you like; to follow a plan, sign in and keep it.",
+  "roadmap.status.signIn": "Sign in to keep it",
+  "roadmap.status.draftTitle": "Not kept yet",
+  "roadmap.status.draftBody":
+    "Keep this result to follow it and tick its steps from any device. Until you do, it isn't saved to your account.",
+  "roadmap.status.replacing":
+    "Your current plan ({phase}, since {date}) stays until you keep this one.",
+  "roadmap.status.keptTitle": "Saved to your account",
+  "roadmap.status.keptBody":
+    "Made a mistake, or something changed? Take the test again: the new result waits for you to keep it, and this plan stays until you do.",
+  "roadmap.keep": "Keep this plan",
+  "roadmap.discard": "Discard",
+  "roadmap.retakeTest": "Take the test again",
+  "roadmap.kept": "Plan saved to your account.",
   "roadmap.loadError":
     "Couldn't load your roadmap. Check your connection and try again.",
   "roadmap.retry": "Try again",

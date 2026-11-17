@@ -24,6 +24,9 @@ export const es: Record<TranslationKey, string> = {
   "pwa.offlineBody":
     "No pudimos conectar con la red. Las calculadoras que ya abriste siguen funcionando sin conexión: todo se calcula en tu dispositivo.",
   "pwa.offlineHome": "Volver al inicio",
+  "notFound.title": "Esta página no existe",
+  "notFound.body":
+    "Puede que el enlace sea viejo o tenga un error. Las calculadoras y las guías están a un clic.",
 
   "lang.en": "Inglés",
   "lang.es": "Español",
@@ -63,6 +66,21 @@ export const es: Record<TranslationKey, string> = {
   "cmd.group.account": "Cuenta",
 
   "nav.close": "Cerrar",
+  "nav.learn": "Aprende",
+  "nav.app": "App",
+  "nav.allTools": "Todas las herramientas",
+  "nav.group.energy": "Energía y nutrición",
+  "nav.group.body": "Cuerpo",
+  "nav.group.training": "Entrenamiento",
+  "nav.allDocs": "Todas las guías",
+  "nav.recommended": "Recomendado",
+  "nav.quiz.desc": "Treinta y dos preguntas y un mapa de qué estudiar después.",
+  "nav.glossary": "Glosario",
+  "nav.glossary.desc": "Cada término, en palabras simples.",
+  "nav.download.desc": "La app para Android que funciona sin conexión.",
+  "nav.changelog.desc": "Qué trae cada versión.",
+  "nav.contact.desc": "Dudas, errores o ideas: escríbenos.",
+  "nav.roadmap.desc": "Diez preguntas, un plan paso a paso.",
 
   "auth.signIn": "Iniciar sesión",
   "auth.signUp": "Crear cuenta",
@@ -305,14 +323,10 @@ export const es: Record<TranslationKey, string> = {
   "quiz.rightAnswer": "Respuesta correcta",
   "quiz.yourAnswer": "Tu respuesta",
   "quiz.why": "Por qué",
-  "quiz.autoNext": "La siguiente pregunta llega sola. Páusala con el botón.",
-  "quiz.autoAdvance":
-    "Pasar a la siguiente pregunta sola, {seconds} segundos después de cada respuesta",
   "quiz.cardTitle": "Test de conocimientos",
   "quiz.cardBody":
     "Descubre tu nivel en nutrición, entrenamiento, composición corporal y fundamentos.",
   "quiz.cardCta": "Hacer el test",
-  "quiz.heroCta": "Hacer el test de conocimientos",
   "quiz.area.nutrition": "Nutrición",
   "quiz.area.training": "Entrenamiento",
   "quiz.area.body": "Composición corporal",
@@ -345,7 +359,6 @@ export const es: Record<TranslationKey, string> = {
   "quiz.historyEmpty":
     "Aún no hay intentos. Haz el test y tu mapa aparecerá aquí.",
   "quiz.remaining": "{n} más",
-  "quiz.pause": "Pausar la cuenta atrás",
   "quiz.review": "Repasa esto",
   "quiz.reviewHint":
     "Las preguntas que fallaste, con la explicación y dónde leer más.",
@@ -1332,6 +1345,8 @@ export const es: Record<TranslationKey, string> = {
   "monthlyTips.diet.body":
     "Dos palancas importan más: calorías totales y proteína total. Ajústalas antes de preocuparte por lo demás.",
   "nav.roadmap": "Mi ruta",
+  "quiz.heroCta": "Hacer el test de conocimientos",
+  "roadmap.heroCta": "Arma tu ruta gratis",
   "roadmap.title": "Tu ruta fitness",
   "roadmap.eyebrow": "Gratis · 10 preguntas · 3 minutos",
   "roadmap.seoDescription":
@@ -1341,7 +1356,7 @@ export const es: Record<TranslationKey, string> = {
     "Diez preguntas rápidas. Tu grasa corporal marca la dirección, tu experiencia marca el ritmo y tus hábitos deciden qué corregir primero. Cada paso enlaza la guía o la calculadora que hace el trabajo.",
   "roadmap.intro.start": "Empezar",
   "roadmap.intro.guest":
-    "Tus respuestas se quedan en este navegador. Inicia sesión para tener tu ruta en todos tus dispositivos.",
+    "Tu resultado se queda solo en este navegador hasta que inicies sesión y lo guardes.",
   "roadmap.q.progress": "Pregunta {n} de {total}",
   "roadmap.q.required": "Elige una opción para continuar.",
   "roadmap.q.back": "Atrás",
@@ -1492,9 +1507,22 @@ export const es: Record<TranslationKey, string> = {
   "roadmap.history.started": "Empezaste este plan",
   "roadmap.history.past": "Planes anteriores",
   "roadmap.history.pastLine": "{done} de {total} pasos",
-  "roadmap.guestNote": "Guardado en este navegador.",
-  "roadmap.guestSignIn":
-    "Inicia sesión para tenerlo en todos tus dispositivos.",
+  "roadmap.status.guestTitle": "Este plan es temporal",
+  "roadmap.status.guestBody":
+    "Solo vive en este navegador: si lo limpias o cambias de dispositivo, se pierde. Haz el test las veces que quieras; para seguir un plan, inicia sesión y guárdalo.",
+  "roadmap.status.signIn": "Inicia sesión para guardarlo",
+  "roadmap.status.draftTitle": "Aún sin guardar",
+  "roadmap.status.draftBody":
+    "Guarda este resultado para seguirlo y marcar sus pasos desde cualquier dispositivo. Mientras no lo hagas, no queda en tu cuenta.",
+  "roadmap.status.replacing":
+    "Tu plan actual ({phase}, desde el {date}) se queda hasta que guardes este.",
+  "roadmap.status.keptTitle": "Guardado en tu cuenta",
+  "roadmap.status.keptBody":
+    "¿Te equivocaste o algo cambió? Haz el test otra vez: el nuevo resultado espera a que lo guardes y este plan sigue hasta entonces.",
+  "roadmap.keep": "Guardar este plan",
+  "roadmap.discard": "Descartar",
+  "roadmap.retakeTest": "Hacer el test otra vez",
+  "roadmap.kept": "Plan guardado en tu cuenta.",
   "roadmap.loadError":
     "No pudimos cargar tu ruta. Revisa tu conexión e inténtalo de nuevo.",
   "roadmap.retry": "Reintentar",
