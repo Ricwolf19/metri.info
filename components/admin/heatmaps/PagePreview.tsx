@@ -5,8 +5,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Spinner } from "@/components/ui/Spinner";
 import {
   type HeatPoint,
+  type HeatZone,
   intensityCap,
   type ReachBand,
+  ZONE_COLS,
+  ZONE_ROW_PX,
+  zoneKey,
+  zoneOf,
 } from "@/lib/analytics/heat";
 import { cn } from "@/lib/utils";
 
@@ -42,7 +47,15 @@ type Props = {
   markers: readonly Guide[];
   /** The first screen's edge — a light pill. */
   fold: Guide;
+  /** Interactions and distinct visitors per hover zone; none, no tooltip. */
+  zones?: readonly HeatZone[];
+  /** What the map counts ("clicks"), for the tooltip. */
+  noun?: string;
 };
+
+type Hover = { zone: HeatZone; x: number; y: number };
+
+const fmt = (n: number) => n.toLocaleString("en-US");
 
 /** The overview strip beside the preview. */
 const STRIP = 44;
@@ -92,6 +105,10 @@ const fit = (container: number, width: number, height: number) =>
  * Home/End, or the overview strip — and only the slice under the scroll is
  * copied from the prebuilt heat layers each frame.
  *
+ * Hovering the heat shows the zone under the pointer (a cell of the
+ * `ZONE_COLS` × `ZONE_ROW_PX` grid) outlined, with how many interactions and
+ * how many different visitors it got, counted exactly on the server.
+ *
  * The frame is not sized to the whole document: sections sized to the
  * viewport (`min-h-dvh`) would grow with it forever. If the page redirects or
  * won't load, the heat is drawn on a blank sheet as tall as the data reaches.
@@ -105,6 +122,8 @@ export const PagePreview = ({
   bands,
   markers,
   fold,
+  zones = [],
+  noun = "interactions",
 }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLIFrameElement>(null);
@@ -116,6 +135,15 @@ export const PagePreview = ({
   const [scrollY, setScrollY] = useState(0);
   const [frame, setFrame] = useState<FrameState>({ status: "loading" });
   const [showFixed, setShowFixed] = useState(true);
+  const [hover, setHover] = useState<Hover | null>(null);
+  const zoneMap = useMemo(
+    () => new Map(zones.map((z) => [zoneKey(z.fixed, z.col, z.row), z])),
+    [zones],
+  );
+  const zoneTotal = useMemo(
+    () => zones.reduce((n, z) => n + z.count, 0),
+    [zones],
+  );
 
   const fixedCount = points.filter((p) => p.fixed).length;
   const dataHeight = useMemo(
@@ -215,6 +243,7 @@ export const PagePreview = ({
       const delta = (e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY) / scale;
       if ((delta < 0 && top <= 0) || (delta > 0 && top >= maxScroll)) return;
       e.preventDefault();
+      setHover(null);
       const next = Math.round(Math.min(maxScroll, Math.max(0, top + delta)));
       if (frame.status === "ready")
         frameRef.current?.contentWindow?.scrollTo({
@@ -226,6 +255,8 @@ export const PagePreview = ({
     stage.addEventListener("wheel", onWheel, { passive: false });
     return () => stage.removeEventListener("wheel", onWheel);
   }, [top, maxScroll, scale, frame.status]);
+
+  const hoverZone = hover?.zone ?? null;
 
   // Paint the frame: bands, the document slice under the scroll, the fixed
   // layer, then the guides.
@@ -249,6 +280,17 @@ export const PagePreview = ({
           drawGuide(ctx, m.y - top, width, m.label, "dark", unit);
       if (fold.y > top && fold.y < top + height)
         drawGuide(ctx, fold.y - top, width, fold.label, "light", unit);
+      if (hoverZone) {
+        const colWidth = width / ZONE_COLS;
+        ctx.lineWidth = 1.5 * unit;
+        ctx.strokeStyle = tokenColor("--ink-50", 0.9);
+        ctx.strokeRect(
+          hoverZone.col * colWidth,
+          hoverZone.row * ZONE_ROW_PX - (hoverZone.fixed ? 0 : top),
+          colWidth,
+          ZONE_ROW_PX,
+        );
+      }
     });
     return () => cancelAnimationFrame(id);
   }, [
@@ -262,6 +304,7 @@ export const PagePreview = ({
     showFixed,
     markers,
     fold,
+    hoverZone,
   ]);
 
   // The overview strip: the whole page, its heat, and where the view is.
@@ -310,6 +353,25 @@ export const PagePreview = ({
     else if (e.key in step) scrollTo(top + step[e.key]);
     else return;
     e.preventDefault();
+  };
+
+  // The zone under the pointer: a fixed element's first (it sits on top),
+  // else the page's at the current scroll. Touch has no hover.
+  const onHover = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (zones.length === 0 || e.pointerType === "touch") return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const share = x / rect.width;
+    const fixed = zoneOf(share, y / scale);
+    const page = zoneOf(share, y / scale + top);
+    const zone =
+      (showFixed
+        ? zoneMap.get(zoneKey(true, fixed.col, fixed.row))
+        : undefined) ??
+      zoneMap.get(zoneKey(false, page.col, page.row)) ??
+      null;
+    setHover(zone ? { zone, x, y } : null);
   };
 
   const onLoad = () => {
@@ -379,8 +441,35 @@ export const PagePreview = ({
             role="region"
             aria-label="Heatmap preview. Scroll it with the mouse wheel, the arrow keys, Page Up, Page Down, Home and End."
             onKeyDown={onKeyDown}
+            onPointerMove={onHover}
+            onPointerLeave={() => setHover(null)}
             className="absolute inset-0 cursor-ns-resize focus-visible:ring-2 focus-visible:ring-brand/55 focus-visible:outline-none focus-visible:ring-inset"
           />
+          {hover ? (
+            <div
+              aria-hidden
+              className="pointer-events-none absolute z-10 rounded-md border border-ink-600 bg-ink-900/95 px-2.5 py-1.5 font-mono text-[11px] leading-snug whitespace-nowrap text-ink-100 shadow-lg"
+              style={{
+                ...(hover.x > shownWidth / 2
+                  ? { right: shownWidth - hover.x + 12 }
+                  : { left: hover.x + 12 }),
+                ...(hover.y > shownHeight / 2
+                  ? { bottom: shownHeight - hover.y + 12 }
+                  : { top: hover.y + 12 }),
+              }}
+            >
+              <span className="block">
+                {fmt(hover.zone.count)} {noun}
+              </span>
+              <span className="block text-ink-400">
+                {fmt(hover.zone.people)}{" "}
+                {hover.zone.people === 1 ? "person" : "people"}
+                {zoneTotal > 0
+                  ? ` · ${Math.round((hover.zone.count / zoneTotal) * 100)}% of all`
+                  : ""}
+              </span>
+            </div>
+          ) : null}
           {frame.status === "loading" ? (
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-ink-950/60">
               <Spinner />

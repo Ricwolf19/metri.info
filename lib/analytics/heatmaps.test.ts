@@ -8,6 +8,9 @@ import {
   pointStats,
   scrolledPast,
   scrollReachBands,
+  ZONE_COLS,
+  ZONE_ROW_PX,
+  zoneOf,
 } from "./heat";
 import {
   HEATMAP_DEVICES,
@@ -155,5 +158,18 @@ describe("scroll depth", () => {
 
   it("is empty with no visits", () => {
     expect(scrollReachBands([])).toEqual([]);
+  });
+});
+
+describe("hover zones", () => {
+  it("put a point in its grid cell, edges clamped", () => {
+    expect(zoneOf(0, 0)).toEqual({ col: 0, row: 0 });
+    expect(zoneOf(0.5, ZONE_ROW_PX * 3 + 1)).toEqual({
+      col: ZONE_COLS / 2,
+      row: 3,
+    });
+    // The right edge (x = 1) stays in the last column.
+    expect(zoneOf(1, 10).col).toBe(ZONE_COLS - 1);
+    expect(zoneOf(-0.2, -5)).toEqual({ col: 0, row: 0 });
   });
 });

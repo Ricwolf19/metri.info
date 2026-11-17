@@ -2,7 +2,14 @@ import { CALC_IDS, ROUTES } from "@/lib/i18n/routes";
 import { siteUrl } from "@/lib/utils";
 
 import type { SentryIssue } from "./errors";
-import type { HeatFold, HeatPoint, ScrollBucket } from "./heat";
+import {
+  type HeatFold,
+  type HeatPoint,
+  type HeatZone,
+  type ScrollBucket,
+  zoneKey,
+  zoneOf,
+} from "./heat";
 import type { HeatmapDevice, HeatmapParams } from "./heatmaps";
 import { type AnalyticsWindow, fillDays, shiftDay } from "./range";
 import type { Inspection, SearchRow, Sitemap } from "./search";
@@ -408,6 +415,32 @@ export const simHeatPoints = (
       ? { ...s, count: Math.max(1, Math.round(s.count / 1.5)) }
       : s,
   );
+};
+
+/** The same simulated interactions per hover zone; a visitor accounts for
+ * about one and a half of them, as in the unique-visitors view. */
+export const simHeatZones = (
+  p: Pick<HeatmapParams, "page" | "device" | "map">,
+  w: Span,
+): HeatZone[] => {
+  const zones = new Map<string, HeatZone>();
+  for (const pt of simHeatPoints({ ...p, agg: "total" }, w)) {
+    const { col, row } = zoneOf(pt.x, pt.y);
+    const key = zoneKey(pt.fixed, col, row);
+    const zone = zones.get(key) ?? {
+      fixed: pt.fixed,
+      col,
+      row,
+      count: 0,
+      people: 0,
+    };
+    zone.count += pt.count;
+    zones.set(key, zone);
+  }
+  return [...zones.values()].map((z) => ({
+    ...z,
+    people: Math.max(1, Math.round(z.count / 1.5)),
+  }));
 };
 
 export const simHeatFold = (

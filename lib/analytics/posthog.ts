@@ -61,5 +61,10 @@ export const toNum = (v: unknown): number => {
   return Number.isFinite(n) ? n : 0;
 };
 
+/** HogQL returns a boolean column as `true`, `1` or `"true"` depending on
+ * the engine path. */
+export const toBool = (v: unknown): boolean =>
+  v === true || v === 1 || v === "true";
+
 export const toStr = (v: unknown): string =>
   v === null || v === undefined ? "" : String(v);

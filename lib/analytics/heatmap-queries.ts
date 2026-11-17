@@ -5,15 +5,27 @@ import { ROUTES } from "@/lib/i18n/routes";
 import { siteUrl } from "@/lib/utils";
 
 import { IN_WINDOW, posthogSimulated, windowValues } from "./behavior";
-import type { HeatFold, HeatPoint, ScrollBucket } from "./heat";
+import {
+  type HeatFold,
+  type HeatPoint,
+  type HeatZone,
+  type ScrollBucket,
+  ZONE_COLS,
+  ZONE_ROW_PX,
+} from "./heat";
 import {
   HEATMAP_POINT_LIMIT,
   type HeatmapParams,
   heatmapUrlPattern,
 } from "./heatmaps";
-import { runHogQL, toNum, toStr, type HogValues } from "./posthog";
+import { runHogQL, toBool, toNum, toStr, type HogValues } from "./posthog";
 import { type AnalyticsWindow, shiftDay } from "./range";
-import { simHeatFold, simHeatPoints, simScrollDepth } from "./simulate";
+import {
+  simHeatFold,
+  simHeatPoints,
+  simHeatZones,
+  simScrollDepth,
+} from "./simulate";
 
 /**
  * Heatmap reads, straight from PostHog's `heatmaps` table in HogQL (the same
@@ -70,10 +82,40 @@ export const getHeatPoints = async (
   );
   if (!rows) return null;
   return rows.map((r) => ({
-    fixed: r[0] === true || r[0] === 1 || r[0] === "true",
+    fixed: toBool(r[0]),
     x: Math.min(1, Math.max(0, toNum(r[1]))),
     y: Math.max(0, toNum(r[2])),
     count: toNum(r[3]),
+  }));
+};
+
+/** Interactions and distinct visitors per hover zone (`ZONE_COLS` columns
+ * across, `ZONE_ROW_PX` rows down), for the preview's tooltip. */
+export const getHeatZones = async (
+  p: HeatmapParams,
+  w: AnalyticsWindow,
+): Promise<HeatZone[] | null> => {
+  if (posthogSimulated()) return simHeatZones(p, w);
+  const rows = await runHogQL(
+    `SELECT pointer_target_fixed,
+       least(${ZONE_COLS - 1}, greatest(0, toInt(floor(x / viewport_width * ${ZONE_COLS})))) AS zone_col,
+       toInt(floor(y * scale_factor / ${ZONE_ROW_PX})) AS zone_row,
+       count() AS cnt,
+       count(DISTINCT distinct_id) AS people
+     FROM heatmaps
+     WHERE ${WHERE} AND ${HAS_POINTER}
+     GROUP BY pointer_target_fixed, zone_col, zone_row
+     ORDER BY cnt DESC
+     LIMIT ${HEATMAP_POINT_LIMIT}`,
+    values(p, w),
+  );
+  if (!rows) return null;
+  return rows.map((r) => ({
+    fixed: toBool(r[0]),
+    col: Math.min(ZONE_COLS - 1, Math.max(0, toNum(r[1]))),
+    row: Math.max(0, toNum(r[2])),
+    count: toNum(r[3]),
+    people: toNum(r[4]),
   }));
 };
 

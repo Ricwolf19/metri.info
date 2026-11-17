@@ -53,6 +53,35 @@ export const pointStats = (points: readonly HeatPoint[]): PointStats => {
   };
 };
 
+// ── Zones (hover) ──────────────────────────────────────────────────────────
+
+/** The hover grid: the viewport width in 24 columns, the height in 40 px
+ * rows. Coarse enough that a zone covers a button, fine enough to tell two
+ * neighbours apart. Zones are counted on the server, so their people are
+ * exact; summing the per-spot points would count one person once per pixel
+ * they clicked. */
+export const ZONE_COLS = 24;
+export const ZONE_ROW_PX = 40;
+
+export type HeatZone = {
+  fixed: boolean;
+  col: number;
+  row: number;
+  /** Every interaction in the zone. */
+  count: number;
+  /** Distinct visitors behind them. */
+  people: number;
+};
+
+export const zoneKey = (fixed: boolean, col: number, row: number) =>
+  `${fixed ? 1 : 0}:${col}:${row}`;
+
+/** The zone under a point (x as a 0..1 share of the width, y in CSS px). */
+export const zoneOf = (x: number, y: number) => ({
+  col: Math.min(ZONE_COLS - 1, Math.max(0, Math.floor(x * ZONE_COLS))),
+  row: Math.max(0, Math.floor(y / ZONE_ROW_PX)),
+});
+
 // ── Scroll depth ───────────────────────────────────────────────────────────
 
 export type ScrollBucket = {

@@ -20,6 +20,7 @@ import {
 import {
   getHeatFold,
   getHeatPoints,
+  getHeatZones,
   getScrollDepth,
   previewPath,
 } from "@/lib/analytics/heatmap-queries";
@@ -72,11 +73,12 @@ export const HeatmapSection = async ({
 }) => {
   const { page, device, map, agg } = params;
   const scroll = map.id === "scrolldepth";
-  const [src, points, fold, buckets] = await Promise.all([
+  const [src, points, fold, buckets, zones] = await Promise.all([
     previewPath(params, window),
     scroll ? Promise.resolve([]) : getHeatPoints(params, window),
     scroll ? Promise.resolve(null) : getHeatFold(params, window),
     scroll ? getScrollDepth(params, window) : Promise.resolve([]),
+    scroll ? Promise.resolve([]) : getHeatZones(params, window),
   ]);
 
   const title = `${map.label} on ${page.label}`;
@@ -216,6 +218,8 @@ export const HeatmapSection = async ({
               bands={[]}
               markers={[]}
               fold={{ y: foldY, label: "Fold" }}
+              zones={zones ?? []}
+              noun={map.noun}
             />
             <Legend
               low={`Fewer ${map.noun}`}
