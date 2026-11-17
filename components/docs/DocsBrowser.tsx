@@ -7,6 +7,7 @@ import { useMemo, useState } from "react";
 import { ChevronRightIcon, SearchIcon } from "@/components/icons";
 import { PinButton } from "@/components/shared/PinButton";
 import { SideNav } from "@/components/ui/SideNav";
+import { StickyColumn } from "@/components/shared/StickyColumn";
 import { track } from "@/lib/analytics/track";
 import type { DocMeta } from "@/lib/docs";
 import {
@@ -103,13 +104,13 @@ export const DocsBrowser = ({
       ) : (
         <div className="mt-10 gap-10 lg:grid lg:grid-cols-[13rem_minmax(0,1fr)]">
           <aside className="mb-6 lg:mb-0">
-            <div className="lg:sticky lg:top-24">
+            <StickyColumn>
               <SideNav
                 groups={railGroups}
                 mode="anchor"
                 ariaLabel={t("docs.title")}
               />
-            </div>
+            </StickyColumn>
           </aside>
 
           <div className="space-y-10">

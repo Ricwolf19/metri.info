@@ -17,6 +17,7 @@ import { TableOfContents } from "@/components/docs/TableOfContents";
 import { Container } from "@/components/shared/Container";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ShareButton } from "@/components/shared/ShareButton";
+import { StickyColumn } from "@/components/shared/StickyColumn";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
 import {
@@ -126,13 +127,13 @@ export const DocArticle = async ({
       <JsonLd data={jsonLd} />
       <div className="grid gap-10 lg:grid-cols-[220px_1fr] xl:grid-cols-[220px_1fr_220px]">
         <aside className="hidden lg:block">
-          <div className="sticky top-24">
+          <StickyColumn>
             <DocsSidebar
               docs={allDocs}
               categories={categories}
               basePath={basePath}
             />
-          </div>
+          </StickyColumn>
         </aside>
 
         <article className="min-w-0">
@@ -268,7 +269,7 @@ export const DocArticle = async ({
         </article>
 
         <aside aria-label={t("docs.onThisPage")} className="hidden xl:block">
-          <div className="sticky top-24 space-y-8">
+          <StickyColumn className="space-y-8">
             <TableOfContents items={toc} />
             <div className="rounded-card border border-ink-600 bg-ink-800 p-5">
               <p className="font-semibold text-ink-50">
@@ -285,7 +286,7 @@ export const DocArticle = async ({
                 <ArrowRightIcon size={15} />
               </Link>
             </div>
-          </div>
+          </StickyColumn>
         </aside>
       </div>
     </Container>

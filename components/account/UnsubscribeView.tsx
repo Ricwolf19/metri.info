@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 import { MailIcon } from "@/components/icons";
-import { Container } from "@/components/shared/Container";
+import { CenteredScreen } from "@/components/shared/CenteredScreen";
 import { buttonVariants } from "@/components/ui/button";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
@@ -83,8 +83,8 @@ export const UnsubscribeView = ({
   locale: Locale;
   searchParams: SearchParams;
 }) => (
-  <Container className="py-14 lg:py-20">
-    <div className="mx-auto max-w-xl">
+  <CenteredScreen>
+    <div className="w-full max-w-xl">
       <div className="flex size-14 items-center justify-center rounded-2xl border border-ink-600 bg-ink-800 text-accent">
         <MailIcon size={28} />
       </div>
@@ -92,5 +92,5 @@ export const UnsubscribeView = ({
         <UnsubscribeState locale={locale} searchParams={searchParams} />
       </Suspense>
     </div>
-  </Container>
+  </CenteredScreen>
 );
