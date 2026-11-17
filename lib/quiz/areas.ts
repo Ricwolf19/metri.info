@@ -54,6 +54,3 @@ export const LEVEL_KEY: Record<QuizLevel, TranslationKey> = {
   3: "quiz.level3",
   4: "quiz.level4",
 };
-
-/** How long the explanation stays before the next question (mobile parity). */
-export const REVEAL_MS = 12_000;

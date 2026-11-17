@@ -10,8 +10,6 @@ import {
   CheckIcon,
   DumbbellIcon,
   type IconProps,
-  PauseIcon,
-  PlayIcon,
   RefreshIcon,
   ScaleIcon,
   XIcon,
@@ -30,13 +28,8 @@ import {
   QUIZ_AREAS,
   QUIZ_MAX_LEVEL,
   type QuizArea,
-  REVEAL_MS,
   toQuizLevel,
 } from "@/lib/quiz/areas";
-import {
-  setQuizAutoAdvance,
-  useQuizAutoAdvance,
-} from "@/lib/quiz/auto-advance";
 import { QUIZ_QUESTIONS } from "@/lib/quiz/content";
 import {
   answerCurrent,
@@ -137,11 +130,11 @@ const AreaLadder = ({
 /**
  * The knowledge check, start to finish: intro (with a shared map and the
  * reader's last result when they exist), one question at a time with an
- * explanation after every answer and a countdown to the next one, then the
- * map. Anyone can take it; the result always stays in this browser, a
- * signed-in account also keeps it as history. On phones the progress and the
- * countdown controls live in a bar pinned to the bottom. Must sit inside a
- * `MotionProvider`.
+ * explanation after every answer, then the map. It never moves on by itself:
+ * the reader reads the explanation and presses Next. Anyone can take it; the
+ * result always stays in this browser, a signed-in account also keeps it as
+ * history. On phones the progress and Next live in a bar pinned to the
+ * bottom. Must sit inside a `MotionProvider`.
  */
 export const QuizFlow = ({
   initial,
@@ -165,11 +158,6 @@ export const QuizFlow = ({
   );
   const [picked, setPicked] = useState<number | null>(null);
   const [saveState, setSaveState] = useState<SaveState>(null);
-  const [paused, setPaused] = useState(false);
-  // Off for good when the reader chose so (remembered on this device).
-  const autoAdvance = useQuizAutoAdvance();
-  const [progress, setProgress] = useState(0);
-  const timerRef = useRef<number | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   // Set when a new prompt should take focus; the prompt's ref honours it.
   const focusPrompt = useRef(false);
@@ -225,34 +213,9 @@ export const QuizFlow = ({
     if (picked === null || !question) return;
     const next = answerCurrent(state, picked === question.answer);
     setPicked(null);
-    setProgress(0);
-    // `paused` is kept: a reader who stopped the clock once has turned the
-    // auto-advance off for the rest of the attempt (WCAG 2.2.1).
     setState(next);
     if (isQuizComplete(next)) void finish(next);
   };
-
-  // Auto-advance after REVEAL_MS unless paused with the button. Hover must
-  // not hold it: the pointer is always inside the card right after a click,
-  // so a hover-hold never let the countdown start on desktop.
-  useEffect(() => {
-    if (!revealed || paused || !autoAdvance || phase !== "question") return;
-    const startedAt = performance.now();
-    const base = progress;
-    const tick = () => {
-      const p = Math.min(1, base + (performance.now() - startedAt) / REVEAL_MS);
-      setProgress(p);
-      if (p >= 1) advance();
-      else timerRef.current = window.setTimeout(tick, 100);
-    };
-    timerRef.current = window.setTimeout(tick, 100);
-    return () => {
-      if (timerRef.current) window.clearTimeout(timerRef.current);
-    };
-    // `progress` is the resume point and `advance` closes over fresh state;
-    // re-running on them is the intent.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [revealed, paused, autoAdvance, phase]);
 
   // Move focus to the new prompt so a screen reader announces it and the next
   // Tab lands on its options, not back at the top of the page. Under
@@ -291,8 +254,6 @@ export const QuizFlow = ({
   const begin = () => {
     setState(startQuiz(QUIZ_QUESTIONS));
     setPicked(null);
-    setProgress(0);
-    setPaused(false);
     setSaveState(null);
     setPhase("question");
     track("quiz_started");
@@ -302,7 +263,6 @@ export const QuizFlow = ({
     if (revealed) return;
     if (index === -1) focusNext.current = true;
     setPicked(index);
-    setProgress(0);
   };
 
   const shareLinks = (scores: QuizScores) => () => {
@@ -347,15 +307,6 @@ export const QuizFlow = ({
                 <p className="text-xs text-ink-400">{t("quiz.keepHint")}</p>
               )}
             </div>
-            <label className="mt-4 flex min-h-11 cursor-pointer items-center gap-3 text-sm text-ink-300">
-              <input
-                type="checkbox"
-                checked={autoAdvance}
-                onChange={(e) => setQuizAutoAdvance(e.target.checked)}
-                className="h-5 w-5 shrink-0 accent-brand"
-              />
-              {t("quiz.autoAdvance", { seconds: REVEAL_MS / 1000 })}
-            </label>
           </div>
           <ol className="grid content-center gap-2.5">
             {QUIZ_AREAS.map((a) => {
@@ -569,15 +520,17 @@ export const QuizFlow = ({
                         LETTERS[slot]
                       )}
                     </span>
-                    {revealed && (isAnswer || isPicked) && (
-                      <span className="sr-only">
-                        {isAnswer
-                          ? t("quiz.rightAnswer")
-                          : t("quiz.yourAnswer")}
-                        :{" "}
-                      </span>
-                    )}
-                    {option[locale]}
+                    <span className="min-w-0 flex-1 [overflow-wrap:anywhere]">
+                      {revealed && (isAnswer || isPicked) && (
+                        <span className="sr-only">
+                          {isAnswer
+                            ? t("quiz.rightAnswer")
+                            : t("quiz.yourAnswer")}
+                          :{" "}
+                        </span>
+                      )}
+                      {option[locale]}
+                    </span>
                   </button>
                 </li>
               );
@@ -627,7 +580,7 @@ export const QuizFlow = ({
                   <p className="mt-1 text-sm leading-relaxed text-ink-200">
                     {question.why[locale]}
                   </p>
-                  <div className="mt-4 hidden items-center gap-3 sm:flex">
+                  <div className="mt-4 hidden sm:block">
                     <Button
                       size="sm"
                       variant="brand"
@@ -636,37 +589,6 @@ export const QuizFlow = ({
                     >
                       {nextLabel}
                     </Button>
-                    {autoAdvance && (
-                      <button
-                        type="button"
-                        onClick={() => setPaused((p) => !p)}
-                        aria-label={t("quiz.pause")}
-                        aria-pressed={paused}
-                        className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-field border border-ink-600 text-ink-300 transition-colors hover:bg-ink-800 hover:text-ink-50"
-                      >
-                        {paused ? (
-                          <PlayIcon size={15} />
-                        ) : (
-                          <PauseIcon size={15} />
-                        )}
-                      </button>
-                    )}
-                    {autoAdvance && (
-                      <span className="min-w-0 flex-1">
-                        <span
-                          className="block h-1 overflow-hidden rounded-full bg-ink-700"
-                          aria-hidden
-                        >
-                          <span
-                            className="block h-full rounded-full bg-brand/70 transition-[width] duration-100 ease-linear"
-                            style={{ width: `${progress * 100}%` }}
-                          />
-                        </span>
-                        <span className="mt-1 block text-[11px] text-ink-500">
-                          {t("quiz.autoNext")}
-                        </span>
-                      </span>
-                    )}
                   </div>
                 </div>
               </m.div>
@@ -675,8 +597,8 @@ export const QuizFlow = ({
         </m.div>
       </AnimatePresence>
 
-      {/* Phone bar: attempt progress always, the countdown controls once an
-          answer is revealed. Pinned so the thumb never has to travel. */}
+      {/* Phone bar: attempt progress always, Next once an answer is
+          revealed. Pinned so the thumb never has to travel. */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-ink-600 bg-ink-900/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur sm:static sm:mt-4 sm:rounded-card sm:border sm:bg-ink-800 sm:p-4 sm:backdrop-blur-none">
         <div className="mx-auto flex max-w-3xl items-center gap-3">
           <div className="min-w-0 flex-1">
@@ -697,28 +619,9 @@ export const QuizFlow = ({
                 style={{ width: `${attemptPct}%` }}
               />
             </div>
-            {revealed && autoAdvance && (
-              <div className="mt-1 h-0.5 overflow-hidden rounded-full bg-ink-700 sm:hidden">
-                <div
-                  className="h-full bg-brand/70 transition-[width] duration-100 ease-linear"
-                  style={{ width: `${progress * 100}%` }}
-                />
-              </div>
-            )}
           </div>
           {revealed && (
-            <div className="flex items-center gap-2 sm:hidden">
-              {autoAdvance && (
-                <button
-                  type="button"
-                  onClick={() => setPaused((p) => !p)}
-                  aria-label={t("quiz.pause")}
-                  aria-pressed={paused}
-                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-field border border-ink-600 bg-ink-800 text-ink-200"
-                >
-                  {paused ? <PlayIcon size={16} /> : <PauseIcon size={16} />}
-                </button>
-              )}
+            <div className="sm:hidden">
               <Button
                 size="sm"
                 variant="brand"
