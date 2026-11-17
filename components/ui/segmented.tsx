@@ -16,7 +16,9 @@ export type SegmentedOption<T extends string> = {
  * option count as custom properties, and the pill translates by its own width
  * — no measuring, no animation runtime. The pill is light with dark text, as
  * in the app: a dark-grey pill on the dark track was 1.14:1, so the selection
- * hung on a text-colour change alone.
+ * hung on a text-colour change alone. A label too long for its share of a
+ * narrow screen wraps to a second line and then ends in an ellipsis; it never
+ * spills into its neighbour.
  */
 export const Segmented = <T extends string>({
   value,
@@ -73,13 +75,17 @@ export const Segmented = <T extends string>({
           key={o.value}
           value={o.value}
           className={cn(
-            "relative z-10 min-w-0 rounded-[calc(var(--radius-field)-0.25rem)] font-medium whitespace-nowrap text-ink-400 transition-colors",
+            "relative z-10 flex min-w-0 items-center justify-center rounded-[calc(var(--radius-field)-0.25rem)] text-center leading-tight font-medium text-ink-400 transition-colors",
             "hover:text-ink-100 data-[state=on]:text-ink-950 data-[state=on]:hover:text-ink-950",
             "focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:outline-none",
-            size === "sm" ? "h-8 px-2 text-xs" : "h-10 px-3 text-sm",
+            size === "sm"
+              ? "min-h-8 px-2 py-1 text-xs"
+              : "min-h-10 px-3 py-1.5 text-sm",
           )}
         >
-          {o.label}
+          <span className="line-clamp-2 [overflow-wrap:anywhere]">
+            {o.label}
+          </span>
         </ToggleGroup.Item>
       ))}
     </ToggleGroup.Root>

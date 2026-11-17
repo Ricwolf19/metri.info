@@ -24,9 +24,11 @@ export const SelectTrigger = ({
     )}
     {...props}
   >
-    {children}
+    {/* The chosen value ends in an ellipsis on a narrow screen; the open list
+        shows it whole. */}
+    <span className="min-w-0 flex-1 truncate text-left">{children}</span>
     <SelectPrimitive.Icon asChild>
-      <ChevronRightIcon size={16} className="rotate-90 text-ink-400" />
+      <ChevronRightIcon size={16} className="shrink-0 rotate-90 text-ink-400" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 );
@@ -41,7 +43,7 @@ export const SelectContent = ({
     <SelectPrimitive.Content
       position={position}
       className={cn(
-        "relative z-50 max-h-72 min-w-[8rem] [animation:metri-pop-in_0.14s_ease-out] overflow-hidden rounded-card border border-ink-600 bg-ink-800 text-ink-100 shadow-xl",
+        "relative z-50 max-h-[min(18rem,var(--radix-select-content-available-height))] min-w-[8rem] [animation:metri-pop-in_0.14s_ease-out] overflow-hidden rounded-card border border-ink-600 bg-ink-800 text-ink-100 shadow-xl",
         position === "popper" &&
           "w-[var(--radix-select-trigger-width)] data-[side=bottom]:translate-y-1 data-[side=top]:-translate-y-1",
         className,
@@ -67,7 +69,7 @@ export const SelectItem = ({
 }) => (
   <SelectPrimitive.Item
     className={cn(
-      "relative flex w-full cursor-pointer items-center rounded-lg py-2 pr-2.5 pl-8 text-sm outline-none select-none",
+      "relative flex w-full cursor-pointer items-center rounded-lg py-2 pr-2.5 pl-8 text-sm [overflow-wrap:anywhere] outline-none select-none",
       "focus:bg-ink-700 focus:text-ink-50 focus:shadow-[inset_2px_0_0_rgb(var(--brand))] data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
@@ -79,7 +81,7 @@ export const SelectItem = ({
       </SelectPrimitive.ItemIndicator>
     </span>
     {description ? (
-      <span className="flex flex-col gap-0.5">
+      <span className="flex min-w-0 flex-col gap-0.5">
         <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
         <span className="text-xs leading-snug text-ink-400">{description}</span>
       </span>
