@@ -134,7 +134,7 @@ export const Diagnostic = ({
         <h2
           ref={heading}
           tabIndex={-1}
-          className="mt-6 text-lg font-semibold text-balance text-ink-50 focus:outline-none"
+          className="mt-6 scroll-mt-24 text-lg font-semibold text-balance text-ink-50 focus:outline-none"
         >
           {t(`roadmap.q.${question}` as TranslationKey)}
         </h2>

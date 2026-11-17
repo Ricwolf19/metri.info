@@ -83,28 +83,44 @@ export const parseRoadmap = (raw: unknown): RoadmapState | null => {
   };
 };
 
+type Replaced = { state: RoadmapState; phase: Phase; total: number };
+
+/** The history with the plan being replaced on top, with how far it got. */
+const pushPast = (replaced: Replaced, now: Date): PastPlan[] =>
+  [
+    {
+      phase: replaced.phase,
+      startedAt: replaced.state.startedAt,
+      endedAt: now.toISOString(),
+      done: Object.keys(replaced.state.done).length,
+      total: replaced.total,
+    },
+    ...replaced.state.history,
+  ].slice(0, HISTORY_LIMIT);
+
 /** A fresh roadmap from new answers; the one it replaces (if any) goes to
  * the top of the history with how far it got. */
 export const startRoadmap = (
   answers: Answers,
   now: Date,
-  previous: { state: RoadmapState; phase: Phase; total: number } | null,
+  previous: Replaced | null,
 ): RoadmapState => ({
   answers,
   startedAt: now.toISOString(),
   done: {},
-  history: previous
-    ? [
-        {
-          phase: previous.phase,
-          startedAt: previous.state.startedAt,
-          endedAt: now.toISOString(),
-          done: Object.keys(previous.state.done).length,
-          total: previous.total,
-        },
-        ...previous.state.history,
-      ].slice(0, HISTORY_LIMIT)
-    : [],
+  history: previous ? pushPast(previous, now) : [],
+});
+
+/** An account keeping a result it hadn't kept yet: the result keeps its
+ * start date and the steps already ticked; the account's current plan, if
+ * it had one, becomes the newest entry of the history. */
+export const keepRoadmap = (
+  draft: RoadmapState,
+  now: Date,
+  replacing: Replaced | null,
+): RoadmapState => ({
+  ...draft,
+  history: replacing ? pushPast(replacing, now) : draft.history,
 });
 
 /** Tick or untick one step. */

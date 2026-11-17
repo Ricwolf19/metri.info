@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 
 import { RoadmapSession } from "@/components/roadmap/RoadmapSession";
-import { Container } from "@/components/shared/Container";
 import { PageHero } from "@/components/shared/PageHero";
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { Stage } from "@/components/shared/Stage";
+import { RoadmapSkeleton } from "@/components/skeletons/RoadmapSkeleton";
 import { getAllDocs } from "@/lib/docs";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { ROADMAP_DOCS } from "@/lib/roadmap/steps";
@@ -26,11 +26,11 @@ export const RoadmapView = ({ locale }: { locale: Locale }) => {
         compact
         share
       />
-      <Container className="py-10 sm:py-14">
-        <Suspense fallback={<LoadingScreen locale={locale} />}>
+      <Stage className="py-10 sm:py-14">
+        <Suspense fallback={<RoadmapSkeleton locale={locale} />}>
           <RoadmapSession docTitles={docTitles} />
         </Suspense>
-      </Container>
+      </Stage>
     </>
   );
 };

@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 
 import { type Answers, parseAnswers } from "./diagnostic";
 import { recommend } from "./recommend";
-import { markStep, parseRoadmap, startRoadmap } from "./state";
+import { keepRoadmap, markStep, parseRoadmap, startRoadmap } from "./state";
 import { ROADMAP_DOCS, roadmapSteps, schedule } from "./steps";
 
 const BASE: Answers = {
@@ -185,6 +185,32 @@ describe("stored state", () => {
     });
     expect(next.history[0]).toMatchObject({ phase: "cut", done: 1, total: 12 });
     expect(next.done).toEqual({});
+  });
+
+  it("keeps a result with its ticks and start, and archives the kept plan", () => {
+    const kept = startRoadmap(BASE, new Date("2026-08-01"), null);
+    const draft = markStep(
+      startRoadmap(BASE, new Date("2026-11-10"), null),
+      "measure",
+      true,
+      new Date("2026-11-11"),
+    );
+    const now = new Date("2026-11-17");
+    const next = keepRoadmap(draft, now, {
+      state: kept,
+      phase: "bulk",
+      total: 10,
+    });
+    expect(next.startedAt).toBe(draft.startedAt);
+    expect(next.done).toEqual(draft.done);
+    expect(next.history[0]).toMatchObject({
+      phase: "bulk",
+      startedAt: kept.startedAt,
+      endedAt: now.toISOString(),
+      done: 0,
+    });
+    // Nothing to replace: the result's own history stands.
+    expect(keepRoadmap(draft, now, null)).toEqual(draft);
   });
 });
 
