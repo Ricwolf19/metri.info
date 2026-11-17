@@ -7,24 +7,26 @@ import { useEffect, useState } from "react";
 
 import {
   ArrowLeftIcon,
-  BookIcon,
   BookmarkIcon,
-  CalculatorIcon,
   ChevronRightIcon,
-  CompassIcon,
-  DownloadIcon,
   GearIcon,
   GithubIcon,
   type IconProps,
   InfoIcon,
   LogOutIcon,
-  MailIcon,
   MenuIcon,
   ShieldIcon,
   StarIcon,
 } from "@/components/icons";
+import { DesktopNav } from "@/components/layout/DesktopNav";
 import { LocaleToggle } from "@/components/layout/LocaleToggle";
 import { Logo } from "@/components/layout/Logo";
+import { MobileNav } from "@/components/layout/MobileNav";
+import {
+  buildSiteNav,
+  isCurrentLink,
+  type ToolNames,
+} from "@/components/layout/site-nav";
 import { UserMenu } from "@/components/layout/UserMenu";
 import { Container } from "@/components/shared/Container";
 import { buttonVariants } from "@/components/ui/button";
@@ -37,30 +39,12 @@ import {
 } from "@/components/ui/sheet";
 import { Spinner } from "@/components/ui/Spinner";
 import { signOut, useSession } from "@/lib/auth/client";
+import type { DocTitles } from "@/lib/docs/featured";
 import { useI18n } from "@/lib/i18n";
-import type { TranslationKey } from "@/lib/i18n/en";
-import {
-  isAdminPath,
-  isAuthPath,
-  type RouteId,
-  routePath,
-} from "@/lib/i18n/routes";
+import { isAdminPath, isAuthPath, routePath } from "@/lib/i18n/routes";
 import { ADMIN_NAV_GROUPS } from "@/components/admin/nav";
 import { mobileAppReleases, webAppRepo } from "@/lib/site";
 import { cn } from "@/lib/utils";
-
-const NAV: {
-  id: RouteId;
-  key: TranslationKey;
-  icon: React.ComponentType<IconProps>;
-}[] = [
-  { id: "tools", key: "nav.tools", icon: CalculatorIcon },
-  { id: "docs", key: "nav.docs", icon: BookIcon },
-  { id: "roadmap", key: "nav.roadmap", icon: CompassIcon },
-  { id: "download", key: "nav.download", icon: DownloadIcon },
-  { id: "about", key: "footer.about", icon: InfoIcon },
-  { id: "contact", key: "nav.contact", icon: MailIcon },
-];
 
 type NavItem = {
   id: string;
@@ -73,9 +57,7 @@ type NavItem = {
 /** A section is current on its index page and on anything nested under it
  * (or only on its own page when `exact`, so "Overview" is not lit everywhere). */
 const isCurrent = (pathname: string, item: Pick<NavItem, "href" | "exact">) =>
-  item.exact
-    ? pathname === item.href
-    : pathname === item.href || pathname.startsWith(`${item.href}/`);
+  item.exact ? pathname === item.href : isCurrentLink(pathname, item.href);
 
 const ADMIN_ITEMS: NavItem[] = ADMIN_NAV_GROUPS.flatMap((g) =>
   g.items.map((i) => ({
@@ -95,7 +77,20 @@ const sheetRowClass =
 const chipClass =
   "inline-flex items-center gap-2 rounded-full border border-ink-600 bg-ink-800 px-3 py-1.5 text-sm text-ink-200 transition-colors hover:border-ink-500/50 hover:text-ink-50";
 
-export const Header = () => {
+/**
+ * The site header. Public pages get the grouped menu (`site-nav.ts`: a
+ * dropdown bar from `md` up, accordions in the phone drawer); `/admin` keeps
+ * its flat list of sections. `toolNames` and `docTitles` come from the root
+ * layout, read on the server so the calculator and guide content never ship
+ * to the browser.
+ */
+export const Header = ({
+  toolNames,
+  docTitles,
+}: {
+  toolNames: ToolNames;
+  docTitles: DocTitles;
+}) => {
   const { t, locale } = useI18n();
   const pathname = usePathname() ?? "/";
   const router = useRouter();
@@ -116,14 +111,7 @@ export const Header = () => {
   // On /admin the bar carries the admin sections (EN-only, like the area
   // itself); everywhere else the public ones. Same component, same indicator.
   const adminArea = isAdminPath(pathname);
-  const items: NavItem[] = adminArea
-    ? ADMIN_ITEMS
-    : NAV.map(({ id, key, icon }) => ({
-        id,
-        href: routePath(id, locale),
-        label: t(key),
-        icon,
-      }));
+  const sections = buildSiteNav(t, locale, toolNames, docTitles);
 
   const signInHref = routePath("signIn", locale);
   const handleSignOut = () => {
@@ -145,48 +133,47 @@ export const Header = () => {
           )}
         </div>
 
-        <nav
-          aria-label={t("nav.sections")}
-          className="hidden items-center gap-1 justify-self-center md:flex"
-        >
-          {items.map((item) => {
-            const { id, href, label } = item;
-            const active = isCurrent(pathname, item);
-            return (
-              <Link
-                key={id}
-                href={href}
-                aria-current={active ? "page" : undefined}
-                className={cn(
-                  "relative px-3 py-2 font-mono text-xs font-medium tracking-wider uppercase transition-colors",
-                  active ? "text-ink-50" : "text-ink-400 hover:text-ink-100",
-                )}
-              >
-                {label}
-                <span
-                  aria-hidden
+        {adminArea ? (
+          <nav
+            aria-label={t("nav.sections")}
+            className="hidden items-center gap-1 justify-self-center md:flex"
+          >
+            {ADMIN_ITEMS.map((item) => {
+              const { id, href, label } = item;
+              const active = isCurrent(pathname, item);
+              return (
+                <Link
+                  key={id}
+                  href={href}
+                  aria-current={active ? "page" : undefined}
                   className={cn(
-                    "absolute inset-x-3 -bottom-[5px] h-0.5 origin-left rounded-full bg-brand transition-transform duration-300",
-                    active ? "scale-x-100" : "scale-x-0",
+                    "relative px-3 py-2 font-mono text-xs font-medium tracking-wider uppercase transition-colors",
+                    active ? "text-ink-50" : "text-ink-400 hover:text-ink-100",
                   )}
-                />
-              </Link>
-            );
-          })}
-        </nav>
+                >
+                  {label}
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "absolute inset-x-3 -bottom-[5px] h-0.5 origin-left rounded-full bg-brand transition-transform duration-300",
+                      active ? "scale-x-100" : "scale-x-0",
+                    )}
+                  />
+                </Link>
+              );
+            })}
+          </nav>
+        ) : (
+          <DesktopNav
+            sections={sections}
+            pathname={pathname}
+            label={t("nav.sections")}
+          />
+        )}
 
         <div className="flex items-center gap-2 md:justify-self-end">
           {!adminArea && <LocaleToggle />}
 
-          <a
-            href={webAppRepo}
-            target="_blank"
-            rel="noreferrer noopener"
-            aria-label={t("nav.github")}
-            className={cn(iconButtonClass, "hidden sm:inline-flex")}
-          >
-            <GithubIcon size={17} />
-          </a>
           {session ? (
             <UserMenu className="hidden sm:inline-flex" />
           ) : (
@@ -225,82 +212,104 @@ export const Header = () => {
               <p className="mt-6 px-1 font-mono text-[11px] font-medium tracking-widest text-ink-500 uppercase">
                 {t("nav.sections")}
               </p>
-              <nav className="mt-2 grid gap-1" aria-label={t("nav.sections")}>
-                {items.map((item) => {
-                  const { id, href, label, icon: Icon } = item;
-                  const active = isCurrent(pathname, item);
-                  return (
-                    <SheetClose asChild key={id}>
-                      <Link
-                        href={href}
-                        aria-current={active ? "page" : undefined}
-                        className={cn(
-                          "group flex items-center gap-3 rounded-xl px-3 py-3 transition-colors",
-                          active
-                            ? "bg-ink-800 text-ink-50"
-                            : "text-ink-200 hover:bg-ink-800/60 hover:text-ink-50",
-                        )}
-                      >
-                        <span
+              {adminArea ? (
+                <nav className="mt-2 grid gap-1" aria-label={t("nav.sections")}>
+                  {ADMIN_ITEMS.map((item) => {
+                    const { id, href, label, icon: Icon } = item;
+                    const active = isCurrent(pathname, item);
+                    return (
+                      <SheetClose asChild key={id}>
+                        <Link
+                          href={href}
+                          aria-current={active ? "page" : undefined}
                           className={cn(
-                            "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors",
+                            "group flex items-center gap-3 rounded-xl px-3 py-3 transition-colors",
                             active
-                              ? "bg-brand/15 text-brand"
-                              : "bg-ink-800 text-ink-400 group-hover:text-ink-200",
+                              ? "bg-ink-800 text-ink-50"
+                              : "text-ink-200 hover:bg-ink-800/60 hover:text-ink-50",
                           )}
                         >
-                          <Icon size={18} />
-                        </span>
-                        <span className="relative text-base font-semibold">
-                          {label}
-                          {active && (
-                            <span
-                              aria-hidden
-                              className="absolute -bottom-1 left-0 h-0.5 w-full rounded-full bg-brand"
-                            />
-                          )}
-                        </span>
-                        {active && (
-                          <span className="sr-only">
-                            {t("nav.currentPage")}
+                          <span
+                            className={cn(
+                              "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors",
+                              active
+                                ? "bg-brand/15 text-brand"
+                                : "bg-ink-800 text-ink-400 group-hover:text-ink-200",
+                            )}
+                          >
+                            <Icon size={18} />
                           </span>
-                        )}
-                        <ChevronRightIcon
-                          size={16}
-                          className="ml-auto shrink-0 text-ink-500 transition-transform group-hover:translate-x-0.5"
-                        />
-                      </Link>
-                    </SheetClose>
-                  );
-                })}
-              </nav>
+                          <span className="relative text-base font-semibold">
+                            {label}
+                            {active && (
+                              <span
+                                aria-hidden
+                                className="absolute -bottom-1 left-0 h-0.5 w-full rounded-full bg-brand"
+                              />
+                            )}
+                          </span>
+                          {active && (
+                            <span className="sr-only">
+                              {t("nav.currentPage")}
+                            </span>
+                          )}
+                          <ChevronRightIcon
+                            size={16}
+                            className="ml-auto shrink-0 text-ink-500 transition-transform group-hover:translate-x-0.5"
+                          />
+                        </Link>
+                      </SheetClose>
+                    );
+                  })}
+                </nav>
+              ) : (
+                <MobileNav
+                  sections={sections}
+                  pathname={pathname}
+                  label={t("nav.sections")}
+                />
+              )}
 
               <p className="mt-5 px-1 font-mono text-[11px] font-medium tracking-widest text-ink-500 uppercase">
                 {t("nav.links")}
               </p>
               <div className="mt-2 flex flex-wrap gap-2 px-1">
-                {adminArea && (
-                  <SheetClose asChild>
-                    <Link
-                      href={routePath("home", locale)}
-                      className={chipClass}
-                    >
-                      <ArrowLeftIcon size={15} />
-                      {t("nav.home")}
-                    </Link>
-                  </SheetClose>
+                {adminArea ? (
+                  <>
+                    <SheetClose asChild>
+                      <Link
+                        href={routePath("home", locale)}
+                        className={chipClass}
+                      >
+                        <ArrowLeftIcon size={15} />
+                        {t("nav.home")}
+                      </Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <a
+                        href={mobileAppReleases}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={chipClass}
+                      >
+                        <BookmarkIcon size={15} className="text-brand" />
+                        {t("nav.changelog")}
+                      </a>
+                    </SheetClose>
+                  </>
+                ) : (
+                  <>
+                    <SheetClose asChild>
+                      <Link
+                        href={routePath("about", locale)}
+                        className={chipClass}
+                      >
+                        <InfoIcon size={15} />
+                        {t("footer.about")}
+                      </Link>
+                    </SheetClose>
+                  </>
                 )}
-                <SheetClose asChild>
-                  <a
-                    href={mobileAppReleases}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={chipClass}
-                  >
-                    <BookmarkIcon size={15} className="text-brand" />
-                    {t("nav.changelog")}
-                  </a>
-                </SheetClose>
                 <SheetClose asChild>
                   <a
                     href={webAppRepo}

@@ -10,12 +10,16 @@ import { CommandLauncher } from "@/components/command/CommandLauncher";
 import { CommandPaletteMount } from "@/components/command/CommandPaletteMount";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import type { ToolNames } from "@/components/layout/site-nav";
 import { MAIN_ID, SkipLink } from "@/components/layout/SkipLink";
 import { CookieConsent } from "@/components/legal/CookieConsent";
 import { Providers } from "@/components/providers";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
+import { CALC_CONTENT } from "@/lib/calculators/content";
 import { getDocsIndex } from "@/lib/docs";
+import { featuredDocTitles } from "@/lib/docs/featured";
+import { CALC_IDS } from "@/lib/i18n/routes";
 import { HTML_LANG_SCRIPT } from "@/lib/i18n/html-lang";
 import { siteUrl } from "@/lib/utils";
 
@@ -98,12 +102,19 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+/** Each calculator's name for the header menu, resolved here so the
+ * calculator content (FAQs, sources) never reaches the client bundle. */
+const TOOL_NAMES = {
+  en: Object.fromEntries(CALC_IDS.map((id) => [id, CALC_CONTENT[id].en.h1])),
+  es: Object.fromEntries(CALC_IDS.map((id) => [id, CALC_CONTENT[id].es.h1])),
+} as ToolNames;
+
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
-  // Cached (`use cache`, max life) so the ⌘K palette can list docs without a
-  // client-side filesystem read — and without the layout's disk I/O blocking
-  // every route from prerendering.
+  // Cached (`use cache`, max life) so the ⌘K palette and the header's Learn
+  // panel can list docs without a client-side filesystem read — and without
+  // the layout's disk I/O blocking every route from prerendering.
   const docsIndex = await getDocsIndex();
 
   return (
@@ -131,7 +142,10 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
                 like /s/[id] it can't, so the boundary keeps that one route from
                 blocking instead of failing the prerender. */}
             <Suspense fallback={<div className="h-16 shrink-0" />}>
-              <Header />
+              <Header
+                toolNames={TOOL_NAMES}
+                docTitles={featuredDocTitles(docsIndex)}
+              />
             </Suspense>
             {/* `min-h-dvh` keeps short pages (contact, download, auth) at least a
                 full viewport tall so the footer always sits below the fold, not
