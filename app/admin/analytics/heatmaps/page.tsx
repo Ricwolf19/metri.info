@@ -8,7 +8,7 @@ import {
 import { HeatmapControls } from "@/components/admin/heatmaps/HeatmapControls";
 import { RangeBar } from "@/components/admin/RangeBar";
 import { SourceNotice } from "@/components/admin/SourceCard";
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import {
   deviceWidthRange,
   HEATMAP_AGGS,
@@ -68,7 +68,13 @@ const Dashboard = async ({ searchParams }: Props) => {
         />
         <Suspense
           key={`${heat.page.id}:${heat.device.id}:${heat.map.id}:${heat.agg}:${windowKey(map.window)}`}
-          fallback={<LoadingScreen label="Drawing the heatmap…" />}
+          fallback={
+            <AdminSkeleton
+              label="Drawing the heatmap…"
+              header={false}
+              body="heatmap"
+            />
+          }
         >
           <HeatmapSection
             params={heat}
@@ -79,13 +85,17 @@ const Dashboard = async ({ searchParams }: Props) => {
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           <Suspense
             key={`activity:${heat.agg}:${windowKey(window)}`}
-            fallback={<LoadingScreen label="Loading…" />}
+            fallback={
+              <AdminSkeleton label="Loading…" header={false} body="card" />
+            }
           >
             <ActivitySection window={window} agg={heat.agg} />
           </Suspense>
           <Suspense
             key={`calendar:${heat.agg}:${windowKey(window)}`}
-            fallback={<LoadingScreen label="Loading…" />}
+            fallback={
+              <AdminSkeleton label="Loading…" header={false} body="card" />
+            }
           >
             <CalendarSection window={window} agg={heat.agg} />
           </Suspense>
@@ -96,7 +106,7 @@ const Dashboard = async ({ searchParams }: Props) => {
 };
 
 const AnalyticsHeatmapsPage = ({ searchParams }: Props) => (
-  <Suspense fallback={<LoadingScreen label="Loading analytics…" />}>
+  <Suspense fallback={<AdminSkeleton label="Loading analytics…" />}>
     <Dashboard searchParams={searchParams} />
   </Suspense>
 );

@@ -1,7 +1,6 @@
-import { Container } from "@/components/shared/Container";
+import { PageHeroFrame } from "@/components/shared/PageHeroFrame";
 import { PageHeader } from "@/components/shared/Section";
 import { ShareButton } from "@/components/shared/ShareButton";
-import { cn } from "@/lib/utils";
 
 /**
  * The standard opening band for a section page (tools, docs, download,
@@ -35,36 +34,9 @@ export const PageHero = ({
 }) => {
   const alignment = align ?? (aside ? "left" : "center");
   return (
-    <section
-      className={cn(
-        "relative isolate overflow-hidden border-b border-ink-600/40",
-        className,
-      )}
-    >
-      <div
-        aria-hidden
-        className="page-grid pointer-events-none absolute inset-0 -z-10"
-      />
-      <div
-        aria-hidden
-        className="glow-brand pointer-events-none absolute inset-x-0 top-0 -z-10 h-72 opacity-70"
-      />
-      <Container className={compact ? "py-10 sm:py-14" : "py-14 sm:py-20"}>
-        {aside ? (
-          <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
-            <PageHeader
-              eyebrow={eyebrow}
-              title={title}
-              highlight={highlight}
-              subtitle={subtitle}
-              align={alignment}
-            >
-              {children}
-              {share && <ShareButton className="mt-6" />}
-            </PageHeader>
-            <div className="min-w-0">{aside}</div>
-          </div>
-        ) : (
+    <PageHeroFrame compact={compact} className={className}>
+      {aside ? (
+        <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
           <PageHeader
             eyebrow={eyebrow}
             title={title}
@@ -75,8 +47,20 @@ export const PageHero = ({
             {children}
             {share && <ShareButton className="mt-6" />}
           </PageHeader>
-        )}
-      </Container>
-    </section>
+          <div className="min-w-0">{aside}</div>
+        </div>
+      ) : (
+        <PageHeader
+          eyebrow={eyebrow}
+          title={title}
+          highlight={highlight}
+          subtitle={subtitle}
+          align={alignment}
+        >
+          {children}
+          {share && <ShareButton className="mt-6" />}
+        </PageHeader>
+      )}
+    </PageHeroFrame>
   );
 };

@@ -10,7 +10,8 @@ import { SyncedActivity } from "@/components/account/SyncedActivity";
 import { QuizHistory } from "@/components/quiz/QuizHistory";
 import { ArrowLeftIcon, ArrowRightIcon, ScaleIcon } from "@/components/icons";
 import { Container } from "@/components/shared/Container";
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { ListSkeleton } from "@/components/skeletons/ListSkeleton";
+import { SkeletonScreen } from "@/components/ui/Skeleton";
 import { PageHero } from "@/components/shared/PageHero";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
@@ -103,7 +104,13 @@ export const ActivityView = ({
           title={t("account.historyTitle")}
           subtitle={t("account.historySubtitle")}
         >
-          <Suspense fallback={<LoadingScreen label={t("common.loading")} />}>
+          <Suspense
+            fallback={
+              <SkeletonScreen locale={locale}>
+                <ListSkeleton rows={4} />
+              </SkeletonScreen>
+            }
+          >
             <HistoryData
               userId={userId}
               locale={locale}

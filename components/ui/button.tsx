@@ -35,7 +35,9 @@ export const buttonVariants = cva(
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
   VariantProps<typeof buttonVariants> & {
-    /** Show a leading spinner and disable the button while a request is in flight. */
+    /** While a request is in flight: a spinner takes the label's place (the
+     * label stays, invisible, so the button keeps its size and its accessible
+     * name) and the button is disabled. */
     loading?: boolean;
   };
 
@@ -49,12 +51,26 @@ export const Button = ({
   ...props
 }: ButtonProps) => (
   <button
-    className={cn(buttonVariants({ variant, size }), className)}
+    className={cn(
+      buttonVariants({ variant, size }),
+      loading && "relative",
+      className,
+    )}
     disabled={disabled || loading}
     aria-busy={loading || undefined}
     {...props}
   >
-    {loading ? <Spinner size="sm" /> : null}
-    {children}
+    {loading ? (
+      <>
+        <span className="inline-flex items-center justify-center gap-[inherit] opacity-0">
+          {children}
+        </span>
+        <span className="absolute inset-0 flex items-center justify-center">
+          <Spinner size="sm" />
+        </span>
+      </>
+    ) : (
+      children
+    )}
   </button>
 );

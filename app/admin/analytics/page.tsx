@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import { BehaviorPanel } from "@/components/admin/analytics/BehaviorPanel";
 import { RangeBar } from "@/components/admin/RangeBar";
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import { ANALYTICS_ZONE_LABEL, type SearchParams } from "@/lib/analytics/range";
 import { readAnalyticsRequest, windowKey } from "@/lib/analytics/request";
 
@@ -21,7 +21,7 @@ const Dashboard = async ({ searchParams }: Props) => {
       />
       <Suspense
         key={windowKey(window)}
-        fallback={<LoadingScreen label="Loading PostHog…" />}
+        fallback={<AdminSkeleton label="Loading PostHog…" header={false} />}
       >
         <BehaviorPanel window={window} />
       </Suspense>
@@ -30,7 +30,7 @@ const Dashboard = async ({ searchParams }: Props) => {
 };
 
 const AnalyticsBehaviorPage = ({ searchParams }: Props) => (
-  <Suspense fallback={<LoadingScreen label="Loading analytics…" />}>
+  <Suspense fallback={<AdminSkeleton label="Loading analytics…" />}>
     <Dashboard searchParams={searchParams} />
   </Suspense>
 );

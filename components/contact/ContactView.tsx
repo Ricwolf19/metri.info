@@ -7,10 +7,10 @@ import {
   ProfileIcon,
   type IconProps,
 } from "@/components/icons";
-import { Container } from "@/components/shared/Container";
 import { PageHero } from "@/components/shared/PageHero";
+import { Stage } from "@/components/shared/Stage";
 import { Card, CardContent } from "@/components/ui/card";
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { ContactFormSkeleton } from "@/components/skeletons/ContactFormSkeleton";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { contactEmail, developerUrl, mobileAppRepo } from "@/lib/site";
 
@@ -61,7 +61,7 @@ export const ContactView = ({ locale }: { locale: Locale }) => {
         subtitle={t("contact.subtitle")}
         compact
       />
-      <Container className="py-12 sm:py-16">
+      <Stage className="py-12 sm:py-16">
         <div className="mx-auto grid max-w-5xl items-start gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
           <div className="space-y-3">
             <Channel
@@ -91,13 +91,13 @@ export const ContactView = ({ locale }: { locale: Locale }) => {
 
           <Card>
             <CardContent className="p-6 sm:p-8">
-              <Suspense fallback={<LoadingScreen locale={locale} />}>
+              <Suspense fallback={<ContactFormSkeleton locale={locale} />}>
                 <ContactForm />
               </Suspense>
             </CardContent>
           </Card>
         </div>
-      </Container>
+      </Stage>
     </>
   );
 };

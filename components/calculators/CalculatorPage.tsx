@@ -6,13 +6,14 @@ import { CALC_ICONS } from "@/components/calculators/calcIcons";
 import { ArrowRightIcon, BookIcon, ChevronRightIcon } from "@/components/icons";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ShareButton } from "@/components/shared/ShareButton";
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { CalculatorSkeleton } from "@/components/skeletons/CalculatorSkeleton";
 import { Container } from "@/components/shared/Container";
 import { createT, type Locale } from "@/lib/i18n/config";
 import { CALC_IDS, routePath, type CalcRouteId } from "@/lib/i18n/routes";
 import { CALC_CONTENT } from "@/lib/calculators/content";
 import { autoLinkTerms } from "@/components/docs/autoLinkTerms";
 import { TableOfContents } from "@/components/docs/TableOfContents";
+import { StickyColumn } from "@/components/shared/StickyColumn";
 import type { TocItem } from "@/lib/docs";
 import { CALC_GUIDES } from "@/lib/calculators/guides";
 import { getDoc } from "@/lib/docs";
@@ -208,14 +209,7 @@ export const CalculatorPage = async ({
         </p>
 
         <div className="mt-8">
-          <Suspense
-            fallback={
-              <LoadingScreen
-                locale={locale}
-                className="min-h-64 rounded-card"
-              />
-            }
-          >
+          <Suspense fallback={<CalculatorSkeleton locale={locale} />}>
             <Calculator id={id} />
           </Suspense>
         </div>
@@ -353,7 +347,7 @@ export const CalculatorPage = async ({
           </article>
 
           <aside className="hidden lg:block">
-            <div className="sticky top-24 space-y-8">
+            <StickyColumn className="space-y-8">
               <TableOfContents items={toc} />
 
               <div className="rounded-card border border-ink-600 bg-ink-800 p-5">
@@ -371,7 +365,7 @@ export const CalculatorPage = async ({
                   <ArrowRightIcon size={15} />
                 </Link>
               </div>
-            </div>
+            </StickyColumn>
           </aside>
         </div>
 

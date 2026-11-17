@@ -3,7 +3,8 @@ import { Suspense } from "react";
 
 import { listAdminUsers } from "@/app/admin/users/actions";
 import { PageHeader } from "@/components/admin/ui";
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { ListSkeleton } from "@/components/skeletons/ListSkeleton";
+import { SkeletonScreen } from "@/components/ui/Skeleton";
 import { UsersList } from "@/components/admin/UsersList";
 import { usersListConfig } from "@/lib/lists/users";
 
@@ -27,7 +28,13 @@ const UsersPage = ({ searchParams }: { searchParams: SearchParams }) => (
       title="Users"
       description="Registered accounts. Search, filter by plan, role, verification or join date, grant or revoke Premium per user, or delete an account permanently (cascades to everything it owns)."
     />
-    <Suspense fallback={<LoadingScreen label="Loading users…" />}>
+    <Suspense
+      fallback={
+        <SkeletonScreen label="Loading users…">
+          <ListSkeleton />
+        </SkeletonScreen>
+      }
+    >
       <UsersData searchParams={searchParams} />
     </Suspense>
   </>

@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import { requireAdmin } from "@/lib/auth/admin";
 
 export const metadata: Metadata = {
   title: "Admin · Metri",
   robots: { index: false, follow: false },
 };
+
+const FRAME = "mx-auto w-full max-w-6xl px-6 py-8 lg:py-10";
 
 /**
  * Admin gate. Guards every /admin/* route in one place via requireAdmin() and
@@ -21,15 +23,17 @@ export const metadata: Metadata = {
  */
 const AdminGate = async ({ children }: { children: React.ReactNode }) => {
   await requireAdmin();
-  return (
-    <div className="mx-auto w-full max-w-6xl px-6 py-8 lg:py-10">
-      {children}
-    </div>
-  );
+  return <div className={FRAME}>{children}</div>;
 };
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => (
-  <Suspense fallback={<LoadingScreen variant="route" label="Loading admin…" />}>
+  <Suspense
+    fallback={
+      <div className={FRAME}>
+        <AdminSkeleton label="Loading admin…" />
+      </div>
+    }
+  >
     <AdminGate>{children}</AdminGate>
   </Suspense>
 );

@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { IndexCoverage } from "@/components/admin/analytics/IndexCoverage";
 import { SearchPanel } from "@/components/admin/analytics/SearchPanel";
 import { RangeBar } from "@/components/admin/RangeBar";
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import { type SearchParams, windowLabel } from "@/lib/analytics/range";
 import { readAnalyticsRequest, windowKey } from "@/lib/analytics/request";
 import { SEARCH_CONSOLE_LAG_DAYS, searchWindow } from "@/lib/analytics/search";
@@ -29,12 +29,21 @@ const Dashboard = async ({ searchParams }: Props) => {
       <div className="space-y-6">
         <Suspense
           key={windowKey(search.window)}
-          fallback={<LoadingScreen label="Loading Search Console…" />}
+          fallback={
+            <AdminSkeleton label="Loading Search Console…" header={false} />
+          }
         >
           <SearchPanel window={search.window} />
         </Suspense>
         <Suspense
-          fallback={<LoadingScreen label="Inspecting every sitemap URL…" />}
+          fallback={
+            <AdminSkeleton
+              label="Inspecting every sitemap URL…"
+              header={false}
+              body="list"
+              caption
+            />
+          }
         >
           <IndexCoverage />
         </Suspense>
@@ -44,7 +53,7 @@ const Dashboard = async ({ searchParams }: Props) => {
 };
 
 const AnalyticsSearchPage = ({ searchParams }: Props) => (
-  <Suspense fallback={<LoadingScreen label="Loading analytics…" />}>
+  <Suspense fallback={<AdminSkeleton label="Loading analytics…" />}>
     <Dashboard searchParams={searchParams} />
   </Suspense>
 );

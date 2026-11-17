@@ -4,7 +4,8 @@ import { Suspense } from "react";
 import { listAdminCalculations } from "@/app/admin/calculations/actions";
 import { CalculationsList } from "@/components/admin/CalculationsList";
 import { PageHeader } from "@/components/admin/ui";
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { ListSkeleton } from "@/components/skeletons/ListSkeleton";
+import { SkeletonScreen } from "@/components/ui/Skeleton";
 import { calculationsListConfig } from "@/lib/lists/calculations";
 
 type SearchParams = Promise<SearchParamsLike>;
@@ -30,7 +31,13 @@ const CalculationsPage = ({ searchParams }: { searchParams: SearchParams }) => (
       title="Saved calculations"
       description="Every calculator result saved to the database: filter by calculator, owner or date, sort any column, export the page or the whole result set."
     />
-    <Suspense fallback={<LoadingScreen label="Loading calculations…" />}>
+    <Suspense
+      fallback={
+        <SkeletonScreen label="Loading calculations…">
+          <ListSkeleton />
+        </SkeletonScreen>
+      }
+    >
       <CalculationsData searchParams={searchParams} />
     </Suspense>
   </>

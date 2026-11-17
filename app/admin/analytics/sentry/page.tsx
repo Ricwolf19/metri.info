@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import { ErrorsPanel } from "@/components/admin/analytics/ErrorsPanel";
 import { RangeBar } from "@/components/admin/RangeBar";
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import { SENTRY_MAX_DAYS, sentryPeriod } from "@/lib/analytics/errors";
 import type { SearchParams } from "@/lib/analytics/range";
 import { readAnalyticsRequest, windowKey } from "@/lib/analytics/request";
@@ -27,7 +27,7 @@ const Dashboard = async ({ searchParams }: Props) => {
       />
       <Suspense
         key={windowKey(window)}
-        fallback={<LoadingScreen label="Loading Sentry…" />}
+        fallback={<AdminSkeleton label="Loading Sentry…" header={false} />}
       >
         <ErrorsPanel window={window} today={today} />
       </Suspense>
@@ -36,7 +36,7 @@ const Dashboard = async ({ searchParams }: Props) => {
 };
 
 const AnalyticsErrorsPage = ({ searchParams }: Props) => (
-  <Suspense fallback={<LoadingScreen label="Loading analytics…" />}>
+  <Suspense fallback={<AdminSkeleton label="Loading analytics…" />}>
     <Dashboard searchParams={searchParams} />
   </Suspense>
 );

@@ -2,7 +2,7 @@ import { Suspense } from "react";
 
 import { TrafficPanel } from "@/components/admin/analytics/TrafficPanel";
 import { RangeBar } from "@/components/admin/RangeBar";
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 import type { SearchParams } from "@/lib/analytics/range";
 import { readAnalyticsRequest, windowKey } from "@/lib/analytics/request";
 
@@ -21,7 +21,9 @@ const Dashboard = async ({ searchParams }: Props) => {
       />
       <Suspense
         key={windowKey(window)}
-        fallback={<LoadingScreen label="Loading Google Analytics…" />}
+        fallback={
+          <AdminSkeleton label="Loading Google Analytics…" header={false} />
+        }
       >
         <TrafficPanel window={window} />
       </Suspense>
@@ -30,7 +32,7 @@ const Dashboard = async ({ searchParams }: Props) => {
 };
 
 const AnalyticsTrafficPage = ({ searchParams }: Props) => (
-  <Suspense fallback={<LoadingScreen label="Loading analytics…" />}>
+  <Suspense fallback={<AdminSkeleton label="Loading analytics…" />}>
     <Dashboard searchParams={searchParams} />
   </Suspense>
 );

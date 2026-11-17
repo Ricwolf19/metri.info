@@ -1,7 +1,7 @@
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { ActivitySkeleton } from "@/components/skeletons/ActivitySkeleton";
 
 const ActividadLoading = () => (
-  <LoadingScreen variant="route" label="Cargando tu actividad…" />
+  <ActivitySkeleton label="Cargando tu actividad…" />
 );
 
 export default ActividadLoading;

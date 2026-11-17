@@ -1,7 +1,5 @@
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { BodySkeleton } from "@/components/skeletons/BodySkeleton";
 
-const CuerpoLoading = () => (
-  <LoadingScreen variant="route" label="Cargando tu mapa corporal…" />
-);
+const CuerpoLoading = () => <BodySkeleton label="Cargando tu mapa corporal…" />;
 
 export default CuerpoLoading;

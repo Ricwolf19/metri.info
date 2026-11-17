@@ -20,10 +20,13 @@ export const MonthlyReportPrompt = ({ className }: { className?: string }) => {
   const { toast } = useToast();
   const [answered, setAnswered] = useState(false);
   const [pending, startTransition] = useTransition();
+  // Which button was pressed, so only that one shows the spinner.
+  const [choice, setChoice] = useState<boolean | null>(null);
 
   if (answered) return null;
 
-  const answer = (enabled: boolean) =>
+  const answer = (enabled: boolean) => {
+    setChoice(enabled);
     startTransition(async () => {
       const res = await setMonthlyReportEmails(enabled);
       if (!res.ok) {
@@ -35,6 +38,7 @@ export const MonthlyReportPrompt = ({ className }: { className?: string }) => {
       if (enabled)
         toast({ title: t("notifications.monthlyOnToast"), variant: "success" });
     });
+  };
 
   return (
     <div
@@ -59,6 +63,7 @@ export const MonthlyReportPrompt = ({ className }: { className?: string }) => {
               size="sm"
               variant="brand"
               disabled={pending}
+              loading={pending && choice === true}
               onClick={() => answer(true)}
             >
               {t("monthlyPrompt.accept")}
@@ -67,6 +72,7 @@ export const MonthlyReportPrompt = ({ className }: { className?: string }) => {
               size="sm"
               variant="ghost"
               disabled={pending}
+              loading={pending && choice === false}
               onClick={() => answer(false)}
             >
               {t("monthlyPrompt.decline")}

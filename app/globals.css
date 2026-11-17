@@ -470,20 +470,28 @@ summary {
   }
 }
 
-/* The app's loader: the mark breathing (AppLoader on mobile, 950 ms each way). */
-@keyframes metri-breathe {
-  0%,
-  100% {
-    opacity: 0.6;
-    transform: scale(0.94);
+/* Skeleton blocks: a soft light band sweeping left to right, the same on every
+   placeholder so a loading page reads as one surface, not a field of blinks.
+   Reduced motion stops the sweep and leaves the flat block. */
+@keyframes metri-shimmer {
+  from {
+    background-position: 100% 0;
   }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
+  to {
+    background-position: -100% 0;
   }
 }
-.animate-breathe {
-  animation: metri-breathe 1.9s ease-in-out infinite;
+.animate-shimmer {
+  background-color: var(--color-ink-700);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(var(--ink-50) / 0.06) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: metri-shimmer 1.6s ease-in-out infinite;
 }
 
 /* Favorite star: a quick overshoot when it flips, so the toggle is felt. */

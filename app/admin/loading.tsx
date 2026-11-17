@@ -1,7 +1,5 @@
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { AdminSkeleton } from "@/components/skeletons/AdminSkeleton";
 
-const AdminSectionLoading = () => (
-  <LoadingScreen variant="route" label="Loading…" />
-);
+const AdminSectionLoading = () => <AdminSkeleton label="Loading…" />;
 
 export default AdminSectionLoading;

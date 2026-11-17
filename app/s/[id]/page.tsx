@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { ShareSkeleton } from "@/components/skeletons/ShareSkeleton";
 import { ArrowRightIcon } from "@/components/icons";
 import { Container } from "@/components/shared/Container";
 import { CALC_CONTENT } from "@/lib/calculators/content";
@@ -149,7 +149,7 @@ const SharePage = ({
   params: Params;
   searchParams: Search;
 }) => (
-  <Suspense fallback={<LoadingScreen />}>
+  <Suspense fallback={<ShareSkeleton />}>
     <ShareContent params={params} searchParams={searchParams} />
   </Suspense>
 );

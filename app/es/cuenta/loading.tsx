@@ -1,7 +1,5 @@
-import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { AccountSkeleton } from "@/components/skeletons/AccountSkeleton";
 
-const CuentaLoading = () => (
-  <LoadingScreen variant="route" label="Cargando tu cuenta…" />
-);
+const CuentaLoading = () => <AccountSkeleton label="Cargando tu cuenta…" />;
 
 export default CuentaLoading;

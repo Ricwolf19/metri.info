@@ -75,7 +75,7 @@ export const HistoryRowActions = ({ id }: { id: string }) => {
               type="button"
               variant="destructive"
               size="sm"
-              disabled={pending}
+              loading={pending}
               onClick={confirm}
             >
               {t("history.delete")}
