@@ -6,8 +6,9 @@ import { leadWeeks, type Phase, type Plan } from "./recommend";
 /**
  * The roadmap: what to do, in order, for the plan the diagnostic produced.
  * Four stages (know where you start, set the phase up, run it, finish it);
- * each step links the guide or calculator that does the work and is done
- * either by hand or because the account shows it happened (`Evidence`).
+ * each step links the guide or calculator that does the work. Only the person
+ * ticks a step: a saved calculation or a quiz attempt doesn't mean the step
+ * is learned, so nothing the account shows ever ticks one for them.
  * Step ids are stored (the done map), so add steps, never rename them.
  */
 
@@ -36,28 +37,11 @@ export type StepId = (typeof STEP_IDS)[number];
 
 export type StepLink = { doc: string } | { route: RouteId };
 
-/** Things the account can show without asking: a saved calculation, a quiz
- * attempt, synced weigh-ins or tape. Each maps to the ISO date it was seen. */
-type EvidenceKey =
-  | "baseline"
-  | "maintenance"
-  | "knowledge"
-  | "calories"
-  | "protein"
-  | "weighIns"
-  | "checkins";
-export type Evidence = Partial<Record<EvidenceKey, string>>;
-
-/** Evidence that only counts once the plan is running (an old weigh-in says
- * nothing about this phase); the rest still holds from before it. */
-const SINCE_START: ReadonlySet<EvidenceKey> = new Set(["weighIns", "checkins"]);
-
 type StepDef = {
   id: StepId;
   stage: Stage;
   /** A step's links depend only on the phase. */
   links: (phase: Phase) => StepLink[];
-  evidence?: EvidenceKey;
   include?: (a: Answers, plan: Plan) => boolean;
 };
 
@@ -66,19 +50,16 @@ const STEPS: StepDef[] = [
     id: "measure",
     stage: "baseline",
     links: () => [{ doc: "measuring-progress" }, { route: "bodyfat" }],
-    evidence: "baseline",
   },
   {
     id: "maintenance",
     stage: "baseline",
     links: () => [{ route: "tdee" }, { doc: "tdee" }],
-    evidence: "maintenance",
   },
   {
     id: "knowledge",
     stage: "baseline",
     links: () => [{ route: "quiz" }],
-    evidence: "knowledge",
   },
   {
     id: "sleep",
@@ -116,13 +97,11 @@ const STEPS: StepDef[] = [
         : phase === "bulk"
           ? [{ route: "macros" }, { doc: "choosing-your-phase" }]
           : [{ route: "macros" }, { doc: "personalizing-your-diet" }],
-    evidence: "calories",
   },
   {
     id: "protein",
     stage: "setup",
     links: () => [{ route: "protein" }, { doc: "macros" }],
-    evidence: "protein",
   },
   {
     id: "training",
@@ -144,13 +123,11 @@ const STEPS: StepDef[] = [
     id: "weighins",
     stage: "run",
     links: () => [{ doc: "weight-tracking" }],
-    evidence: "weighIns",
   },
   {
     id: "checkins",
     stage: "run",
     links: () => [{ doc: "reading-your-numbers" }],
-    evidence: "checkins",
   },
   {
     id: "adjust",
@@ -178,10 +155,8 @@ export type RoadmapStep = {
   stage: Stage;
   links: StepLink[];
   status: StepStatus;
-  /** When it was done (by hand or detected), ISO. */
+  /** When the person ticked it, ISO. */
   doneAt: string | null;
-  /** Done because the account showed it, not ticked by hand. */
-  detected: boolean;
 };
 
 /** The plan's steps in order, each with its status; the first one not done
@@ -190,24 +165,15 @@ export const roadmapSteps = ({
   answers,
   plan,
   done,
-  evidence,
-  startedAt,
 }: {
   answers: Answers;
   plan: Plan;
   done: Partial<Record<StepId, string>>;
-  evidence: Evidence;
-  startedAt: string;
 }): RoadmapStep[] => {
   let currentSet = false;
   return STEPS.filter((s) => !s.include || s.include(answers, plan)).map(
     (s) => {
-      const seen = s.evidence ? evidence[s.evidence] : undefined;
-      const detectedAt =
-        seen && (!SINCE_START.has(s.evidence!) || seen >= startedAt)
-          ? seen
-          : null;
-      const doneAt = done[s.id] ?? detectedAt;
+      const doneAt = done[s.id] ?? null;
       let status: StepStatus = doneAt ? "done" : "todo";
       if (status === "todo" && !currentSet) {
         status = "current";
@@ -219,7 +185,6 @@ export const roadmapSteps = ({
         links: s.links(plan.phase),
         status,
         doneAt,
-        detected: !done[s.id] && detectedAt !== null,
       };
     },
   );

@@ -5,8 +5,7 @@ import type { CalcFacts } from "@/lib/calculators/prefill";
 import { readCalcFacts } from "@/lib/calculators/read-facts";
 import { event } from "@/lib/log/logger";
 import { parseRoadmap, type RoadmapState } from "@/lib/roadmap/state";
-import type { Evidence } from "@/lib/roadmap/steps";
-import { readEvidence, readRoadmap, writeRoadmap } from "@/lib/roadmap/store";
+import { readRoadmap, writeRoadmap } from "@/lib/roadmap/store";
 
 export type RoadmapLoad =
   | { signedIn: false }
@@ -16,22 +15,20 @@ export type RoadmapLoad =
       /** The stored plan couldn't be read: never treat that as "none", or
        * the next save would overwrite it. */
       readFailed: boolean;
-      evidence: Evidence;
       /** Seeds the diagnostic (sex, body fat, weight) when starting over. */
       facts: CalcFacts | null;
     };
 
 /**
  * Everything the roadmap page needs for a signed-in account, in one call:
- * the stored roadmap, what the account already shows for each step, and the
- * facts that prefill the diagnostic. Called from the client so the page
+ * the stored roadmap and the facts that prefill the diagnostic. Called from the client so the page
  * itself stays static, like the calculators.
  */
 export const loadRoadmap = async (): Promise<RoadmapLoad> => {
   const session = await getSession();
   if (!session) return { signedIn: false };
   const userId = session.user.id;
-  const [read, evidence, facts] = await Promise.all([
+  const [read, facts] = await Promise.all([
     readRoadmap(userId).then(
       (roadmap) => ({ roadmap, readFailed: false }),
       (error) => {
@@ -39,10 +36,9 @@ export const loadRoadmap = async (): Promise<RoadmapLoad> => {
         return { roadmap: null, readFailed: true };
       },
     ),
-    readEvidence(userId, new Date()),
     readCalcFacts(userId).catch(() => null),
   ]);
-  return { signedIn: true, ...read, evidence, facts };
+  return { signedIn: true, ...read, facts };
 };
 
 export type SaveRoadmapResult =
@@ -62,10 +58,7 @@ export const saveRoadmap = async (
     await writeRoadmap(session.user.id, state);
     return { ok: true };
   } catch (error) {
-    event.warn("roadmap.save-failed", {
-      userId: session.user.id,
-      error: String(error),
-    });
+    event.warn("roadmap.save-failed", { userId: session.user.id, error });
     return { ok: false, reason: "failed" };
   }
 };

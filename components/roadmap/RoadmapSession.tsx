@@ -16,7 +16,6 @@ import { useToast } from "@/components/ui/toast";
 import { track } from "@/lib/analytics/track";
 import type { CalcFacts } from "@/lib/calculators/prefill";
 import { useI18n } from "@/lib/i18n";
-import { readLocalResult } from "@/lib/quiz/scores";
 import type { Answers } from "@/lib/roadmap/diagnostic";
 import { readLocalRoadmap, writeLocalRoadmap } from "@/lib/roadmap/local";
 import { recommend } from "@/lib/roadmap/recommend";
@@ -26,12 +25,7 @@ import {
   type RoadmapState,
   startRoadmap,
 } from "@/lib/roadmap/state";
-import {
-  type Evidence,
-  roadmapSteps,
-  schedule,
-  type StepId,
-} from "@/lib/roadmap/steps";
+import { roadmapSteps, schedule, type StepId } from "@/lib/roadmap/steps";
 
 type Loaded = {
   signedIn: boolean;
@@ -45,7 +39,6 @@ type Loaded = {
   draft: RoadmapState | null;
   /** The draft is the one stored in this browser (made as a visitor). */
   draftLocal: boolean;
-  evidence: Evidence;
   facts: CalcFacts | null;
 };
 
@@ -57,18 +50,13 @@ const prefersImperial = (facts: CalcFacts | null) => {
 };
 
 /** A plan's phase and step count, for the history entry it leaves. */
-const summarize = (state: RoadmapState, evidence: Evidence) => {
+const summarize = (state: RoadmapState) => {
   const plan = recommend(state.answers);
   return {
     state,
     phase: plan.phase,
-    total: roadmapSteps({
-      answers: state.answers,
-      plan,
-      done: state.done,
-      evidence,
-      startedAt: state.startedAt,
-    }).length,
+    total: roadmapSteps({ answers: state.answers, plan, done: state.done })
+      .length,
   };
 };
 
@@ -99,14 +87,12 @@ export const RoadmapSession = ({
       .then((res) => {
         if (!active) return;
         if (!res.signedIn) {
-          const quizAt = readLocalResult()?.at || undefined;
           setLoaded({
             signedIn: false,
             failed: false,
             kept: null,
             draft: local,
             draftLocal: true,
-            evidence: quizAt ? { knowledge: quizAt } : {},
             facts: null,
           });
           return;
@@ -117,7 +103,6 @@ export const RoadmapSession = ({
           kept: res.roadmap,
           draft: local,
           draftLocal: local !== null,
-          evidence: res.evidence,
           facts: res.facts,
         });
       });
@@ -150,18 +135,12 @@ export const RoadmapSession = ({
     );
   }
 
-  const { kept, draft, evidence, facts, signedIn } = loaded;
+  const { kept, draft, facts, signedIn } = loaded;
   const state = draft ?? kept;
   const plan = state ? recommend(state.answers) : null;
   const steps =
     state && plan
-      ? roadmapSteps({
-          answers: state.answers,
-          plan,
-          done: state.done,
-          evidence,
-          startedAt: state.startedAt,
-        })
+      ? roadmapSteps({ answers: state.answers, plan, done: state.done })
       : [];
 
   /** A draft changed: in this browser if that's where it lives. */
@@ -179,7 +158,7 @@ export const RoadmapSession = ({
       setDraft(startRoadmap(answers, now, null), false);
     } else {
       setDraft(
-        startRoadmap(answers, now, draft ? summarize(draft, evidence) : null),
+        startRoadmap(answers, now, draft ? summarize(draft) : null),
         true,
       );
     }
@@ -206,11 +185,7 @@ export const RoadmapSession = ({
   const keep = async () => {
     if (!draft) return;
     setKeeping(true);
-    const next = keepRoadmap(
-      draft,
-      new Date(),
-      kept ? summarize(kept, evidence) : null,
-    );
+    const next = keepRoadmap(draft, new Date(), kept ? summarize(kept) : null);
     const res = await saveRoadmap(next).catch(() => ({ ok: false }) as const);
     setKeeping(false);
     if (!res.ok) {

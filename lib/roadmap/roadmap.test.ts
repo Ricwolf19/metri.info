@@ -99,8 +99,6 @@ describe("recommend: rates and lengths", () => {
 });
 
 describe("roadmapSteps", () => {
-  const startedAt = "2026-11-01T10:00:00.000Z";
-
   it("includes the fixes the answers call for, and marks where you are", () => {
     const answers = {
       ...BASE,
@@ -111,8 +109,6 @@ describe("roadmapSteps", () => {
       answers,
       plan: recommend(answers),
       done: { measure: "2026-11-02T00:00:00.000Z" },
-      evidence: {},
-      startedAt,
     });
     const ids = steps.map((s) => s.id);
     expect(ids).toContain("sleep");
@@ -122,21 +118,15 @@ describe("roadmapSteps", () => {
     expect(steps[1].status).toBe("current");
   });
 
-  it("counts a saved TDEE from before the plan, but not an old weigh-in", () => {
+  it("marks done only the steps the person ticked", () => {
     const steps = roadmapSteps({
       answers: BASE,
       plan: recommend(BASE),
-      done: {},
-      evidence: {
-        maintenance: "2026-10-01T00:00:00.000Z",
-        weighIns: "2026-10-20T00:00:00.000Z",
-      },
-      startedAt,
+      done: { maintenance: "2026-11-02T00:00:00.000Z" },
     });
-    const byId = Object.fromEntries(steps.map((s) => [s.id, s]));
-    expect(byId.maintenance.status).toBe("done");
-    expect(byId.maintenance.detected).toBe(true);
-    expect(byId.weighins.status).not.toBe("done");
+    expect(
+      steps.filter((s) => s.status === "done").map((s) => [s.id, s.doneAt]),
+    ).toEqual([["maintenance", "2026-11-02T00:00:00.000Z"]]);
   });
 
   it("links the deficit calculator for a cut and the macros one otherwise", () => {
@@ -144,8 +134,6 @@ describe("roadmapSteps", () => {
       answers: BASE,
       plan: recommend(BASE),
       done: {},
-      evidence: {},
-      startedAt,
     }).find((s) => s.id === "calories")!;
     expect(cut.links).toContainEqual({ route: "deficit" });
   });

@@ -1,17 +1,16 @@
-import { sql } from "drizzle-orm";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
 import { getLatestBodyLogs } from "@/lib/sync/latest";
 
 import type { Answers } from "./diagnostic";
 import { startRoadmap } from "./state";
-import { readEvidence, readRoadmap, writeRoadmap } from "./store";
+import { readRoadmap, writeRoadmap } from "./store";
 
 /**
- * The roadmap's and the calculator prefill's SQL (jsonb text ordering,
- * DISTINCT ON per tape site, MAX per calculator, the upsert) against a real
- * Postgres — PGlite, in-memory. These readers swallow errors and return
- * "nothing seen", so a broken query would otherwise fail silently.
+ * The roadmap's upsert and the body-log reader's SQL (jsonb text ordering,
+ * DISTINCT ON per tape site) against a real Postgres — PGlite, in-memory.
+ * The body-log reader swallows errors and returns "nothing synced", so a
+ * broken query would otherwise fail silently.
  */
 vi.mock("@/lib/db", async () => {
   const { PGlite } = await import("@electric-sql/pglite");
@@ -29,27 +28,6 @@ vi.mock("@/lib/db", async () => {
       "updated_at" timestamp not null,
       "server_updated_at" timestamp default now() not null,
       primary key ("user_id", "table_name", "row_id")
-    );
-    create table "calculation_log" (
-      "id" text primary key,
-      "user_id" text references "user"("id") on delete cascade,
-      "calculator_type" text not null,
-      "inputs" jsonb not null,
-      "results" jsonb not null,
-      "created_at" timestamp default now() not null
-    );
-    create table "quiz_attempt" (
-      "id" text primary key,
-      "user_id" text not null references "user"("id") on delete cascade,
-      "scores" jsonb not null,
-      "misses" jsonb,
-      "asked" integer not null,
-      "created_at" timestamp with time zone default now() not null
-    );
-    create table "user_profile" (
-      "id" text primary key references "user"("id") on delete cascade,
-      "latest_tdee" real,
-      "updated_at" timestamp default now() not null
     );
     create table "roadmap" (
       "user_id" text primary key references "user"("id") on delete cascade,
@@ -82,8 +60,7 @@ const ANSWERS: Answers = {
 
 const seed = async () => {
   const { db } = await import("@/lib/db");
-  const { calculationLog, quizAttempt, syncRow } =
-    await import("@/lib/db/schema");
+  const { syncRow } = await import("@/lib/db/schema");
   const row = (table: string, id: string, data: unknown, deleted = false) => ({
     userId: "u1",
     tableName: table,
@@ -147,43 +124,6 @@ const seed = async () => {
       userId: "u2",
     },
   ]);
-  await db.insert(calculationLog).values([
-    {
-      id: "c1",
-      userId: "u1",
-      calculatorType: "tdee",
-      inputs: {},
-      results: {},
-      createdAt: new Date("2026-10-01T00:00:00Z"),
-    },
-    {
-      id: "c2",
-      userId: "u1",
-      calculatorType: "tdee",
-      inputs: {},
-      results: {},
-      createdAt: new Date("2026-11-02T00:00:00Z"),
-    },
-    {
-      id: "c3",
-      userId: "u1",
-      calculatorType: "protein",
-      inputs: {},
-      results: {},
-      createdAt: new Date("2026-11-03T00:00:00Z"),
-    },
-  ]);
-  await db.insert(quizAttempt).values({
-    id: "q1",
-    userId: "u1",
-    scores: {},
-    asked: 32,
-    createdAt: new Date("2026-11-04T00:00:00Z"),
-  });
-  // Raw: Drizzle would name every profile column, the table here has three.
-  await db.execute(
-    sql`insert into "user_profile" (id, latest_tdee, updated_at) values ('u1', 2200, '2026-09-01T00:00:00')`,
-  );
 };
 
 beforeAll(seed);
@@ -209,20 +149,6 @@ describe("getLatestBodyLogs", () => {
       tape: {},
       goal: null,
     });
-  });
-});
-
-describe("readEvidence", () => {
-  it("dates each step from the account's own records", async () => {
-    const evidence = await readEvidence("u1", NOW);
-    expect(evidence.maintenance).toBe("2026-11-02T00:00:00.000Z");
-    expect(evidence.protein).toBe("2026-11-03T00:00:00.000Z");
-    expect(evidence.knowledge).toBe("2026-11-04T00:00:00.000Z");
-    expect(evidence.weighIns).toBe("2026-11-15T23:59:59.000Z");
-    // Any tape site counts (the chest, on the 15th); the deleted waist
-    // reading on the 16th doesn't.
-    expect(evidence.baseline).toBe("2026-11-15T23:59:59.000Z");
-    expect(evidence.calories).toBeUndefined();
   });
 });
 

@@ -11,8 +11,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * One step on the timeline: a marker on the rail (done, you-are-here or to
- * do), what to do and why, its links, and the action. A step the account
- * proved (`detected`) shows where it was seen and can't be unticked.
+ * do), what to do and why, its links, and the action. Only the person ticks
+ * a step, so a ticked one can always be unticked.
  */
 export const StepItem = ({
   step,
@@ -71,12 +71,10 @@ export const StepItem = ({
         <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
           {done && step.doneAt ? (
             <span className="text-xs text-ink-400">
-              {t(step.detected ? "roadmap.detectedOn" : "roadmap.doneOn", {
-                date: formatDay(step.doneAt, locale),
-              })}
+              {t("roadmap.doneOn", { date: formatDay(step.doneAt, locale) })}
             </span>
           ) : null}
-          {done && !step.detected ? (
+          {done ? (
             <button
               type="button"
               onClick={() => onToggle(false)}
