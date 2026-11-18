@@ -95,6 +95,14 @@ critical flows on a real iPhone before a release.
 - **SEO is server-first**: Metadata API, JSON-LD, file-based sitemap/robots/manifest, dynamic OG.
   `app/sitemap.ts` must stay statically cached (`"use cache"` + `cacheLife("max")`) — a per-request
   sitemap broke GSC ingestion. SEO/analytics playbooks live in the maintainer's private notes.
+  Every public page has its own Open Graph card in its language: the segment's `opengraph-image.tsx`
+  is one line, `renderOgCard(pageCard | calcCard | docCard)`. `lib/og/cards.ts` says what each card
+  holds (a guide its sections and reading time, a calculator its formula, an index what it lists),
+  `lib/og/render.tsx` draws it (Geist TTFs from `geist`, traced in `next.config.ts`) inside `"use
+  cache"`, so every card is prerendered at build (the guide and calculator ones through their own
+  `generateStaticParams`; without the cache, Cache Components renders each on request), and supplies
+  the frame, brand and footer the share images (`/og/calc|quiz|body`) are built from. A new page
+  gets a card; `cards.test.ts` holds every calculator and guide to one in both languages.
   Two rules the page HTML depends on, both guarded by `e2e/smoke.spec.ts`: an indexable page's
   `generateMetadata` never reads `searchParams` (dynamic metadata is streamed after the HTML to
   crawlers that run JS, Googlebot included, so the title and canonical go missing; shared quiz
@@ -145,8 +153,9 @@ critical flows on a real iPhone before a release.
 - **Roadmap** (`/roadmap`, `lib/roadmap`): a ten-question diagnostic → `recommend()` (phase, pace,
   block length from the `choosing-your-phase` tables: body fat sets the direction, experience the
   pace, a long diet earns a maintenance block first) → ordered steps in four stages, each linking a
-  guide or calculator. Steps are ticked by hand or by `Evidence` the account shows (saved calcs,
-  quiz attempts, synced weigh-ins and tape). The test can be retaken at any time and every result
+  guide or calculator. Only the person ticks a step: a saved calculation, a quiz attempt or a
+  synced weigh-in doesn't mean the step is learned, so nothing the account shows ticks one. The
+  test can be retaken at any time and every result
   starts as a draft (`RoadmapStatus` says where it lives): a visitor's lives in localStorage and is
   labelled temporary; a signed-in result lives on the page only (a shared browser never hands one
   person's answers to the next) until the person presses "Keep this plan" (`keepRoadmap`), which
