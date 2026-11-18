@@ -3,6 +3,12 @@ import type { NextConfig } from "next";
 
 import { ROUTES } from "./lib/i18n/routes";
 
+/** The fonts `lib/og/render.tsx` draws every card with. */
+const OG_FONTS = [
+  "./node_modules/geist/dist/fonts/geist-sans/Geist-{Regular,Bold}.ttf",
+  "./node_modules/geist/dist/fonts/geist-mono/GeistMono-Medium.ttf",
+];
+
 const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
@@ -14,14 +20,17 @@ const nextConfig: NextConfig = {
   // Native gRPC/protobuf deps — keep them external instead of bundling them into
   // the server build (Next's recommended handling for such packages).
   serverExternalPackages: ["@google-analytics/data"],
-  // The monthly PDF reads these TTFs from disk at runtime. Turbopack traces
-  // the font folder from the computed path today; this pins the five it uses
-  // so a change in tracing can't ship the cron without them.
+  // The monthly PDF and every Open Graph image read these TTFs from disk at
+  // runtime (`lib/og/render.tsx`), and a guide's card reads its MDX.
+  // Turbopack traces the font folder from the computed path today; this pins
+  // the files so a change in tracing can't ship a route without them.
   outputFileTracingIncludes: {
     "/api/cron/monthly-report": [
       "./node_modules/geist/dist/fonts/geist-sans/Geist-{Regular,SemiBold,Bold}.ttf",
       "./node_modules/geist/dist/fonts/geist-mono/GeistMono-{Regular,Bold}.ttf",
     ],
+    "/og/*": OG_FONTS,
+    "/**/opengraph-image*": [...OG_FONTS, "./content/docs/**/*.mdx"],
   },
   // PostHog ingests through this reverse proxy: the browser talks to first-party
   // `/relay/*` and Next forwards to PostHog's US ingestion/asset hosts. The

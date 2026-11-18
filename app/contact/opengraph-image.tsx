@@ -1,13 +1,10 @@
-import { sectionCopy } from "@/lib/seo/pages";
-import { ogContentType, ogSize, renderOg } from "@/lib/og";
+import { pageCard } from "@/lib/og/cards";
+import { ogContentType, ogSize, renderOgCard } from "@/lib/og/render";
 
 export const alt = "Metri · Contact";
 export const size = ogSize;
 export const contentType = ogContentType;
 
-const Image = () => {
-  const { title, description, eyebrow } = sectionCopy("contact", "en");
-  return renderOg(title, eyebrow, description);
-};
+const Image = () => renderOgCard(pageCard("contact", "en"));
 
 export default Image;

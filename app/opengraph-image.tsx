@@ -1,14 +1,10 @@
-import { ogContentType, ogSize, renderOg } from "@/lib/og";
+import { pageCard } from "@/lib/og/cards";
+import { ogContentType, ogSize, renderOgCard } from "@/lib/og/render";
 
 export const alt = "Metri · Open-source fitness tracker";
 export const size = ogSize;
 export const contentType = ogContentType;
 
-const Image = () =>
-  renderOg(
-    "Track. Progress. Evolve.",
-    "Open-source fitness tracker",
-    "Free fitness calculators and an evidence-based knowledge base. No account, open source.",
-  );
+const Image = () => renderOgCard(pageCard("home", "en"));
 
 export default Image;

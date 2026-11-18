@@ -13,7 +13,15 @@ import { decodeBodyShare } from "@/lib/body/share";
 import { siteLabelKey } from "@/lib/body/sites";
 import { signed } from "@/lib/body/units";
 import { createT, isLocale } from "@/lib/i18n/config";
-import { MARK_DATA_URI, ogSize } from "@/lib/og";
+import {
+  OG_COLOR,
+  OgBrand,
+  ogFonts,
+  OgFooter,
+  OgFrame,
+  ogSize,
+  ogUrl,
+} from "@/lib/og/render";
 import { MUSCLE_HEADS } from "@/lib/training/muscles";
 
 /**
@@ -80,34 +88,8 @@ export const GET = (req: Request) => {
     });
 
   return new ImageResponse(
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        padding: "52px 72px",
-        background: "#09090b",
-        backgroundImage:
-          "radial-gradient(1100px 460px at 82% -12%, rgba(190,248,43,0.16), transparent)",
-        color: "#fafafa",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={MARK_DATA_URI} width={52} height={52} alt="Metri" />
-        <span
-          style={{ fontSize: "28px", fontWeight: 700, letterSpacing: "1px" }}
-        >
-          Metri
-        </span>
-        <span
-          style={{ fontSize: "22px", color: "#71717a", marginLeft: "12px" }}
-        >
-          · {t("body.title")}
-        </span>
-      </div>
+    <OgFrame padding="52px 72px">
+      <OgBrand section={t("body.title")} />
 
       <div style={{ display: "flex", alignItems: "center", gap: "72px" }}>
         <svg
@@ -141,18 +123,18 @@ export const GET = (req: Request) => {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "baseline",
-                borderBottom: "1px solid #27272a",
+                borderBottom: `1px solid ${OG_COLOR.border}`,
                 paddingBottom: "12px",
               }}
             >
-              <span style={{ fontSize: "24px", color: "#a1a1aa" }}>
+              <span style={{ fontSize: "24px", color: OG_COLOR.muted }}>
                 {s.label}
               </span>
               <span
                 style={{
                   fontSize: "40px",
                   fontWeight: 700,
-                  color: "#fafafa",
+                  color: OG_COLOR.text,
                 }}
               >
                 {s.value}
@@ -164,7 +146,7 @@ export const GET = (req: Request) => {
               display: "flex",
               gap: "18px",
               fontSize: "18px",
-              color: "#a1a1aa",
+              color: OG_COLOR.muted,
             }}
           >
             {(["untrained", "low", "optimal", "high"] as const).map((s) => (
@@ -187,20 +169,11 @@ export const GET = (req: Request) => {
         </div>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          fontSize: "22px",
-          color: "#71717a",
-        }}
-      >
-        <span>metri.info</span>
-        <span>{t("body.eyebrow")}</span>
-      </div>
-    </div>,
+      <OgFooter url={ogUrl("/")} note={t("body.eyebrow")} />
+    </OgFrame>,
     {
       ...ogSize,
+      fonts: ogFonts(),
       headers: {
         "cache-control": "public, max-age=600, s-maxage=86400",
         "x-robots-tag": "noindex",

@@ -1,20 +1,19 @@
-import { CALC_CONTENT } from "@/lib/calculators/content";
-import { calcIdForSlug } from "@/lib/i18n/routes";
-import { ogContentType, ogSize, renderOg } from "@/lib/og";
+import { CALC_IDS, calcIdForSlug, ROUTES } from "@/lib/i18n/routes";
+import { calcCard, pageCard } from "@/lib/og/cards";
+import { ogContentType, ogSize, renderOgCard } from "@/lib/og/render";
 
-export const alt = "Metri calculator";
+export const alt = "Metri · Free calculator";
 export const size = ogSize;
 export const contentType = ogContentType;
+
+/** Every card is drawn at build, like the pages. */
+export const generateStaticParams = () =>
+  CALC_IDS.map((id) => ({ calc: ROUTES[id].en.split("/").pop() as string }));
 
 const Image = async ({ params }: { params: Promise<{ calc: string }> }) => {
   const { calc } = await params;
   const id = calcIdForSlug("en", calc);
-  const c = id ? CALC_CONTENT[id].en : null;
-  return renderOg(
-    c?.h1 ?? "Fitness Calculator",
-    "Free calculator",
-    c?.tagline ?? "",
-  );
+  return renderOgCard(id ? calcCard(id, "en") : pageCard("tools", "en"));
 };
 
 export default Image;

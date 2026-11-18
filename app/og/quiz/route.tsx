@@ -2,7 +2,17 @@ import { ImageResponse } from "next/og";
 
 import { createT, isLocale } from "@/lib/i18n/config";
 import { routePath } from "@/lib/i18n/routes";
-import { MARK_DATA_URI, ogSize, renderOg } from "@/lib/og";
+import { pageCard } from "@/lib/og/cards";
+import {
+  OG_COLOR,
+  OgBrand,
+  ogFonts,
+  OgFooter,
+  OgFrame,
+  ogSize,
+  ogUrl,
+  renderOgCard,
+} from "@/lib/og/render";
 import {
   AREA_KEY,
   LEVEL_KEY,
@@ -10,7 +20,6 @@ import {
   QUIZ_MAX_LEVEL,
 } from "@/lib/quiz/areas";
 import { decodeScores } from "@/lib/quiz/scores";
-import { sectionCopy } from "@/lib/seo/pages";
 
 const SIZE = 360;
 const PAD = 24;
@@ -35,10 +44,7 @@ export const GET = (req: Request) => {
     ? (searchParams.get("locale") as "en" | "es")
     : "en";
   const r = searchParams.get("r");
-  if (r === null) {
-    const { title, description, eyebrow } = sectionCopy("quiz", locale);
-    return renderOg(title, eyebrow, description);
-  }
+  if (r === null) return renderOgCard(pageCard("quiz", locale));
   const scores = decodeScores(r);
   if (!scores) return new Response("Bad result", { status: 400 });
   const t = createT(locale);
@@ -51,34 +57,8 @@ export const GET = (req: Request) => {
   ).join(" ");
 
   return new ImageResponse(
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        padding: "56px 72px",
-        background: "#09090b",
-        backgroundImage:
-          "radial-gradient(1100px 460px at 82% -12%, rgba(190,248,43,0.16), transparent)",
-        color: "#fafafa",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={MARK_DATA_URI} width={52} height={52} alt="Metri" />
-        <span
-          style={{ fontSize: "28px", fontWeight: 700, letterSpacing: "1px" }}
-        >
-          Metri
-        </span>
-        <span
-          style={{ fontSize: "22px", color: "#71717a", marginLeft: "12px" }}
-        >
-          · {t("quiz.title")}
-        </span>
-      </div>
+    <OgFrame padding="56px 72px">
+      <OgBrand section={t("quiz.title")} />
 
       <div style={{ display: "flex", alignItems: "center", gap: "64px" }}>
         <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`}>
@@ -87,7 +67,7 @@ export const GET = (req: Request) => {
               key={i}
               points={points}
               fill="none"
-              stroke="#2a2a2f"
+              stroke={OG_COLOR.border}
               strokeWidth={1.5}
             />
           ))}
@@ -100,7 +80,7 @@ export const GET = (req: Request) => {
                 y1={C}
                 x2={x}
                 y2={y}
-                stroke="#2a2a2f"
+                stroke={OG_COLOR.border}
                 strokeWidth={1.5}
               />
             );
@@ -108,7 +88,7 @@ export const GET = (req: Request) => {
           <polygon
             points={values}
             fill="rgba(190,248,43,0.28)"
-            stroke="#bef82b"
+            stroke={OG_COLOR.brand}
             strokeWidth={3}
             strokeLinejoin="round"
           />
@@ -144,7 +124,7 @@ export const GET = (req: Request) => {
                 }}
               >
                 <span style={{ fontWeight: 600 }}>{t(AREA_KEY[area])}</span>
-                <span style={{ color: "#a1a1aa" }}>
+                <span style={{ color: OG_COLOR.muted }}>
                   {t(LEVEL_KEY[scores[area]])} · {scores[area]}/4
                 </span>
               </div>
@@ -156,7 +136,8 @@ export const GET = (req: Request) => {
                       flex: 1,
                       height: "10px",
                       borderRadius: "999px",
-                      background: i < scores[area] ? "#bef82b" : "#202024",
+                      background:
+                        i < scores[area] ? OG_COLOR.brand : OG_COLOR.raised,
                     }}
                   />
                 ))}
@@ -166,20 +147,14 @@ export const GET = (req: Request) => {
         </div>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          fontSize: "22px",
-          color: "#71717a",
-        }}
-      >
-        <span>metri.info{routePath("quiz", locale)}</span>
-        <span>{t("quiz.eyebrow")}</span>
-      </div>
-    </div>,
+      <OgFooter
+        url={ogUrl(routePath("quiz", locale))}
+        note={t("quiz.eyebrow")}
+      />
+    </OgFrame>,
     {
       ...ogSize,
+      fonts: ogFonts(),
       headers: {
         "cache-control": "public, max-age=600, s-maxage=86400",
         "x-robots-tag": "noindex",

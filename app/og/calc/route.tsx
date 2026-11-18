@@ -5,7 +5,15 @@ import { CALCULATORS } from "@/lib/calculators/registry";
 import { decodeValues, readValues } from "@/lib/calculators/share";
 import type { CalcId, CalcResult } from "@/lib/calculators/types";
 import { createT, isLocale } from "@/lib/i18n/config";
-import { MARK_DATA_URI, ogSize } from "@/lib/og";
+import {
+  OG_COLOR,
+  OgBrand,
+  ogFonts,
+  OgFooter,
+  OgFrame,
+  ogSize,
+  ogUrl,
+} from "@/lib/og/render";
 
 const toNumber = (formatted: string) =>
   Number(formatted.replace(/[^0-9.-]/g, ""));
@@ -22,59 +30,10 @@ const Stat = ({ label, value }: { label: string; value: string }) => (
       border: "1px solid rgba(255,255,255,0.08)",
     }}
   >
-    <span style={{ fontSize: "20px", color: "#a1a1aa" }}>{label}</span>
-    <span style={{ fontSize: "34px", fontWeight: 700, color: "#fafafa" }}>
+    <span style={{ fontSize: "20px", color: OG_COLOR.muted }}>{label}</span>
+    <span style={{ fontSize: "34px", fontWeight: 700, color: OG_COLOR.text }}>
       {value}
     </span>
-  </div>
-);
-
-const Brand = () => (
-  <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-    {/* eslint-disable-next-line @next/next/no-img-element */}
-    <img src={MARK_DATA_URI} width={52} height={52} alt="Metri" />
-    <span
-      style={{
-        fontSize: "28px",
-        fontWeight: 700,
-        letterSpacing: "1px",
-        color: "#fafafa",
-      }}
-    >
-      Metri
-    </span>
-  </div>
-);
-
-const Frame = ({ children }: { children: React.ReactNode }) => (
-  <div
-    style={{
-      width: "100%",
-      height: "100%",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-      padding: "64px 72px",
-      background: "#09090b",
-      backgroundImage:
-        "radial-gradient(1100px 460px at 82% -12%, rgba(190,248,43,0.16), transparent)",
-    }}
-  >
-    {children}
-  </div>
-);
-
-const Footer = () => (
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "space-between",
-      fontSize: "22px",
-      color: "#71717a",
-    }}
-  >
-    <span>metri.info</span>
-    <span>Free · open source</span>
   </div>
 );
 
@@ -126,59 +85,68 @@ export const GET = (req: Request) => {
           border: "1px solid rgba(255,255,255,0.08)",
         }}
       >
-        <span style={{ fontSize: "22px", color: "#bef82b", fontWeight: 700 }}>
+        <span
+          style={{ fontSize: "22px", color: OG_COLOR.brand, fontWeight: 700 }}
+        >
           {tag}
         </span>
-        <span style={{ fontSize: "56px", fontWeight: 700, color: "#fafafa" }}>
+        <span
+          style={{ fontSize: "56px", fontWeight: 700, color: OG_COLOR.text }}
+        >
           {primaryText(res)}
         </span>
-        <span style={{ fontSize: "20px", color: "#a1a1aa" }}>
+        <span style={{ fontSize: "20px", color: OG_COLOR.muted }}>
           {res ? t(res.primaryLabelKey) : ""}
         </span>
       </div>
     );
     return new ImageResponse(
-      <Frame>
-        <Brand />
+      <OgFrame>
+        <OgBrand />
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          <span style={{ fontSize: "40px", fontWeight: 700, color: "#fafafa" }}>
+          <span
+            style={{ fontSize: "40px", fontWeight: 700, color: OG_COLOR.text }}
+          >
             {content.h1}
           </span>
           <div style={{ display: "flex", gap: "20px" }}>
             {column("A", resA)}
             {column("B", resB)}
           </div>
-          <span style={{ fontSize: "26px", color: "#bef82b" }}>
+          <span style={{ fontSize: "26px", color: OG_COLOR.brand }}>
             {t("calc.difference")}: {sign}
             {Math.abs(delta).toLocaleString("en-US")}
             {unit}
           </span>
         </div>
-        <Footer />
-      </Frame>,
-      { ...ogSize, headers },
+        <OgFooter url={ogUrl("/")} note={t("og.note")} />
+      </OgFrame>,
+      { ...ogSize, headers, fonts: ogFonts() },
     );
   }
 
   const rows = (resA?.rows ?? []).slice(0, 3);
   return new ImageResponse(
-    <Frame>
-      <Brand />
+    <OgFrame>
+      <OgBrand />
       <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
         <span
           style={{
+            fontFamily: "Geist Mono",
             fontSize: "20px",
             letterSpacing: "3px",
             textTransform: "uppercase",
-            color: "#bef82b",
+            color: OG_COLOR.brand,
           }}
         >
           {content.h1}
         </span>
-        <span style={{ fontSize: "92px", fontWeight: 700, color: "#fafafa" }}>
+        <span
+          style={{ fontSize: "92px", fontWeight: 700, color: OG_COLOR.text }}
+        >
           {primaryText(resA)}
         </span>
-        <span style={{ fontSize: "28px", color: "#a1a1aa" }}>
+        <span style={{ fontSize: "28px", color: OG_COLOR.muted }}>
           {resA ? t(resA.primaryLabelKey) : ""}
         </span>
         {rows.length > 0 && (
@@ -193,8 +161,8 @@ export const GET = (req: Request) => {
           </div>
         )}
       </div>
-      <Footer />
-    </Frame>,
-    { ...ogSize, headers },
+      <OgFooter url={ogUrl("/")} note={t("og.note")} />
+    </OgFrame>,
+    { ...ogSize, headers, fonts: ogFonts() },
   );
 };
